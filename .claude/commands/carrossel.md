@@ -15,7 +15,7 @@ description: >
 - **Identidade visual:** `marca/design-guide.md` — LER ANTES de criar qualquer HTML
 - **Contexto do negócio:** `_contexto/empresa.md`
 - **Tom de voz:** `_contexto/preferencias.md`
-- **Playwright MCP:** necessário pra renderizar PNGs (verifica disponibilidade na Fase 2)
+- **Playwright CLI:** `npx playwright screenshot` para renderizar HTMLs em PNG (instalado globalmente, não depende de MCP)
 
 ## Input
 
@@ -68,11 +68,13 @@ O usuário fornece:
 - Último slide: apenas branding e CTA, sem texto longo
 
 4. Salvar HTMLs em `conteudo/carrosseis/[tema]/instagram/`
-5. Verificar se Playwright MCP está disponível:
-   - Se disponível: renderizar slide 1 e mostrar pro usuário antes de renderizar os demais
-   - Se não disponível: avisar que renderização automática requer Playwright e mostrar como instalar. Oferecer instrução pra renderizar manualmente (abrir HTML no Chrome, Ctrl+Shift+P > "Capture screenshot")
+5. Renderizar cada HTML em PNG via CLI:
+   ```bash
+   npx playwright screenshot --viewport-size=1080,1350 --full-page "file:///caminho/absoluto/slide-XX.html" "slide-XX.png"
+   ```
+   - Renderizar slide 1 primeiro e mostrar pro usuário antes de renderizar os demais
 
-**CHECKPOINT (se Playwright disponível):** mostrar slide 1 renderizado. Se aprovado, renderizar os demais (viewport 1080x1350).
+**CHECKPOINT:** mostrar slide 1 renderizado. Se aprovado, renderizar os demais.
 
 Salvar PNGs em `conteudo/carrosseis/[tema]/instagram/`.
 
@@ -85,7 +87,10 @@ Após finalizar o Instagram, perguntar:
 
 Se sim:
 - Adaptar os HTMLs: height 1920px, ajustar padding, aumentar fonte levemente
-- Renderizar com Playwright (viewport 1080x1920) se disponível
+- Renderizar via CLI:
+  ```bash
+  npx playwright screenshot --viewport-size=1080,1920 --full-page "file:///caminho/absoluto/slide-XX.html" "slide-XX.png"
+  ```
 - Salvar em `conteudo/carrosseis/[tema]/tiktok/`
 
 ---
