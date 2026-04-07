@@ -46,4 +46,13 @@
 
 ---
 
+## Logo
+
+- **Arquivo:** *(ex: marca/logo.png ou marca/logo.svg)*
+- **Versão pra fundo escuro:** *(se tiver variação — ex: marca/logo-branco.png)*
+- **Onde usar:** slide final do carrossel (CTA), header de propostas, slides de apresentação
+- **Tamanho sugerido:** largura entre 120-200px nos HTMLs
+
+---
+
 ## Observações adicionais

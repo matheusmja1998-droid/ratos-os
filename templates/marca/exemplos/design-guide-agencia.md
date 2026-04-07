@@ -43,3 +43,12 @@ Dark e bold. Interface de agência de performance: sem frescura, sem decoração
 - Usar verde em qualquer tom
 - Cards com muito rounding (> 16px parece infantil no nosso posicionamento)
 - Gradiente como fundo de seção inteira
+
+---
+
+## Logo
+
+- **Arquivo:** marca/logo.svg
+- **Versão pra fundo claro:** marca/logo-dark.svg
+- **Onde usar:** slide final do carrossel (CTA), header de propostas, slides de apresentação
+- **Tamanho sugerido:** largura entre 120-200px nos HTMLs

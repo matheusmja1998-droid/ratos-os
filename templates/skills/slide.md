@@ -65,3 +65,4 @@ Renderizar com Playwright se disponível e mostrar o resultado.
 - Um slide por vez — se o usuário quer vários, criar um de cada vez e confirmar antes do próximo
 - Inline CSS, sem dependências externas além do Google Fonts
 - O slide deve funcionar como screenshot — tudo visível dentro da área, sem scroll
+- Se o design guide tiver logo definido na seção **Logo**, pode incluir no slide quando fizer sentido (ex: canto inferior, assinatura). Escolher a versão correta conforme o fundo do slide

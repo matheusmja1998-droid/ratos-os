@@ -42,7 +42,7 @@ Se o usuário já forneceu as informações de forma livre, extrai o que der e p
 Criar um arquivo HTML completo com as seguintes seções:
 
 **Estrutura da proposta:**
-1. Header — logo/nome da empresa prestadora + data
+1. Header — logo/nome da empresa prestadora + data. Se o design guide tiver logo definido na seção **Logo**, usar a imagem (largura 140-180px). Escolher a versão correta (fundo claro ou escuro) conforme o estilo da proposta. Se não tiver logo, usar o nome da empresa em texto
 2. Destinatário — "Proposta para [Cliente]"
 3. O problema — o desafio que o cliente enfrenta (em 2-3 parágrafos, na perspectiva do cliente)
 4. A solução — o que você propõe e por que resolve

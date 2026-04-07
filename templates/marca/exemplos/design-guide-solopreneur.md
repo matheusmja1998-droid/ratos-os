@@ -43,3 +43,12 @@ Quente, humano e editorial. Tons terrosos com fundo off-white. Parece um livro b
 - Fundo branco puro (#FFFFFF) — usar sempre o off-white (#FAF7F2)
 - Bordas retas (solid sem radius) — parece corpo e genérico
 - Amarelo-limão como acento — destoa do tom quente
+
+---
+
+## Logo
+
+- **Arquivo:** marca/logo.png
+- **Versão pra fundo escuro:** marca/logo-branco.png
+- **Onde usar:** slide final do carrossel (CTA), header de propostas, slides de apresentação
+- **Tamanho sugerido:** largura entre 120-200px nos HTMLs

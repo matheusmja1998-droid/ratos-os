@@ -65,7 +65,7 @@ O usuário fornece:
 - Tipografia: fontes do design guide (ou Bricolage Grotesque + Instrument Serif padrão)
 - Cor de destaque: cor do design guide (ou #FFD600 padrão)
 - Variação visual: não fazer todos os slides com layout idêntico — usar pelo menos 2 layouts diferentes (ex: texto simples, destaque com número grande, card com borda, citação em destaque)
-- Último slide: apenas branding e CTA, sem texto longo
+- Último slide: apenas branding e CTA, sem texto longo. Se o design guide tiver logo definido na seção **Logo**, incluir a imagem do logo no slide final (usar o caminho do arquivo como `<img src>`, largura entre 120-200px). Escolher a versão correta (fundo claro ou escuro) conforme a cor de fundo do slide
 
 4. Salvar HTMLs em `conteudo/carrosseis/[tema]/instagram/`
 5. Renderizar cada HTML em PNG via CLI:
