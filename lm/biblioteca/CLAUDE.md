@@ -8,8 +8,10 @@
 
 | Situação | Livro(s) |
 |---|---|
-| Montar ou melhorar uma oferta | **Hormozi — $100M Money Models** |
-| Estruturar o funil da LM (atração → upsell → recorrência) | **Hormozi** |
+| Montar ou melhorar uma oferta | **Hormozi — $100M Offers** |
+| Fechar mais calls, travar no script, objeções | **Hormozi — CLOSER (dentro do $100M Offers)** |
+| Leads insuficientes, pipeline inconsistente | **Hormozi — $100M Leads** |
+| Estruturar o funil da LM (atração → upsell → recorrência) | **Hormozi — $100M Money Models** |
 | Preparar uma call de diagnóstico | **SPIN Selling + Neurovendas** |
 | Travar no script ou na pergunta de fechamento | **SPIN Selling** |
 | Lead hesitando / "preciso pensar" | **Neurovendas** |
@@ -31,7 +33,10 @@
 - [A Retórica em Aristóteles](vendas/retorica-aristoteles.md) — ethos, pathos, logos, persuasão ética
 
 ## Negócio
-- [**$100M Money Models — Alex Hormozi**](negocio/hormozi-100m-money-models.md) ← **referência principal de ofertas**
+- **Alex Hormozi (3 livros)** → [ver pasta completa](negocio/hormozi/CLAUDE.md)
+  - [$100M Offers](negocio/hormozi/hormozi-100m-offers.md) — Grand Slam Offer, Value Equation, CLOSER framework, pricing
+  - [$100M Leads](negocio/hormozi/hormozi-100m-leads.md) — Core 4, lead magnets, LAIRE, 80% após 5º contato
+  - [$100M Money Models](negocio/hormozi/hormozi-100m-money-models.md) — modelo de ofertas em camadas, funil de receita
 - [A Vaca Roxa — Seth Godin](negocio/vaca-roxa.md) — diferenciação e posicionamento
 - [O Mito do Empreendedor — Michael Gerber](negocio/mito-do-empreendedor.md) — sistemas, escala, sair da operação
 
@@ -54,10 +59,16 @@ Retórica (Aristóteles)
         ↓
     Script de Diagnóstico (lm/comercial/ofertas/scripts/)
 
-Hormozi ($100M Money Models)
-    ↓ define o modelo de ofertas: atração → upsell → downsell → continuidade
+Hormozi ($100M Leads)
+    ↓ define os canais de geração de leads (Core 4: Warm/Cold Outreach, Content, Ads)
+        ↓
+Hormozi ($100M Offers)
+    ↓ converte leads com Grand Slam Offer + CLOSER framework
         ↓
     Ignição Solo (R$497) → Ignição Comercial (R$5k) → Protocolo Pipeline Zero (R$12k+)
+        ↓
+Hormozi ($100M Money Models)
+    ↓ organiza os produtos em modelo de receita em camadas (continuidade ainda falta)
         ↓
 Vaca Roxa
     ↓ garante que as ofertas sejam marcantes o suficiente para serem comentadas
