@@ -1,14 +1,68 @@
-# Claude Code OS — Kit Ratos de IA
+# Matheus Jardim — Claude Code OS
 
-Este repositório é o kit de boas-vindas do curso Claude Code OS.
+## O que é esse workspace
 
-Se você acabou de clonar esse repositório:
-1. Rode `/setup` pra configurar o sistema pro seu negócio (uns 5 minutos)
-2. Depois rode `/mapear` pra criar skills personalizadas pro que você faz no dia a dia
+Workspace de operações das duas agências do Matheus: WinVision e L.M Agência. Aqui ficam clientes, propostas, conteúdo, análises e entregas de ambas as operações.
+
+**Estrutura de pastas:**
+- `_contexto/` — memória do sistema (não apagar)
+- `marca/` — identidade visual de cada agência
+- `dados/` — arquivos pra análise (CSV, PDF, relatórios)
+- `templates/skills/` — templates de skills prontos pra personalizar com /mapear
+- `templates/ferramentas/catalogo.md` — APIs e ferramentas disponíveis pra usar em skills
+- `winvision/` — clientes, propostas e conteúdo da WinVision
+- `lm/` — clientes, propostas e conteúdo da L.M Agência
+- `tarefas.md` — lista de tarefas corrente
+
+## Sobre o negócio
+
+Matheus Jardim toca duas agências em paralelo.
+
+**WinVision** — agência solo de marketing digital com foco em lançamentos de infoprodutos e estruturação comercial. Faturamento atual: R$10k/mês. CNPJ: 46.997.976/0001-81.
+
+**L.M Agência** — operação em sociedade 50/50 com Valentino Pascual, focada em estruturação comercial B2B para integradoras solares. Faturamento atual: R$4k/mês. CNPJ: 62.831.134/0001-01.
+
+Meta financeira: R$50k/mês (gap atual de R$36k).
+
+## Clientes ativos
+
+**WinVision:**
+- Fernanda Serraglia (Vem Doleta — educação financeira pra imigrantes)
+- Prof. Caio Pickcius (Mecânico Expert — mecânica de motos)
+- Ev Cosméticos
+- Liso Ideal (Kleber)
+
+**L.M Agência:**
+- Jonas / Hypertech (solar — meta R$20M)
+- Dr. Fábio / IOT (ortopedia, Varginha)
+- Clínica Comtato
+
+## O que mais produzimos aqui
+
+- Análise de relatórios e dados de performance
+- Análise comercial
+- Criativos (tráfego pago e orgânico)
+- Produção de conteúdo pra redes sociais
+- Propostas comerciais
+- Relatórios pra clientes
+- Prospecção
+
+## Tom de voz
+
+Tom informal, direto e sem enrolação. Escrever como se estivesse conversando.
+
+Evitar: travessão (—), frases genéricas de IA, bullet points desnecessários, linguagem formal ou corporativa.
+
+## Ferramentas conectadas
+
+- [ ] Gmail MCP
+- [ ] Google Calendar MCP
+- [ ] Canva MCP
+- [ ] Notion MCP
+
+*(Marcar conforme for instalando)*
 
 ---
-
-<!-- Este arquivo será atualizado pelo /setup com o contexto do seu negócio. -->
 
 ## Contexto do negócio
 

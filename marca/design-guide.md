@@ -5,54 +5,67 @@
 
 ---
 
-## Cores
+## WinVision
 
-- **Fundo principal:**
+### Cores
 
-- **Cor de destaque / CTA:**
+- **Cor de destaque / CTA:** #00E878 (verde)
+- **Cor de apoio:** #8DFFC8 (verde claro)
+- **Fundo principal:** #080808 (preto)
+- **Texto principal:** #FFFFFF (branco)
+- **Cor proibida:** vermelho, tons terrosos
 
-- **Texto principal:**
+### Tipografia
 
-- **Fundo alternativo / cards:**
+- **Títulos e destaques:** Plus Jakarta Sans
+- **Corpo, subtítulos e botões:** Plus Jakarta Sans
+- **Peso do título:** Bold (700) ou ExtraBold (800)
 
-- **Cor proibida:**
+### Estilo geral
 
----
+Clean, moderno, dark mode. Destaque em verde. Sem ornamentos excessivos.
 
-## Tipografia
+### Elementos-chave
 
-- **Títulos e destaques:**
+- Bordas: finas ou sem borda
+- Border-radius dos cards: 8-12px
+- Botões: fundo verde #00E878, texto preto, sem borda
+- Sombras: leves ou nenhuma
 
-- **Corpo, subtítulos e botões:**
+### O que NUNCA fazer
 
-- **Peso do título:**
+Fundo branco em materiais da WinVision. Fontes serifadas. Excesso de cores.
 
----
+### Logo
 
-## Estilo geral
-
----
-
-## Elementos-chave
-
-- Bordas:
-- Border-radius dos cards:
-- Botões:
-- Sombras:
-
----
-
-## O que NUNCA fazer
-
----
-
-## Logo
-
-- **Arquivo:** *(ex: marca/logo.png ou marca/logo.svg)*
-- **Versão pra fundo escuro:** *(se tiver variação — ex: marca/logo-branco.png)*
+- **Arquivo:** *(jogar em marca/ e atualizar aqui)*
+- **Versão pra fundo escuro:** *(se tiver — ex: marca/winvision-logo-branco.png)*
 - **Onde usar:** slide final do carrossel (CTA), header de propostas, slides de apresentação
 - **Tamanho sugerido:** largura entre 120-200px nos HTMLs
 
 ---
 
+## L.M Agência
+
+### Cores
+
+*(Preencher quando definido)*
+
+- **Fundo principal:**
+- **Cor de destaque / CTA:**
+- **Texto principal:**
+
+### Tipografia
+
+*(Preencher quando definido)*
+
+### Logo
+
+- **Arquivo:** *(jogar em marca/ e atualizar aqui)*
+- **Onde usar:** propostas e materiais da L.M
+
+---
+
 ## Observações adicionais
+
+Quando a tarefa não especificar qual agência, usar identidade da WinVision como padrão.
