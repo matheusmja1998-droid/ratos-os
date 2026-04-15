@@ -10,6 +10,14 @@ import os
 import sys
 import shutil
 
+# Carrega .env da skill (mesmo mecanismo dos outros scripts)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+try:
+    from lib import _load_env_file
+    _load_env_file()
+except ImportError:
+    pass
+
 
 def check_python():
     v = sys.version_info
