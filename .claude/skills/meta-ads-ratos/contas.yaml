@@ -32,4 +32,47 @@ clientes:
   #   moeda: "BRL"
   #   notas: "qualquer observacao relevante"
 
-  # -- Suas contas abaixo --
+  mecanico-expert:
+    nome: "Mecânico Expert (Prof. Caio Pickcius)"
+    conta_anuncio: "act_191737889662177"
+    pagina_facebook: "109404090843824"
+    instagram_id: "17841439311584041"
+    instagram_username: "@prof.caiopickcius"
+    moeda: "BRL"
+    notas: "RPC GARAGE MOTORCYCLES — conta principal"
+
+  vemdoleta:
+    nome: "VemDoleta (Fernanda Serraglia)"
+    conta_anuncio: "act_362367444"
+    pagina_facebook: "811764808694222"
+    instagram_id: "17841435650733671"
+    instagram_username: "@fernanda.serraglia"
+    moeda: "BRL"
+    notas: "CA1 — conta principal. Outras CAs: act_229270626843036 (CA02), act_430349686083376 (CA03), act_359524526975089 (CA04), act_236026032915095 (CA05)"
+
+  liso-ideal:
+    nome: "Liso Ideal (Kleber)"
+    conta_anuncio: "act_1375975899342771"
+    pagina_facebook: ""
+    instagram_id: ""
+    instagram_username: ""
+    moeda: "BRL"
+    notas: "BM: EV Cosméticos Profissionais — preencher page/IG quando disponível"
+
+  vacari-cosmeticos:
+    nome: "Vacari Cosméticos"
+    conta_anuncio: "act_1725538527656776"
+    pagina_facebook: "1845198325729319"
+    instagram_id: "17841448101250665"
+    instagram_username: "@elietivacaricosmeticos"
+    moeda: "BRL"
+    notas: "BM: Kleber Vacari de Mattos"
+
+  agencia-winvision:
+    nome: "Agência WinVision"
+    conta_anuncio: "act_1533029434614019"
+    pagina_facebook: "968752879644338"
+    instagram_id: ""
+    instagram_username: ""
+    moeda: "BRL"
+    notas: "BM: Valentino Pascual (L.M Agência) — preencher IG quando disponível"
