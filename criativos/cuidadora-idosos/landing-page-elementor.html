@@ -1,0 +1,643 @@
+<!-- COLE ESSE CÓDIGO NUM BLOCO HTML DO ELEMENTOR -->
+<!-- O Pixel do Facebook deve ser adicionado via plugin "Insert Headers and Footers" -->
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+/* Todas as classes prefixadas com .mc-lp para não conflitar com o Elementor */
+
+.mc-lp * { box-sizing: border-box; margin: 0; padding: 0; }
+
+.mc-lp a { text-decoration: none; }
+
+/* ─── WHATSAPP FLUTUANTE ─── */
+.mc-wa-float {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9999;
+  background: #25D366;
+  color: #fff !important;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  border-radius: 100px;
+  text-decoration: none !important;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  box-shadow: 0 8px 32px rgba(37,211,102,0.4);
+  transition: transform 0.2s;
+}
+.mc-wa-float:hover { transform: translateY(-2px); }
+.mc-wa-float svg { width: 22px; height: 22px; fill: #fff; flex-shrink: 0; }
+
+/* ─── HERO ─── */
+.mc-lp .mc-hero {
+  background: #9B3060;
+  padding: 80px 24px 100px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.mc-lp .mc-hero::before {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.06);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.mc-lp .mc-hero::after {
+  content: '';
+  position: absolute;
+  width: 900px; height: 900px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.04);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.mc-lp .mc-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 8px 20px;
+  border-radius: 100px;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 2;
+}
+.mc-lp .mc-hero h1 {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 900 !important;
+  font-size: clamp(36px, 6vw, 68px) !important;
+  line-height: 1.05 !important;
+  color: #fff !important;
+  margin-bottom: 24px !important;
+  position: relative;
+  z-index: 2;
+}
+.mc-lp .mc-hero h1 span { color: #F4A7BC; }
+.mc-lp .mc-hero p {
+  font-size: clamp(16px, 2vw, 20px);
+  color: rgba(255,255,255,0.7);
+  max-width: 560px;
+  margin: 0 auto 48px;
+  line-height: 1.6;
+  font-family: 'Open Sans', sans-serif;
+  position: relative;
+  z-index: 2;
+}
+.mc-lp .mc-hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: #25D366;
+  color: #fff !important;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 20px 48px;
+  border-radius: 100px;
+  box-shadow: 0 8px 32px rgba(37,211,102,0.35);
+  position: relative;
+  z-index: 2;
+  transition: transform 0.2s;
+}
+.mc-lp .mc-hero-cta:hover { transform: translateY(-2px); }
+.mc-lp .mc-hero-cta svg { width: 22px; height: 22px; fill: #fff; }
+
+/* ─── PROBLEMA ─── */
+.mc-lp .mc-problema {
+  background: #FDF5F7;
+  padding: 80px 24px;
+  text-align: center;
+}
+.mc-lp .mc-problema h2 {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 800 !important;
+  font-size: clamp(26px, 4vw, 42px) !important;
+  color: #9B3060 !important;
+  line-height: 1.2 !important;
+  max-width: 700px;
+  margin: 0 auto 24px !important;
+}
+.mc-lp .mc-problema p {
+  font-size: 18px;
+  color: #666;
+  max-width: 580px;
+  margin: 0 auto;
+  line-height: 1.7;
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* ─── SOBRE ─── */
+.mc-lp .mc-sobre {
+  background: #fff;
+  padding: 80px 24px;
+}
+.mc-lp .mc-sobre-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .mc-lp .mc-sobre-inner { grid-template-columns: 1fr; gap: 40px; }
+}
+.mc-lp .mc-sobre-foto {
+  background: #FDF0F4;
+  border-radius: 20px;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed rgba(155,48,96,0.2);
+  flex-direction: column;
+  gap: 16px;
+  color: #C4687A;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 32px;
+  overflow: hidden;
+}
+.mc-lp .mc-sobre-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 18px;
+}
+.mc-lp .mc-sobre-foto svg { width: 48px; height: 48px; opacity: 0.4; }
+.mc-lp .mc-sobre-texto .mc-label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #C4687A;
+  margin-bottom: 12px;
+  display: block;
+}
+.mc-lp .mc-sobre-texto h2 {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 900 !important;
+  font-size: clamp(28px, 3vw, 42px) !important;
+  color: #9B3060 !important;
+  line-height: 1.1 !important;
+  margin-bottom: 20px !important;
+  text-transform: uppercase;
+}
+.mc-lp .mc-sobre-texto p {
+  font-size: 17px;
+  color: #666;
+  line-height: 1.7;
+  margin-bottom: 32px;
+  font-family: 'Open Sans', sans-serif;
+}
+.mc-lp .mc-credencial-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #9B3060;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  border-radius: 100px;
+}
+.mc-lp .mc-credencial-badge svg { width: 14px; height: 14px; fill: #fff; }
+
+/* ─── SERVIÇOS ─── */
+.mc-lp .mc-servicos {
+  background: #9B3060;
+  padding: 80px 24px;
+  text-align: center;
+}
+.mc-lp .mc-servicos .mc-label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 12px;
+  display: block;
+}
+.mc-lp .mc-servicos h2 {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 900 !important;
+  font-size: clamp(28px, 4vw, 44px) !important;
+  color: #fff !important;
+  margin-bottom: 56px !important;
+}
+.mc-lp .mc-servicos-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+@media (max-width: 600px) {
+  .mc-lp .mc-servicos-grid { grid-template-columns: 1fr; }
+}
+.mc-lp .mc-servico-card {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 28px 24px;
+  text-align: left;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.mc-lp .mc-servico-icon {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.mc-lp .mc-servico-icon svg {
+  width: 22px; height: 22px;
+  stroke: #F4A7BC;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.mc-lp .mc-servico-card h3 {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  color: #fff !important;
+  margin-bottom: 6px !important;
+}
+.mc-lp .mc-servico-card p {
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.5;
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+}
+
+/* ─── COMO FUNCIONA ─── */
+.mc-lp .mc-como {
+  background: #FDF5F7;
+  padding: 80px 24px;
+  text-align: center;
+}
+.mc-lp .mc-como .mc-label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #C4687A;
+  margin-bottom: 12px;
+  display: block;
+}
+.mc-lp .mc-como h2 {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 900 !important;
+  font-size: clamp(26px, 4vw, 40px) !important;
+  color: #9B3060 !important;
+  margin-bottom: 56px !important;
+}
+.mc-lp .mc-steps {
+  max-width: 800px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+@media (max-width: 640px) {
+  .mc-lp .mc-steps { grid-template-columns: 1fr; }
+}
+.mc-lp .mc-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.mc-lp .mc-step-number {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: #9B3060;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mc-lp .mc-step h3 {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 17px !important;
+  color: #9B3060 !important;
+  margin: 0 !important;
+}
+.mc-lp .mc-step p {
+  font-size: 15px;
+  color: #666;
+  line-height: 1.6;
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+}
+
+/* ─── FAQ ─── */
+.mc-lp .mc-faq {
+  background: #FDF0F4;
+  padding: 80px 24px;
+}
+.mc-lp .mc-faq .mc-label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #C4687A;
+  margin-bottom: 12px;
+  display: block;
+  text-align: center;
+}
+.mc-lp .mc-faq h2 {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 900 !important;
+  font-size: clamp(26px, 4vw, 38px) !important;
+  color: #9B3060 !important;
+  text-align: center;
+  margin-bottom: 48px !important;
+}
+.mc-lp .mc-faq-list {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.mc-lp .mc-faq-item {
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px 28px;
+  border: 1px solid rgba(155,48,96,0.08);
+}
+.mc-lp .mc-faq-item h3 {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  color: #9B3060 !important;
+  margin-bottom: 10px !important;
+}
+.mc-lp .mc-faq-item p {
+  font-size: 15px;
+  color: #666;
+  line-height: 1.6;
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+}
+
+/* ─── CTA FINAL ─── */
+.mc-lp .mc-cta-final {
+  background: #9B3060;
+  padding: 100px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.mc-lp .mc-cta-final::before {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.06);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+.mc-lp .mc-cta-final h2 {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 900 !important;
+  font-size: clamp(30px, 5vw, 54px) !important;
+  color: #fff !important;
+  line-height: 1.1 !important;
+  margin-bottom: 20px !important;
+  position: relative;
+  z-index: 2;
+}
+.mc-lp .mc-cta-final h2 span { color: #F4A7BC; }
+.mc-lp .mc-cta-final p {
+  font-size: 18px;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 48px;
+  position: relative;
+  z-index: 2;
+  font-family: 'Open Sans', sans-serif;
+}
+.mc-lp .mc-btn-final {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: #25D366;
+  color: #fff !important;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 22px 56px;
+  border-radius: 100px;
+  box-shadow: 0 8px 32px rgba(37,211,102,0.35);
+  position: relative;
+  z-index: 2;
+  transition: transform 0.2s;
+}
+.mc-lp .mc-btn-final:hover { transform: translateY(-2px); }
+.mc-lp .mc-btn-final svg { width: 24px; height: 24px; fill: #fff; }
+
+/* ─── FOOTER ─── */
+.mc-lp .mc-footer {
+  background: #6B1A3A;
+  padding: 28px 24px;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.35);
+}
+</style>
+
+<!-- WhatsApp flutuante (fora do wrapper, pois é fixed) -->
+<a class="mc-wa-float" href="https://wa.me/5531989756107?text=quero%20saber%20mais%20detalhes%20sobre%20o%20seu%20trabalho%20de%20cuidadora" target="_blank">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  Agende uma conversa
+</a>
+
+<div class="mc-lp">
+
+<!-- HERO -->
+<section class="mc-hero">
+  <div class="mc-hero-badge">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+    Técnica em Enfermagem
+  </div>
+  <h1>Seu familiar está em<br><span>boas mãos.</span></h1>
+  <p>Cuidado domiciliar completo para idosos com formação técnica em enfermagem. Responsabilidade e carinho em cada detalhe.</p>
+  <a class="mc-hero-cta" href="https://wa.me/5531989756107?text=quero%20saber%20mais%20detalhes%20sobre%20o%20seu%20trabalho%20de%20cuidadora" target="_blank">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    Agende uma conversa
+  </a>
+</section>
+
+<!-- PROBLEMA -->
+<section class="mc-problema">
+  <h2>Você trabalha o dia todo e fica com aquela preocupação no fundo da cabeça.</h2>
+  <p>E se meu pai cair? E se minha mãe não tomar o remédio certo? Essa preocupação constante não precisa fazer parte da sua rotina.</p>
+</section>
+
+<!-- SOBRE -->
+<section class="mc-sobre">
+  <div class="mc-sobre-inner">
+    <div class="mc-sobre-foto">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Foto em breve
+    </div>
+    <div class="mc-sobre-texto">
+      <span class="mc-label">Quem vai cuidar</span>
+      <h2>Mariana Caroline</h2>
+      <p>Formada em Técnica de Enfermagem, escolhi essa profissão porque sei na prática o quanto é difícil deixar um familiar em casa e precisar ir trabalhar. Cuido de cada pessoa como se fosse da minha própria família.</p>
+      <div class="mc-credencial-badge">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        Técnica em Enfermagem — Formação Oficial
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVIÇOS -->
+<section class="mc-servicos">
+  <span class="mc-label">O que está incluso</span>
+  <h2>Cuidado completo do início ao fim</h2>
+  <div class="mc-servicos-grid">
+    <div class="mc-servico-card">
+      <div class="mc-servico-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+      <div><h3>Medicação no horário</h3><p>Administração correta e no horário certo, sem falhas.</p></div>
+    </div>
+    <div class="mc-servico-card">
+      <div class="mc-servico-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      <div><h3>Companhia e cuidado emocional</h3><p>Presença, atenção e conversa. Ninguém fica sozinho.</p></div>
+    </div>
+    <div class="mc-servico-card">
+      <div class="mc-servico-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <div><h3>Higiene e banho</h3><p>Cuidado com higiene pessoal feito com respeito e dignidade.</p></div>
+    </div>
+    <div class="mc-servico-card">
+      <div class="mc-servico-icon"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div>
+      <div><h3>Refeições</h3><p>Auxílio na alimentação no horário certo.</p></div>
+    </div>
+    <div class="mc-servico-card">
+      <div class="mc-servico-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div><h3>Cuidados diurnos e noturnos</h3><p>Disponível para plantões de dia ou de noite conforme a necessidade.</p></div>
+    </div>
+    <div class="mc-servico-card">
+      <div class="mc-servico-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.16 6.16l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg></div>
+      <div><h3>Comunicação com a família</h3><p>Atualizações regulares sobre o estado do seu familiar.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="mc-como">
+  <span class="mc-label">É simples assim</span>
+  <h2>Como começar</h2>
+  <div class="mc-steps">
+    <div class="mc-step">
+      <div class="mc-step-number">1</div>
+      <h3>Entre em contato</h3>
+      <p>Manda uma mensagem no WhatsApp e conversamos sobre a situação do seu familiar.</p>
+    </div>
+    <div class="mc-step">
+      <div class="mc-step-number">2</div>
+      <h3>Combinamos os detalhes</h3>
+      <p>Alinhamos horários, rotina e tudo que o idoso precisa para o cuidado ser perfeito.</p>
+    </div>
+    <div class="mc-step">
+      <div class="mc-step-number">3</div>
+      <h3>Começa o cuidado</h3>
+      <p>Você vai trabalhar com tranquilidade sabendo que seu familiar está em boas mãos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="mc-faq">
+  <span class="mc-label">Dúvidas frequentes</span>
+  <h2>Perguntas comuns</h2>
+  <div class="mc-faq-list">
+    <div class="mc-faq-item">
+      <h3>Qual a diferença de uma cuidadora com formação técnica?</h3>
+      <p>Uma técnica em enfermagem tem treinamento específico para administrar medicamentos corretamente, identificar sinais de emergência e prestar primeiros socorros. Vai muito além do cuidado básico.</p>
+    </div>
+    <div class="mc-faq-item">
+      <h3>Você atende em qual região?</h3>
+      <p>Atendo na região de Belo Horizonte e entorno. Entre em contato para confirmar sua localidade.</p>
+    </div>
+    <div class="mc-faq-item">
+      <h3>Como funciona o cuidado mensal?</h3>
+      <p>A gente conversa sobre a rotina do seu familiar, os dias e horários necessários e monta um plano personalizado. O valor mensal é combinado conforme a demanda.</p>
+    </div>
+    <div class="mc-faq-item">
+      <h3>É possível começar rápido?</h3>
+      <p>Sim. Dependendo da disponibilidade, consigo começar ainda nessa semana. Manda mensagem e a gente vê juntos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="mc-cta-final">
+  <h2>Pronto para ter<br><span>tranquilidade de verdade?</span></h2>
+  <p>Uma conversa no WhatsApp resolve. Sem compromisso.</p>
+  <a class="mc-btn-final" href="https://wa.me/5531989756107?text=quero%20saber%20mais%20detalhes%20sobre%20o%20seu%20trabalho%20de%20cuidadora" target="_blank">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    Agende uma conversa
+  </a>
+</section>
+
+<footer class="mc-footer">
+  © 2026 Mariana Caroline — Cuidadora de Idosos · Técnica em Enfermagem
+</footer>
+
+</div><!-- /.mc-lp -->
+
+<script>
+document.querySelectorAll('a[href*="wa.me"]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    if (typeof fbq !== 'undefined') fbq('track', 'Lead');
+  });
+});
+</script>
