@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Criativo 04 — Layout invertido claro</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1080px;
+    height: 1080px;
+    overflow: hidden;
+  }
+
+  .card {
+    width: 1080px;
+    height: 1080px;
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    position: relative;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  /* ---- LEFT (verde) ---- */
+  .left {
+    background: #F0F7F3;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px;
+    overflow: hidden;
+    border-right: 1px solid #D8EDE1;
+  }
+
+  .left-decoration {
+    position: absolute;
+    bottom: -60px;
+    left: -60px;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    background: rgba(26,92,56,0.07);
+  }
+
+  .left-decoration-2 {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: rgba(26,92,56,0.05);
+  }
+
+  .icon-circle {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: #1A5C38;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 36px;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 16px 48px rgba(26,92,56,0.25);
+  }
+
+  .left-name {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 26px;
+    color: #1A5C38;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .left-role {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: #666;
+    text-align: center;
+    line-height: 1.5;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 32px;
+  }
+
+  .left-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #1A5C38;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 100px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ---- RIGHT ---- */
+  .right {
+    background: #fff;
+    padding: 72px 64px 64px 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .headline {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 52px;
+    line-height: 1.05;
+    color: #1A3C28;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    margin-bottom: 16px;
+  }
+
+  .headline span {
+    color: #1A5C38;
+  }
+
+  .subtext {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 48px;
+    max-width: 440px;
+  }
+
+  /* Services */
+  .services-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #aaa;
+    margin-bottom: 20px;
+  }
+
+  .services {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .service-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .service-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: #F0F7F3;
+    border: 1px solid #D8EDE1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .service-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: #1A5C38;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .service-text {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 17px;
+    color: #333;
+  }
+
+  /* CTA */
+  .cta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #25D366;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 18px 36px;
+    border-radius: 100px;
+    width: fit-content;
+    box-shadow: 0 8px 24px rgba(37,211,102,0.3);
+  }
+
+  .cta svg {
+    width: 20px;
+    height: 20px;
+    fill: #fff;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="left-decoration"></div>
+    <div class="left-decoration-2"></div>
+
+    <div class="icon-circle">
+      <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 80 C50 80 18 58 18 36 C18 24 27 16 37 18 C42 19 47 23 50 28 C53 23 58 19 63 18 C73 16 82 24 82 36 C82 58 50 80 50 80Z"
+              fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <line x1="50" y1="37" x2="50" y2="55" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <line x1="41" y1="46" x2="59" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="left-name">Mariana<br>Caroline</div>
+    <div class="left-role">Cuidadora de Idosos<br>Técnica em Enfermagem</div>
+    <div class="left-badge">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+      Formação Técnica
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div>
+      <h1 class="headline">Seu familiar<br>merece<br><span>cuidado<br>de verdade.</span></h1>
+      <p class="subtext">Cuidado domiciliar completo com formação técnica em enfermagem. Responsabilidade e carinho em cada detalhe.</p>
+    </div>
+
+    <div>
+      <p class="services-title">O que ofereço</p>
+      <div class="services">
+        <div class="service-item">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          </div>
+          <span class="service-text">Medicação no horário</span>
+        </div>
+        <div class="service-item">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          </div>
+          <span class="service-text">Companhia e cuidado emocional</span>
+        </div>
+        <div class="service-item">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <span class="service-text">Higiene, banho e refeições</span>
+        </div>
+        <div class="service-item">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <span class="service-text">Cuidados diurnos e noturnos</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      Agende uma conversa
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
