@@ -15,6 +15,7 @@ from facebook_business.adobjects.adset import AdSet
 from facebook_business.adobjects.ad import Ad
 from facebook_business.adobjects.adcreative import AdCreative
 from facebook_business.adobjects.customaudience import CustomAudience
+from facebook_business.adobjects.adimage import AdImage
 
 
 # ---------------------------------------------------------------------------
@@ -188,42 +189,58 @@ def cmd_creative(args):
 @handle_fb_error
 def cmd_image(args):
     init_api()
-    import requests
-    import tempfile
 
     account_id = resolve_account(args.account)
 
-    # Download image to temp file
-    print("Baixando imagem...", file=sys.stderr)
-    response = requests.get(args.url, stream=True)
-    response.raise_for_status()
+    params = {}
+    if args.name:
+        params['name'] = args.name
 
-    # Determine extension from URL or content-type
-    ext = '.jpg'
-    content_type = response.headers.get('content-type', '')
-    if 'png' in content_type or args.url.lower().endswith('.png'):
-        ext = '.png'
-    elif 'webp' in content_type or args.url.lower().endswith('.webp'):
-        ext = '.webp'
+    account = AdAccount(account_id)
 
-    tmp = tempfile.NamedTemporaryFile(suffix=ext, delete=False)
-    try:
-        for chunk in response.iter_content(chunk_size=8192):
-            tmp.write(chunk)
-        tmp.close()
-
-        params = {}
+    if args.file:
+        # Upload from local file using AdImage
+        filepath = os.path.abspath(os.path.expanduser(args.file))
+        if not os.path.exists(filepath):
+            print_error(f"Arquivo não encontrado: {filepath}")
+            sys.exit(1)
+        print(f"Enviando arquivo local: {filepath}", file=sys.stderr)
+        img = AdImage(parent_id=account_id)
+        img[AdImage.Field.filename] = filepath
         if args.name:
-            params['name'] = args.name
-
-        account = AdAccount(account_id)
-        result = account.create_ad_image(params=params, files={'filename': tmp.name})
+            img[AdImage.Field.name] = args.name
+        img.remote_create()
         safe_delay(1)
-
         print(f"Imagem enviada com sucesso", file=sys.stderr)
-        print_json(result)
-    finally:
-        os.unlink(tmp.name)
+        print_json(img.export_all_data())
+        return
+    else:
+        # Download from URL then upload
+        import requests
+        import tempfile
+        print("Baixando imagem...", file=sys.stderr)
+        response = requests.get(args.url, stream=True)
+        response.raise_for_status()
+
+        ext = '.jpg'
+        content_type = response.headers.get('content-type', '')
+        if 'png' in content_type or args.url.lower().endswith('.png'):
+            ext = '.png'
+        elif 'webp' in content_type or args.url.lower().endswith('.webp'):
+            ext = '.webp'
+
+        tmp = tempfile.NamedTemporaryFile(suffix=ext, delete=False)
+        try:
+            for chunk in response.iter_content(chunk_size=8192):
+                tmp.write(chunk)
+            tmp.close()
+            result = account.create_ad_image(params=params, files={'filename': tmp.name})
+        finally:
+            os.unlink(tmp.name)
+
+    safe_delay(1)
+    print(f"Imagem enviada com sucesso", file=sys.stderr)
+    print_json(result)
 
 
 @handle_fb_error
@@ -370,7 +387,9 @@ def main():
     # --- image ---
     p = sub.add_parser("image", help="Upload de imagem")
     add_account_arg(p)
-    p.add_argument("--url", required=True, help="URL da imagem para upload")
+    grp = p.add_mutually_exclusive_group(required=True)
+    grp.add_argument("--url", help="URL da imagem para upload")
+    grp.add_argument("--file", help="Caminho local do arquivo para upload")
     p.add_argument("--name", help="Nome da imagem")
 
     # --- video ---
