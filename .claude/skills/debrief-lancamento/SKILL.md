@@ -185,7 +185,7 @@ Todas as análises usam **apenas os compradores mapeados** e os **leads/investim
 **6.2 Temperatura** — agrupar por `utm_medium` (paid-cold = frio, social/organico = orgânico)
 - Leads aj., Compradores, Conversão, Investimento aj. (spend × (1 - quebra)), ROAS, CPL
 
-**6.3 Conjuntos de anúncios** — agrupar por `utm_campaign`, cruzar com `adset_name` da Meta
+**6.3 Conjuntos de anúncios** — agrupar por `utm_medium`, cruzar com `adset_name` da Meta
 - Leads aj., Compradores, Conversão, Spend aj., ROAS, CPL
 - Ordenar por ROAS (maior pra menor)
 - Destacar top 3 e bottom 3
@@ -196,9 +196,18 @@ Todas as análises usam **apenas os compradores mapeados** e os **leads/investim
 - Identificar o criativo dominante (mais compradores)
 - Verificar padrão no nome: tema, mês, versão
 
-**6.5 Países** — apenas Fernanda, agrupar por `utm_term` ou coluna de país
-- Compradores, Conversão por país
-- Portugal separado dos demais
+**6.5 Países** — apenas Fernanda
+- Fernanda envia uma planilha separada com `email` e `país`
+- Cruzar essa planilha com a de compradores por e-mail (equivalente ao PROCV)
+- Agrupar compradores mapeados por país
+- Compradores, Conversão por país — Portugal separado dos demais
+
+```python
+df_paises = pd.read_excel('dados/[arquivo_paises_fernanda].xlsx')
+df_paises['email'] = df_paises['email'].str.lower().str.strip()
+df_comp_paises = df_mapeados.merge(df_paises, on='email', how='left')
+analise_paises = df_comp_paises.groupby('pais').size().reset_index(name='compradores')
+```
 
 ---
 
