@@ -105,38 +105,97 @@ leads_ajustados = total_leads * (1 - quebra_pct)
 investimento_ajustado = investimento_total * (1 - quebra_pct)
 ```
 
-O usuário vai informar o investimento total — perguntar se não estiver disponível na planilha.
+O investimento vem da Meta Ads API (passo 5 abaixo) — não precisa perguntar ao usuário.
 
 ---
 
-### Passo 5 — Extrair os dados por dimensão
+### Passo 5 — Buscar investimento na Meta Ads API
+
+Usar os scripts da skill `meta-ads-ratos` pra puxar o `spend` por conjunto e por criativo, no período do lançamento.
+
+**5.1 Identificar a conta do cliente**
+
+Consultar `.claude/skills/meta-ads-ratos/contas.yaml`:
+- Fernanda → `act_362367444` (e CAs adicionais: CA02, CA03, CA04, CA05)
+- Caio → `act_191737889662177`
+- Liso → `act_1375975899342771`
+
+**5.2 Puxar investimento por conjunto (adset)**
+
+```bash
+python3 .claude/skills/meta-ads-ratos/scripts/insights.py account \
+  --id act_XXXXXXX \
+  --fields "adset_name,spend" \
+  --level adset \
+  --time-range '{"since":"YYYY-MM-DD","until":"YYYY-MM-DD"}' \
+  --limit 100
+```
+
+O período `since`/`until` vem das datas do lançamento (extrair da planilha de leads — coluna `date_lead`).
+
+**5.3 Puxar investimento por criativo (ad)**
+
+```bash
+python3 .claude/skills/meta-ads-ratos/scripts/insights.py account \
+  --id act_XXXXXXX \
+  --fields "ad_name,spend" \
+  --level ad \
+  --time-range '{"since":"YYYY-MM-DD","until":"YYYY-MM-DD"}' \
+  --limit 200
+```
+
+**5.4 Fernanda — puxar todas as contas**
+
+Puxar nas 5 CAs (act_362367444, act_229270626843036, act_430349686083376, act_359524526975089, act_236026032915095) e somar o spend por conjunto/criativo.
+
+**5.5 Cruzar com os UTMs**
+
+- `utm_campaign` → match com `adset_name` da API (nome do conjunto)
+- `utm_content` → match com `ad_name` da API (nome do criativo)
+
+O match pode ser por substring ou similaridade — os nomes da Meta têm `+` no lugar de espaço nas UTMs. Normalizar antes de cruzar:
+
+```python
+def normalizar(s):
+    return s.lower().replace('+', ' ').replace('-', ' ').strip()
+```
+
+**5.6 Calcular investimento total**
+
+```python
+investimento_total = df_adsets['spend'].sum()  # total pago
+```
+
+---
+
+### Passo 6 — Extrair os dados por dimensão
 
 Todas as análises usam **apenas os compradores mapeados** e os **leads/investimento ajustados pela quebra**.
 
-**5.1 Posicionamento** — agrupar por `utm_source` (facebook, instagram, organico)
+**6.1 Posicionamento** — agrupar por `utm_source` (facebook, instagram, organico)
 - Leads aj., Compradores mapeados, Taxa de conversão
 
-**5.2 Temperatura** — agrupar por `utm_medium` (paid-cold = frio, social/organico = orgânico)
-- Leads aj., Compradores, Conversão, Investimento aj., Faturamento, ROAS, CPL
+**6.2 Temperatura** — agrupar por `utm_medium` (paid-cold = frio, social/organico = orgânico)
+- Leads aj., Compradores, Conversão, Investimento aj. (spend × (1 - quebra)), ROAS, CPL
 
-**5.3 Conjuntos de anúncios** — agrupar por `utm_campaign`
-- Mesmas colunas de temperatura
+**6.3 Conjuntos de anúncios** — agrupar por `utm_campaign`, cruzar com `adset_name` da Meta
+- Leads aj., Compradores, Conversão, Spend aj., ROAS, CPL
 - Ordenar por ROAS (maior pra menor)
 - Destacar top 3 e bottom 3
 
-**5.4 Criativos** — agrupar por `utm_content`
-- Mesmas colunas
+**6.4 Criativos** — agrupar por `utm_content`, cruzar com `ad_name` da Meta
+- Leads aj., Compradores, Conversão, Spend aj., ROAS, CPL
 - Ordenar por ROAS
 - Identificar o criativo dominante (mais compradores)
 - Verificar padrão no nome: tema, mês, versão
 
-**5.5 Países** — apenas Fernanda, agrupar por `utm_term` ou coluna de país se existir
+**6.5 Países** — apenas Fernanda, agrupar por `utm_term` ou coluna de país
 - Compradores, Conversão por país
 - Portugal separado dos demais
 
 ---
 
-### Passo 6 — Buscar histórico anterior
+### Passo 7 — Buscar histórico anterior
 
 Verificar `winvision/clientes/[cliente]/lancamentos/`. Se houver arquivo anterior, ler e comparar:
 - Faturamento líquido
