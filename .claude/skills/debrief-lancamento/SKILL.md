@@ -113,14 +113,22 @@ O investimento vem da Meta Ads API (passo 5 abaixo) — não precisa perguntar a
 
 Usar os scripts da skill `meta-ads-ratos` pra puxar o `spend` por conjunto e por criativo, no período do lançamento.
 
+**Mapeamento de UTMs:**
+- `utm_campaign` → **nome do conjunto de anúncios** (adset_name na Meta)
+- `utm_content` → **nome do criativo** (ad_name na Meta)
+
 **5.1 Identificar a conta do cliente**
 
 Consultar `.claude/skills/meta-ads-ratos/contas.yaml`:
-- Fernanda → `act_362367444` (e CAs adicionais: CA02, CA03, CA04, CA05)
+- Fernanda → `act_362367444` (CA1)
 - Caio → `act_191737889662177`
 - Liso → `act_1375975899342771`
 
-**5.2 Puxar investimento por conjunto (adset)**
+**5.2 Definir o período do lançamento**
+
+Extrair a data mínima e máxima da coluna `date_lead` na planilha de leads — esse é o período a consultar na Meta.
+
+**5.3 Puxar investimento por conjunto (adset)**
 
 ```bash
 python3 .claude/skills/meta-ads-ratos/scripts/insights.py account \
@@ -128,12 +136,10 @@ python3 .claude/skills/meta-ads-ratos/scripts/insights.py account \
   --fields "adset_name,spend" \
   --level adset \
   --time-range '{"since":"YYYY-MM-DD","until":"YYYY-MM-DD"}' \
-  --limit 100
+  --limit 200
 ```
 
-O período `since`/`until` vem das datas do lançamento (extrair da planilha de leads — coluna `date_lead`).
-
-**5.3 Puxar investimento por criativo (ad)**
+**5.4 Puxar investimento por criativo (ad)**
 
 ```bash
 python3 .claude/skills/meta-ads-ratos/scripts/insights.py account \
@@ -141,29 +147,27 @@ python3 .claude/skills/meta-ads-ratos/scripts/insights.py account \
   --fields "ad_name,spend" \
   --level ad \
   --time-range '{"since":"YYYY-MM-DD","until":"YYYY-MM-DD"}' \
-  --limit 200
+  --limit 500
 ```
-
-**5.4 Fernanda — puxar todas as contas**
-
-Puxar nas 5 CAs (act_362367444, act_229270626843036, act_430349686083376, act_359524526975089, act_236026032915095) e somar o spend por conjunto/criativo.
 
 **5.5 Cruzar com os UTMs**
 
-- `utm_campaign` → match com `adset_name` da API (nome do conjunto)
-- `utm_content` → match com `ad_name` da API (nome do criativo)
+- `utm_campaign` → match com `adset_name` da API
+- `utm_content` → match com `ad_name` da API
 
-O match pode ser por substring ou similaridade — os nomes da Meta têm `+` no lugar de espaço nas UTMs. Normalizar antes de cruzar:
+Os nomes nas UTMs têm `+` no lugar de espaço. Normalizar antes do match:
 
 ```python
 def normalizar(s):
+    if not isinstance(s, str):
+        return ''
     return s.lower().replace('+', ' ').replace('-', ' ').strip()
 ```
 
 **5.6 Calcular investimento total**
 
 ```python
-investimento_total = df_adsets['spend'].sum()  # total pago
+investimento_total = df_adsets['spend'].astype(float).sum()
 ```
 
 ---
