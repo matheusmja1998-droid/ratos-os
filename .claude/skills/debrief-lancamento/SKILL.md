@@ -15,28 +15,28 @@ description: >
 
 - `_contexto/empresa.md` — contexto dos clientes
 - `_contexto/preferencias.md` — tom de voz
-- Planilha do lançamento salva em `dados/`
+- Planilha de leads salva em `dados/`
+- Planilha de compradores salva em `dados/`
 - Histórico anterior: `winvision/clientes/[cliente]/lancamentos/` (se existir)
 
 ---
 
 ## Metodologia de análise (como funciona a quebra)
 
-O mapeamento de compradores é feito via PROCV cruzando e-mail de comprador com e-mail de lead. Alguns compradores compram com e-mail diferente do que se cadastraram — esses ficam sem origem mapeada. Isso é chamado de **quebra**.
+O mapeamento é feito cruzando e-mail do comprador com e-mail do lead (equivalente a um PROCV). Compradores que compraram com e-mail diferente do cadastro ficam sem origem — isso é a **quebra**.
 
 **Como a quebra afeta os números:**
 - Se 25% dos compradores não foram mapeados → quebra = 25%
-- Essa quebra é refletida proporcionalmente nos leads e no investimento
+- Essa quebra é aplicada proporcionalmente nos leads e no investimento
 - Todos os KPIs (ROAS, conversão, CPL) são calculados **sobre os números ajustados pela quebra**
-- A planilha já faz esse ajuste automaticamente nas colunas "Leads - X%" e "Valor investido - X%"
 
-**Regra de ouro:** nunca analisar ROAS ou conversão sobre o total bruto. Sempre sobre o mapeado (após quebra).
+**Regra de ouro:** nunca calcular ROAS ou conversão sobre o total bruto. Sempre sobre o mapeado (após quebra).
 
 ---
 
 ## Workflow
 
-### Passo 1 — Identificar cliente e planilha
+### Passo 1 — Identificar cliente e arquivos
 
 Se o usuário não especificou o cliente, perguntar:
 > "É o debrief de qual cliente? Caio, Liso (Kleber) ou Fernanda?"
@@ -46,73 +46,97 @@ Mapear pro slug da pasta:
 - Liso / Kleber → `liso-ideal`
 - Fernanda → `fernanda-serraglia`
 
-Verificar se existe planilha em `dados/`. Se houver mais de uma, perguntar qual usar.
+Verificar arquivos disponíveis em `dados/`. Identificar qual é a planilha de leads e qual é a de compradores (pelo nome do arquivo ou perguntar ao usuário).
 
 ---
 
-### Passo 2 — Ler a planilha com Python
-
-Usar `openpyxl` com `data_only=True` para ler os valores calculados (não as fórmulas).
+### Passo 2 — Ler os dois arquivos com Python
 
 ```python
 import openpyxl
-wb = openpyxl.load_workbook('dados/[arquivo].xlsx', read_only=True, data_only=True)
+
+wb_leads = openpyxl.load_workbook('dados/[arquivo_leads].xlsx', read_only=True, data_only=True)
+wb_comp = openpyxl.load_workbook('dados/[arquivo_compradores].xlsx', read_only=True, data_only=True)
 ```
 
-**Abas a ler:**
+**Estrutura esperada — Leads:**
+- Colunas: `email`, `telefone`, `date_lead`, `utm_source`, `utm_campaign`, `utm_medium`, `utm_content`, `utm_term`
 
-| Aba | O que contém |
-|-----|--------------|
-| `LEADS` | Todos os leads com UTMs (source, campaign, medium, content, term) |
-| `COMPRADORES` | Compradores com PROCV já feito puxando UTMs dos leads |
-| `Analise` | Tabelas calculadas com quebra aplicada: por posicionamento, temperatura, conjunto, criativo |
-| `RESULTADOS` | Consolidação final (pode ter fórmulas — preferir ler Analise) |
+**Estrutura esperada — Compradores:**
+- Coluna principal: `email` (ou equivalente)
+- Pode conter: valor da compra, data da compra
 
-**Lógica de leitura:**
-- Ler `Analise` com `data_only=True` — os valores já estão calculados com quebra
-- Identificar os blocos por cabeçalho: POSICIONAMENTO, TEMPERATURA, CONJUNTO, CRIATIVOS, PAÍSES (se existir)
-- Ignorar linhas vazias e colunas None
+Se as colunas tiverem nomes diferentes, identificar pelo conteúdo.
 
 ---
 
-### Passo 3 — Calcular a quebra
+### Passo 3 — Cruzar compradores com leads (PROCV)
 
-```
-Total compradores (aba COMPRADORES) = X
-Compradores mapeados (com UTM origem preenchida) = Y
-Quebra = (X - Y) / X × 100%
-```
+```python
+import pandas as pd
 
-A planilha já aplica a quebra nas colunas ajustadas. Confirmar qual percentual foi usado.
+df_leads = pd.read_excel('dados/[leads].xlsx')
+df_comp = pd.read_excel('dados/[compradores].xlsx')
+
+# Normalizar e-mails (lowercase, strip)
+df_leads['email'] = df_leads['email'].str.lower().str.strip()
+df_comp['email'] = df_comp['email'].str.lower().str.strip()
+
+# Cruzar
+df_merged = df_comp.merge(df_leads[['email','utm_source','utm_campaign','utm_medium','utm_content','utm_term']], 
+                           on='email', how='left')
+
+# Mapeados = compradores que tiveram match
+df_mapeados = df_merged[df_merged['utm_source'].notna()]
+df_nao_mapeados = df_merged[df_merged['utm_source'].isna()]
+```
 
 ---
 
-### Passo 4 — Extrair os dados por dimensão
+### Passo 4 — Calcular a quebra
 
-**4.1 Posicionamento (Facebook / Instagram / Orgânico)**
-- Leads, Leads ajustados, Compradores, Taxa de conversão
+```python
+total_compradores = len(df_comp)
+compradores_mapeados = len(df_mapeados)
+quebra_pct = (total_compradores - compradores_mapeados) / total_compradores
 
-**4.2 Temperatura (Frio / Orgânico)**
-- Leads, Leads ajustados, Compradores, Taxa de conversão, Investimento, Investimento ajustado, Faturamento, ROAS, CPL limite
+# Aplicar quebra nos leads e investimento
+leads_ajustados = total_leads * (1 - quebra_pct)
+investimento_ajustado = investimento_total * (1 - quebra_pct)
+```
 
-**4.3 Conjuntos de anúncios**
+O usuário vai informar o investimento total — perguntar se não estiver disponível na planilha.
+
+---
+
+### Passo 5 — Extrair os dados por dimensão
+
+Todas as análises usam **apenas os compradores mapeados** e os **leads/investimento ajustados pela quebra**.
+
+**5.1 Posicionamento** — agrupar por `utm_source` (facebook, instagram, organico)
+- Leads aj., Compradores mapeados, Taxa de conversão
+
+**5.2 Temperatura** — agrupar por `utm_medium` (paid-cold = frio, social/organico = orgânico)
+- Leads aj., Compradores, Conversão, Investimento aj., Faturamento, ROAS, CPL
+
+**5.3 Conjuntos de anúncios** — agrupar por `utm_campaign`
 - Mesmas colunas de temperatura
 - Ordenar por ROAS (maior pra menor)
 - Destacar top 3 e bottom 3
 
-**4.4 Criativos**
+**5.4 Criativos** — agrupar por `utm_content`
 - Mesmas colunas
 - Ordenar por ROAS
-- Identificar o criativo dominante (mais leads ou mais compradores)
-- Verificar padrão no nome do criativo (tema, mês, versão)
+- Identificar o criativo dominante (mais compradores)
+- Verificar padrão no nome: tema, mês, versão
 
-**4.5 Países (apenas Fernanda)**
-- Se existir bloco de países na planilha, extrair conversão por país
-- Portugal geralmente é separado dos demais
+**5.5 Países** — apenas Fernanda, agrupar por `utm_term` ou coluna de país se existir
+- Compradores, Conversão por país
+- Portugal separado dos demais
 
 ---
 
-### Passo 5 — Buscar histórico anterior
+### Passo 6 — Buscar histórico anterior
 
 Verificar `winvision/clientes/[cliente]/lancamentos/`. Se houver arquivo anterior, ler e comparar:
 - Faturamento líquido
@@ -124,7 +148,7 @@ Verificar `winvision/clientes/[cliente]/lancamentos/`. Se houver arquivo anterio
 
 ---
 
-### Passo 6 — Gerar os 3 outputs
+### Passo 7 — Gerar os 3 outputs
 
 #### Output 1 — Resumo executivo (uso interno)
 
@@ -195,7 +219,7 @@ Verificar `winvision/clientes/[cliente]/lancamentos/`. Se houver arquivo anterio
 [comparativo se houver histórico]
 ```
 
-#### Output 2 — Diagnóstico de criativos
+#### Output 2 — Diagnóstico completo de criativos
 
 Lista completa dos criativos com ROAS, compradores e conversão, ordenados do melhor pro pior. Identificar padrões: qual tema performa, qual versão ganhou, qual mês de criativo dominou.
 
