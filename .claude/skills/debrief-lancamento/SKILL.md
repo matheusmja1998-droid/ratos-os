@@ -309,14 +309,36 @@ Tom mais leve. Destacar positivo primeiro. Apresentar gaps como "oportunidades".
 
 ---
 
-### Passo 7 — Salvar o histórico
+### Passo 8 — Salvar tudo na pasta do cliente
+
+**8.1 Salvar o debrief**
 
 Salvar o Output 1 em:
 ```
 winvision/clientes/[cliente]/lancamentos/[YYYY-MM]_[tema].md
 ```
 
-Confirmar o nome do arquivo com o usuário antes de salvar.
+**8.2 Mover as planilhas pra pasta do cliente**
+
+Mover os arquivos de `dados/` pra:
+```
+winvision/clientes/[cliente]/lancamentos/[YYYY-MM]_[tema]/
+```
+
+Criar a subpasta com o mesmo nome do debrief. Mover todos os arquivos usados:
+- planilha de leads
+- planilha de compradores
+- planilha de países (se existir)
+
+```bash
+mkdir -p "winvision/clientes/[cliente]/lancamentos/[YYYY-MM]_[tema]"
+mv "dados/[arquivo_leads].xlsx" "winvision/clientes/[cliente]/lancamentos/[YYYY-MM]_[tema]/"
+mv "dados/[arquivo_compradores].xlsx" "winvision/clientes/[cliente]/lancamentos/[YYYY-MM]_[tema]/"
+# se tiver planilha de países:
+mv "dados/[arquivo_paises].xlsx" "winvision/clientes/[cliente]/lancamentos/[YYYY-MM]_[tema]/"
+```
+
+Confirmar o nome da pasta com o usuário antes de executar.
 
 ---
 
