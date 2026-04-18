@@ -114,8 +114,11 @@ O investimento vem da Meta Ads API (passo 5 abaixo) — não precisa perguntar a
 Usar os scripts da skill `meta-ads-ratos` pra puxar o `spend` por conjunto e por criativo, no período do lançamento.
 
 **Mapeamento de UTMs:**
-- `utm_campaign` → **nome do conjunto de anúncios** (adset_name na Meta)
+- `utm_source` → temperatura (paid-cold = frio, organico = orgânico)
+- `utm_campaign` → placement (Facebook_Mobile_Feed, Instagram_Feed...) — não usar pra análise de conjuntos
+- `utm_medium` → **nome do conjunto de anúncios** (adset_name na Meta)
 - `utm_content` → **nome do criativo** (ad_name na Meta)
+- `utm_term` → país (apenas Fernanda)
 
 **5.1 Identificar a conta do cliente**
 
@@ -152,8 +155,8 @@ python3 .claude/skills/meta-ads-ratos/scripts/insights.py account \
 
 **5.5 Cruzar com os UTMs**
 
-- `utm_campaign` → match com `adset_name` da API
-- `utm_content` → match com `ad_name` da API
+- `utm_medium` → match com `adset_name` da API (nome do conjunto)
+- `utm_content` → match com `ad_name` da API (nome do criativo)
 
 Os nomes nas UTMs têm `+` no lugar de espaço. Normalizar antes do match:
 
