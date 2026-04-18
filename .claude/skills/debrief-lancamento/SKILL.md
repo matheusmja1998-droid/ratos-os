@@ -115,10 +115,10 @@ Usar os scripts da skill `meta-ads-ratos` pra puxar o `spend` por conjunto e por
 
 **Mapeamento de UTMs:**
 - `utm_source` → temperatura (paid-cold = frio, organico = orgânico)
-- `utm_campaign` → placement (Facebook_Mobile_Feed, Instagram_Feed...) — não usar pra análise de conjuntos
+- `utm_campaign` → placement (Facebook_Mobile_Feed, Instagram_Feed...) — não usar pra análise
 - `utm_medium` → **nome do conjunto de anúncios** (adset_name na Meta)
 - `utm_content` → **nome do criativo** (ad_name na Meta)
-- `utm_term` → país (apenas Fernanda)
+- `utm_term` → **nome da campanha** (campaign_name na Meta)
 
 **5.1 Identificar a conta do cliente**
 
