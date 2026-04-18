@@ -1,22 +1,24 @@
 ---
 name: debrief-lancamento
 description: >
-  Faz o debriefing completo de um lançamento da WinVision (Caio, Liso ou Fernanda).
-  Recebe a planilha do lançamento (salva em dados/), lê todas as abas, calcula a quebra
-  de mapeamento, e gera análise completa por posicionamento, temperatura, conjuntos,
-  criativos e países (Fernanda). Salva o histórico na pasta do cliente.
-  Use quando o usuário disser "faz o debrief do lançamento", "analisa o lançamento",
-  "acabou o lançamento do X", "quero entender o que aconteceu".
+  Faz o debriefing completo de um lançamento de qualquer cliente da WinVision.
+  Recebe planilha de leads e de compradores (salvas em dados/), cruza os dados,
+  calcula a quebra de mapeamento, busca investimento na Meta Ads API, e gera análise
+  completa por posicionamento, temperatura, conjuntos e criativos. Salva o histórico
+  na pasta do cliente. Use quando o usuário disser "faz o debrief do lançamento",
+  "analisa o lançamento", "acabou o lançamento do X", "quero entender o que aconteceu".
 ---
 
 # /debrief-lancamento — Debriefing de Lançamento
 
 ## Dependências
 
-- `_contexto/empresa.md` — contexto dos clientes
+- `_contexto/empresa.md` — lista de clientes e contexto
 - `_contexto/preferencias.md` — tom de voz
+- `.claude/skills/meta-ads-ratos/contas.yaml` — contas Meta por cliente
 - Planilha de leads salva em `dados/`
 - Planilha de compradores salva em `dados/`
+- Planilha de países salva em `dados/` (apenas clientes com segmentação geográfica, ex: Fernanda)
 - Histórico anterior: `winvision/clientes/[cliente]/lancamentos/` (se existir)
 
 ---
@@ -38,15 +40,18 @@ O mapeamento é feito cruzando e-mail do comprador com e-mail do lead (equivalen
 
 ### Passo 1 — Identificar cliente e arquivos
 
-Se o usuário não especificou o cliente, perguntar:
-> "É o debrief de qual cliente? Caio, Liso (Kleber) ou Fernanda?"
+Se o usuário não especificou o cliente, perguntar qual cliente da WinVision. Ler `_contexto/empresa.md` pra listar os clientes ativos se necessário.
 
-Mapear pro slug da pasta:
-- Caio → `prof-caio-pickcius`
+Mapear o nome do cliente pro slug da pasta em `winvision/clientes/`:
+- Caio / Mecânico Expert → `prof-caio-pickcius`
 - Liso / Kleber → `liso-ideal`
-- Fernanda → `fernanda-serraglia`
+- Fernanda / Vem Doleta → `fernanda-serraglia`
+- EV Cosméticos → `ev-cosmeticos`
+- Novos clientes: usar slug no formato `nome-sobrenome` ou `nome-produto`
 
-Verificar arquivos disponíveis em `dados/`. Identificar qual é a planilha de leads e qual é a de compradores (pelo nome do arquivo ou perguntar ao usuário).
+Verificar arquivos em `dados/`. Identificar leads e compradores pelo nome do arquivo ou perguntar ao usuário.
+
+Se for Fernanda (ou outro cliente com segmentação geográfica), verificar se tem planilha de países em `dados/` também.
 
 ---
 
@@ -196,11 +201,11 @@ Todas as análises usam **apenas os compradores mapeados** e os **leads/investim
 - Identificar o criativo dominante (mais compradores)
 - Verificar padrão no nome: tema, mês, versão
 
-**6.5 Países** — apenas Fernanda
-- Fernanda envia uma planilha separada com `email` e `país`
-- Cruzar essa planilha com a de compradores por e-mail (equivalente ao PROCV)
+**6.5 Países** — quando o cliente tiver segmentação geográfica (ex: Fernanda)
+- O cliente envia uma planilha separada com `email` e `país`
+- Cruzar essa planilha com a de compradores por e-mail
 - Agrupar compradores mapeados por país
-- Compradores, Conversão por país — Portugal separado dos demais
+- Compradores, Conversão por país
 
 ```python
 df_paises = pd.read_excel('dados/[arquivo_paises_fernanda].xlsx')
