@@ -2,11 +2,11 @@
 name: debrief-lancamento
 description: >
   Faz o debriefing completo de um lançamento da WinVision (Caio, Liso ou Fernanda).
-  Coleta os dados do lançamento, analisa o funil, identifica o que funcionou e o que falhou,
-  e gera 3 entregas: resumo interno, diagnóstico por etapa do funil, e rascunho pro cliente.
-  Salva o histórico na pasta do cliente.
-  Use quando o usuário disser "faz o debrief do lançamento", "vamos analisar o lançamento",
-  "acabou o lançamento do X", "quero entender o que aconteceu no lançamento".
+  Recebe a planilha do lançamento (salva em dados/), lê todas as abas, calcula a quebra
+  de mapeamento, e gera análise completa por posicionamento, temperatura, conjuntos,
+  criativos e países (Fernanda). Salva o histórico na pasta do cliente.
+  Use quando o usuário disser "faz o debrief do lançamento", "analisa o lançamento",
+  "acabou o lançamento do X", "quero entender o que aconteceu".
 ---
 
 # /debrief-lancamento — Debriefing de Lançamento
@@ -15,16 +15,30 @@ description: >
 
 - `_contexto/empresa.md` — contexto dos clientes
 - `_contexto/preferencias.md` — tom de voz
+- Planilha do lançamento salva em `dados/`
 - Histórico anterior: `winvision/clientes/[cliente]/lancamentos/` (se existir)
+
+---
+
+## Metodologia de análise (como funciona a quebra)
+
+O mapeamento de compradores é feito via PROCV cruzando e-mail de comprador com e-mail de lead. Alguns compradores compram com e-mail diferente do que se cadastraram — esses ficam sem origem mapeada. Isso é chamado de **quebra**.
+
+**Como a quebra afeta os números:**
+- Se 25% dos compradores não foram mapeados → quebra = 25%
+- Essa quebra é refletida proporcionalmente nos leads e no investimento
+- Todos os KPIs (ROAS, conversão, CPL) são calculados **sobre os números ajustados pela quebra**
+- A planilha já faz esse ajuste automaticamente nas colunas "Leads - X%" e "Valor investido - X%"
+
+**Regra de ouro:** nunca analisar ROAS ou conversão sobre o total bruto. Sempre sobre o mapeado (após quebra).
 
 ---
 
 ## Workflow
 
-### Passo 1 — Identificar o cliente
+### Passo 1 — Identificar cliente e planilha
 
-Se o usuário não especificou, perguntar:
-
+Se o usuário não especificou o cliente, perguntar:
 > "É o debrief de qual cliente? Caio, Liso (Kleber) ou Fernanda?"
 
 Mapear pro slug da pasta:
@@ -32,96 +46,144 @@ Mapear pro slug da pasta:
 - Liso / Kleber → `liso-ideal`
 - Fernanda → `fernanda-serraglia`
 
+Verificar se existe planilha em `dados/`. Se houver mais de uma, perguntar qual usar.
+
 ---
 
-### Passo 2 — Coletar os dados
+### Passo 2 — Ler a planilha com Python
 
-Pedir os números do lançamento. Se o usuário já colou os dados ou anexou um arquivo, usar direto sem perguntar.
+Usar `openpyxl` com `data_only=True` para ler os valores calculados (não as fórmulas).
 
-Campos a coletar (pedir todos de uma vez, não um por um):
-
-```
-- Nome/tema do lançamento:
-- Data de início e fim:
-- Tipo: (PL, perpétuo, SL, outro)
-- Faturamento bruto:
-- Faturamento líquido (após reembolsos):
-- Nº de vendas:
-- Ticket médio:
-- % de reembolso:
-- Leads captados:
-- CPL (custo por lead):
-- Investimento total em tráfego:
-- ROAS:
-- Taxa de conversão leads → vendas:
-- Canais de tráfego usados:
-- Observações livres (o que aconteceu, o que foi diferente):
+```python
+import openpyxl
+wb = openpyxl.load_workbook('dados/[arquivo].xlsx', read_only=True, data_only=True)
 ```
 
-Se algum campo não tiver disponível, continuar assim mesmo — indicar como "não informado" na análise.
+**Abas a ler:**
+
+| Aba | O que contém |
+|-----|--------------|
+| `LEADS` | Todos os leads com UTMs (source, campaign, medium, content, term) |
+| `COMPRADORES` | Compradores com PROCV já feito puxando UTMs dos leads |
+| `Analise` | Tabelas calculadas com quebra aplicada: por posicionamento, temperatura, conjunto, criativo |
+| `RESULTADOS` | Consolidação final (pode ter fórmulas — preferir ler Analise) |
+
+**Lógica de leitura:**
+- Ler `Analise` com `data_only=True` — os valores já estão calculados com quebra
+- Identificar os blocos por cabeçalho: POSICIONAMENTO, TEMPERATURA, CONJUNTO, CRIATIVOS, PAÍSES (se existir)
+- Ignorar linhas vazias e colunas None
 
 ---
 
-### Passo 3 — Buscar histórico anterior
+### Passo 3 — Calcular a quebra
 
-Verificar se existe algum arquivo em `winvision/clientes/[cliente]/lancamentos/`. Se existir, ler o mais recente pra comparar resultados.
+```
+Total compradores (aba COMPRADORES) = X
+Compradores mapeados (com UTM origem preenchida) = Y
+Quebra = (X - Y) / X × 100%
+```
 
----
-
-### Passo 4 — Analisar
-
-#### 4.1 Panorama geral
-- O lançamento bateu a meta? (se não tiver meta explícita, perguntar ou estimar pelo histórico)
-- ROAS saudável? (referência: acima de 3x é bom pra info, abaixo de 2x é preocupante)
-- CPL dentro do esperado?
-- Reembolso alto? (acima de 10% merece atenção)
-
-#### 4.2 Diagnóstico por etapa do funil
-
-Para cada etapa, avaliar o que funcionou e o que freou:
-
-| Etapa | O que medir | Pergunta-chave |
-|-------|-------------|----------------|
-| **Tráfego** | CPL, alcance, CTR | O tráfego chegou barato e qualificado? |
-| **Captação** | Leads, taxa de opt-in | A página capturou bem? |
-| **Aquecimento** | Engajamento, presença, abertura de e-mails | As pessoas chegaram quentes pro carrinho? |
-| **Carrinho** | Conversão, velocidade de vendas | Quanto veio nas primeiras horas? Quanto veio na virada? |
-| **Retenção** | % reembolso, LTV inicial | A promessa foi cumprida? |
-
-#### 4.3 O que ficou na mesa
-- Oportunidades não aproveitadas (upsell, extensão de carrinho, remarketing, etc.)
-- Gargalos que custaram vendas
-- O que teria mudado o resultado com pouca mudança (alavancas fáceis)
-
-#### 4.4 Comparação com lançamento anterior (se houver histórico)
-- Faturamento: cresceu ou caiu?
-- CPL: melhorou ou piorou?
-- Conversão: evoluiu?
-- O que mudou entre os dois lançamentos?
+A planilha já aplica a quebra nas colunas ajustadas. Confirmar qual percentual foi usado.
 
 ---
 
-### Passo 5 — Gerar os 3 outputs
+### Passo 4 — Extrair os dados por dimensão
+
+**4.1 Posicionamento (Facebook / Instagram / Orgânico)**
+- Leads, Leads ajustados, Compradores, Taxa de conversão
+
+**4.2 Temperatura (Frio / Orgânico)**
+- Leads, Leads ajustados, Compradores, Taxa de conversão, Investimento, Investimento ajustado, Faturamento, ROAS, CPL limite
+
+**4.3 Conjuntos de anúncios**
+- Mesmas colunas de temperatura
+- Ordenar por ROAS (maior pra menor)
+- Destacar top 3 e bottom 3
+
+**4.4 Criativos**
+- Mesmas colunas
+- Ordenar por ROAS
+- Identificar o criativo dominante (mais leads ou mais compradores)
+- Verificar padrão no nome do criativo (tema, mês, versão)
+
+**4.5 Países (apenas Fernanda)**
+- Se existir bloco de países na planilha, extrair conversão por país
+- Portugal geralmente é separado dos demais
+
+---
+
+### Passo 5 — Buscar histórico anterior
+
+Verificar `winvision/clientes/[cliente]/lancamentos/`. Se houver arquivo anterior, ler e comparar:
+- Faturamento líquido
+- ROAS geral
+- CPL
+- Taxa de conversão geral
+- Criativo dominante
+- Quebra de mapeamento
+
+---
+
+### Passo 6 — Gerar os 3 outputs
 
 #### Output 1 — Resumo executivo (uso interno)
 
 ```markdown
 # Debrief — [Nome do Lançamento] | [Cliente]
-*[Data]*
+*[Mês/Ano]*
 
-## O que aconteceu
-[2-3 parágrafos com o panorama geral do lançamento]
+## Panorama geral
+[2-3 parágrafos: o que aconteceu, qual foi o resultado, contexto geral]
+
+## Quebra de mapeamento
+- Compradores totais: X
+- Compradores mapeados: Y
+- Quebra: Z% — [breve comentário se foi alta ou dentro do normal]
+
+## Números-chave (sobre mapeado)
+| Métrica | Valor |
+|---------|-------|
+| Faturamento | |
+| Investimento tráfego | |
+| ROAS | |
+| Leads totais | |
+| Leads ajustados | |
+| Compradores mapeados | |
+| Taxa de conversão | |
+| CPL médio | |
+
+## Por posicionamento
+| Plataforma | Leads aj. | Compradores | Conversão |
+|------------|-----------|-------------|-----------|
+| Facebook | | | |
+| Instagram | | | |
+| Orgânico | | | |
+
+## Por temperatura
+| Temperatura | Leads aj. | Compradores | Conversão | Invest. aj. | ROAS |
+|-------------|-----------|-------------|-----------|-------------|------|
+| Frio | | | | | |
+| Orgânico | | | | | |
+
+## Top criativos (por ROAS)
+1. [nome] — ROAS X, Y compradores
+2. [nome] — ROAS X, Y compradores
+3. [nome] — ROAS X, Y compradores
+
+## Criativos abaixo do esperado
+- [nome] — ROAS X, Y compradores
+
+## [Países — apenas Fernanda]
+| País | Compradores | Conversão |
+|------|-------------|-----------|
 
 ## O que funcionou
-- [item com contexto]
 - [item com contexto]
 
 ## O que freou
 - [item com contexto]
-- [item com contexto]
 
 ## O que ficou na mesa
-- [oportunidade não aproveitada]
 - [oportunidade não aproveitada]
 
 ## 3 próximos passos
@@ -129,50 +191,37 @@ Para cada etapa, avaliar o que funcionou e o que freou:
 2. [ação concreta pro próximo lançamento]
 3. [ação concreta pro próximo lançamento]
 
-## Números-chave
-| Métrica | Valor |
-|---------|-------|
-| Faturamento bruto | |
-| Faturamento líquido | |
-| Nº de vendas | |
-| Ticket médio | |
-| Reembolso | |
-| Leads | |
-| CPL | |
-| Investimento tráfego | |
-| ROAS | |
-| Conversão leads→vendas | |
+## vs. Lançamento anterior
+[comparativo se houver histórico]
 ```
 
-#### Output 2 — Diagnóstico de funil
+#### Output 2 — Diagnóstico de criativos
 
-Tabela + comentário por etapa (tráfego, captação, aquecimento, carrinho, retenção). Linguagem técnica, pra uso interno.
+Lista completa dos criativos com ROAS, compradores e conversão, ordenados do melhor pro pior. Identificar padrões: qual tema performa, qual versão ganhou, qual mês de criativo dominou.
 
 #### Output 3 — Rascunho pro cliente
 
-Tom mais leve. Destacar o que foi positivo primeiro, depois o que vai melhorar. Sem expor gaps internos ou críticas diretas — apresentar como "oportunidades pro próximo lançamento". Sem dados que possam gerar desconforto se compartilhados diretamente.
+Tom mais leve. Destacar positivo primeiro. Apresentar gaps como "oportunidades". Sem expor números internos que possam gerar desconforto. Sem mencionar quebra de mapeamento diretamente.
 
 ---
 
-### Passo 6 — Salvar o histórico
+### Passo 7 — Salvar o histórico
 
-Salvar o Output 1 (resumo executivo completo com todos os números) em:
-
+Salvar o Output 1 em:
 ```
-winvision/clientes/[cliente]/lancamentos/[YYYY-MM]_[tema-do-lancamento].md
+winvision/clientes/[cliente]/lancamentos/[YYYY-MM]_[tema].md
 ```
 
-Exemplo: `winvision/clientes/prof-caio-pickcius/lancamentos/2026-04_lancamento-mecanico-expert.md`
-
-Confirmar com o usuário o nome do arquivo antes de salvar.
+Confirmar o nome do arquivo com o usuário antes de salvar.
 
 ---
 
 ## Regras
 
-- Nunca inventar dados — se não tiver o número, dizer "não informado"
-- Output 3 (pro cliente) nunca deve expor críticas diretas, só oportunidades
-- Fernanda: seguir compliance de linguagem (`_contexto/preferencias.md` e memória de compliance)
-- Análise sempre em prosa + tabela — não só bullet points
+- Sempre usar `data_only=True` no openpyxl — as fórmulas na planilha não são lidas, apenas os valores calculados
+- Nunca calcular ROAS ou conversão sobre total bruto — sempre sobre o mapeado (após quebra)
+- Fernanda: sempre incluir análise por países e seguir compliance de linguagem (não usar "ensinar a investir", "ajudar a investir" — só "mostrar caminhos")
+- Output 3 nunca expõe quebra de mapeamento nem críticas diretas
+- Análise sempre em prosa + tabelas — não só listas
 - Tom conforme `_contexto/preferencias.md`
-- Perguntar todos os dados de uma vez, não em sequência um a um
+- Se `openpyxl` não estiver instalado: `pip3 install openpyxl --break-system-packages`
