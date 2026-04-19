@@ -13,4 +13,4 @@ Aprendizados e insights coletados de podcasts, vídeos, conteúdos e conversas s
 
 | Fonte | Tipo | Data | Arquivo |
 |-------|------|------|---------|
-|       |      |      |         |
+| Energizei Cast #109 — Tendências e Oportunidades 2026 (Mário Viana / Soul Energy) | Podcast | Abr/2026 | insights.md |
