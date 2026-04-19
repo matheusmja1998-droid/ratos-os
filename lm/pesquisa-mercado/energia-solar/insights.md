@@ -78,3 +78,98 @@
 - **Custo de disponibilidade** — valor mínimo pago à concessionária mesmo sem consumo
 - **Retrofit** — adicionar bateria/armazenamento em instalação solar que já existe
 - **Curtailment** — desligar geração quando há excesso de oferta na rede
+
+---
+
+## Energizei Cast #081 — Sistemas Híbridos com Armazenamento: A Grande Bola da Vez
+**Fonte:** Podcast | **Convidado:** Mário Viana (Dir. Comercial e Marketing, Soul Energy)
+
+---
+
+### Os 3 tipos de sistema — definição clara
+
+- **Off-grid:** desconectado da rede. Ideal pra onde não chega energia. Se falhar, zero energia
+- **On-grid:** conectado à rede, mas depende dela para funcionar. Se faltar energia, para
+- **Híbrido:** une os dois. Funciona com ou sem rede. É o mais completo
+
+### On-grid vende economia. Híbrido vende autonomia.
+
+Essa é a mudança de mental mais importante. O integrador acostumado com on-grid fica tentando calcular payback e economia — o cliente de híbrido não quer isso. Ele quer liberdade, conforto, status.
+
+- On-grid → cliente quer economizar
+- Off-grid → cliente não tem acesso à rede
+- Híbrido → cliente não pode ou não quer ficar sem energia
+
+### 80% das integradoras ainda não trabalham com híbrido (dado Green Research)
+
+Oceano azul real. Quem se preparar agora tem vantagem competitiva antes da corrida virar commodity.
+
+### Analogia da caixa d'água — como explicar pro cliente leigo
+
+Armazenamento de energia = caixa d'água:
+- Quanto mais tempo de reserva quiser → maior a caixa → mais caro
+- Não adianta ter armazenamento de 5h se falta energia por no máximo 1h na sua região
+- A cisterna é o equivalente à bateria
+
+### O que cabe em 5 kW de inversor + 5 kW de bateria por 1 hora
+
+Roteador + sistema de som + TV 65" + TV 59" + freezer + geladeira + videogame + 2 ventiladores — tudo por 1h.
+Resolve 95% da demanda residencial. É menor fisicamente do que uma TV de 65".
+
+### Cargas essenciais (o que priorizar no dimensionamento)
+
+1. Roteador (internet = ar para as pessoas)
+2. Iluminação
+3. Sistema de segurança (câmeras, alarme)
+4. TV, geladeira, gelágua, freezer
+5. Tomadas (carregar celular, notebook)
+6. Videogame (criança sem energia = caos)
+
+Ar-condicionado geralmente fica fora das cargas essenciais — consome muito para o ganho.
+
+### Não meça o bolso do cliente pelo seu próprio bolso
+
+- Geladeira de R$150k existe. Adega de R$500k existe. Sistema de som de R$300k existe
+- Para esse cliente, R$50k em proteção e autonomia é barato
+- O vendedor que mede o bolso do cliente pelo próprio erra sempre
+
+### Gatilho da inveja em condomínios
+
+Prédio apaga. Um apartamento continua com luz, som, TV ligada.
+Os vizinhos ligam querendo saber quem instalou.
+Uma venda num edifício pode gerar cascata de oportunidades.
+
+### Venda consultiva: leve as duas soluções
+
+Quando visitar um cliente que pediu on-grid, mas você sabe que ele tem dor de falta de energia:
+1. Apresenta o on-grid que ele pediu
+2. Apresenta também o híbrido com armazenamento
+3. Isso demonstra mais capacidade técnica, gera autoridade, abre espaço para ticket maior
+
+O médico não pergunta o remédio que o paciente quer — ele ouve a dor e prescreve.
+
+### "Híbrido na veia" — campanha da Soul Energy
+
+Instalar o sistema de demonstração no escritório do próprio integrador:
+1. Ele aprende instalando
+2. Vira showroom para levar clientes
+3. Demonstração ao vivo: corta o disjuntor geral → tudo continua ligado → cliente quer na hora
+4. Equivalente ao test drive de concessionária
+
+### Retrofit em quem já tem on-grid
+
+- Quem tem on-grid instalado corretamente pode adicionar inversor híbrido + bateria sem grande custo
+- Microinversor: pode colocar o sistema híbrido como microrrede — o on-grid continua gerando durante o dia mesmo com a rede fora
+- É o cliente mais fácil: já acredita, já tem payback do on-grid, tem sobra de caixa da economia
+
+### Dimensionamento exige participação do cliente (e o cliente é leigo)
+
+- O integrador precisa educar antes de dimensionar
+- Perguntas chave: quais equipamentos quer manter ligados? Por quanto tempo falta energia normalmente?
+- "Quero que tudo funcione" = resposta de quem não entende. Precisa afunilar
+
+### Glossário complementar
+
+- **Microrrede:** on-grid alimentado pela bateria do híbrido durante falta de energia — o painel continua gerando
+- **Kit apagão:** inversor + bateria sem painel, para apartamento
+- **Showroom / test drive:** sistema instalado no escritório do integrador para demonstração ao vivo
