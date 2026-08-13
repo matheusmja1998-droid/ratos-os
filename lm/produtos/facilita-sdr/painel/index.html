@@ -58,8 +58,14 @@
   .lead-card:hover { border-color:var(--verde); }
   .lead-card.arrastando { opacity:.4; }
   /* tarefa vencida: o card inteiro fica vermelho pra saltar aos olhos no Kanban */
-  .lead-card.atrasado { border-color:#e57373; background:#fff5f5; box-shadow:inset 3px 0 0 #d93025; }
+  /* tarefa vencida: o CARD INTEIRO fica avermelhado, não só a linha da tarefa */
+  .lead-card.atrasado { border-color:#e08a8a; background:#fdeaea; box-shadow:inset 4px 0 0 #d93025; }
+  .lead-card.atrasado .nome { color:#a3241c; }
+  .lead-card.atrasado .sub { color:#9a6a66; }
+  .lead-card.atrasado:hover { background:#fbdede; }
   #btn-atrasadas.on { background:#d93025; color:#fff; border-color:#d93025; }
+  /* aviso quando um filtro não devolve nada (senão a tela fica vazia sem explicação) */
+  .kanban-vazio { padding:26px 20px; text-align:center; color:var(--muted); font-size:13.5px; }
 
   /* ---- personalizador de funil (estilo Kommo, na identidade verde da casa) ---- */
   @keyframes pf-in { from { opacity:0; transform:translateY(14px) scale(.97); } to { opacity:1; transform:none; } }
@@ -724,6 +730,15 @@ function toggleAtrasadas() {
   $("#btn-atrasadas")?.classList.toggle("on", soAtrasadas);
   carregarKanban();
 }
+function limparFiltros() {
+  soAtrasadas = false; filtroIA = "todos";
+  $("#btn-atrasadas")?.classList.remove("on");
+  document.querySelectorAll(".filtro-ia").forEach((b) => b.classList.toggle("on", b.dataset.filtro === "todos"));
+  if ($("#busca-pipe")) $("#busca-pipe").value = "";
+  if ($("#filtro-nicho")) $("#filtro-nicho").value = "";
+  if ($("#filtro-tag")) $("#filtro-tag").value = "";
+  carregarKanban();
+}
 async function carregarKanban() {
   if (!pipelineAtual) return;
   const qs = new URLSearchParams();
@@ -773,7 +788,19 @@ function renderKanban() {
       <div class="coluna-body">` +
       doStatus.slice(0, 60).map((l) => cardLead(l)).join("") + "</div></div>";
   }).join("");
-  $("#kanban").innerHTML = html;
+  // filtro que não achou nada: explica em vez de deixar a tela vazia
+  if (!totalVis && (soAtrasadas || busca || $("#filtro-nicho")?.value || $("#filtro-tag")?.value || filtroIA !== "todos")) {
+    const proximas = (kanbanDados.colunas.flatMap((c) => c.leads).filter((l) => l.tarefa?.quando).length);
+    $("#kanban").innerHTML = `<div class="kanban-vazio">
+      ${soAtrasadas
+        ? `🎉 <b>Nenhuma tarefa atrasada nesse funil.</b><br>
+           <span style="font-size:12.5px">${proximas ? `Você tem ${proximas} tarefa(s) com data marcada, mas nenhuma venceu ainda.` : "Nenhuma tarefa com data marcada por aqui."}</span><br>
+           <button class="btn mini sec" style="margin-top:10px" onclick="toggleAtrasadas()">ver todos os leads</button>`
+        : `Nenhum lead com esses filtros.<br><button class="btn mini sec" style="margin-top:10px" onclick="limparFiltros()">limpar filtros</button>`}
+    </div>`;
+  } else {
+    $("#kanban").innerHTML = html;
+  }
   if ($("#busca-pipe-contador")) $("#busca-pipe-contador").textContent = busca ? `${totalVis} encontrado(s)` : "";
   if ($("#pipe-total")) $("#pipe-total").textContent = `${totalVis} leads`;
   if ($("#pipe-valor")) $("#pipe-valor").textContent = money(valorVis);
@@ -796,9 +823,13 @@ function cardLead(l) {
         📞 <b>decisor:</b> ${l.telefone_decisor}
         <a href="https://wa.me/${l.telefone_decisor}" target="_blank" onclick="event.stopPropagation()" style="color:var(--verde); font-weight:600; margin-left:4px">WhatsApp ↗</a>
         <a href="tel:+${l.telefone_decisor}" onclick="event.stopPropagation()" style="color:#2563eb; font-weight:600; margin-left:4px">ligar ↗</a></div>` : ""}
-      ${l.tarefa ? `<div style="margin-top:6px; padding:5px 8px; background:${atrasada ? "#fdecec" : "#fff8e1"}; border:1px solid ${atrasada ? "#e88" : "#e8b93a"}; border-radius:6px; font-size:11.5px; color:${atrasada ? "#b3261e" : "#a8641e"}">
-        ${atrasada ? "🔴" : "📌"} <b>${l.tarefa.tipo === "reuniao" ? "reunião" : l.tarefa.tipo === "ligacao" ? "ligar" : "tarefa"}:</b> ${l.tarefa.texto}${l.tarefa.quando ? " · " + l.tarefa.quando : ""}${l.tarefa.hora ? " " + l.tarefa.hora : ""}
-        ${atrasada ? " <b>(atrasada)</b>" : ""}</div>` : ""}
+      ${l.tarefa ? (() => {
+        const ehHoje = l.tarefa.quando === hojeISO();
+        const quando = l.tarefa.quando ? (ehHoje ? "hoje" : l.tarefa.quando.split("-").reverse().slice(0, 2).join("/")) : "";
+        return `<div style="margin-top:6px; padding:5px 8px; background:${atrasada ? "#fbdada" : ehHoje ? "#fff3d6" : "#fff8e1"}; border:1px solid ${atrasada ? "#e08a8a" : "#e8b93a"}; border-radius:6px; font-size:11.5px; color:${atrasada ? "#a3241c" : "#a8641e"}">
+          ${atrasada ? "🔴" : ehHoje ? "⏰" : "📌"} <b>${l.tarefa.tipo === "reuniao" ? "reunião" : l.tarefa.tipo === "ligacao" ? "ligar" : "tarefa"}:</b> ${l.tarefa.texto}${quando ? " · " + quando : ""}${l.tarefa.hora ? " " + l.tarefa.hora : ""}
+          ${atrasada ? " <b>(atrasada)</b>" : ""}</div>`;
+      })() : ""}
       ${previewMsg(l)}
       <div style="margin-top:5px; display:flex; gap:5px; align-items:center; flex-wrap:wrap">
         ${l.ia_pausada ? '<span class="tag quente">humano no comando</span>' : ""}
