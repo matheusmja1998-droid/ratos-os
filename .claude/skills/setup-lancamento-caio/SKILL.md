@@ -76,7 +76,9 @@ Outros robôs do Caio (rotacionar tag/mãe quando ativos): `spend_dashboard.py` 
 ## Passo 4 — n8n (webhook do grupo + Manychat)
 
 1. **Webhook Sendflow membros** `kqZCI90BiBTqQmxg` (node `Append Grupo_Wpp`): trocar `documentId` → mãe nova (aba Grupo_Wpp fica). GET → PUT (settings whitelisted) → reativar. Backup antes. É `[GERAL]` mas na prática é o do Caio.
-2. **Obrigado TRF** `EMzOnqocCLL7gxUU` + **ORG** `XN3yINOCAaT4m6j9`: nos nodes `ManyChat — addTagByName`, trocar o `tag_name` do body pra `{TAG}_TRF` / `{TAG}_ORG` (url `.../fb/subscriber/addTagByName`). Não renomear nodes sem atualizar as connections. Reativar.
+2. **Obrigado TRF** `EMzOnqocCLL7gxUU` + **ORG** `XN3yINOCAaT4m6j9`: no node `ManyChat — addTagByName`, trocar **SÓ o `tag_name`** do `jsonBody` pra `{tag}_trf` / `{tag}_org` (url `.../fb/subscriber/addTagByName`). Reativar.
+   - ⚠️ **NUNCA renomear o node** (deixar o nome fixo `ManyChat — addTagByName`). No ANE_SET eu botava a tag no nome do node e isso QUEBROU a connection (n8n liga nodes por nome): o `createSubscriber` apontava pro nome antigo → o `addTag` ficou desconectado → lead entrava mas não recebia tag → automação não disparava. Fluxo correto: `Webhook → Parse Body + Phone → createSubscriber → addTagByName`.
+   - ⚠️ **`addTagByName` é case-sensitive** — usar o case EXATO da tag criada no painel (ex minúsculas `ane_set_26_trf`), senão cria uma tag nova sem automação.
 3. **Manual do Matheus**: criar as tags `{TAG}_TRF`/`{TAG}_ORG` no painel do Manychat e ligar o gatilho da automação nelas (API não faz).
 
 ## Passo 5 — Central (captação + lead scoring, SEM deploy)
