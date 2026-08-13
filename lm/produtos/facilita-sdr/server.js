@@ -26,7 +26,7 @@ import {
   threadsDoLead, getThread, threadPorTelefone, abrirThread,
 } from "./lib/db.js";
 import {
-  parseWebhook, enviarTexto, mostrarDigitando, criarInstancia,
+  parseWebhook, enviarTexto, enviarMidia, mostrarDigitando, criarInstancia,
   conectarInstancia, statusInstanciaLive, statusConectado, configurarWebhook, checarWhatsapp,
 } from "./lib/uazapi.js";
 import { responderLead, horariosDisponiveis } from "./lib/agente.js";
@@ -478,6 +478,20 @@ app.get("/api/agenda", auth, async (req, res) => {
   const tarefasReuniao = db.prepare(`SELECT t.*, l.nome_clinica FROM tarefas t JOIN leads l ON l.id = t.lead_id
     WHERE t.tipo='reuniao' AND t.feita=0 AND t.quando IS NOT NULL ORDER BY t.quando, t.hora`).all();
 
+  // liga cada evento ao lead (pra mostrar resumo ao clicar na agenda)
+  const rs = db.prepare(`SELECT r.*, l.id lead_id, l.nome_clinica, l.telefone, l.telefone_decisor,
+      l.nome_contato, l.nome_decisor, l.dor, l.cidade, l.nicho, l.valor_venda, l.resumo
+    FROM reunioes r JOIN leads l ON l.id = r.lead_id WHERE r.status IN ('marcada','remarcada')`).all();
+  for (const e of eventos) {
+    const ini = (e.inicio || "").slice(0, 16);
+    const r = rs.find((x) => (x.inicio || "").slice(0, 16) === ini)
+      || rs.find((x) => e.titulo && x.nome_clinica && e.titulo.includes(x.nome_clinica));
+    if (r) e.lead = {
+      id: r.lead_id, nome: r.nome_clinica, telefone: r.telefone, telefone_decisor: r.telefone_decisor,
+      contato: r.nome_decisor || r.nome_contato, dor: r.dor, cidade: r.cidade, nicho: r.nicho,
+      valor: r.valor_venda, resumo: r.resumo, closer: r.closer,
+    };
+  }
   res.json({
     closer, conectada, eventos,
     reunioes: db.prepare(`SELECT r.*, l.nome_clinica, l.telefone FROM reunioes r JOIN leads l ON l.id = r.lead_id
@@ -1059,6 +1073,51 @@ app.delete("/api/usuario/:id", auth, exige("gerir_usuarios"), (req, res) => {
   atualizarUsuario(id, { ativo: 0 }); // desativa, nunca apaga (histórico do lead fica)
   for (const [tok, s] of sessoes) if (s.usuarioId === id) sessoes.delete(tok);
   res.json({ ok: true });
+});
+
+// ÁUDIO NA CONVERSA: manda um áudio gravado/escolhido pro lead (pausa a IA,
+// igual mandar texto pelo painel). Aceita thread paralela.
+app.post("/api/lead/:id/audio", auth, exige("conversar"), upload.single("audio"), async (req, res) => {
+  const lead = getLead(req.params.id);
+  if (!lead) return res.status(404).json({ erro: "lead nao existe" });
+  if (!req.file) return res.status(400).json({ erro: "arquivo nao veio" });
+  try {
+    let thread = null;
+    if (req.body?.thread_id) {
+      thread = getThread(Number(req.body.thread_id));
+      if (!thread || thread.lead_id !== lead.id) return res.status(400).json({ erro: "thread não é desse lead" });
+    }
+    const alvo = thread?.telefone || lead.telefone;
+    const b64 = readFileSync(req.file.path).toString("base64");
+    const ext = (extname(req.file.originalname || "") || ".ogg").toLowerCase().replace(".", "");
+    const mime = ext === "mp3" ? "audio/mpeg" : ext === "m4a" ? "audio/mp4" : ext === "webm" ? "audio/webm" : "audio/ogg";
+    const { unlinkSync } = await import("node:fs");
+    const simulado = String(alvo).startsWith("0000");
+    const tok = instanciasConectadas()[0]?.uazapi_token || "";
+    const r = simulado ? { ok: true } : await enviarMidia(tok, alvo, { tipo: "audio", arquivo: `data:${mime};base64,${b64}` });
+    unlinkSync(req.file.path);
+    if (!r.ok) return res.status(502).json({ erro: r.erro });
+    const ins = salvarMensagem(lead.id, "assistant", "[áudio enviado]", "audio");
+    if (thread) db.prepare("UPDATE mensagens SET thread_id = ? WHERE id = ?").run(thread.id, ins.lastInsertRowid);
+    if (!lead.ia_pausada && !thread) { atualizarLead(lead.id, { ia_pausada: 1 }); registrarEvento(lead.id, "handoff", "painel (áudio)"); }
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ erro: e.message });
+  }
+});
+
+// CONFLITO DE AGENDA: diz se já tem reunião nesse horário (avisa, não bloqueia)
+app.get("/api/agenda/conflito", auth, (req, res) => {
+  const inicio = String(req.query.inicio || "").slice(0, 16); // AAAA-MM-DDTHH:MM
+  if (!inicio) return res.status(400).json({ erro: "falta o horário" });
+  const [dia, hora] = inicio.split("T");
+  const min = (h) => Number(h.slice(0, 2)) * 60 + Number(h.slice(3, 5));
+  const alvo = min(hora || "00:00");
+  const dobradas = db.prepare(`SELECT r.inicio, r.closer, l.nome_clinica FROM reunioes r
+    JOIN leads l ON l.id = r.lead_id
+    WHERE r.status IN ('marcada','remarcada') AND substr(r.inicio,1,10) = ?`).all(dia)
+    .filter((r) => Math.abs(min((r.inicio || "").slice(11, 16)) - alvo) < 60); // menos de 1h de distância
+  res.json({ conflito: dobradas.length > 0, reunioes: dobradas });
 });
 
 // SAIR: invalida o token desta sessão
@@ -1663,7 +1722,7 @@ app.get("/api/admin/clientes", auth, async (req, res) => {
 // MARCA (painel troca o nome conforme o deploy: interno vs cliente)
 // ============================================================
 app.get("/api/marca", (req, res) => {
-  res.json({ produto: process.env.SDR_MARCA || "Facilita SDR", cliente: process.env.CLIENTE_NOME || "" });
+  res.json({ produto: process.env.SDR_MARCA || "Prospecta AI", cliente: process.env.CLIENTE_NOME || "" });
 });
 
 // ============================================================

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Facilita SDR</title>
+<title>Prospecta AI</title>
 <style>
   :root {
     --bg:#f6f8f7; --surface:#ffffff; --border:#e2e8e4; --text:#14201a; --muted:#5f6f66;
@@ -57,6 +57,11 @@
   /* layout com sidebar vertical recolhível */
   .layout { display:flex; min-height:100vh; }
   #sidebar { width:210px; flex:0 0 210px; background:var(--surface); border-right:1px solid var(--border); display:flex; flex-direction:column; position:sticky; top:0; height:100vh; transition:width .18s, flex-basis .18s; }
+  #sidebar nav { flex:1; overflow-y:auto; }
+  .sb-sair { display:flex; align-items:center; gap:10px; width:100%; border:none; background:none;
+    padding:11px 16px; font-size:14px; color:var(--muted); cursor:pointer; border-top:1px solid var(--border); }
+  .sb-sair:hover { background:var(--verde-soft); color:var(--text); }
+  #sidebar.recolhido .sb-sair { justify-content:center; padding:11px 0; }
   .sb-top { display:flex; align-items:center; gap:8px; padding:14px 16px; border-bottom:1px solid var(--border); }
   .sb-top h1 { font-size:17px; color:var(--verde-esc); white-space:nowrap; overflow:hidden; }
   .sb-top h1 span { color:var(--verde); }
@@ -72,7 +77,8 @@
   #sidebar.recolhido .sb-top h1, #sidebar.recolhido .lbl, #sidebar.recolhido .sb-status { display:none; }
   #sidebar.recolhido #sb-toggle { margin:0 auto; }
   #sidebar.recolhido nav button { justify-content:center; padding:10px 0; }
-  main { padding:20px; margin:0 auto; flex:1; min-width:0; max-width:1300px; }
+  #app { display:flex; min-height:100vh; }
+  main { padding:20px; margin:0 auto; flex:1; min-width:0; max-width:1300px; overflow-y:auto; height:100vh; }
   @media (max-width:760px){ #sidebar{width:56px;flex-basis:56px} #sidebar .sb-top h1,#sidebar .lbl,#sidebar .sb-status{display:none} #sidebar nav button{justify-content:center;padding:10px 0} }
   .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px; }
   .grid-metricas { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:20px; }
@@ -156,10 +162,39 @@
   .divisor::after { /* alcance maior pro mouse sem ocupar espaco */
     content:""; position:absolute; top:0; bottom:0; left:-5px; right:-5px; }
   body.redimensionando { cursor:col-resize; user-select:none; }
-  .painel-notas { display:none; overflow-y:auto; min-height:0; padding:14px 16px; }
-  .conversas-wrap.com-notas .painel-notas { display:block; }
-  .nota-linha { display:grid; grid-template-columns:118px 1fr; gap:4px 8px; font-size:12.5px; padding:5px 0; border-bottom:1px dashed var(--border); align-items:start; }
-  .nota-linha > span:first-child { color:var(--muted); }
+  /* PAINEL DE NOTAS: fixo na direita, sempre visivel (o botao nao muda de lugar).
+     Layout reto (sem cantos arredondados) pra dar pra ler as divisoes de bate-pronto. */
+  .painel-notas { display:none; min-height:0; padding:0; border-radius:0; overflow:hidden;
+    grid-template-rows:auto 1fr auto; }
+  .conversas-wrap.com-notas .painel-notas { display:grid; }
+  .pn-topo { padding:12px 14px 10px; border-bottom:2px solid var(--border); }
+  .pn-nome { font-size:19px; font-weight:800; line-height:1.2; letter-spacing:-.2px; }
+  .pn-corpo { overflow-y:auto; min-height:0; }
+  .pn-rodape { border-top:2px solid var(--border); background:var(--surface); }
+  .nota-linha { display:grid; grid-template-columns:104px 1fr; gap:2px 10px; font-size:12.5px;
+    padding:7px 14px; border-bottom:1px solid var(--border); align-items:center; }
+  .nota-linha > span:first-child { color:var(--muted); font-size:11.5px; text-transform:uppercase;
+    letter-spacing:.3px; font-weight:600; }
+  .nota-linha input, .nota-linha select { border-radius:0; border:1px solid transparent; background:transparent;
+    padding:3px 5px; font-size:13px; width:100%; }
+  .nota-linha input:hover, .nota-linha select:hover { border-color:var(--border); }
+  .nota-linha input:focus, .nota-linha select:focus { border-color:var(--verde); background:var(--surface); outline:none; }
+  .pn-secao { padding:7px 14px 4px; font-size:10.5px; font-weight:700; letter-spacing:.6px;
+    text-transform:uppercase; color:var(--muted); background:var(--bg); border-bottom:1px solid var(--border); }
+  /* menu que abre ao clicar num telefone/link */
+  .menu-ctx { position:fixed; z-index:1000; background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; box-shadow:0 8px 26px rgba(0,0,0,.16); padding:4px; min-width:172px; }
+  .menu-ctx button { display:flex; align-items:center; gap:9px; width:100%; border:none; background:none;
+    padding:8px 11px; font-size:13px; color:var(--text); cursor:pointer; border-radius:6px; text-align:left; }
+  .menu-ctx button:hover { background:var(--verde-soft); }
+  .num-clicavel { cursor:pointer; border-bottom:1px dashed var(--muted); font-weight:600; }
+  .num-clicavel:hover { color:var(--verde); border-color:var(--verde); }
+  .ic { vertical-align:-2px; flex-shrink:0; }
+  /* tarefas fixas no rodape do painel */
+  .pn-tarefa { display:flex; gap:8px; align-items:flex-start; padding:8px 14px; font-size:12.5px;
+    border-top:1px solid var(--border); }
+  .pn-tarefa.venceu { background:#fdeaea; color:#a3241c; }
+  html[data-tema="dark"] .pn-tarefa.venceu { background:#3a1f1f; color:#ffb4ab; }
   .conv-item.pendente .conv-nome { font-weight:800; }
   .conv-item.pendente { background:#fffdf5; }
   .conv-item { padding:10px 12px; border-radius:10px; cursor:pointer; border:1px solid transparent; }
@@ -197,7 +232,7 @@
 <body>
 
 <div id="login" class="card" style="display:none">
-  <h2 style="color:var(--verde-esc); margin-bottom:10px">⚡ Facilita <span style="color:var(--verde)">SDR</span></h2>
+  <h2 style="color:var(--verde-esc); margin-bottom:10px">Prospecta <span style="color:var(--verde)">AI</span></h2>
   <label>Email</label>
   <input id="in-email" type="email" style="width:100%" placeholder="seu@email.com" autocomplete="username">
   <label>Senha</label>
@@ -218,33 +253,27 @@
 <div class="layout">
 <aside id="sidebar">
   <div class="sb-top">
-    <h1 id="titulo-app">⚡ Facilita <span>SDR</span></h1>
+    <h1 id="titulo-app">Prospecta <span>AI</span></h1>
     <button id="sb-toggle" onclick="toggleSidebar()" title="recolher/expandir">⟨</button>
   </div>
   <nav>
-    <button data-aba="dashboard" onclick="aba('dashboard')"><span>📈</span><span class="lbl">Dashboard</span></button>
-    <button data-aba="pipeline" class="on" onclick="aba('pipeline')"><span>📊</span><span class="lbl">Pipeline</span></button>
-    <button data-aba="conversas" onclick="aba('conversas')"><span>💭</span><span class="lbl">Conversas <span id="badge-quente"></span></span></button>
-    <button data-aba="campanhas" onclick="aba('campanhas')"><span>📣</span><span class="lbl">Campanhas</span></button>
-    <button data-aba="reunioes" onclick="aba('reunioes')"><span>📅</span><span class="lbl">Reuniões</span></button>
-    <button data-aba="cerebro" onclick="aba('cerebro')"><span>🧠</span><span class="lbl">Cérebro</span></button>
-    <button data-aba="assistente" onclick="aba('assistente')"><span>💬</span><span class="lbl">Assistente</span></button>
-    <button data-aba="testar" onclick="aba('testar')"><span>🧪</span><span class="lbl">Testar</span></button>
-    <button data-aba="equipe" id="nav-equipe" style="display:none" onclick="aba('equipe')"><span>👥</span><span class="lbl">Equipe</span></button>
-    <button data-aba="config" onclick="aba('config')"><span>⚙️</span><span class="lbl">Config</span></button>
-    <button data-aba="assinatura" id="nav-assinatura" style="display:none" onclick="aba('assinatura')"><span>💳</span><span class="lbl">Assinatura</span></button>
-    <button data-aba="admin" id="nav-admin" style="display:none" onclick="aba('admin')"><span>👑</span><span class="lbl">Admin</span></button>
-    <button onclick="toggleTema()" title="alternar tema claro/escuro"><span id="tema-ico">🌙</span><span class="lbl" id="tema-lbl">Tema escuro</span></button>
-    <button onclick="sair()" title="sair da conta"><span>🚪</span><span class="lbl" id="sair-lbl">Sair</span></button>
+    <button data-aba="dashboard" onclick="aba('dashboard')"><span data-ic="grafico"></span><span class="lbl">Dashboard</span></button>
+    <button data-aba="pipeline" class="on" onclick="aba('pipeline')"><span data-ic="kanban"></span><span class="lbl">CRM</span></button>
+    <button data-aba="conversas" onclick="aba('conversas')"><span data-ic="chat"></span><span class="lbl">Conversas <span id="badge-quente"></span></span></button>
+    <button data-aba="campanhas" onclick="aba('campanhas')"><span data-ic="megafone"></span><span class="lbl">Campanhas</span></button>
+    <button data-aba="reunioes" onclick="aba('reunioes')"><span data-ic="calendario"></span><span class="lbl">Agenda</span></button>
+    <button data-aba="testar" onclick="aba('testar')"><span data-ic="teste"></span><span class="lbl">Testar</span></button>
+    <button data-aba="configuracoes" onclick="aba('configuracoes')"><span data-ic="engrenagem"></span><span class="lbl">Configurações</span></button>
   </nav>
+  <button class="sb-sair" onclick="sair()" title="sair da conta"><span data-ic="sair"></span><span class="lbl" id="sair-lbl">Sair</span></button>
   <div class="sb-status" id="status-chip">…</div>
 </aside>
 <main>
   <div id="aba-dashboard" style="display:none">
     <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap">
-      <h2 id="dash-titulo" style="font-size:18px; color:var(--verde-esc)">📊 Visão geral</h2>
+      <h2 id="dash-titulo" style="font-size:18px; color:var(--verde-esc)">Visão geral</h2>
       <select id="dash-usuario" onchange="carregarDashboard()" style="margin-left:auto; font-size:13px" title="de quem são os números">
-        <option value="">👥 Equipe toda</option>
+        <option value="">Equipe toda</option>
       </select>
       <select id="dash-dias" onchange="carregarDashboard()" style="font-size:13px"
         <option value="7">últimos 7 dias</option>
@@ -253,9 +282,9 @@
       </select>
     </div>
     <div style="display:flex; gap:5px; margin-bottom:14px; flex-wrap:wrap">
-      <button class="btn mini dash-tab on" data-dash="geral" onclick="trocarDash('geral')">📊 Geral</button>
-      <button class="btn mini dash-tab sec" data-dash="disparo" onclick="trocarDash('disparo')">💬 Disparo</button>
-      <button class="btn mini dash-tab sec" data-dash="prospeccao" onclick="trocarDash('prospeccao')">📞 Prospecção</button>
+      <button class="btn mini dash-tab on" data-dash="geral" onclick="trocarDash('geral')">Geral</button>
+      <button class="btn mini dash-tab sec" data-dash="disparo" onclick="trocarDash('disparo')">Disparo</button>
+      <button class="btn mini dash-tab sec" data-dash="prospeccao" onclick="trocarDash('prospeccao')">Ligações</button>
     </div>
     <div id="dash-corpo">carregando…</div>
   </div>
@@ -267,26 +296,28 @@
     <!-- barra da pipeline: escolher funil, valor total e gestao -->
     <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px; flex-wrap:wrap">
       <select id="sel-pipeline" onchange="trocarPipeline(this.value)" style="font-size:14px; font-weight:600; padding:6px 10px; min-width:190px"></select>
-      <span onclick="renomearFunilRapido()" title="renomear este funil" style="cursor:pointer; font-size:13px; color:var(--muted)">✏️</span>
+      <span onclick="renomearFunilRapido()" title="renomear este funil" style="cursor:pointer; color:var(--muted); display:flex" data-ic="nota" data-ic-tam="14"></span>
       <span id="pipe-total" class="tag" style="font-size:13px"></span>
       <span id="pipe-valor" class="tag" style="background:#e7f7ef; color:#0b6b46; font-size:13px; font-weight:700"></span>
-      <button class="btn mini sec" data-precisa="editar_pipeline" onclick="abrirPersonalizarFunil()">⚙️ personalizar funil</button>
-      <button class="btn mini" data-precisa="editar_lead" onclick="abrirNovoLead()">+ lead manual</button>
+      <span style="margin-left:auto; display:flex; gap:6px; align-items:center">
+        <button class="btn mini sec" data-precisa="editar_pipeline" onclick="abrirPersonalizarFunil()">Personalizar funil</button>
+        <button class="btn mini" data-precisa="editar_lead" onclick="abrirNovoLead()">+ Novo lead</button>
+      </span>
     </div>
 
     <div style="display:flex; gap:8px; align-items:center; margin-bottom:10px; flex-wrap:wrap">
-      <input id="busca-pipe" placeholder="🔍 buscar por clínica, telefone ou contato" style="flex:1; min-width:220px" oninput="renderKanban()">
+      <input id="busca-pipe" placeholder="buscar por clínica, telefone ou contato" style="flex:1; min-width:220px" oninput="renderKanban()">
       <div style="display:flex; gap:4px; flex-wrap:wrap">
         <button class="btn mini sec filtro-ia on" data-filtro="todos" onclick="setFiltroIA('todos')">Todas</button>
-        <button class="btn mini sec filtro-ia" data-filtro="ia" onclick="setFiltroIA('ia')">🤖 IA atendendo</button>
-        <button class="btn mini sec filtro-ia" data-filtro="humano" onclick="setFiltroIA('humano')">🙋 com humano</button>
+        <button class="btn mini sec filtro-ia" data-filtro="ia" onclick="setFiltroIA('ia')">IA atendendo</button>
+        <button class="btn mini sec filtro-ia" data-filtro="humano" onclick="setFiltroIA('humano')">com humano</button>
       </div>
-      <button class="btn mini sec" id="btn-atrasadas" onclick="toggleAtrasadas()">🔴 tarefas atrasadas</button>
+      <button class="btn mini sec" id="btn-atrasadas" onclick="toggleAtrasadas()">tarefas atrasadas</button>
       <select id="filtro-nicho" onchange="renderKanban()" style="font-size:13px"><option value="">Todos os nichos</option></select>
       <select id="filtro-tag" onchange="renderKanban()" style="font-size:13px"><option value="">Todas as tags</option></select>
       <span id="busca-pipe-contador" style="font-size:13px; color:var(--muted)"></span>
     </div>
-    <div class="dica-scroll">↔ arrasta pro lado pra ver todas as etapas · segura e arrasta um card pra mudar de etapa · card vermelho = tarefa atrasada</div>
+    <div class="dica-scroll">arrasta pro lado pra ver todas as etapas · segura e arrasta um card pra mudar de etapa · card vermelho = tarefa atrasada</div>
     <div class="kanban" id="kanban"></div>
   </div>
 
@@ -307,7 +338,7 @@
           <option value="perdido">Perdidos</option>
           <option value="optout">Opt-out</option>
           <option value="sem_whatsapp">Sem WhatsApp</option>
-          <option value="__humano">🙋 com humano (pausadas)</option>
+          <option value="__humano">com humano (pausadas)</option>
         </select>
         <div id="lista-conv"></div>
       </div>
@@ -319,7 +350,7 @@
 
   <div id="aba-equipe" style="display:none">
     <div class="card" style="margin-bottom:12px">
-      <b style="font-size:15px">👥 Equipe</b>
+      <b style="font-size:15px">Equipe</b>
       <div style="font-size:12.5px; color:var(--muted); margin-top:4px">
         Quem trabalha no CRM. Cada pessoa entra com o e-mail e senha dela, e vê/faz só o que o papel permite.
       </div>
@@ -362,7 +393,7 @@
         <textarea id="c-aberturas" rows="4" style="width:100%">Oi, tudo bem? Aqui é o Matheus. Consigo falar com o responsável da {nome_clinica}?
 Opa, tudo certo? Matheus aqui. Quem é o responsável pela {nome_clinica}?
 Oi! Aqui é o Matheus. Preciso falar com quem cuida da {nome_clinica}, é você?</textarea>
-        <p style="font-size:12px; color:var(--muted); margin:6px 0 0">💡 Quem responder, a IA conduz sozinha. Quem engajar e sumir, a IA reengaja automático (você vê a tarefa no lead). Não precisa configurar follow-up aqui.</p>
+        <p style="font-size:12px; color:var(--muted); margin:6px 0 0">Quem responder, a IA conduz sozinha. Quem engajar e sumir, a IA reengaja automático (você vê a tarefa no lead). Não precisa configurar follow-up aqui.</p>
         <div class="duas-col">
           <div><label>Máximo de mensagens por dia</label><input id="c-teto" type="number" value="25" style="width:100%" oninput="renderDivisao()"></div>
           <div><label>Horário de disparo</label><input id="c-janela" value="08:30-18:00" style="width:100%"></div>
@@ -391,13 +422,13 @@ Oi! Aqui é o Matheus. Preciso falar com quem cuida da {nome_clinica}, é você?
 
         <!-- 1) planilha modelo -->
         <div style="background:var(--verde-soft); border-radius:8px; padding:10px 12px; margin-bottom:12px">
-          <b style="font-size:13px">📄 Modelo de planilha</b>
+          <b style="font-size:13px">Modelo de planilha</b>
           <div style="font-size:12px; color:var(--muted); margin:4px 0 7px">
             Baixa o modelo, preenche com os teus leads e sobe aqui. Só <b>nome</b> e <b>telefone</b> são obrigatórios.
           </div>
           <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center">
-            <button class="btn mini" onclick="baixarModelo()">⬇️ baixar modelo (CSV)</button>
-            <a id="link-drive-modelo" href="#" target="_blank" class="btn mini sec" style="display:none; text-decoration:none">📗 copiar planilha do Drive</a>
+            <button class="btn mini" onclick="baixarModelo()">baixar modelo (CSV)</button>
+            <a id="link-drive-modelo" href="#" target="_blank" class="btn mini sec" style="display:none; text-decoration:none">copiar planilha do Drive</a>
             <span onclick="verColunasModelo()" style="font-size:11.5px; color:var(--verde); cursor:pointer; font-weight:600">ver colunas aceitas</span>
           </div>
         </div>
@@ -427,7 +458,7 @@ Oi! Aqui é o Matheus. Preciso falar com quem cuida da {nome_clinica}, é você?
 
   <div id="aba-reunioes" style="display:none">
     <div style="display:flex; gap:8px; align-items:center; margin-bottom:12px; flex-wrap:wrap">
-      <h2 style="font-size:17px; color:var(--verde-esc)">📅 Agenda</h2>
+      <h2 style="font-size:17px; color:var(--verde-esc)">Agenda</h2>
       <select id="agenda-closer" onchange="carregarAgenda()" style="font-size:13px"></select>
       <div style="display:flex; gap:4px; align-items:center; margin-left:8px">
         <button class="btn mini sec" onclick="mudarSemana(-1)">‹</button>
@@ -443,8 +474,34 @@ Oi! Aqui é o Matheus. Preciso falar com quem cuida da {nome_clinica}, é você?
   </div>
 
   <div id="aba-cerebro" style="display:none">
-    <div class="aviso">🧠 Tudo que tu escrever aqui entra na cabeça da IA com <b>prioridade máxima</b>: quando conflitar com o comportamento padrão, o teu texto vence. Salvou, valeu na próxima mensagem (testa na aba Testar). O fluxo fixo continua: pedir responsável → confirmar → áudio → agendar.</div>
+    <div class="card" style="margin-bottom:12px">
+      <h3 style="margin-bottom:6px">Contexto da sua IA</h3>
+      <p style="font-size:13px; color:var(--muted); line-height:1.55; margin:0">
+        Aqui é onde a IA aprende sobre o seu negócio. Tudo que estiver nesta página entra na cabeça dela com
+        <b>prioridade máxima</b>: quando o texto daqui conflitar com o comportamento padrão, <b>o seu texto vence</b>.
+        Você tem dois caminhos e pode usar os dois:
+      </p>
+      <ul style="font-size:13px; color:var(--muted); line-height:1.6; margin:8px 0 0 18px; padding:0">
+        <li><b>Escrevendo você mesmo</b> (à direita) — quem você é, o que vende, preço, casos reais, objeções e como responder cada uma.</li>
+        <li><b>Conversando com o assistente</b> (à esquerda) — ele te faz perguntas e escreve o contexto sozinho. O que ele escrever aparece nos campos à direita pra você revisar.</li>
+      </ul>
+      <p style="font-size:13px; color:var(--muted); margin:8px 0 0">
+        Salvou, já vale na próxima mensagem — dá pra conferir na aba <b>Testar</b>. O fluxo continua o mesmo:
+        pedir o responsável → confirmar → mandar áudio → agendar.
+      </p>
+    </div>
     <div class="duas-col">
+      <div class="card chat" style="height:calc(100vh - 330px); min-height:380px">
+        <h3 style="margin-bottom:8px">Falar com o assistente</h3>
+        <div class="chat-msgs" id="ent-msgs"></div>
+        <div id="ent-badge" style="padding:0 12px; font-size:12px; color:var(--verde-esc)"></div>
+        <div class="chat-envio">
+          <textarea id="ent-texto" rows="2" placeholder="responde aqui…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();entEnviar()}"></textarea>
+          <button class="btn" onclick="entEnviar()">Enviar</button>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px; max-height:calc(100vh - 330px); overflow-y:auto">
+
       <div class="card">
         <h3>Diretrizes gerais</h3>
         <p style="font-size:12px; color:var(--muted); margin:4px 0">Como falar, o que nunca dizer, tom, tamanho das mensagens.</p>
@@ -452,7 +509,7 @@ Oi! Aqui é o Matheus. Preciso falar com quem cuida da {nome_clinica}, é você?
       </div>
       <div class="card">
         <h3>Pitch, produto e preço</h3>
-        <p style="font-size:12px; color:var(--muted); margin:4px 0">O que dizer sobre a Facilita, os argumentos, casos, o que responder sobre valor.</p>
+        <p style="font-size:12px; color:var(--muted); margin:4px 0">O que dizer sobre a empresa, os argumentos, casos, o que responder sobre valor.</p>
         <textarea id="tr-treino_pitch" rows="8" style="width:100%" placeholder="Ex: O argumento principal é X. Falar do caso da clínica de pneumo assim: ... Sobre preço, dizer: ..."></textarea>
       </div>
       <div class="card">
@@ -471,13 +528,31 @@ VOCÊ: Opa! Aqui é da equipe do Matheus...
 LEAD: ..."></textarea>
       </div>
     </div>
-    <div style="margin-top:14px"><button class="btn" onclick="salvarTreino()">💾 Salvar treinamento</button> <span id="tr-ok" style="color:var(--verde); font-size:13px"></span></div>
+    <div style="margin-top:14px"><button class="btn" onclick="salvarTreino()">Salvar treinamento</button> <span id="tr-ok" style="color:var(--verde); font-size:13px"></span></div>
+        </div>
+    </div>
+  </div>
+
+  <!-- CONFIGURAÇÕES: uma aba só, com sub-abas (Config · Usuários · Contexto · Tema) -->
+  <div id="aba-configuracoes" style="display:none">
+    <div style="display:flex; gap:6px; margin-bottom:14px; flex-wrap:wrap; align-items:center">
+      <button class="btn mini sub-cfg on" data-sub="config" onclick="subCfg('config')">Configurações</button>
+      <button class="btn mini sub-cfg sec" data-sub="equipe" onclick="subCfg('equipe')">Usuários</button>
+      <button class="btn mini sub-cfg sec" data-sub="cerebro" onclick="subCfg('cerebro')">Contexto da IA</button>
+      <button class="btn mini sub-cfg sec" id="sub-assinatura" style="display:none" onclick="subCfg('assinatura')">Assinatura</button>
+      <button class="btn mini sub-cfg sec" id="sub-admin" style="display:none" onclick="subCfg('admin')">Admin</button>
+      <div style="margin-left:auto; display:flex; gap:7px; align-items:center; font-size:13px; color:var(--muted)">
+        Tema
+        <button class="btn mini sec" onclick="toggleTema()" id="btn-tema-cfg">escuro</button>
+      </div>
+    </div>
+    <div id="cfg-conteudo"></div>
   </div>
 
   <div id="aba-testar" style="display:none">
     <div class="duas-col">
       <div class="card chat" style="height:calc(100vh - 220px)">
-        <div class="chat-topo"><b>🧪 Simulador</b> <span style="color:var(--muted); font-size:13px">tu é o dono da clínica, a IA responde de verdade (nada sai pro WhatsApp)</span>
+        <div class="chat-topo"><b>Simulador</b> <span style="color:var(--muted); font-size:13px">tu é o dono da clínica, a IA responde de verdade (nada sai pro WhatsApp)</span>
           <button class="btn mini sec" onclick="simReset()">reiniciar conversa</button></div>
         <div class="chat-msgs" id="sim-msgs"><div style="margin:auto; color:var(--muted); font-size:13px">manda a primeira mensagem como se fosse a clínica respondendo o disparo</div></div>
         <div class="chat-envio">
@@ -486,7 +561,7 @@ LEAD: ..."></textarea>
         </div>
       </div>
       <div class="card" style="align-self:start">
-        <h3 style="margin-bottom:6px">📱 Teste REAL no WhatsApp</h3>
+        <h3 style="margin-bottom:6px">Teste REAL no WhatsApp</h3>
         <p style="font-size:13px; color:var(--muted); margin-bottom:8px">Cadastra um telefone teu (ou de alguém do time) como lead de teste. A IA manda a abertura de verdade pra esse número e conduz o fluxo completo: responsável → áudio → reunião na agenda. Precisa do WhatsApp conectado.</p>
         <label>Telefone (com DDD)</label>
         <input id="real-tel" style="width:100%" placeholder="31999998888">
@@ -501,28 +576,16 @@ LEAD: ..."></textarea>
     </div>
   </div>
 
-  <div id="aba-assistente" style="display:none">
-    <div class="aviso">💬 Conversa comigo que eu monto o cérebro da tua IA sozinho. Só responder as perguntas. Tudo que eu escrever aparece na aba 🧠 Cérebro pra tu revisar depois.</div>
-    <div class="card chat" style="height:calc(100vh - 240px); max-width:720px">
-      <div class="chat-msgs" id="ent-msgs"></div>
-      <div id="ent-badge" style="padding:0 12px; font-size:12px; color:var(--verde-esc)"></div>
-      <div class="chat-envio">
-        <textarea id="ent-texto" rows="2" placeholder="responde aqui…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();entEnviar()}"></textarea>
-        <button class="btn" onclick="entEnviar()">Enviar</button>
-      </div>
-    </div>
-  </div>
-
   <div id="aba-assinatura" style="display:none">
     <div class="card" style="max-width:480px">
-      <h3 style="margin-bottom:8px">💳 Sua assinatura</h3>
+      <h3 style="margin-bottom:8px">Sua assinatura</h3>
       <div id="assin-corpo" style="font-size:14px">carregando…</div>
     </div>
   </div>
 
   <div id="aba-admin" style="display:none">
     <div class="card">
-      <h3 style="margin-bottom:4px">👑 Visão do dono — todas as contas</h3>
+      <h3 style="margin-bottom:4px">Visão do dono — todas as contas</h3>
       <div id="admin-resumo" style="font-size:13px; color:var(--muted); margin-bottom:10px"></div>
       <table id="admin-tabela"></table>
     </div>
@@ -531,14 +594,14 @@ LEAD: ..."></textarea>
   <div id="aba-config" style="display:none">
     <div class="duas-col">
       <div class="card">
-        <h3 style="margin-bottom:6px">📱 Meus WhatsApps</h3>
+        <h3 style="margin-bottom:6px">Meus WhatsApps</h3>
         <p style="font-size:12px; color:var(--muted); margin:4px 0 8px">Com mais de um número, os disparos são distribuídos automaticamente entre eles (rotação), protegendo cada chip.</p>
         <div id="lista-whats"></div>
         <div style="margin-top:8px"><button class="btn sec mini" onclick="addWhats()">+ adicionar WhatsApp</button> <span id="whats-msg" style="font-size:12px; color:var(--muted)"></span></div>
         <div id="qr-area" style="margin-top:10px"></div>
         <div id="sec-chave" style="display:none">
           <hr style="border:none; border-top:1px solid var(--border); margin:16px 0">
-          <h3>🔑 Chave da IA (Anthropic)</h3>
+          <h3>Chave da IA (Anthropic)</h3>
           <p style="font-size:12.5px; color:var(--muted); margin:4px 0 8px">Sua IA usa a sua conta da Anthropic (você paga só o que usar, centavos por conversa). <a id="lnk-tutorial" href="#" target="_blank" style="color:var(--verde)">como gerar minha chave →</a></p>
           <div id="chave-status" style="font-size:13px; margin-bottom:8px"></div>
           <input id="chave-input" style="width:100%; font-family:monospace" placeholder="sk-ant-api03-...">
@@ -609,7 +672,7 @@ const STATUS_COLS = [
   ["novo", "Novos"], ["disparado", "Disparados"], ["respondeu", "Responderam"],
   ["em_conversa", "Em conversa"], ["decisor", "Contato c/ decisor"], ["negociando", "Negociando reunião"],
   ["reuniao_marcada", "Reunião marcada"],
-  ["compareceu", "Compareceu"], ["trial", "Trial Facilita"], ["fechado", "Fechados"], ["perdido", "Perdidos"],
+  ["compareceu", "Compareceu"], ["trial", "Trial"], ["fechado", "Fechados"], ["perdido", "Perdidos"],
   ["sem_whatsapp", "Sem WhatsApp"],
 ];
 
@@ -644,18 +707,39 @@ async function logar() {
   } catch (e) { $("#login-erro").textContent = "não alcancei a API: " + e.message; }
 }
 
+const ABAS = ["dashboard", "pipeline", "conversas", "campanhas", "reunioes", "testar", "configuracoes"];
+const SUBS_CFG = ["config", "equipe", "cerebro", "assinatura", "admin"]; // moram dentro de Configurações
+
 function aba(nome) {
   document.querySelectorAll("nav button").forEach((b) => b.classList.toggle("on", b.dataset.aba === nome));
-  ["dashboard", "pipeline", "conversas", "campanhas", "reunioes", "cerebro", "assistente", "testar", "config", "assinatura", "admin", "equipe"].forEach((a) => { const el = $("#aba-" + a); if (el) el.style.display = a === nome ? "" : "none"; });
-  if (nome === "equipe") renderEquipe();
+  ABAS.forEach((a) => { const el = $("#aba-" + a); if (el) el.style.display = a === nome ? "" : "none"; });
+  SUBS_CFG.forEach((a) => { const el = $("#aba-" + a); if (el && nome !== "configuracoes") el.style.display = "none"; });
   if (nome === "campanhas") { carregarCampanhas(); prepararImportacao(); }
   if (nome === "reunioes") carregarAgenda();
-  if (nome === "config") carregarConfig();
   if (nome === "testar") simCarregar();
-  if (nome === "cerebro") carregarTreino();
-  if (nome === "assinatura") carregarAssinatura();
-  if (nome === "admin") carregarAdmin();
   if (nome === "dashboard") carregarDashboard();
+  if (nome === "configuracoes") subCfg(subCfgAtual);
+  pintarIcones();
+}
+
+// sub-abas de Configurações: move o bloco pra dentro do container e carrega
+let subCfgAtual = "config";
+function subCfg(qual) {
+  subCfgAtual = qual;
+  document.querySelectorAll(".sub-cfg").forEach((b) => b.classList.toggle("sec", b.dataset.sub !== qual && b.id !== "sub-" + qual));
+  document.querySelectorAll(".sub-cfg").forEach((b) => b.classList.toggle("on", b.dataset.sub === qual || b.id === "sub-" + qual));
+  const alvo = $("#cfg-conteudo");
+  SUBS_CFG.forEach((a) => {
+    const el = $("#aba-" + a);
+    if (!el) return;
+    if (a === qual) { alvo.appendChild(el); el.style.display = ""; } else el.style.display = "none";
+  });
+  if (qual === "equipe") renderEquipe();
+  if (qual === "config") carregarConfig();
+  if (qual === "cerebro") carregarTreino();
+  if (qual === "assinatura") carregarAssinatura();
+  if (qual === "admin") carregarAdmin();
+  pintarIcones();
 }
 
 // ---- cérebro (treinamento) ----
@@ -675,7 +759,7 @@ async function salvarTreino() {
 function simRender(d) {
   $("#sim-msgs").innerHTML = (d.mensagens || []).map((m) => `
     <div class="bolha ${m.role}">${m.texto}<span class="hora">${horaSP(m.criado_em)}</span></div>`).join("") +
-    (d.reuniao ? `<div class="bolha sistema">📅 reunião marcada: ${d.reuniao.inicio.replace("T", " ")} com ${d.reuniao.closer}</div>` : "");
+    (d.reuniao ? `<div class="bolha sistema">reunião marcada: ${d.reuniao.inicio.replace("T", " ")} com ${d.reuniao.closer}</div>` : "");
   const box = $("#sim-msgs"); box.scrollTop = box.scrollHeight;
 }
 async function simCarregar() { simRender(await api("/api/simular", { method: "POST", body: JSON.stringify({}) })); }
@@ -690,7 +774,7 @@ async function simEnviar() {
 async function testarReal() {
   $("#real-res").textContent = "disparando…";
   const r = await api("/api/testar-real", { method: "POST", body: JSON.stringify({ telefone: $("#real-tel").value, nome: $("#real-nome").value }) });
-  $("#real-res").textContent = r.ok ? "✅ " + r.msg : "❌ " + r.erro;
+  $("#real-res").textContent = r.ok ? "" + r.msg : "" + r.erro;
 }
 async function verTestes() {
   const ts = await api("/api/leads?incluir_teste=1");
@@ -712,7 +796,7 @@ async function atualizar() {
   chip.textContent = "WhatsApp: " + st + (estado.instancia.detalhe ? " (" + estado.instancia.detalhe + ")" : "") + " · hoje: " + estado.metricas.disparosHoje + " disparos";
   chip.style.color = st === "conectado" ? "var(--verde-esc)" : "var(--vermelho)";
   const quentes = leads.filter((l) => l.ia_pausada && !["optout","descartado","perdido","fechado"].includes(l.status)).length;
-  $("#badge-quente").textContent = quentes ? "🔥" + quentes : "";
+  $("#badge-quente").textContent = quentes ? "" + quentes : "";
   renderMetricas(); renderListaConv(); renderChecklist();
   // Kanban vem da API por pipeline (colunas configuráveis): carrega na 1a vez,
   // depois só redesenha com o que já está em memória pra não pesar o refresh.
@@ -767,8 +851,8 @@ async function carregarPipelines() {
   if (!pipelines.some((p) => p.id === pipelineAtual)) pipelineAtual = pipelines[0].id;
   const sel = $("#sel-pipeline");
   if (sel) sel.innerHTML = pipelines.map((p) =>
-    `<option value="${p.id}" ${p.id === pipelineAtual ? "selected" : ""}>${p.tipo === "ligacao" ? "📞" : "💬"} ${p.nome}</option>`).join("")
-    + `<option value="__novo">＋ adicionar funil de vendas</option>`;
+    `<option value="${p.id}" ${p.id === pipelineAtual ? "selected" : ""}>${p.tipo === "ligacao" ? "" : ""} ${p.nome}</option>`).join("")
+    + `<option value="__novo">adicionar funil de vendas</option>`;
   await carregarKanban();
 }
 function trocarPipeline(id) {
@@ -834,13 +918,13 @@ function renderKanban() {
     const doStatus = col.leads.filter((l) => casaBusca(l) && casaIA(l));
     const valor = doStatus.reduce((s, l) => s + (Number(l.valor_venda) || 0), 0);
     totalVis += doStatus.length; valorVis += valor;
-    const limpar = doStatus.length ? `<span class="limpar" title="excluir todos dessa etapa" onclick="event.stopPropagation(); limparColuna('${col.chave || ""}','${col.nome}',${doStatus.length})">🗑</span>` : "";
+    const limpar = doStatus.length ? `<span class="limpar" title="excluir todos dessa etapa" onclick="event.stopPropagation(); limparColuna('${col.chave || ""}','${col.nome}',${doStatus.length})"></span>` : "";
     return `<div class="coluna" data-etapa="${col.id}"
         ondragover="event.preventDefault(); this.classList.add('drop')"
         ondragleave="this.classList.remove('drop')"
         ondrop="soltarCard(event, ${col.id})">
       <h3>${col.nome} <b>${doStatus.length}</b>${limpar}
-        ${valor ? `<div style="font-size:11.5px; color:#0b6b46; font-weight:700; margin-top:2px">${money(valor)}</div>` : ""}</h3>
+        <div style="font-size:11.5px; color:${valor ? "#0b6b46" : "var(--muted)"}; font-weight:700; margin-top:2px; width:100%">${money(valor)}</div></h3>
       <div class="coluna-body">` +
       doStatus.slice(0, 60).map((l) => cardLead(l)).join("") + "</div></div>";
   }).join("");
@@ -849,7 +933,7 @@ function renderKanban() {
     const proximas = (kanbanDados.colunas.flatMap((c) => c.leads).filter((l) => l.tarefa?.quando).length);
     $("#kanban").innerHTML = `<div class="kanban-vazio">
       ${soAtrasadas
-        ? `🎉 <b>Nenhuma tarefa atrasada nesse funil.</b><br>
+        ? `<b>Nenhuma tarefa atrasada nesse funil.</b><br>
            <span style="font-size:12.5px">${proximas ? `Você tem ${proximas} tarefa(s) com data marcada, mas nenhuma venceu ainda.` : "Nenhuma tarefa com data marcada por aqui."}</span><br>
            <button class="btn mini sec" style="margin-top:10px" onclick="toggleAtrasadas()">ver todos os leads</button>`
         : `Nenhum lead com esses filtros.<br><button class="btn mini sec" style="margin-top:10px" onclick="limparFiltros()">limpar filtros</button>`}
@@ -873,23 +957,23 @@ function cardLead(l) {
         onclick="abrirConversa(${l.id}); aba('conversas')">
       <span class="excluir" title="excluir lead" onclick="event.stopPropagation(); excluirLead(${l.id}, '${(l.nome_clinica || "").replace(/'/g, "")}')">✕</span>
       <div class="nome">${l.nome_clinica}</div>
-      <div class="sub">📱 ${l.telefone}${l.cidade && l.cidade !== "Teste" ? " · " + l.cidade : ""}${l.nome_contato ? " · " + l.nome_contato : ""} <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.nome_clinica + " " + (l.cidade || ""))}" target="_blank" onclick="event.stopPropagation()" title="ver no Google Maps" style="color:var(--verde); text-decoration:none">🔎</a></div>
+      <div class="sub">${l.telefone}${l.cidade && l.cidade !== "Teste" ? " · " + l.cidade : ""}${l.nome_contato ? " · " + l.nome_contato : ""} <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.nome_clinica + " " + (l.cidade || ""))}" target="_blank" onclick="event.stopPropagation()" title="ver no Google Maps" style="color:var(--verde); text-decoration:none"></a></div>
       ${Number(l.valor_venda) ? `<div style="margin-top:5px; font-size:13px; font-weight:700; color:#0b6b46">${money(l.valor_venda)}</div>` : ""}
       ${l.telefone_decisor ? `<div style="margin-top:6px; padding:6px 8px; background:#fff7e6; border:1px solid #f0c674; border-radius:6px; font-size:12px">
-        📞 <b>decisor:</b> ${l.telefone_decisor}
+        <b>decisor:</b> ${l.telefone_decisor}
         <a href="https://wa.me/${l.telefone_decisor}" target="_blank" onclick="event.stopPropagation()" style="color:var(--verde); font-weight:600; margin-left:4px">WhatsApp ↗</a>
         <a href="tel:+${l.telefone_decisor}" onclick="event.stopPropagation()" style="color:#2563eb; font-weight:600; margin-left:4px">ligar ↗</a></div>` : ""}
       ${l.tarefa ? (() => {
         const ehHoje = l.tarefa.quando === hojeISO();
         const quando = l.tarefa.quando ? (ehHoje ? "hoje" : l.tarefa.quando.split("-").reverse().slice(0, 2).join("/")) : "";
-        return `<div style="margin-top:6px; padding:5px 8px; background:${atrasada ? "#fbdada" : ehHoje ? "#fff3d6" : "#fff8e1"}; border:1px solid ${atrasada ? "#e08a8a" : "#e8b93a"}; border-radius:6px; font-size:11.5px; color:${atrasada ? "#a3241c" : "#a8641e"}">
-          ${atrasada ? "🔴" : ehHoje ? "⏰" : "📌"} <b>${l.tarefa.tipo === "reuniao" ? "reunião" : l.tarefa.tipo === "ligacao" ? "ligar" : "tarefa"}:</b> ${l.tarefa.texto}${quando ? " · " + quando : ""}${l.tarefa.hora ? " " + l.tarefa.hora : ""}
-          ${atrasada ? " <b>(atrasada)</b>" : ""}</div>`;
+        return `<div style="margin-top:6px; padding:5px 8px; background:${atrasada ? "#fbdada" : ehHoje ? "#fff3d6" : "#fff8e1"}; border:1px solid ${atrasada ? "#e08a8a" : "#e8b93a"}; border-radius:5px; font-size:11.5px; color:${atrasada ? "#a3241c" : "#a8641e"}">
+          <b>${l.tarefa.tipo === "reuniao" ? "Reunião" : l.tarefa.tipo === "ligacao" ? "Ligar" : "Tarefa"}:</b> ${l.tarefa.texto}
+          <div style="font-weight:700; margin-top:1px">${atrasada ? atrasoTxt(l.tarefa.quando) : ehHoje ? "hoje" : quando}${l.tarefa.hora ? " às " + l.tarefa.hora : ""}</div></div>`;
       })() : ""}
       ${previewMsg(l)}
       <div style="margin-top:5px; display:flex; gap:5px; align-items:center; flex-wrap:wrap">
         ${l.ia_pausada ? '<span class="tag quente">humano no comando</span>' : ""}
-        ${l.tag_importacao ? `<span class="tag" style="background:#eef2ff; color:#3949ab">🏷 ${l.tag_importacao}</span>` : ""}
+        ${l.tag_importacao ? `<span class="tag" style="background:#eef2ff; color:#3949ab">${l.tag_importacao}</span>` : ""}
         ${l.nicho ? `<span class="tag">${l.nicho}</span>` : ""}
       </div>
     </div>`;
@@ -913,7 +997,7 @@ async function carregarEu() {
   if (!eu) return;
   if ($("#sair-lbl")) $("#sair-lbl").textContent = `Sair (${eu.nome})`; // mostra quem está logado
   // esconde o que o papel não pode fazer
-  const nav = $("#nav-equipe");
+  const nav = $(".sub-cfg[data-sub='equipe']");
   if (nav) nav.style.display = euPode("gerir_usuarios") ? "" : "none";
   document.querySelectorAll("[data-precisa]").forEach((el) => {
     el.style.display = euPode(el.dataset.precisa) ? "" : "none";
@@ -936,7 +1020,7 @@ async function renderEquipe() {
       <button class="btn mini sec" onclick="trocarSenha(${u.id}, '${u.nome.replace(/'/g, "")}')">senha</button>
       ${u.id === eu?.id ? "" : `
         <button class="btn mini ${u.ativo ? "sec" : ""}" onclick="toggleUsuario(${u.id}, ${u.ativo ? 0 : 1})">${u.ativo ? "desativar" : "reativar"}</button>
-        <button class="btn mini perigo" onclick="excluirUsuario(${u.id}, '${(u.nome || "").replace(/'/g, "")}')" title="excluir de vez">🗑</button>`}
+        <button class="btn mini perigo" onclick="excluirUsuario(${u.id}, '${(u.nome || "").replace(/'/g, "")}')" title="excluir de vez"></button>`}
     </div>`;
   }).join("") || '<div style="color:var(--muted); font-size:13px">só você por enquanto</div>';
 }
@@ -1010,14 +1094,14 @@ async function abrirGestorPipelines() {
     return `
     <div class="card" style="padding:10px 12px; margin-bottom:8px">
       <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap">
-        <b style="flex:1">${p.tipo === "ligacao" ? "📞" : "💬"} ${p.nome}</b>
+        <b style="flex:1">${p.tipo === "ligacao" ? "" : ""} ${p.nome}</b>
         <span class="tag">${p.leads} leads</span>
-        ${p.whatsapp_nome ? `<span class="tag" style="background:#e7f7ef; color:#0b6b46">📱 ${p.whatsapp_nome}</span>` : ""}
+        ${p.whatsapp_nome ? `<span class="tag" style="background:#e7f7ef; color:#0b6b46">${p.whatsapp_nome}</span>` : ""}
         <button class="btn mini sec" onclick="renomearPipeline(${p.id}, '${p.nome.replace(/'/g, "")}')">renomear</button>
         <button class="btn mini perigo" onclick="arquivarPipeline(${p.id})">arquivar</button>
       </div>
 
-      <!-- ETAPAS: clica no nome pra renomear, ✕ exclui (se vazia), + adiciona -->
+      <!-- ETAPAS: clica no nome pra renomear, exclui (se vazia), + adiciona -->
       <div style="margin-top:8px; display:flex; gap:4px; flex-wrap:wrap; align-items:center">
         ${p.etapas.map((e) => `<span class="tag" style="display:inline-flex; gap:4px; align-items:center; font-size:11.5px">
           <span onclick="renomearEtapa(${e.id}, '${(e.nome || "").replace(/'/g, "")}')" style="cursor:pointer" title="clica pra renomear">${e.nome}</span>
@@ -1034,7 +1118,7 @@ async function abrirGestorPipelines() {
         </select></div>` : ""}
 
       ${p.tipo === "ligacao" ? `<div style="margin-top:8px; padding:8px 10px; background:#eef6ff; border-radius:7px">
-        <b style="font-size:12px; color:#1e5aa8">📞 Pra onde vai o lead em cada clique da ligação</b>
+        <b style="font-size:12px; color:#1e5aa8">Pra onde vai o lead em cada clique da ligação</b>
         <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(215px, 1fr)); gap:4px 10px; margin-top:6px">
           ${RESULTADOS_LIG.map(([v, rot]) => `<label style="display:flex; gap:5px; align-items:center; font-size:11.5px">
             <span style="min-width:92px">${rot} →</span>
@@ -1055,8 +1139,8 @@ async function abrirGestorPipelines() {
       <div style="display:flex; gap:6px; margin-top:8px; flex-wrap:wrap">
         <input id="np-nome" placeholder="nome (ex: Ligação BH)" style="flex:1; min-width:160px; font-size:13px; padding:6px 9px">
         <select id="np-tipo" style="font-size:13px">
-          <option value="disparo">💬 Disparo (WhatsApp automático)</option>
-          <option value="ligacao">📞 Ligação (prospecção manual)</option>
+          <option value="disparo">Disparo (WhatsApp automático)</option>
+          <option value="ligacao">Ligação (prospecção manual)</option>
         </select>
         <button class="btn mini" onclick="criarPipeline()">criar</button>
       </div>
@@ -1168,7 +1252,7 @@ function pfRender() {
       <input id="pf-nova-etapa" placeholder="digita o nome da nova fase e aperta Enter" onkeydown="if(event.key==='Enter')pfAddEtapa()">
     </div>
     ${p.tipo === "disparo" ? `<div style="display:flex; gap:8px; align-items:center; margin-top:14px; padding:10px 12px; background:var(--verde-soft); border-radius:9px; font-size:13px">
-      <span>📱 WhatsApp deste funil:</span>
+      <span>WhatsApp deste funil:</span>
       <select id="pf-whats" onchange="vincularWhats(${p.id}, this.value)" style="flex:1; font-size:12.5px"></select>
     </div>` : ""}`;
 
@@ -1178,7 +1262,7 @@ function pfRender() {
     </div>
     ${PF_CLIQUES.map(([v, rot]) => `
       <div class="pf-clique">
-        <b>📞 ${rot}</b>
+        <b>${rot}</b>
         <span style="color:var(--muted)">→</span>
         <select onchange="salvarMapaLigacao(${p.id}, '${v}', this.value)">
           <option value="">(não move o lead)</option>
@@ -1291,7 +1375,7 @@ async function pfCarregarWhats(p) {
     ws.map((i) => `<option value="${i.id}" ${p.instancia_id === i.id ? "selected" : ""}>${i.nome || "WhatsApp " + i.id} (${i.status})</option>`).join("");
 }
 
-// renomear rápido pelo ✏️ do lado do nome do funil (mini-modal bonito, sem popup nativo)
+// renomear rápido pelo  do lado do nome do funil (mini-modal bonito, sem popup nativo)
 function renomearFunilRapido() {
   const p = pipelines.find((x) => x.id === pipelineAtual);
   if (!p) return;
@@ -1318,10 +1402,10 @@ function modalNovoFunil() {
       <input id="nf-nome" placeholder="nome do funil (ex: Valentino, Clínicas BH...)" style="font-size:14px; padding:9px 12px">
       <div style="display:flex; gap:8px">
         <div class="nf-tipo on" data-nf="ligacao" onclick="nfEscolher('ligacao')">
-          <div class="ic">📞</div><b>Ligação</b><span>prospecção manual por telefone</span>
+          <div class="ic"></div><b>Ligação</b><span>prospecção manual por telefone</span>
         </div>
         <div class="nf-tipo" data-nf="disparo" onclick="nfEscolher('disparo')">
-          <div class="ic">💬</div><b>Disparo</b><span>WhatsApp automático com IA</span>
+          <div class="ic"></div><b>Disparo</b><span>WhatsApp automático com IA</span>
         </div>
       </div>
       <div style="font-size:11.5px; color:var(--muted)">O funil nasce com as fases padrão — depois é só personalizar do teu jeito.</div>
@@ -1365,7 +1449,7 @@ function abrirNovoLead() {
       <div style="display:flex; gap:6px; align-items:center">
         <span style="font-size:12.5px; color:var(--muted)">Pipeline:</span>
         <select id="nl-pipeline" style="flex:1; font-size:13px">
-          ${pipelines.map((p) => `<option value="${p.id}" ${p.id === pipelineAtual ? "selected" : ""}>${p.tipo === "ligacao" ? "📞" : "💬"} ${p.nome}</option>`).join("")}
+          ${pipelines.map((p) => `<option value="${p.id}" ${p.id === pipelineAtual ? "selected" : ""}>${p.tipo === "ligacao" ? "" : ""} ${p.nome}</option>`).join("")}
         </select>
       </div>
       <label style="font-size:12.5px; display:flex; gap:6px; align-items:center">
@@ -1448,7 +1532,7 @@ function renderListaConv() {
   // Se a IA está tocando a conversa, fica normal.
   $("#lista-conv").innerHTML = comMsg.map((l) => `
     <div class="conv-item ${convAberta === l.id ? "on" : ""}${l.precisa_resposta ? " pendente" : ""}" onclick="abrirConversa(${l.id})">
-      <div class="conv-nome" style="font-weight:600; font-size:14px">${l.precisa_resposta ? "🔴 " : l.ia_pausada ? "🔥 " : ""}${l.nome_clinica}</div>
+      <div class="conv-nome" style="font-weight:600; font-size:14px">${l.precisa_resposta ? "" : l.ia_pausada ? "" : ""}${l.nome_clinica}</div>
       <div style="font-size:12px; color:var(--muted)">${l.telefone} · ${l.status}</div>
     </div>`).join("") || '<div style="color:var(--muted); font-size:13px">nenhuma conversa ainda</div>';
 }
@@ -1482,28 +1566,34 @@ async function abrirConversa(id, auto) {
   if (threadAberta && !(d.threads || []).some((t) => t.id === threadAberta)) threadAberta = null;
   $("#chat").innerHTML = `
     <div class="chat-topo">
-      <b>${l.nome_clinica}</b> <span style="color:var(--muted); font-size:13px">${l.telefone} ${l.cidade ? "· " + l.cidade : ""}</span>
-      <button class="btn mini ${l.ia_pausada ? "" : "sec"}" onclick="toggleIA(${l.id}, ${l.ia_pausada ? 0 : 1})">${l.ia_pausada ? "🤖 Devolver pra IA" : "🙋 Assumir conversa"}</button>
+      <b>${l.nome_clinica}</b> <span style="color:var(--muted); font-size:13px">${fmtTel(l.telefone)}${l.cidade ? " · " + l.cidade : ""}</span>
+      <button class="btn mini ${l.ia_pausada ? "" : "sec"}" onclick="toggleIA(${l.id}, ${l.ia_pausada ? 0 : 1})">${l.ia_pausada ? "Devolver pra IA" : "Assumir conversa"}</button>
       <select onchange="mudarStatus(${l.id}, this.value)" style="font-size:12px">
         ${STATUS_COLS.map(([s, r]) => `<option value="${s}" ${l.status === s ? "selected" : ""}>${r}</option>`).join("")}
         <option value="optout" ${l.status === "optout" ? "selected" : ""}>Opt-out</option>
         <option value="descartado" ${l.status === "descartado" ? "selected" : ""}>Descartado</option>
       </select>
-      ${d.reuniao ? `<span class="tag">📅 ${d.reuniao.inicio.replace("T", " ")} · ${d.reuniao.closer}</span>` : ""}
-      <button class="btn mini ${notasAbertas ? "" : "sec"}" style="margin-left:auto" onclick="toggleNotas()">📋 ${notasAbertas ? "fechar notas" : "notas"}</button>
-      <button class="btn mini perigo" onclick="excluirLead(${l.id}, '${(l.nome_clinica || "").replace(/'/g, "")}')">🗑</button>
+      ${d.reuniao ? `<span class="tag">${d.reuniao.inicio.replace("T", " ")} · ${d.reuniao.closer}</span>` : ""}
+      <span style="margin-left:auto; display:flex; gap:6px; align-items:center">
+        <button class="btn mini ${notasAbertas ? "" : "sec"}" onclick="toggleNotas()">${notasAbertas ? "Fechar notas" : "Abrir notas"}</button>
+        <span onclick="menuLead(event, ${l.id})" title="mais opções" style="cursor:pointer; color:var(--muted); padding:3px 5px" data-ic="pontos"></span>
+      </span>
     </div>
     ${(d.threads || []).length > 1 ? `<div style="padding:6px 14px; border-bottom:1px solid var(--border); display:flex; gap:6px; align-items:center; flex-wrap:wrap; background:#fafbfa">
       <span style="font-size:11.5px; color:var(--muted)">conversas:</span>
-      ${d.threads.map((t) => `<button class="btn mini ${threadAberta === t.id ? "" : "sec"}" style="font-size:11.5px" onclick="abrirThread(${l.id}, ${t.id})">${t.rotulo || t.telefone}${t.nao_lida ? " 🔴" : ""}</button>`).join("")}
+      ${d.threads.map((t) => `<button class="btn mini ${threadAberta === t.id ? "" : "sec"}" style="font-size:11.5px" onclick="abrirThread(${l.id}, ${t.id})">${t.rotulo || t.telefone}${t.nao_lida ? " " : ""}</button>`).join("")}
     </div>` : ""}
     <div class="chat-msgs" id="chat-msgs">${d.mensagens.map((m) => `
       <div class="bolha ${m.role}">${m.texto}<span class="hora">${horaSP(m.criado_em)}</span></div>`).join("")}</div>
     <div class="chat-envio">
       <textarea id="chat-texto" rows="2" placeholder="responder como humano (pausa a IA)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMsg(${l.id})}"></textarea>
+      <button class="btn sec" id="btn-gravar" title="gravar áudio" onclick="gravarAudio(${l.id})" style="padding:8px 11px"><span data-ic="microfone"></span></button>
+      <input type="file" id="audio-chat" accept="audio/*" style="display:none" onchange="enviarAudioArquivo(${l.id})">
+      <button class="btn sec" title="enviar arquivo de áudio" onclick="$('#audio-chat').click()" style="padding:8px 11px"><span data-ic="mais"></span></button>
       <button class="btn" onclick="enviarMsg(${l.id})">Enviar</button>
     </div>`;
   renderPainelNotas(d);
+  pintarIcones($("#chat"));
   if (rascunho) $("#chat-texto").value = rascunho; // devolve o texto que estava sendo digitado
   if (rascunhoNota && $("#nota-input")) $("#nota-input").value = rascunhoNota; // idem pra nota
   if (rascunhoTarefa && $("#tarefa-input")) $("#tarefa-input").value = rascunhoTarefa; // idem pra tarefa
@@ -1524,12 +1614,62 @@ async function abrirConversa(id, auto) {
 let notasAbertas = localStorage.getItem("notas_abertas") === "1";
 let threadAberta = null;
 
+// ---- icones proprios (SVG inline, sem emoji) ----
+const ICONES = {
+  grafico: `<path d="M3 3v18h18"/><path d="M7 15l3.5-4 3 2.5L20 7"/>`,
+  kanban: `<rect x="3" y="4" width="5" height="16" rx="1"/><rect x="9.5" y="4" width="5" height="11" rx="1"/><rect x="16" y="4" width="5" height="7" rx="1"/>`,
+  chat: `<path d="M20 12a7.5 7.5 0 0 1-10.9 6.7L4 20l1.4-4.3A7.5 7.5 0 1 1 20 12z"/>`,
+  megafone: `<path d="M3 10v4a1 1 0 0 0 1 1h3l6 4V5L7 9H4a1 1 0 0 0-1 1z"/><path d="M17 9a4 4 0 0 1 0 6"/>`,
+  calendario: `<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>`,
+  teste: `<path d="M9 3h6M10 3v6.2L5.5 18a2 2 0 0 0 1.8 3h9.4a2 2 0 0 0 1.8-3L14 9.2V3"/>`,
+  engrenagem: `<circle cx="12" cy="12" r="3.2"/><path d="M19.4 14a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V20a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7.5 18.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 4 12.8H4a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 5.6 6.5l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H11a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V11a2 2 0 1 1 0 4h-.1z"/>`,
+  lua: `<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>`,
+  sol: `<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>`,
+  sair: `<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/>`,
+  usuarios: `<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/>`,
+  cerebro: `<path d="M9.5 3A2.5 2.5 0 0 0 7 5.5v.2A2.8 2.8 0 0 0 5 8.4a2.8 2.8 0 0 0 .5 1.6A2.8 2.8 0 0 0 5 12.4c0 1 .5 1.8 1.3 2.3A2.5 2.5 0 0 0 9 18a2.5 2.5 0 0 0 3-2.4V5.5A2.5 2.5 0 0 0 9.5 3z"/><path d="M14.5 3A2.5 2.5 0 0 1 17 5.5v.2a2.8 2.8 0 0 1 2 2.7c0 .6-.2 1.1-.5 1.6a2.8 2.8 0 0 1 .5 2.4c0 1-.5 1.8-1.3 2.3A2.5 2.5 0 0 1 15 18a2.5 2.5 0 0 1-3-2.4"/><path d="M12 18v3"/>`,
+  telefone: `<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.4 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>`,
+  whatsapp: `<path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/><path d="M8.5 7.8c.2-.4.4-.4.7-.4h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2 0 .4-.1.6l-.5.6c-.1.2-.2.3 0 .6a8 8 0 0 0 3.5 3c.3.1.5.1.6 0l.7-.8c.2-.2.4-.2.6-.1l1.8.9c.3.1.4.3.4.5v.6c0 .4-.4.9-.8 1a3 3 0 0 1-1.7.2 12 12 0 0 1-7.2-6.5 3 3 0 0 1 .1-2.6z" fill="currentColor" stroke="none"/>`,
+  copiar: `<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>`,
+  nota: `<path d="M15 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9z"/><path d="M15 3v6h6M8 13h7M8 17h5"/>`,
+  tarefa: `<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>`,
+  lixeira: `<path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/>`,
+  mais: `<path d="M12 5v14M5 12h14"/>`,
+  pontos: `<circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/>`,
+  relogio: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 1.9"/>`,
+  alerta: `<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>`,
+  predio: `<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 8h.01M15 8h.01M9 12h.01M15 12h.01M9 16h.01M15 16h.01"/>`,
+  link: `<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>`,
+  busca: `<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>`,
+  dinheiro: `<circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.6-1-1.7-1.5-3-1.5-1.7 0-3 .9-3 2.1 0 2.7 6 1.2 6 3.9 0 1.2-1.3 2-3 2-1.3 0-2.4-.5-3-1.5M12 6.5v11"/>`,
+  etiqueta: `<path d="M20.6 13.4 12 22l-9-9V4a1 1 0 0 1 1-1h9l7.6 7.6a2 2 0 0 1 0 2.8z"/><path d="M7.5 7.5h.01"/>`,
+  pessoa: `<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>`,
+  globo: `<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>`,
+  microfone: `<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>`,
+  foguete: `<path d="M5 13c-1 3-1 6-1 6s3 0 6-1"/><path d="M12.5 3.5C16 2 21 3 21 3s1 5-.5 8.5c-1.8 4.2-6 7-6 7l-4-4s2.8-4.2 7-6z"/><circle cx="15" cy="9" r="1.5"/>`,
+  seta: `<path d="M9 18l6-6-6-6"/>`,
+  coroa: `<path d="M3 18h18M4 8l3.5 3L12 5l4.5 6L20 8l-1.5 8h-13z"/>`,
+  cartao: `<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>`,
+};
+function ic(nome, tam = 17) {
+  const d = ICONES[nome] || "";
+  return `<svg class="ic" width="${tam}" height="${tam}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+}
+// pinta os data-ic="nome" do HTML estatico
+function pintarIcones(raiz = document) {
+  raiz.querySelectorAll("[data-ic]").forEach((el) => {
+    if (el.dataset.icPronto) return;
+    el.innerHTML = ic(el.dataset.ic, Number(el.dataset.icTam) || 17);
+    el.dataset.icPronto = "1";
+  });
+}
+
 // ---- tema claro/escuro (fica salvo no navegador) ----
 function aplicarTema(t) {
   document.documentElement.setAttribute("data-tema", t);
   localStorage.setItem("sdr_tema", t);
   const esc = t === "dark";
-  if ($("#tema-ico")) $("#tema-ico").textContent = esc ? "☀️" : "🌙";
+  if ($("#tema-ico")) $("#tema-ico").textContent = esc ? "" : "";
   if ($("#tema-lbl")) $("#tema-lbl").textContent = esc ? "Tema claro" : "Tema escuro";
 }
 function toggleTema() {
@@ -1589,8 +1729,8 @@ function linhaTelefone(l, t) {
   return `<div style="display:flex; gap:5px; align-items:center; margin-bottom:3px; flex-wrap:wrap">
     <b style="font-size:12.5px">${num}</b>
     ${t.rotulo ? `<span style="color:var(--muted); font-size:11.5px">${t.rotulo}</span>` : ""}
-    <a href="tel:+${num}" title="ligar (abre o discador/VoIP)" style="color:#2563eb; font-size:11.5px; font-weight:600; text-decoration:none">📞 ligar</a>
-    <span onclick="conversarCom(${l.id}, '${num}', '${(t.rotulo || "").replace(/'/g, "")}')" title="abrir conversa aqui no sistema" style="cursor:pointer; color:var(--verde); font-size:11.5px; font-weight:600">💬 mensagem</span>
+    <a href="tel:+${num}" title="ligar (abre o discador/VoIP)" style="color:#2563eb; font-size:11.5px; font-weight:600; text-decoration:none">ligar</a>
+    <span onclick="conversarCom(${l.id}, '${num}', '${(t.rotulo || "").replace(/'/g, "")}')" title="abrir conversa aqui no sistema" style="cursor:pointer; color:var(--verde); font-size:11.5px; font-weight:600">mensagem</span>
     ${ehDecisor ? "" : `<span onclick="excluirTelefone(${t.id}, ${l.id})" style="cursor:pointer; color:var(--muted); font-size:11px">✕</span>`}
   </div>`;
 }
@@ -1606,139 +1746,195 @@ function renderPainelNotas(d) {
   const pipeAtual = pipes.find((p) => p.id === l.pipeline_id);
   const tels = d.telefones || [];
   const abertas = (d.tarefas || []).filter((t) => !t.feita);
+  const linha = (rot, conteudo) => `<div class="nota-linha"><span>${rot}</span><span>${conteudo}</span></div>`;
 
   el.innerHTML = `
-    <!-- 1. NOME DA EMPRESA -->
-    <div style="margin-bottom:10px">
-      <b style="font-size:15px">${l.nome_clinica}</b>
-      <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.nome_clinica + " " + (l.cidade || ""))}" target="_blank" style="color:var(--verde); font-size:11.5px; font-weight:600; margin-left:6px">ver no Google ↗</a>
+    <!-- TOPO: nome grande + resumo da IA -->
+    <div class="pn-topo">
+      <div style="display:flex; align-items:flex-start; gap:8px">
+        <div class="pn-nome" style="flex:1">${l.nome_clinica}</div>
+        <span onclick="menuLead(event, ${l.id})" title="mais opções" style="cursor:pointer; color:var(--muted); padding:2px 4px" data-ic="pontos"></span>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center; margin-top:5px; font-size:12px; color:var(--muted); flex-wrap:wrap">
+        ${l.cidade && l.cidade !== "Teste" ? `<span>${l.cidade}</span>` : ""}
+        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.nome_clinica + " " + (l.cidade || ""))}" target="_blank" style="color:var(--verde); font-weight:600; text-decoration:none">ver no Google</a>
+        ${pipeAtual ? `<span style="margin-left:auto">${pipeAtual.nome}</span>` : ""}
+      </div>
+      <div id="resumo-ia" style="margin-top:9px; padding:9px 11px; background:var(--verde-soft); font-size:12.5px; line-height:1.45; white-space:pre-wrap; max-height:170px; overflow-y:auto">${d.resumo || '<span style="color:var(--muted)">gerando resumo…</span>'}</div>
     </div>
 
-    <!-- 2. RESUMO DO ATENDIMENTO DA IA -->
-    <div style="background:var(--verde-soft); border-radius:8px; padding:9px 11px; margin-bottom:10px">
-      <div style="font-size:11px; color:var(--muted); font-weight:600; margin-bottom:4px">RESUMO DO ATENDIMENTO</div>
-      <div id="resumo-ia" style="font-size:12.5px; white-space:pre-wrap; line-height:1.4">${d.resumo || '<span style="color:var(--muted)">gerando resumo…</span>'}</div>
-    </div>
-
-    <!-- 3. TAG DA IMPORTACAO -->
-    <div class="nota-linha"><span>🏷 Tag</span><span>${l.tag_importacao || l.origem_lista || "<i style='color:var(--muted)'>sem tag</i>"}</span></div>
-
-    <!-- 4. ETAPA + PIPELINE (com botao pra mudar) -->
-    <div class="nota-linha"><span>📊 Etapa</span><span>
-      <select onchange="moverParaPipeline(${l.id}, this.value)" style="width:100%; font-size:12px; padding:4px 6px">
-        ${pipes.map((p) => `<optgroup label="${p.tipo === "ligacao" ? "📞" : "💬"} ${p.nome}">
+    <!-- CORPO: os dados do lead -->
+    <div class="pn-corpo">
+      <div class="pn-secao">Situação</div>
+      ${linha("Etapa", `<select onchange="moverParaPipeline(${l.id}, this.value)">
+        ${pipes.map((p) => `<optgroup label="${p.nome}">
           ${p.etapas.map((e) => `<option value="${e.id}" ${e.id === l.etapa_id ? "selected" : ""}>${e.nome}</option>`).join("")}
         </optgroup>`).join("")}
-      </select>
-      <div style="font-size:11px; color:var(--muted); margin-top:2px">pipeline: ${pipeAtual?.nome || "—"}</div>
-    </span></div>
-
-    <!-- responsavel pelo lead -->
-    <div class="nota-linha"><span>👤 Responsável</span><span>
-      <select onchange="editarCampo(${l.id}, 'usuario_id', this.value)" style="width:100%; font-size:12px; padding:4px 6px">
+      </select>`)}
+      ${linha("Responsável", `<select onchange="editarCampo(${l.id}, 'usuario_id', this.value)">
         <option value="">— ninguém —</option>
         ${(d.usuarios || []).map((u) => `<option value="${u.id}" ${u.id === l.usuario_id ? "selected" : ""}>${u.nome}</option>`).join("")}
-      </select></span></div>
+      </select>`)}
+      ${linha("Valor", `<input type="number" value="${l.valor_venda || ""}" placeholder="0,00" onchange="editarCampo(${l.id}, 'valor_venda', this.value)">`)}
+      ${linha("Tag", `<span style="font-size:12.5px">${l.tag_importacao || l.origem_lista || "<i style='color:var(--muted)'>sem tag</i>"}</span>`)}
 
-    <!-- 5. VALOR DA VENDA -->
-    <div class="nota-linha"><span>💰 Valor</span><span>
-      <input type="number" value="${l.valor_venda || ""}" placeholder="0,00" style="width:100%; font-size:12.5px; padding:4px 7px"
-        onchange="editarCampo(${l.id}, 'valor_venda', this.value)"></span></div>
+      <div class="pn-secao">Contato</div>
+      ${linha("Telefones", tels.filter((t) => t.tipo !== "decisor").map((t) => `
+        <div style="display:flex; gap:6px; align-items:center; margin-bottom:3px">
+          <span class="num-clicavel" onclick="menuTelefone(event, '${t.numero}', ${l.id})">${fmtTel(t.numero)}</span>
+          ${t.rotulo ? `<span style="color:var(--muted); font-size:11px">${t.rotulo}</span>` : ""}
+        </div>`).join("") + `
+        <input id="novo-tel" placeholder="+ adicionar telefone" style="font-size:12px; margin-top:2px" onkeydown="if(event.key==='Enter')addTelefone(${l.id})">`)}
+      ${linha("Atendente", `<input value="${l.nome_atendente || l.nome_contato || ""}" placeholder="quem atendeu" onchange="editarCampo(${l.id}, 'nome_atendente', this.value)">`)}
+      ${linha("Decisor", `<input value="${l.nome_decisor || ""}" placeholder="nome do decisor" onchange="editarCampo(${l.id}, 'nome_decisor', this.value)">`)}
+      ${linha("Tel. decisor", tels.filter((t) => t.tipo === "decisor").map((t) => `
+        <div style="display:flex; gap:6px; align-items:center">
+          <span class="num-clicavel" onclick="menuTelefone(event, '${t.numero}', ${l.id})">${fmtTel(t.numero)}</span>
+          ${t.rotulo ? `<span style="color:var(--muted); font-size:11px">${t.rotulo}</span>` : ""}
+        </div>`).join("") || `<input id="novo-tel-decisor" placeholder="telefone do decisor" style="font-size:12px" onkeydown="if(event.key==='Enter')addTelefoneDecisor(${l.id})">`)}
 
-    <!-- 6. TELEFONES DA EMPRESA (varios) -->
-    <div class="nota-linha"><span>📱 Telefones</span><span>
-      ${tels.filter((t) => t.tipo !== "decisor").map((t) => linhaTelefone(l, t)).join("") || "<i style='color:var(--muted)'>nenhum</i>"}
-      <div style="display:flex; gap:4px; margin-top:4px">
-        <input id="novo-tel" placeholder="+ outro telefone" style="flex:1; min-width:0; font-size:11.5px; padding:4px 7px" onkeydown="if(event.key==='Enter')addTelefone(${l.id})">
-        <button class="btn mini sec" style="font-size:11px" onclick="addTelefone(${l.id})">add</button>
-      </div></span></div>
+      <div class="pn-secao">Empresa</div>
+      ${linha("Nicho", `<input value="${l.nicho || ""}" placeholder="ex: Odontologia" onchange="editarCampo(${l.id}, 'nicho', this.value)">`)}
+      ${linha("Site", l.site
+        ? `<span class="num-clicavel" onclick="menuLink(event, '${(l.site || "").replace(/'/g, "")}')">${(l.site || "").replace(/^https?:\/\//, "").slice(0, 32)}</span>`
+        : `<input value="" placeholder="site da empresa" onchange="editarCampo(${l.id}, 'site', this.value)">`)}
+      ${linha("Google", l.google_negocio
+        ? `<span class="num-clicavel" onclick="menuLink(event, '${(l.google_negocio || "").replace(/'/g, "")}')">abrir perfil</span>`
+        : `<input value="" placeholder="link do Google Meu Negócio" onchange="editarCampo(${l.id}, 'google_negocio', this.value)">`)}
 
-    <!-- 7. NICHO -->
-    <div class="nota-linha"><span>🏥 Nicho</span><span>
-      <input value="${l.nicho || ""}" placeholder="ex: Odontologia" style="width:100%; font-size:12.5px; padding:4px 7px"
-        onchange="editarCampo(${l.id}, 'nicho', this.value)"></span></div>
-
-    <!-- 8. NOME DO DECISOR -->
-    <div class="nota-linha"><span>👔 Decisor</span><span>
-      <input value="${l.nome_decisor || ""}" placeholder="nome do decisor" style="width:100%; font-size:12.5px; padding:4px 7px"
-        onchange="editarCampo(${l.id}, 'nome_decisor', this.value)"></span></div>
-
-    <!-- 9. TELEFONE DO DECISOR -->
-    <div class="nota-linha"><span>📞 Tel. decisor</span><span>
-      ${tels.filter((t) => t.tipo === "decisor").map((t) => linhaTelefone(l, t)).join("") || `
-        <div style="display:flex; gap:4px">
-          <input id="novo-tel-decisor" placeholder="telefone do decisor" style="flex:1; min-width:0; font-size:11.5px; padding:4px 7px" onkeydown="if(event.key==='Enter')addTelefoneDecisor(${l.id})">
-          <button class="btn mini sec" style="font-size:11px" onclick="addTelefoneDecisor(${l.id})">add</button>
-        </div>`}</span></div>
-
-    <!-- 10. NOME DA ATENDENTE -->
-    <div class="nota-linha"><span>🙋 Atendente</span><span>
-      <input value="${l.nome_atendente || l.nome_contato || ""}" placeholder="quem atendeu" style="width:100%; font-size:12.5px; padding:4px 7px"
-        onchange="editarCampo(${l.id}, 'nome_atendente', this.value)"></span></div>
-
-    <!-- 11. GOOGLE MEU NEGOCIO -->
-    <div class="nota-linha"><span>🌐 Google Meu Negócio</span><span>
-      ${l.google_negocio ? `<a href="${l.google_negocio}" target="_blank" style="color:var(--verde); font-size:12px">abrir ↗</a> ` : ""}
-      <input value="${l.google_negocio || ""}" placeholder="link do GMN" style="width:100%; font-size:11.5px; padding:4px 7px; margin-top:2px"
-        onchange="editarCampo(${l.id}, 'google_negocio', this.value)"></span></div>
-
-    <!-- REGISTRO DE LIGACAO (alimenta o dashboard de prospecção).
-         O botao do ULTIMO resultado registrado fica verde (marcado). -->
-    ${`<div style="margin-top:12px; padding:10px 11px; background:#eef6ff; border:1px solid #b6d4f5; border-radius:8px">
-      <b style="font-size:12.5px; color:#1e5aa8">📞 Registrar ligação</b>
-      <div style="font-size:11.5px; color:var(--muted); margin:3px 0 7px">O card se move sozinho conforme o resultado.</div>
-      <div style="display:flex; gap:4px; flex-wrap:wrap">
+      <div class="pn-secao">Registrar ligação</div>
+      <div style="padding:9px 14px; display:flex; gap:5px; flex-wrap:wrap">
         ${[["nao_atendeu", "não atendeu"], ["conectou", "atendeu"], ["decisor", "falei c/ decisor"], ["reuniao", "marquei reunião"], ["recusou", "recusou"]]
-          .map(([v, r]) => `<button class="btn mini ${d.ultima_ligacao === v ? "" : "sec"}" style="font-size:11px" onclick="registrarLigacao(${l.id}, '${v}')">${d.ultima_ligacao === v ? "✓ " : ""}${r}</button>`).join("")}
+          .map(([v, r]) => `<button class="btn mini ${d.ultima_ligacao === v ? "" : "sec"}" style="font-size:11px" onclick="registrarLigacao(${l.id}, '${v}')">${r}</button>`).join("")}
       </div>
-    </div>`}
 
-    <!-- 12. CAMPO NOTA / TAREFA -->
-    <div style="margin-top:14px; border-top:2px solid var(--border); padding-top:10px">
-      <div style="display:flex; gap:5px; margin-bottom:7px">
-        <button id="btn-modo-nota" class="btn mini ${modoNota === "nota" ? "" : "sec"}" style="flex:1" onclick="setModoNota('nota')">📝 Nota</button>
-        <button id="btn-modo-tarefa" class="btn mini ${modoNota === "tarefa" ? "" : "sec"}" style="flex:1" onclick="setModoNota('tarefa')">📌 Tarefa</button>
-      </div>
-      <div id="form-nota" style="${modoNota === "nota" ? "" : "display:none"}">
-        <input id="nota-input" placeholder="ex: liguei, não atendeu" style="width:100%; font-size:12.5px; padding:6px 9px" onkeydown="if(event.key==='Enter')addNota(${l.id})">
-        <button class="btn mini" style="width:100%; margin-top:5px" onclick="addNota(${l.id})">salvar nota</button>
-      </div>
-      <div id="form-tarefa" style="${modoNota === "tarefa" ? "" : "display:none"}">
-        <input id="tarefa-input" placeholder="ex: ligar pro Marcelo" style="width:100%; font-size:12.5px; padding:6px 9px" onkeydown="if(event.key==='Enter')addTarefa(${l.id})">
-        <div style="display:flex; gap:4px; margin-top:5px">
-          <input id="tarefa-quando" type="date" style="flex:1; min-width:0; font-size:11.5px; padding:4px 6px">
-          <input id="tarefa-hora" type="time" style="width:90px; font-size:11.5px; padding:4px 6px">
-        </div>
-        <div style="display:flex; gap:4px; margin-top:5px">
-          <select id="tarefa-tipo" style="flex:1; font-size:11.5px; padding:4px 6px">
-            <option value="followup">🔔 Follow-up</option>
-            <option value="ligacao">📞 Ligação</option>
-            <option value="reuniao">📅 Reunião (vai pra agenda)</option>
-          </select>
-          <select id="tarefa-usuario" style="flex:1; font-size:11.5px; padding:4px 6px">
-            ${(d.usuarios || []).map((u) => `<option value="${u.id}">${u.nome}</option>`).join("")}
-          </select>
-        </div>
-        <button class="btn mini" style="width:100%; margin-top:5px" onclick="addTarefa(${l.id})">salvar tarefa</button>
-      </div>
+      ${(d.notas || []).length ? `<div class="pn-secao">Notas</div>
+        ${d.notas.map((n) => `<div style="padding:7px 14px; border-bottom:1px solid var(--border); font-size:12.5px; display:flex; gap:7px">
+          <span style="color:var(--muted); white-space:nowrap; font-size:11px">${dataHoraSP(n.criado_em)}</span>
+          <span style="flex:1">${n.texto}${n.usuario_nome ? `<span style="color:var(--muted)"> — ${n.usuario_nome}</span>` : ""}</span>
+          <span onclick="excluirNota(${n.id}, ${l.id})" style="cursor:pointer; color:var(--muted)">✕</span>
+        </div>`).join("")}` : ""}
     </div>
 
-    <!-- lista de tarefas e notas -->
-    ${abertas.length ? `<div style="margin-top:12px">
-      <div style="font-size:11px; color:var(--muted); font-weight:600; margin-bottom:5px">TAREFAS ABERTAS</div>
-      ${abertas.map((t) => `<div style="font-size:12px; padding:5px 7px; margin-bottom:4px; border-radius:6px; background:${tarefaAtrasada(t) ? "#fdecec" : "#fff8e1"}; border:1px solid ${tarefaAtrasada(t) ? "#e88" : "#e8b93a"}; display:flex; gap:5px; align-items:flex-start">
-        <input type="checkbox" onchange="marcarTarefa(${t.id}, this.checked, ${l.id})" style="cursor:pointer; margin-top:2px">
-        <span style="flex:1">${t.tipo === "reuniao" ? "📅" : t.tipo === "ligacao" ? "📞" : "🔔"} ${t.texto}
-          ${t.quando ? `<div style="color:var(--muted); font-size:11px">${t.quando}${t.hora ? " às " + t.hora : ""}${t.usuario_nome ? " · " + t.usuario_nome : ""}${tarefaAtrasada(t) ? " <b style='color:#b3261e'>(atrasada)</b>" : ""}</div>` : ""}</span>
-        <span onclick="excluirTarefa(${t.id}, ${l.id})" style="cursor:pointer; color:var(--muted)">✕</span>
-      </div>`).join("")}</div>` : ""}
-    ${(d.notas || []).length ? `<div style="margin-top:12px">
-      <div style="font-size:11px; color:var(--muted); font-weight:600; margin-bottom:5px">NOTAS</div>
-      ${d.notas.map((n) => `<div style="font-size:12px; padding:5px 0; border-bottom:1px dashed var(--border); display:flex; gap:6px">
-        <span style="color:var(--muted); white-space:nowrap; font-size:11px">${dataHoraSP(n.criado_em)}</span>
-        <span style="flex:1">${n.texto}${n.usuario_nome ? `<span style="color:var(--muted)"> — ${n.usuario_nome}</span>` : ""}</span>
-        <span onclick="excluirNota(${n.id}, ${l.id})" style="cursor:pointer; color:var(--muted)">✕</span>
-      </div>`).join("")}</div>` : ""}`;
+    <!-- RODAPE FIXO: tarefas em aberto + campo de nota/tarefa -->
+    <div class="pn-rodape">
+      ${abertas.map((t) => {
+        const venceu = tarefaAtrasada(t);
+        return `<div class="pn-tarefa ${venceu ? "venceu" : ""}">
+          <input type="checkbox" onchange="marcarTarefa(${t.id}, this.checked, ${l.id})" style="cursor:pointer; margin-top:2px">
+          <span style="flex:1">
+            <b>${t.tipo === "reuniao" ? "Reunião" : t.tipo === "ligacao" ? "Ligar" : "Tarefa"}:</b> ${t.texto}
+            ${t.quando ? `<div style="font-size:11px; opacity:.85">${venceu ? atrasoTxt(t.quando) : t.quando === hojeISO() ? "hoje" : t.quando.split("-").reverse().slice(0, 2).join("/")}${t.hora ? " às " + t.hora : ""}${t.usuario_nome ? " · " + t.usuario_nome : ""}</div>` : ""}
+          </span>
+          <span onclick="excluirTarefa(${t.id}, ${l.id})" style="cursor:pointer; color:var(--muted)">✕</span>
+        </div>`;
+      }).join("")}
+      <div style="padding:9px 14px; border-top:1px solid var(--border)">
+        <div style="display:flex; gap:5px; margin-bottom:6px">
+          <button id="btn-modo-nota" class="btn mini ${modoNota === "nota" ? "" : "sec"}" style="flex:1" onclick="setModoNota('nota')">Nota</button>
+          <button id="btn-modo-tarefa" class="btn mini ${modoNota === "tarefa" ? "" : "sec"}" style="flex:1" onclick="setModoNota('tarefa')">Tarefa</button>
+        </div>
+        <div id="form-nota" style="${modoNota === "nota" ? "" : "display:none"}">
+          <input id="nota-input" placeholder="ex: liguei, não atendeu" style="width:100%; font-size:12.5px; padding:6px 9px" onkeydown="if(event.key==='Enter')addNota(${l.id})">
+        </div>
+        <div id="form-tarefa" style="${modoNota === "tarefa" ? "" : "display:none"}">
+          <input id="tarefa-input" placeholder="ex: ligar pro Marcelo" style="width:100%; font-size:12.5px; padding:6px 9px" onkeydown="if(event.key==='Enter')addTarefa(${l.id})">
+          <div style="display:flex; gap:4px; margin-top:5px">
+            <input id="tarefa-quando" type="date" style="flex:1; min-width:0; font-size:11.5px; padding:4px 6px">
+            <input id="tarefa-hora" type="time" style="width:88px; font-size:11.5px; padding:4px 6px">
+          </div>
+          <div style="display:flex; gap:4px; margin-top:5px">
+            <select id="tarefa-tipo" style="flex:1; font-size:11.5px; padding:4px 6px">
+              <option value="followup">Follow-up</option>
+              <option value="ligacao">Ligação</option>
+              <option value="reuniao">Reunião (vai pra agenda)</option>
+            </select>
+            <select id="tarefa-usuario" style="flex:1; font-size:11.5px; padding:4px 6px">
+              ${(d.usuarios || []).map((u) => `<option value="${u.id}">${u.nome}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+        <button class="btn mini" style="width:100%; margin-top:6px" onclick="${modoNota === "nota" ? `addNota(${l.id})` : `addTarefa(${l.id})`}">salvar</button>
+      </div>
+    </div>`;
+  pintarIcones(el);
+}
+
+// ---- menus de contexto (clicar no número/link abre as opções) ----
+function fecharMenuCtx() { document.querySelector(".menu-ctx")?.remove(); }
+document.addEventListener("click", (e) => { if (!e.target.closest(".menu-ctx") && !e.target.closest(".num-clicavel")) fecharMenuCtx(); });
+
+function abrirMenuCtx(ev, itens) {
+  ev.stopPropagation();
+  fecharMenuCtx();
+  const m = document.createElement("div");
+  m.className = "menu-ctx";
+  m.innerHTML = itens.map((i, n) => i === "-"
+    ? `<div style="height:1px; background:var(--border); margin:4px 2px"></div>`
+    : `<button data-n="${n}">${ic(i.icone)}<span>${i.rot}</span></button>`).join("");
+  document.body.appendChild(m);
+  // posiciona sem sair da tela
+  const r = ev.target.getBoundingClientRect();
+  m.style.left = Math.min(r.left, innerWidth - m.offsetWidth - 12) + "px";
+  m.style.top = (r.bottom + m.offsetHeight > innerHeight ? r.top - m.offsetHeight - 4 : r.bottom + 4) + "px";
+  m.querySelectorAll("button").forEach((b) => b.onclick = (e) => {
+    e.stopPropagation(); fecharMenuCtx(); itens[Number(b.dataset.n)].acao();
+  });
+}
+
+function menuTelefone(ev, numero, leadId) {
+  abrirMenuCtx(ev, [
+    { icone: "telefone", rot: "Ligar", acao: () => { location.href = "tel:+" + numero; } },
+    { icone: "whatsapp", rot: "WhatsApp", acao: () => conversarCom(leadId, numero, "Contato") },
+    { icone: "link", rot: "Abrir wa.me", acao: () => window.open("https://wa.me/" + numero, "_blank") },
+    { icone: "copiar", rot: "Copiar", acao: () => copiar(numero) },
+  ]);
+}
+function menuLink(ev, url) {
+  const u = url.startsWith("http") ? url : "https://" + url;
+  abrirMenuCtx(ev, [
+    { icone: "link", rot: "Abrir", acao: () => window.open(u, "_blank") },
+    { icone: "copiar", rot: "Copiar", acao: () => copiar(u) },
+  ]);
+}
+// 3 pontos do lead: o que não é do dia a dia mora aqui (inclusive excluir)
+function menuLead(ev, leadId) {
+  const l = kanbanDados?.colunas.flatMap((c) => c.leads).find((x) => x.id === leadId) || { id: leadId };
+  abrirMenuCtx(ev, [
+    { icone: "copiar", rot: "Copiar telefone", acao: () => copiar(l.telefone || "") },
+    { icone: "busca", rot: "Buscar no Google", acao: () => window.open(`https://www.google.com/search?q=${encodeURIComponent(l.nome_clinica || "")}`, "_blank") },
+    "-",
+    { icone: "lixeira", rot: "Excluir lead", acao: () => excluirLead(leadId, l.nome_clinica || "esse lead") },
+  ]);
+}
+async function copiar(txt) {
+  try { await navigator.clipboard.writeText(txt); toast("copiado"); }
+  catch { toast("não deu pra copiar"); }
+}
+function toast(msg) {
+  const t = document.createElement("div");
+  t.textContent = msg;
+  t.style.cssText = "position:fixed; bottom:22px; left:50%; transform:translateX(-50%); background:var(--verde-esc); color:#fff; padding:8px 16px; border-radius:8px; font-size:13px; z-index:1100; box-shadow:0 4px 14px rgba(0,0,0,.2)";
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 1600);
+}
+
+// telefone formatado bonitinho: 5531999998888 -> (31) 99999-8888
+function fmtTel(n) {
+  const t = String(n || "").replace(/\D/g, "");
+  const semDdi = t.startsWith("55") ? t.slice(2) : t;
+  if (semDdi.length === 11) return `(${semDdi.slice(0, 2)}) ${semDdi.slice(2, 7)}-${semDdi.slice(7)}`;
+  if (semDdi.length === 10) return `(${semDdi.slice(0, 2)}) ${semDdi.slice(2, 6)}-${semDdi.slice(6)}`;
+  return n;
+}
+// há quanto tempo a tarefa venceu
+function atrasoTxt(quando) {
+  const dias = Math.round((new Date(hojeISO()) - new Date(quando)) / 864e5);
+  if (dias <= 0) return "hoje";
+  if (dias === 1) return "atrasada 1 dia";
+  if (dias < 30) return `atrasada ${dias} dias`;
+  const m = Math.floor(dias / 30);
+  return `atrasada ${m} ${m === 1 ? "mês" : "meses"}`;
 }
 
 const hojeISO = () => new Date().toLocaleDateString("sv-SE", { timeZone: "America/Sao_Paulo" });
@@ -1818,9 +2014,17 @@ async function addTarefa(id) {
   };
   if (body.tipo === "reuniao" && (!body.quando || !body.hora))
     return alert("pra virar reunião na agenda, preenche o dia E a hora");
+  // AVISA (não bloqueia) se já tem reunião perto desse horário
+  if (body.tipo === "reuniao") {
+    const c = await api(`/api/agenda/conflito?inicio=${body.quando}T${body.hora}`).catch(() => null);
+    if (c?.conflito) {
+      const lista = c.reunioes.map((r) => `• ${(r.inicio || "").slice(11, 16)} — ${r.nome_clinica}`).join("\n");
+      if (!confirm(`Atenção: já tem reunião perto desse horário.\n\n${lista}\n\nMarcar assim mesmo?`)) return;
+    }
+  }
   const r = await api("/api/lead/" + id + "/tarefas", { method: "POST", body: JSON.stringify(body) });
   if (r?.agenda?.erro) alert(r.agenda.erro);
-  else if (r?.agenda?.id) alert("Reunião criada e já subiu pra agenda ✅");
+  else if (r?.agenda?.id) alert("Reunião criada e já subiu pra agenda");
   abrirConversa(id); atualizar(); carregarKanban();
 }
 async function marcarTarefa(tarefaId, feita, leadId) {
@@ -1831,6 +2035,44 @@ async function excluirTarefa(tarefaId, leadId) {
   await api("/api/tarefa/" + tarefaId, { method: "DELETE" });
   abrirConversa(leadId); atualizar();
 }
+// ---- audio na conversa: grava pelo microfone ou manda um arquivo ----
+let gravador = null, pedacos = [];
+async function gravarAudio(leadId) {
+  const btn = $("#btn-gravar");
+  if (gravador && gravador.state === "recording") { gravador.stop(); return; }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    pedacos = [];
+    gravador = new MediaRecorder(stream);
+    gravador.ondataavailable = (e) => pedacos.push(e.data);
+    gravador.onstop = async () => {
+      stream.getTracks().forEach((t) => t.stop());
+      btn.classList.remove("perigo"); btn.classList.add("sec");
+      btn.innerHTML = ic("microfone");
+      const blob = new Blob(pedacos, { type: gravador.mimeType || "audio/webm" });
+      if (blob.size < 1200) return toast("áudio muito curto");
+      await mandarAudio(leadId, new File([blob], "audio.webm", { type: blob.type }));
+    };
+    gravador.start();
+    btn.classList.remove("sec"); btn.classList.add("perigo");
+    btn.innerHTML = '<span style="font-size:13px">parar</span>';
+    toast("gravando… clica de novo pra enviar");
+  } catch { alert("não consegui acessar o microfone (o navegador precisa de permissão e HTTPS)"); }
+}
+function enviarAudioArquivo(leadId) {
+  const f = $("#audio-chat").files[0];
+  if (f) mandarAudio(leadId, f);
+}
+async function mandarAudio(leadId, arquivo) {
+  toast("enviando áudio…");
+  const fd = new FormData();
+  fd.append("audio", arquivo);
+  if (threadAberta) fd.append("thread_id", threadAberta);
+  const r = await api("/api/lead/" + leadId + "/audio", { method: "POST", body: fd });
+  if (r?.erro) return alert("erro: " + r.erro);
+  abrirConversa(leadId);
+}
+
 let enviandoMsg = false; // trava: duplo clique no Enviar não pode duplicar
 async function enviarMsg(id) {
   const cx = $("#chat-texto");
@@ -1869,7 +2111,7 @@ async function carregarCampanhas() {
       <div style="font-size:12px; color:var(--muted)">${c.disparados} processados no total · 1 a cada ${c.cadencia_min_seg / 60}–${c.cadencia_max_seg / 60} min · ${c.janela_inicio}–${c.janela_fim}${c.sem_whatsapp ? ` · ${c.sem_whatsapp} sem WhatsApp (não contam)` : ""}</div>
       <div style="margin-top:6px; display:flex; gap:6px; flex-wrap:wrap">
         ${c.status !== "ativa" ? `<button class="btn mini" onclick="patchCampanha(${c.id},'ativa')">▶ Ativar</button>` : `<button class="btn mini sec" onclick="patchCampanha(${c.id},'pausada')">⏸ Pausar</button>`}
-        <button class="btn mini sec" onclick="editarCampanha(${c.id})">✏️ mensagens</button>
+        <button class="btn mini sec" onclick="editarCampanha(${c.id})"> mensagens</button>
         <button class="btn mini sec" onclick="vincularLeads(${c.id})">+ vincular leads</button>
       </div>
     </div>`).join("") || '<div style="color:var(--muted); font-size:13px">nenhuma campanha</div>';
@@ -1878,8 +2120,8 @@ function editarCampanha(id) {
   const c = campanhasCache.find((x) => x.id === id);
   if (!c) return;
   campEditando = id;
-  $("#c-titulo").textContent = `✏️ Editando: ${c.nome}`;
-  $("#c-botao").textContent = "💾 Salvar alterações";
+  $("#c-titulo").textContent = ` Editando: ${c.nome}`;
+  $("#c-botao").textContent = "Salvar alterações";
   $("#c-cancelar").style.display = "";
   $("#c-nome").value = c.nome;
   $("#c-teto").value = c.teto_dia;
@@ -1941,7 +2183,7 @@ async function prepararImportacao() {
   const sel = $("#imp-pipeline");
   if (sel) {
     sel.innerHTML = pipelines.map((p) =>
-      `<option value="${p.id}" ${p.id === pipelineAtual ? "selected" : ""}>${p.tipo === "ligacao" ? "📞 Ligação" : "💬 Disparo"} — ${p.nome}${p.whatsapp_nome ? " (" + p.whatsapp_nome + ")" : ""}</option>`).join("");
+      `<option value="${p.id}" ${p.id === pipelineAtual ? "selected" : ""}>${p.tipo === "ligacao" ? "Ligação" : "Disparo"} — ${p.nome}${p.whatsapp_nome ? " (" + p.whatsapp_nome + ")" : ""}</option>`).join("");
     mudouPipelineImport();
   }
   const m = await api("/api/modelo-importacao").catch(() => null);
@@ -1955,7 +2197,7 @@ function mudouPipelineImport() {
   av.innerHTML = p.tipo === "disparo"
     ? (p.whatsapp_nome
       ? `Os leads entram na <b>fila de disparo</b> e saem pelo WhatsApp <b>${p.whatsapp_nome}</b>.`
-      : `⚠️ Essa pipeline de disparo <b>não tem WhatsApp vinculado</b>. Vincula em Pipeline → ⚙️ pipelines.`)
+      : `Essa pipeline de disparo <b>não tem WhatsApp vinculado</b>. Vincula em Pipeline → pipelines.`)
     : `Os leads entram na coluna <b>Novos</b> pra você ligar. Nada é enviado automaticamente.`;
 }
 function baixarModelo() {
@@ -1970,7 +2212,7 @@ async function verColunasModelo() {
     ${m.colunas.map((c) => `<div style="display:flex; gap:8px; padding:4px 0; border-bottom:1px dashed var(--border); font-size:12.5px">
       <code style="min-width:150px; color:var(--verde); font-weight:600">${c.campo}</code>
       <span>${c.desc}</span></div>`).join("")}
-    <button class="btn mini" style="margin-top:11px; width:100%" onclick="baixarModelo()">⬇️ baixar modelo preenchido</button>`, 520);
+    <button class="btn mini" style="margin-top:11px; width:100%" onclick="baixarModelo()">baixar modelo preenchido</button>`, 520);
 }
 async function importarCSV() {
   const f = $("#csv-file").files[0];
@@ -1983,9 +2225,9 @@ async function importarCSV() {
   $("#import-res").textContent = "importando…";
   const r = await api("/api/importar", { method: "POST", body: fd });
   if (!r.ok) { $("#import-res").textContent = "erro: " + r.erro; return; }
-  $("#import-res").innerHTML = `✅ <b>${r.novos} novos</b> · ${r.repetidos} já existiam · ${r.semTel} sem telefone
+  $("#import-res").innerHTML = `<b>${r.novos} novos</b> · ${r.repetidos} já existiam · ${r.semTel} sem telefone
     <div style="margin-top:3px">foram pra <b>${r.pipeline}</b>${r.tag ? ` com a tag <b>${r.tag}</b>` : ""}${r.na_fila ? " e já estão na fila de disparo" : ""}</div>
-    ${r.aviso ? `<div style="color:#a8641e; margin-top:3px">⚠️ ${r.aviso}</div>` : ""}`;
+    ${r.aviso ? `<div style="color:#a8641e; margin-top:3px">${r.aviso}</div>` : ""}`;
   atualizar(); carregarKanban();
 }
 
@@ -2017,10 +2259,43 @@ async function carregarAgenda() {
     sel.style.display = d.closers.length > 1 ? "" : "none";
   }
   $("#agenda-status").innerHTML = d.conectada
-    ? `🟢 agenda do <b>${d.closer}</b> conectada`
-    : `🔴 agenda do <b>${d.closer}</b> não conectada · <span onclick="aba('config')" style="color:var(--verde); cursor:pointer; font-weight:600">conectar</span>`;
+    ? `agenda do <b>${d.closer}</b> conectada`
+    : `agenda do <b>${d.closer}</b> não conectada · <span onclick="aba('config')" style="color:var(--verde); cursor:pointer; font-weight:600">conectar</span>`;
   agendaEventos = d.conectada ? d.eventos : null;
   renderGradeSemana();
+}
+
+// clicar num evento da agenda: mostra com quem é a call e as infos do lead
+function verEvento(dia, idx) {
+  const evs = agendaEventos.filter((e) => (e.inicio || "").slice(0, 10) === dia)
+    .sort((a, b) => (a.inicio || "").localeCompare(b.inicio || ""));
+  const e = evs[idx];
+  if (!e) return;
+  const l = e.lead;
+  const hora = e.diaInteiro ? "dia todo" : `${(e.inicio || "").slice(11, 16)}${e.fim ? " – " + (e.fim || "").slice(11, 16) : ""}`;
+  const linha = (rot, val) => val ? `<div style="display:grid; grid-template-columns:96px 1fr; gap:9px; padding:6px 0; border-bottom:1px solid var(--border); font-size:13px">
+    <span style="color:var(--muted); font-size:11.5px; text-transform:uppercase; letter-spacing:.3px; font-weight:600">${rot}</span><span>${val}</span></div>` : "";
+  modal(e.titulo, `
+    <div style="font-size:13px; color:var(--muted); margin-bottom:10px">
+      ${dia.split("-").reverse().join("/")} · <b style="color:var(--text)">${hora}</b>
+      ${e.convidados ? ` · ${e.convidados} participantes` : ""}
+    </div>
+    ${l ? `
+      ${linha("Empresa", `<b>${l.nome}</b>${l.cidade ? ` · ${l.cidade}` : ""}`)}
+      ${linha("Com quem", l.contato || "—")}
+      ${linha("Telefone", l.telefone_decisor || l.telefone ? `<span class="num-clicavel" onclick="menuTelefone(event, '${l.telefone_decisor || l.telefone}', ${l.id})">${fmtTel(l.telefone_decisor || l.telefone)}</span>` : "")}
+      ${linha("Nicho", l.nicho)}
+      ${linha("Dor", l.dor)}
+      ${linha("Valor", Number(l.valor) ? money(l.valor) : "")}
+      ${linha("Closer", l.closer)}
+      ${l.resumo ? `<div style="margin-top:10px; padding:10px 12px; background:var(--verde-soft); font-size:12.5px; white-space:pre-wrap; line-height:1.45; max-height:220px; overflow-y:auto">${l.resumo}</div>` : ""}
+      <div style="display:flex; gap:7px; margin-top:12px">
+        ${e.meet ? `<a class="btn mini" href="${e.meet}" target="_blank" style="text-decoration:none">Abrir Meet</a>` : ""}
+        <button class="btn mini sec" onclick="fecharModal(); aba('conversas'); abrirConversa(${l.id})">Ver conversa</button>
+      </div>`
+    : `<div style="font-size:13px; color:var(--muted)">Compromisso da sua agenda (não é uma reunião do CRM).</div>
+       ${e.meet ? `<a class="btn mini" href="${e.meet}" target="_blank" style="text-decoration:none; margin-top:10px; display:inline-block">Abrir Meet</a>` : ""}`}
+  `, 470);
 }
 
 function renderGradeSemana() {
@@ -2052,9 +2327,9 @@ function renderGradeSemana() {
           <div style="font-size:15px; font-weight:${ehHoje ? "800" : "600"}; color:${ehHoje ? "var(--verde-esc)" : "var(--text)"}">${dt.getDate()}</div>
         </div>
         <div style="flex:1; padding:4px; display:flex; flex-direction:column; gap:3px; overflow-y:auto; background:${ehHoje ? "#f7fcf9" : "transparent"}">
-          ${evs.map((e) => `<div ${e.meet ? `onclick="window.open('${e.meet}','_blank')"` : ""}
-            style="${e.meet ? "cursor:pointer; " : ""}padding:4px 6px; background:${e.diaInteiro ? "#f0f0f0" : "var(--verde-soft)"}; border-left:3px solid ${e.diaInteiro ? "#bbb" : "var(--verde)"}; border-radius:4px; font-size:11px; line-height:1.3; overflow:hidden"
-            title="${(e.titulo || "").replace(/"/g, "&quot;")}${e.meet ? " (clica pra abrir o Meet)" : ""}">
+          ${evs.map((e, ie) => `<div onclick="verEvento('${dia}', ${ie})"
+            style="cursor:pointer; padding:4px 6px; background:${e.diaInteiro ? "#f0f0f0" : "var(--verde-soft)"}; border-left:3px solid ${e.lead ? "#1e5aa8" : e.diaInteiro ? "#bbb" : "var(--verde)"}; border-radius:4px; font-size:11px; line-height:1.3; overflow:hidden"
+            title="${(e.titulo || "").replace(/"/g, "&quot;")} — clica pra ver os detalhes">
             <b>${e.diaInteiro ? "dia todo" : (e.inicio || "").slice(11, 16)}</b> ${e.titulo.length > 34 ? e.titulo.slice(0, 34) + "…" : e.titulo}
           </div>`).join("") || ""}
         </div>
@@ -2073,8 +2348,8 @@ async function carregarReunioes() {
       <td>${r.closer}</td><td style="font-size:12px">${r.dor || ""}</td><td>${r.status}</td>
       <td>${["marcada", "remarcada"].includes(r.status) ? `
         <button class="btn mini" onclick="patchReuniao(${r.id},'realizada')">✅</button>
-        <button class="btn mini sec" onclick="patchReuniao(${r.id},'no_show')">👻 no-show</button>
-        <button class="btn mini perigo" onclick="patchReuniao(${r.id},'cancelada')">✖</button>` : ""}</td>
+        <button class="btn mini sec" onclick="patchReuniao(${r.id},'no_show')">no-show</button>
+        <button class="btn mini perigo" onclick="patchReuniao(${r.id},'cancelada')"></button>` : ""}</td>
     </tr>`).join("");
 }
 async function patchReuniao(id, status) { await api("/api/reuniao/" + id, { method: "PATCH", body: JSON.stringify({ status }) }); carregarReunioes(); }
@@ -2089,8 +2364,8 @@ async function carregarConfig() {
   carregarWhats();
   api("/api/gcal-status").then((g) => {
     const linha = (nome, ok) => `<div style="display:flex; align-items:center; gap:10px; margin:6px 0">
-      <span style="min-width:150px"><b>${nome[0].toUpperCase() + nome.slice(1)}</b>: ${ok ? "✅ agenda conectada" : "❌ não conectada"}</span>
-      <a class="btn mini ${ok ? "sec" : ""}" href="${API}/api/gcal/conectar?closer=${nome}&t=${SENHA}" target="_blank">${ok ? "🔄 reconectar" : "🔗 Conectar agenda"}</a>
+      <span style="min-width:150px"><b>${nome[0].toUpperCase() + nome.slice(1)}</b>: ${ok ? "agenda conectada" : "não conectada"}</span>
+      <a class="btn mini ${ok ? "sec" : ""}" href="${API}/api/gcal/conectar?closer=${nome}&t=${SENHA}" target="_blank">${ok ? "reconectar" : "Conectar agenda"}</a>
     </div>`;
     $("#gcal-status").innerHTML = linha("matheus", g.matheus) + linha("valentino", g.valentino);
   });
@@ -2114,8 +2389,8 @@ async function carregarAudio() {
       : `<span style="font-size:12.5px; color:var(--muted)">sem áudio ${uid ? "— usa o geral da empresa" : ""}</span>`}
     </div>`;
   $("#audios-lista").innerHTML =
-    linha("🏢 Geral", a.geral?.configurado, a.geral?.info, null) +
-    (a.porPessoa || []).map((p) => linha(`🎙 ${p.nome}`, p.configurado, p.info, p.usuario_id)).join("");
+    linha("Geral", a.geral?.configurado, a.geral?.info, null) +
+    (a.porPessoa || []).map((p) => linha(`${p.nome}`, p.configurado, p.info, p.usuario_id)).join("");
   // seletor de quem é o áudio que vai subir
   const sel = $("#audio-dono");
   if (sel) {
@@ -2132,8 +2407,8 @@ async function subirAudio() {
   const dono = $("#audio-dono")?.value;
   if (dono) fd.append("usuario_id", dono);
   const r = await api("/api/audio", { method: "POST", body: fd });
-  if (!r.ok) return $("#audio-status").textContent = "❌ erro: " + r.erro;
-  $("#audio-status").textContent = "✅ áudio salvo";
+  if (!r.ok) return $("#audio-status").textContent = "erro: " + r.erro;
+  $("#audio-status").textContent = "áudio salvo";
   $("#audio-file").value = "";
   carregarAudio(); carregarWhats();
 }
@@ -2150,10 +2425,16 @@ async function carregarWhats() {
   const equipe = Array.isArray(us) ? us.filter((u) => u.ativo) : [];
   $("#lista-whats").innerHTML = insts.map((i) => `
     <div style="padding:8px 0; border-bottom:1px solid var(--border); font-size:13.5px">
-      <div style="display:flex; align-items:center; gap:8px">
-        <span style="width:9px; height:9px; border-radius:999px; background:${i.status === "conectado" ? "var(--verde)" : "var(--vermelho)"}"></span>
-        <span style="flex:1"><b>${i.nome}</b> <span style="color:var(--muted); font-size:12px">${i.numero || "não conectado"} · ${i.status}</span></span>
-        ${i.dono ? `<span class="tag" style="background:#eef2ff; color:#3949ab">👤 ${i.dono}</span>` : ""}
+      <div style="display:flex; align-items:center; gap:9px">
+        <span style="color:${i.status === "conectado" ? "#25D366" : "var(--muted)"}; display:flex" title="${i.status}">${ic("whatsapp", 22)}</span>
+        <span style="flex:1">
+          <b style="font-size:14px">${i.nome}</b>
+          <div style="font-size:12px; color:var(--muted); display:flex; align-items:center; gap:5px">
+            <span style="width:7px; height:7px; border-radius:99px; background:${i.status === "conectado" ? "var(--verde)" : "var(--vermelho)"}"></span>
+            ${i.numero ? fmtTel(i.numero) : "não conectado"} · ${i.status}
+          </div>
+        </span>
+        ${i.dono ? `<span class="tag" style="background:#eef2ff; color:#3949ab">${i.dono}</span>` : ""}
         <button class="btn mini sec" onclick="pegarQR(${i.id})">${i.status === "conectado" ? "reconectar" : "conectar (QR)"}</button>
         <button class="btn mini perigo" onclick="removerWhats(${i.id})">✕</button>
       </div>
@@ -2193,7 +2474,7 @@ async function removerWhats(id) {
 async function pegarQR(instId) {
   $("#qr-area").innerHTML = "gerando…";
   const r = await api("/api/qr" + (instId ? "?inst=" + instId : ""));
-  if (r.qrcode) $("#qr-area").innerHTML = `<img src="${r.qrcode}" style="width:240px"><p style="font-size:13px; color:var(--muted)">WhatsApp → Aparelhos conectados → Conectar aparelho</p><button class="btn sec mini" onclick="pegarQR(${instId || ""})">🔄 novo QR</button>`;
+  if (r.qrcode) $("#qr-area").innerHTML = `<img src="${r.qrcode}" style="width:240px"><p style="font-size:13px; color:var(--muted)">WhatsApp → Aparelhos conectados → Conectar aparelho</p><button class="btn sec mini" onclick="pegarQR(${instId || ""})">novo QR</button>`;
   else { $("#qr-area").innerHTML = `<p>status: <b>${r.status || r.erro}</b></p>`; carregarWhats(); }
 }
 
@@ -2217,16 +2498,16 @@ async function preencherSeletorPessoas() {
   const us = await api("/api/usuarios").catch(() => []);
   if (!Array.isArray(us) || !us.length) return;
   const atual = sel.value;
-  sel.innerHTML = `<option value="">👥 Equipe toda</option>` +
-    us.filter((u) => u.ativo).map((u) => `<option value="${u.id}" ${String(u.id) === atual ? "selected" : ""}>👤 ${u.nome}</option>`).join("");
+  sel.innerHTML = `<option value="">Equipe toda</option>` +
+    us.filter((u) => u.ativo).map((u) => `<option value="${u.id}" ${String(u.id) === atual ? "selected" : ""}>${u.nome}</option>`).join("");
   sel.dataset.pronto = "1";
 }
 async function carregarDashboard() {
   await preencherSeletorPessoas();
   document.querySelectorAll(".dash-tab").forEach((b) => b.classList.toggle("sec", b.dataset.dash !== dashAtual));
   const quem = $("#dash-usuario")?.selectedOptions?.[0]?.text || "";
-  const sufixo = $("#dash-usuario")?.value ? ` · ${quem.replace("👤 ", "")}` : "";
-  $("#dash-titulo").textContent = { geral: "📊 Visão geral", disparo: "💬 Dashboard de Disparo", prospeccao: "📞 Dashboard de Prospecção" }[dashAtual] + sufixo;
+  const sufixo = $("#dash-usuario")?.value ? ` · ${quem.replace("", "")}` : "";
+  $("#dash-titulo").textContent = { geral: "Visão geral", disparo: "Dashboard de Disparo", prospeccao: "Dashboard de Ligações" }[dashAtual] + sufixo;
   if (dashAtual === "geral") return dashGeral();
   if (dashAtual === "prospeccao") return dashProspeccao();
   return dashDisparo();
@@ -2239,7 +2520,7 @@ function barraBench(b, sufixo = "%") {
   const cor = b.ok ? "var(--verde)" : (b.atual > 0 ? "#e8a13a" : "#d93025");
   return `<div style="margin-bottom:11px">
     <div style="display:flex; font-size:12.5px; margin-bottom:3px">
-      <span style="flex:1">${b.ok ? "🟢" : b.atual > 0 ? "🟡" : "🔴"} ${b.rotulo}</span>
+      <span style="flex:1">${b.ok ? "" : b.atual > 0 ? "" : ""} ${b.rotulo}</span>
       <b style="color:${cor}">${b.atual}${sufixo}</b>
       <span style="color:var(--muted); margin-left:6px">meta ${b.meta}${sufixo}${b.ideal ? `–${b.ideal}${sufixo}` : ""}</span>
     </div>
@@ -2264,7 +2545,7 @@ async function dashGeral() {
     <div class="duas-col">
       <div class="card">
         <h3 style="margin-bottom:10px">Os dois canais</h3>
-        ${[["💬 Disparo (WhatsApp)", c.disparo, "toques", "respostas"], ["📞 Ligação (prospecção)", c.ligacao, "ligações", "decisores"]].map(([rot, ch, l1, l2]) => `
+        ${[["Disparo (WhatsApp)", c.disparo, "toques", "respostas"], ["Ligação (prospecção)", c.ligacao, "ligações", "decisores"]].map(([rot, ch, l1, l2]) => `
           <div style="padding:9px 0; border-bottom:1px solid var(--border)">
             <div style="display:flex; align-items:baseline">
               <b style="flex:1; font-size:13.5px">${rot}</b>
@@ -2277,7 +2558,7 @@ async function dashGeral() {
           </div>`).join("")}
         <div style="margin-top:10px; font-size:12.5px; padding:8px 10px; background:var(--verde-soft); border-radius:7px">
           ${d.melhorCanal === "empate" ? "Os dois canais estão trazendo o mesmo tanto de reunião." :
-            `<b>${d.melhorCanal === "ligacao" ? "📞 Ligação" : "💬 Disparo"}</b> está trazendo mais reunião no período. ` +
+            `<b>${d.melhorCanal === "ligacao" ? "Ligação" : "Disparo"}</b> está trazendo mais reunião no período. ` +
             `Benchmark de mercado: 1 reunião a cada ${d.mercado.ligacoes_por_reuniao} ligações ou ${d.mercado.disparos_por_reuniao} disparos.`}
         </div>
       </div>
@@ -2285,7 +2566,7 @@ async function dashGeral() {
       <div class="card">
         <h3 style="margin-bottom:10px">Dinheiro por pipeline</h3>
         ${d.porPipeline.map((p) => `<div style="display:flex; align-items:center; gap:8px; padding:7px 0; border-bottom:1px solid var(--border)">
-          <span style="flex:1; font-size:13px">${p.tipo === "ligacao" ? "📞" : "💬"} ${p.nome}</span>
+          <span style="flex:1; font-size:13px">${p.tipo === "ligacao" ? "" : ""} ${p.nome}</span>
           <span style="font-size:11.5px; color:var(--muted)">${p.leads} leads</span>
           <b style="color:#0b6b46">${money(p.valor)}</b>
         </div>`).join("") || '<div style="color:var(--muted); font-size:13px">sem pipelines</div>'}
@@ -2293,7 +2574,7 @@ async function dashGeral() {
         ${d.equipe.map((e) => `<div style="display:flex; gap:8px; padding:5px 0; font-size:12.5px">
           <span style="flex:1">${e.nome}</span>
           <span style="color:var(--muted)">${e.leads} leads</span>
-          ${e.tarefas_abertas ? `<span class="tag" style="background:#fff8e1; color:#a8641e">📌 ${e.tarefas_abertas}</span>` : ""}
+          ${e.tarefas_abertas ? `<span class="tag" style="background:#fff8e1; color:#a8641e">${e.tarefas_abertas}</span>` : ""}
         </div>`).join("")}
       </div>
     </div>`;
@@ -2318,11 +2599,11 @@ async function dashProspeccao() {
         <div style="font-size:11.5px; color:var(--muted); margin-bottom:11px">A marca preta é a meta de mercado.</div>
         ${barraBench(b.topo)}${barraBench(b.meio)}${barraBench(b.fundo)}${barraBench(b.volume, "/dia")}
         ${d.diagnostico.length ? `<div style="margin-top:12px; padding:10px 12px; background:#fff8e1; border:1px solid #e8b93a; border-radius:8px">
-          <b style="font-size:12.5px; color:#a8641e">⚠️ Onde está travando</b>
+          <b style="font-size:12.5px; color:#a8641e">Onde está travando</b>
           ${d.diagnostico.map((x) => `<div style="font-size:12.5px; margin-top:5px">
             <b>${x.nivel.toUpperCase()}</b> em ${x.atual}% (meta ${x.meta}%) → ${x.txt}</div>`).join("")}
         </div>` : (d.ligacoes >= 10 ? `<div style="margin-top:12px; padding:9px 12px; background:var(--verde-soft); border-radius:8px; font-size:12.5px">
-          🟢 Funil dentro do benchmark. Pra crescer, sobe o volume de ligações.</div>` : `<div style="margin-top:12px; font-size:12.5px; color:var(--muted)">
+          Funil dentro do benchmark. Pra crescer, sobe o volume de ligações.</div>` : `<div style="margin-top:12px; font-size:12.5px; color:var(--muted)">
           Faz pelo menos 10 ligações pro diagnóstico aparecer.</div>`)}
         <div style="margin-top:12px; font-size:12px; color:var(--muted)">
           Mercado gasta <b>${d.mercado.ligacoes_por_reuniao} ligações</b> por reunião.
@@ -2351,7 +2632,7 @@ async function dashProspeccao() {
         </div>`).join("") || '<div style="color:var(--muted); font-size:12.5px">ninguém ligou ainda</div>'}
 
         <div style="margin-top:14px; padding:10px 12px; background:#eef6ff; border-radius:8px; font-size:12.5px">
-          📋 <b>${d.aLigar}</b> ${d.aLigar === 1 ? "lead esperando" : "leads esperando"} ligação nas pipelines de prospecção.
+          <b>${d.aLigar}</b> ${d.aLigar === 1 ? "lead esperando" : "leads esperando"} ligação nas pipelines de prospecção.
         </div>
       </div>
     </div>`;
@@ -2361,7 +2642,7 @@ async function dashDisparo() {
   const dias = $("#dash-dias").value;
   const d = await api("/api/dashboard?" + dashQS());
   const kpi = (num, rot, sub) => `<div class="card metrica"><div class="num">${num}</div><div class="rot">${rot}</div>${sub ? `<div style="font-size:11px;color:var(--muted);margin-top:2px">${sub}</div>` : ""}</div>`;
-  const semaforo = (b) => b.ok ? "🟢" : (b.atual > 0 ? "🟡" : "🔴");
+  const semaforo = (b) => b.ok ? "" : (b.atual > 0 ? "" : "");
   const maxSerie = Math.max(1, ...d.serie.map((s) => s.disparos || 0));
   const totalFunil = Math.max(1, d.porStatus.novo || 0, ...Object.values(d.porStatus));
 
@@ -2377,14 +2658,14 @@ async function dashDisparo() {
 
     <div class="duas-col" style="margin-bottom:18px">
       <div class="card">
-        <h3 style="margin-bottom:10px">🎯 Benchmarks de prospecção</h3>
+        <h3 style="margin-bottom:10px">Benchmarks de prospecção</h3>
         <table>
           <tr><th></th><th>Seu número</th><th>Meta</th><th></th></tr>
           <tr><td>Disparo → Decisor</td><td><b>${d.bench.disparo_decisor.atual}%</b></td><td>${d.bench.disparo_decisor.min}–${d.bench.disparo_decisor.max}%</td><td>${semaforo(d.bench.disparo_decisor)}</td></tr>
           <tr><td>Decisor → Reunião</td><td><b>${d.bench.decisor_reuniao.atual}%</b></td><td>${d.bench.decisor_reuniao.min}–${d.bench.decisor_reuniao.max}%</td><td>${semaforo(d.bench.decisor_reuniao)}</td></tr>
           <tr><td>Disparos por dia</td><td><b>${d.bench.disparos_dia.atual}</b></td><td>≥ ${d.bench.disparos_dia.min}</td><td>${semaforo(d.bench.disparos_dia)}</td></tr>
         </table>
-        <p style="font-size:11.5px; color:var(--muted); margin-top:8px">🟢 na meta · 🟡 abaixo · 🔴 sem dado. Referência de outbound WhatsApp: uma boa copy gera 8-12% de decisor e 40-50% viram reunião.</p>
+        <p style="font-size:11.5px; color:var(--muted); margin-top:8px">na meta · abaixo · sem dado. Referência de outbound WhatsApp: uma boa copy gera 8-12% de decisor e 40-50% viram reunião.</p>
       </div>
       <div class="card">
         <h3 style="margin-bottom:10px">Funil (foto atual)</h3>
@@ -2408,7 +2689,7 @@ async function dashDisparo() {
     </div>
 
     ${d.porWhats.length > 1 ? `<div class="card" style="margin-bottom:18px">
-      <h3 style="margin-bottom:10px">📱 Split por WhatsApp (hoje)</h3>
+      <h3 style="margin-bottom:10px">Split por WhatsApp (hoje)</h3>
       ${d.porWhats.map((w) => `<div style="display:flex; align-items:center; gap:8px; margin-bottom:6px; font-size:13px">
         <span style="width:8px;height:8px;border-radius:999px;background:${w.status==="conectado"?"var(--verde)":"var(--vermelho)"}"></span>
         <span style="flex:1">${w.nome}</span>
@@ -2428,11 +2709,11 @@ async function entTurno() {
   const r = await api("/api/entrevista", { method: "POST", body: JSON.stringify({ historico: entHist }) });
   const box = $("#ent-msgs");
   box.querySelector(".sistema:last-child")?.remove();
-  if (r.erro) { box.innerHTML += `<div class="bolha sistema">⚠️ ${r.erro}</div>`; return; }
+  if (r.erro) { box.innerHTML += `<div class="bolha sistema">${r.erro}</div>`; return; }
   entHist.push({ role: "assistant", content: r.mensagem });
   box.innerHTML += `<div class="bolha user" style="align-self:flex-start">${r.mensagem.replace(/\n/g, "<br>")}</div>`;
   if (r.campos?.length) $("#ent-badge").textContent = "✓ atualizei: " + r.campos.join(" · ");
-  if (r.concluido) box.innerHTML += '<div class="bolha sistema">✅ Cérebro pronto! Vai na aba Testar conversar com a tua IA, ou revisa na aba 🧠 Cérebro.</div>';
+  if (r.concluido) box.innerHTML += '<div class="bolha sistema">Cérebro pronto! Vai na aba Testar conversar com a tua IA, ou revisa na aba Cérebro.</div>';
   box.scrollTop = box.scrollHeight;
 }
 async function entEnviar() {
@@ -2454,7 +2735,7 @@ async function renderChecklist() {
   const falta = passos.filter((p) => !p.ok);
   $("#checklist").innerHTML = falta.length === 0 ? "" : `
     <div class="card" style="margin-bottom:14px">
-      <b style="font-size:14px">🚀 Primeiros passos (${passos.length - falta.length}/${passos.length})</b>
+      <b style="font-size:14px">Primeiros passos (${passos.length - falta.length}/${passos.length})</b>
       ${passos.map((p, i) => `<div style="display:flex; align-items:center; gap:8px; padding:6px 0; font-size:13.5px; ${i ? "border-top:1px solid var(--border)" : ""}">
         <span style="width:20px; height:20px; border-radius:999px; display:grid; place-items:center; font-size:12px; background:${p.ok ? "var(--verde)" : "#eef1ef"}; color:${p.ok ? "#fff" : "var(--muted)"}">${p.ok ? "✓" : i + 1}</span>
         <span style="${p.ok ? "color:var(--muted); text-decoration:line-through" : ""}">${p.txt}</span>
@@ -2470,13 +2751,13 @@ async function carregarChave() {
     $("#sec-chave").style.display = "";
     $("#lnk-tutorial").href = API + "/tutorial-chave";
     $("#chave-status").innerHTML = chaveInfo.configurada
-      ? `✅ chave configurada (origem: ${chaveInfo.origem})` : "⚠️ nenhuma chave — a IA não responde sem ela";
+      ? `chave configurada (origem: ${chaveInfo.origem})` : "nenhuma chave — a IA não responde sem ela";
   }
 }
 async function salvarChave() {
   $("#chave-msg").textContent = "validando com a Anthropic…";
   const r = await api("/api/chave", { method: "POST", body: JSON.stringify({ chave: $("#chave-input").value }) });
-  $("#chave-msg").textContent = r.ok ? "✅ válida e salva" : "❌ " + r.erro;
+  $("#chave-msg").textContent = r.ok ? "válida e salva" : "" + r.erro;
   if (r.ok) { $("#chave-input").value = ""; carregarChave(); renderChecklist(); }
 }
 
@@ -2501,8 +2782,8 @@ async function carregarAdmin() {
     d.clientes.map((c) => `<tr>
       <td><b>${c.nome}</b><br><small style="color:var(--muted)"><a href="${c.url}" target="_blank" style="color:var(--muted)">${c.slug}</a></small></td>
       <td style="font-size:12.5px">${c.email}</td><td>${c.leads}</td><td>${c.disparos}</td><td>${c.respostas}</td><td>${c.reunioes}</td>
-      <td>${c.whats_conectados > 0 ? "🟢 " + c.whats_conectados : "🔴 0"}</td>
-      <td>${c.erro ? "⚠️ " + c.erro : c.pausada ? "⏸ pausada" : "✅ ativa"}</td>
+      <td>${c.whats_conectados > 0 ? "" + c.whats_conectados : "0"}</td>
+      <td>${c.erro ? "" + c.erro : c.pausada ? "⏸ pausada" : "ativa"}</td>
     </tr>`).join("");
 }
 
@@ -2510,15 +2791,15 @@ async function carregarAdmin() {
 async function carregarMarca() {
   try {
     const m = await (await fetch(API + "/api/marca")).json();
-    const nome = m.produto || "Facilita SDR";
-    window.__modoCliente = nome !== "Facilita SDR";
+    const nome = m.produto || "Prospecta AI";
+    window.__modoCliente = nome !== "Prospecta AI";
     if (window.__modoCliente) {
       document.querySelectorAll(".so-interno").forEach((e) => e.style.display = "none");
       const a = document.getElementById("lbl-audio"); if (a) a.textContent = "Áudio da minha empresa";
     }
     document.title = nome;
     const partes = nome.split(" ");
-    const html = "⚡ " + (partes.length > 1 ? partes.slice(0, -1).join(" ") + " <span>" + partes.at(-1) + "</span>" : "<span>" + nome + "</span>");
+    const html = "" + (partes.length > 1 ? partes.slice(0, -1).join(" ") + " <span>" + partes.at(-1) + "</span>" : "<span>" + nome + "</span>");
     const ta = document.querySelector("#titulo-app"); if (ta) ta.innerHTML = html;
     const lt = document.querySelector("#login h2");
     if (lt) lt.innerHTML = html.replace("<span>", '<span style="color:var(--verde)">');
@@ -2544,6 +2825,7 @@ function toggleSidebar() {
 function iniciar() {
   $("#login").style.display = "none"; $("#app").style.display = "";
   if (localStorage.getItem("sdr_sidebar") === "1") { document.getElementById("sidebar").classList.add("recolhido"); document.getElementById("sb-toggle").textContent = "⟩"; }
+  pintarIcones(); // troca os data-ic por SVG
   carregarEu(); // quem sou eu + o que meu papel pode (esconde abas/botões)
   atualizar();
   carregarExtras();
