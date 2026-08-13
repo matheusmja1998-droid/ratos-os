@@ -53,7 +53,11 @@ Abas (8): Config, Meta_Ads, Leads_TRF, Leads_ORG, Pesquisa_1, Pesquisa_2, Grupo_
 
 ## Passo 2 — Fontes de leads/pesquisa
 
-As abas Leads_TRF/ORG e Pesquisa_1/2 são alimentadas via IMPORTRANGE das planilhas do time OU pelo fluxo do Caio. Se usar IMPORTRANGE, autorizar cada donor via API (token mjta): `POST docs.google.com/spreadsheets/d/{MAE}/externaldata/addimportrangepermissions?donorDocId={FONTE}` → 200. Validar lendo A1:C3 (não pode ser `#REF!`). As pesquisas do Caio (Tally) normalmente já vêm com UTM, então PROCV costuma não ser necessário.
+**Pesquisa_1/2** (Tally / OBRIGADO): IMPORTRANGE das planilhas OBRIGADO funciona direto. Autorizar cada donor via API (token mjta): `POST docs.google.com/spreadsheets/d/{MAE}/externaldata/addimportrangepermissions?donorDocId={FONTE}` → `{"success":true}`. Validar lendo A1:C3 (não pode ser `#REF!`). Já vêm com UTM, PROCV não é necessário.
+
+⚠️ **Leads_TRF/ORG — IMPORTRANGE NÃO funciona (aninhado)**: as planilhas de leads têm IMPORTRANGE interno (puxam do AC), e IMPORTRANGE de IMPORTRANGE = `#REF!` (mesmo autorizado, fonte com dados, mjta com canEdit). No ANE_SET perdi tempo aqui. **Solução: sync via VPS** (a SA lê os VALORES já resolvidos da fonte e escreve na aba Leads da mãe):
+- Compartilhar as fontes de leads com a SA `vps-caio-spend` (reader, via mjta Drive API).
+- `/root/agente/sync_leads_caio.py` (env `SYNC_MAE`, `SYNC_FONTE_TRF`, `SYNC_FONTE_ORG`; descobre a 1ª aba da fonte sozinho) + `run_sync_leads_caio_set.sh` + cron `5,35 * * * *` (a cada 30 min). Rodar 1x na hora e conferir a mãe (Leads_TRF/ORG com dados, não `#REF!`).
 
 ## Passo 3 — Extração Meta na VPS
 
