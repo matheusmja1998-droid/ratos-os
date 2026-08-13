@@ -18,7 +18,15 @@
   /* no escuro, os blocos claros fixos do painel precisam de contraste */
   html[data-tema="dark"] .lead-card.atrasado { background:#3a1f1f; border-color:#7f3a3a; }
   html[data-tema="dark"] .lead-card.atrasado .nome { color:#ffb4ab; }
-  html[data-tema="dark"] .bolha.user { background:#26302b; }
+  /* CONVERSA no escuro: as bolhas têm cor fixa (verde/cinza claro), então o
+     texto sumia. Aqui elas ganham fundo escuro e texto claro. */
+  html[data-tema="dark"] .bolha.user { background:#26302b; color:#e6efe9; }
+  html[data-tema="dark"] .bolha.assistant { background:#1d4032; color:#e8f7ee; }
+  html[data-tema="dark"] .bolha.sistema { background:#3a3320; color:#f5d78a; }
+  html[data-tema="dark"] .bolha .hora { color:#9fb3a8; }
+  html[data-tema="dark"] .chat-topo, html[data-tema="dark"] .chat-envio { background:var(--surface); }
+  html[data-tema="dark"] .conv-item.on { background:#22302a; }
+  html[data-tema="dark"] .conv-item.pendente { background:#2b2a1e; }
   html[data-tema="dark"] input, html[data-tema="dark"] select, html[data-tema="dark"] textarea {
     background:var(--surface); color:var(--text); border-color:var(--border); }
   html[data-tema="dark"] .pf-bar { filter:brightness(.62) saturate(1.25); }
@@ -227,6 +235,7 @@
     <button data-aba="assinatura" id="nav-assinatura" style="display:none" onclick="aba('assinatura')"><span>💳</span><span class="lbl">Assinatura</span></button>
     <button data-aba="admin" id="nav-admin" style="display:none" onclick="aba('admin')"><span>👑</span><span class="lbl">Admin</span></button>
     <button onclick="toggleTema()" title="alternar tema claro/escuro"><span id="tema-ico">🌙</span><span class="lbl" id="tema-lbl">Tema escuro</span></button>
+    <button onclick="sair()" title="sair da conta"><span>🚪</span><span class="lbl" id="sair-lbl">Sair</span></button>
   </nav>
   <div class="sb-status" id="status-chip">…</div>
 </aside>
@@ -902,6 +911,7 @@ const PAPEIS = {
 async function carregarEu() {
   eu = await api("/api/eu").catch(() => null);
   if (!eu) return;
+  if ($("#sair-lbl")) $("#sair-lbl").textContent = `Sair (${eu.nome})`; // mostra quem está logado
   // esconde o que o papel não pode fazer
   const nav = $("#nav-equipe");
   if (nav) nav.style.display = euPode("gerir_usuarios") ? "" : "none";
@@ -924,7 +934,9 @@ async function renderEquipe() {
         ${Object.entries(PAPEIS).map(([k, v]) => `<option value="${k}" ${u.papel === k ? "selected" : ""}>${v.rot}</option>`).join("")}
       </select>
       <button class="btn mini sec" onclick="trocarSenha(${u.id}, '${u.nome.replace(/'/g, "")}')">senha</button>
-      ${u.id === eu?.id ? "" : `<button class="btn mini ${u.ativo ? "perigo" : "sec"}" onclick="toggleUsuario(${u.id}, ${u.ativo ? 0 : 1})">${u.ativo ? "desativar" : "reativar"}</button>`}
+      ${u.id === eu?.id ? "" : `
+        <button class="btn mini ${u.ativo ? "sec" : ""}" onclick="toggleUsuario(${u.id}, ${u.ativo ? 0 : 1})">${u.ativo ? "desativar" : "reativar"}</button>
+        <button class="btn mini perigo" onclick="excluirUsuario(${u.id}, '${(u.nome || "").replace(/'/g, "")}')" title="excluir de vez">🗑</button>`}
     </div>`;
   }).join("") || '<div style="color:var(--muted); font-size:13px">só você por enquanto</div>';
 }
@@ -956,6 +968,20 @@ async function toggleUsuario(id, ativo) {
   if (!ativo && !confirm("Desativar essa pessoa? Ela perde o acesso, mas o histórico dela fica.")) return;
   await api("/api/usuario/" + id, { method: "PATCH", body: JSON.stringify({ ativo }) });
   renderEquipe();
+}
+// EXCLUIR de vez (o histórico do lead fica; só o acesso e o vínculo somem)
+async function excluirUsuario(id, nome) {
+  if (!confirm(`Excluir "${nome}" de vez?\n\nOs leads, funis e WhatsApps dele ficam salvos — só perdem o dono (viram "da empresa").\n\nSe quiser só tirar o acesso e manter tudo no nome dele, use "desativar".`)) return;
+  const r = await api("/api/usuario/" + id + "?excluir=1", { method: "DELETE" });
+  if (r?.erro) return alert(r.erro);
+  renderEquipe();
+}
+// SAIR: derruba a sessão e volta pra tela de login
+function sair() {
+  if (!confirm("Sair da conta?")) return;
+  api("/api/logout", { method: "POST" }).catch(() => {});
+  localStorage.removeItem("sdr_senha");
+  location.reload();
 }
 
 // ---- MODAL generico (usado por pipelines, lead manual, usuarios) ----

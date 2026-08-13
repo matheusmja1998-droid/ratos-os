@@ -1033,8 +1033,38 @@ app.patch("/api/usuario/:id", auth, exige("gerir_usuarios"), (req, res) => {
 });
 app.delete("/api/usuario/:id", auth, exige("gerir_usuarios"), (req, res) => {
   const id = Number(req.params.id);
-  if (id === req.usuario.id) return res.status(400).json({ erro: "não dá pra desativar você mesmo" });
+  if (id === req.usuario.id) return res.status(400).json({ erro: "não dá pra remover você mesmo" });
+  const u = getUsuario(id);
+  if (!u) return res.status(404).json({ erro: "usuário não existe" });
+  // ?excluir=1 apaga de vez; sem isso só desativa (mantém o vínculo no histórico)
+  if (req.query.excluir === "1") {
+    const ultimoAdmin = u.papel === "admin" &&
+      db.prepare("SELECT COUNT(*) c FROM usuarios WHERE papel='admin' AND ativo=1 AND id <> ?").get(id).c === 0;
+    if (ultimoAdmin) return res.status(400).json({ erro: "esse é o último administrador — promova outra pessoa antes" });
+    // solta os vínculos (o histórico do lead fica; o dono vira "da empresa")
+    const tx = db.transaction(() => {
+      db.prepare("UPDATE leads SET usuario_id = NULL WHERE usuario_id = ?").run(id);
+      db.prepare("UPDATE pipelines SET usuario_id = NULL WHERE usuario_id = ?").run(id);
+      db.prepare("UPDATE instancias SET usuario_id = NULL WHERE usuario_id = ?").run(id);
+      db.prepare("UPDATE tarefas SET usuario_id = NULL WHERE usuario_id = ?").run(id);
+      db.prepare("UPDATE notas SET usuario_id = NULL WHERE usuario_id = ?").run(id);
+      db.prepare("DELETE FROM usuarios WHERE id = ?").run(id);
+    });
+    tx();
+    setConfig(`audio_oficial_u${id}`, ""); // limpa o áudio pessoal
+    for (const [tok, s] of sessoes) if (s.usuarioId === id) sessoes.delete(tok); // derruba a sessão dele
+    console.log(`[equipe] usuário REMOVIDO: ${u.nome} (${u.email}) por ${req.usuario.nome}`);
+    return res.json({ ok: true, removido: u.nome });
+  }
   atualizarUsuario(id, { ativo: 0 }); // desativa, nunca apaga (histórico do lead fica)
+  for (const [tok, s] of sessoes) if (s.usuarioId === id) sessoes.delete(tok);
+  res.json({ ok: true });
+});
+
+// SAIR: invalida o token desta sessão
+app.post("/api/logout", auth, (req, res) => {
+  const token = String(req.headers.authorization || "").replace(/^Bearer\s+/i, "");
+  sessoes.delete(token);
   res.json({ ok: true });
 });
 
