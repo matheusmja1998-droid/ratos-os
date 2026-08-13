@@ -112,7 +112,15 @@
   .lista-conv { overflow-y:auto; min-height:0; }
   /* com notas: lista continua (mais estreita, encostada na esquerda), conversa
      centralizada no meio, notas na direita */
-  .conversas-wrap.com-notas { grid-template-columns:250px 1fr 372px; }
+  .conversas-wrap.com-notas { grid-template-columns:250px 1fr 6px var(--notas-w, 372px); }
+  /* divisoria arrastavel entre a conversa e as notas */
+  .divisor { cursor:col-resize; border-radius:4px; background:transparent; position:relative; transition:background .12s; }
+  .conversas-wrap:not(.com-notas) .divisor { display:none; }
+  .divisor::before { content:""; position:absolute; inset:0 1px; border-radius:4px; background:var(--border); transition:background .12s; }
+  .divisor:hover::before, .divisor.arrastando::before { background:var(--verde); }
+  .divisor::after { /* alcance maior pro mouse sem ocupar espaco */
+    content:""; position:absolute; top:0; bottom:0; left:-5px; right:-5px; }
+  body.redimensionando { cursor:col-resize; user-select:none; }
   .painel-notas { display:none; overflow-y:auto; min-height:0; padding:14px 16px; }
   .conversas-wrap.com-notas .painel-notas { display:block; }
   .nota-linha { display:grid; grid-template-columns:118px 1fr; gap:4px 8px; font-size:12.5px; padding:5px 0; border-bottom:1px dashed var(--border); align-items:start; }
@@ -264,6 +272,7 @@
         <div id="lista-conv"></div>
       </div>
       <div class="card chat" id="chat"><div style="margin:auto; color:var(--muted)">escolhe uma conversa aí do lado</div></div>
+      <div class="divisor" id="divisor-notas" title="arrasta pra esquerda ou direita pra mudar o tamanho" onmousedown="iniciarResize(event)" ondblclick="resetResize()"></div>
       <div class="card painel-notas" id="painel-notas"></div>
     </div>
   </div>
@@ -1450,6 +1459,40 @@ async function abrirConversa(id, auto) {
 // ============================================================
 let notasAbertas = localStorage.getItem("notas_abertas") === "1";
 let threadAberta = null;
+
+// ---- divisória arrastável entre a conversa e as notas ----
+// Arrasta pra ESQUERDA = notas maiores. Pra DIREITA = conversa maior.
+// A largura fica salva no navegador; duplo clique volta ao padrão.
+const NOTAS_MIN = 260, NOTAS_MAX = 720, NOTAS_PADRAO = 372;
+function aplicarLarguraNotas(px) {
+  const w = Math.round(Math.min(NOTAS_MAX, Math.max(NOTAS_MIN, px)));
+  document.documentElement.style.setProperty("--notas-w", w + "px");
+  localStorage.setItem("notas_w", w);
+  return w;
+}
+function iniciarResize(ev) {
+  ev.preventDefault();
+  const wrap = document.querySelector(".conversas-wrap");
+  if (!wrap) return;
+  const div = $("#divisor-notas");
+  div?.classList.add("arrastando");
+  document.body.classList.add("redimensionando");
+  const mover = (e) => {
+    // largura das notas = distância do mouse até a borda direita do container
+    aplicarLarguraNotas(wrap.getBoundingClientRect().right - e.clientX);
+  };
+  const soltar = () => {
+    document.removeEventListener("mousemove", mover);
+    document.removeEventListener("mouseup", soltar);
+    div?.classList.remove("arrastando");
+    document.body.classList.remove("redimensionando");
+  };
+  document.addEventListener("mousemove", mover);
+  document.addEventListener("mouseup", soltar);
+}
+function resetResize() { aplicarLarguraNotas(NOTAS_PADRAO); }
+// restaura a largura escolhida no boot
+aplicarLarguraNotas(Number(localStorage.getItem("notas_w")) || NOTAS_PADRAO);
 
 function toggleNotas() {
   notasAbertas = !notasAbertas;
