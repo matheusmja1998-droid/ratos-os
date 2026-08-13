@@ -764,7 +764,13 @@ app.post("/api/config", auth, (req, res) => {
 const WHATSAPPS_LIMITE = Number(process.env.WHATSAPPS_LIMITE || 99); // container de cliente define pelo plano
 
 app.get("/api/instancias", auth, (req, res) => {
-  res.json({ instancias: listarInstancias(), limite: WHATSAPPS_LIMITE });
+  let instancias = listarInstancias().map((i) => ({
+    ...i, dono: i.usuario_id ? (getUsuario(i.usuario_id)?.nome || null) : null,
+  }));
+  // ?minhas=1 -> só os WhatsApps desta pessoa (os sem dono aparecem pra todos)
+  if (req.query.minhas === "1" && req.usuario?.id)
+    instancias = instancias.filter((i) => !i.usuario_id || i.usuario_id === req.usuario.id);
+  res.json({ instancias, limite: WHATSAPPS_LIMITE });
 });
 
 app.post("/api/instancias", auth, (req, res) => {
@@ -773,6 +779,8 @@ app.post("/api/instancias", auth, (req, res) => {
     return res.status(403).json({ erro: `seu plano permite ${WHATSAPPS_LIMITE} WhatsApp(s). Fale com o suporte pra aumentar (R$20/mês por número).` });
   const nome = String(req.body?.nome || `WhatsApp ${insts.length + 1}`).slice(0, 40);
   const id = criarInstanciaDB(nome);
+  // o WhatsApp fica no nome de quem conectou (cada um tem o chip dele)
+  if (req.usuario?.id) atualizarInstancia(id, { usuario_id: req.usuario.id });
   res.json({ ok: true, id });
 });
 
@@ -970,8 +978,10 @@ app.delete("/api/nota/:id", auth, (req, res) => {
 // CRM v2 — usuarios, pipelines/etapas, kanban, telefones, threads
 // ============================================================
 
-// ---- usuarios (só admin mexe) ----
-app.get("/api/usuarios", auth, exige("gerir_usuarios"), (req, res) => res.json(listarUsuarios()));
+// ---- usuarios ----
+// listar é liberado pra quem vê dashboard (precisa pro seletor "de quem são os
+// números" e pra atribuir responsável). Criar/editar continua só pra admin.
+app.get("/api/usuarios", auth, exige("ver_dashboard"), (req, res) => res.json(listarUsuarios()));
 app.post("/api/usuarios", auth, exige("gerir_usuarios"), (req, res) => {
   const { nome, email, senha, papel } = req.body || {};
   if (!nome || !email || !senha) return res.status(400).json({ erro: "nome, email e senha são obrigatórios" });
@@ -996,14 +1006,21 @@ app.delete("/api/usuario/:id", auth, exige("gerir_usuarios"), (req, res) => {
 
 // ---- pipelines e etapas ----
 app.get("/api/pipelines", auth, (req, res) => {
-  const ps = listarPipelines();
+  let ps = listarPipelines();
+  // ?minhas=1 -> só os funis desta pessoa (as sem dono aparecem pra todos)
+  if (req.query.minhas === "1" && req.usuario?.id)
+    ps = ps.filter((p) => !p.usuario_id || p.usuario_id === req.usuario.id);
+  else if (req.query.usuario_id)
+    ps = ps.filter((p) => p.usuario_id === Number(req.query.usuario_id));
   res.json(ps.map((p) => ({ ...p, etapas: etapasDaPipeline(p.id) })));
 });
 app.post("/api/pipelines", auth, exige("editar_pipeline"), (req, res) => {
   const { nome, tipo, instancia_id, usuario_id } = req.body || {};
   if (!nome) return res.status(400).json({ erro: "nome obrigatório" });
   if (!["disparo", "ligacao"].includes(tipo || "disparo")) return res.status(400).json({ erro: "tipo tem que ser disparo ou ligacao" });
-  const id = criarPipeline({ nome, tipo: tipo || "disparo", instancia_id: instancia_id || null, usuario_id: usuario_id || null });
+  // dono: quem foi indicado, senão quem criou (cada um monta os funis dele)
+  const id = criarPipeline({ nome, tipo: tipo || "disparo", instancia_id: instancia_id || null,
+    usuario_id: usuario_id || req.usuario?.id || null });
   // vinculo WhatsApp <-> pipeline (o chip do funcionário)
   if (instancia_id) atualizarInstancia(Number(instancia_id), { pipeline_id: id });
   res.json({ ok: true, id, etapas: etapasDaPipeline(id) });
@@ -1232,18 +1249,24 @@ app.delete("/api/tarefa/:id", auth, (req, res) => {
 app.get("/api/dashboard", auth, (req, res) => {
   const dias = Math.min(90, Math.max(1, Number(req.query.dias) || 30));
   const desde = `datetime('now','-${dias} days')`;
-  const contaEvt = (tipo) => db.prepare(`SELECT COUNT(*) c FROM eventos WHERE tipo = ? AND criado_em >= ${desde}`).get(tipo).c;
+  // filtro por pessoa (dono do lead ou da pipeline)
+  const uidD = req.query.usuario_id ? Number(req.query.usuario_id) : null;
+  const doDonoD = uidD ? ` AND l.id IN (SELECT id FROM leads WHERE usuario_id = ${uidD}
+    OR pipeline_id IN (SELECT id FROM pipelines WHERE usuario_id = ${uidD}))` : "";
+  const contaEvt = (tipo) => db.prepare(`SELECT COUNT(*) c FROM eventos e JOIN leads l ON l.id = e.lead_id
+    WHERE e.tipo = ? AND e.criado_em >= ${desde}${doDonoD}`).get(tipo).c;
 
   const disparos = contaEvt("disparo");
   const respostas = contaEvt("resposta");
   const reunioes = contaEvt("reuniao");
   const optouts = contaEvt("optout");
   const followups = contaEvt("followup");
-  const decisores = contaEvt("responsavel") + db.prepare(`SELECT COUNT(*) c FROM eventos WHERE tipo='decisor_contato' AND criado_em >= ${desde}`).get().c;
+  const decisores = contaEvt("responsavel") + db.prepare(`SELECT COUNT(*) c FROM eventos e JOIN leads l ON l.id = e.lead_id
+    WHERE e.tipo='decisor_contato' AND e.criado_em >= ${desde}${doDonoD}`).get().c;
 
   // funil por status (foto atual)
   const porStatus = {};
-  for (const r of db.prepare("SELECT status, COUNT(*) c FROM leads WHERE eh_teste = 0 GROUP BY status").all()) porStatus[r.status] = r.c;
+  for (const r of db.prepare(`SELECT l.status, COUNT(*) c FROM leads l WHERE l.eh_teste = 0${doDonoD} GROUP BY l.status`).all()) porStatus[r.status] = r.c;
 
   // taxas
   const pct = (a, b) => (b ? Math.round((a / b) * 1000) / 10 : 0);
@@ -1262,9 +1285,10 @@ app.get("/api/dashboard", auth, (req, res) => {
 
   // serie diaria (disparos x respostas x reunioes) pros ultimos N dias
   const serie = db.prepare(`
-    SELECT date(criado_em) d,
-      SUM(tipo='disparo') disparos, SUM(tipo='resposta') respostas, SUM(tipo='reuniao') reunioes
-    FROM eventos WHERE criado_em >= ${desde} GROUP BY date(criado_em) ORDER BY d`).all();
+    SELECT date(e.criado_em) d,
+      SUM(e.tipo='disparo') disparos, SUM(e.tipo='resposta') respostas, SUM(e.tipo='reuniao') reunioes
+    FROM eventos e JOIN leads l ON l.id = e.lead_id
+    WHERE e.criado_em >= ${desde}${doDonoD} GROUP BY date(e.criado_em) ORDER BY d`).all();
 
   // por instancia (split/rotacao)
   const porWhats = listarInstancias().map((i) => ({ nome: i.nome, disparos_hoje: i.disparos_hoje || 0, cota_dia: i.cota_dia || 0, status: i.status }));
@@ -1324,9 +1348,16 @@ app.post("/api/lead/:id/ligacao", auth, exige("conversar"), (req, res) => {
 app.get("/api/dashboard/prospeccao", auth, (req, res) => {
   const dias = Math.min(90, Math.max(1, Number(req.query.dias) || 30));
   const desde = `datetime('now','-${dias} days')`;
-  const conta = (like) => db.prepare(`SELECT COUNT(*) c FROM eventos WHERE tipo='ligacao' AND detalhe LIKE ? AND criado_em >= ${desde}`).get(like + "%").c;
+  // FILTRO POR PESSOA: conta só os leads de quem for pedido (usuario_id do lead
+  // ou dono da pipeline). Sem filtro = a equipe toda.
+  const uid = req.query.usuario_id ? Number(req.query.usuario_id) : null;
+  const doDono = uid ? ` AND l.id IN (SELECT id FROM leads WHERE usuario_id = ${uid}
+    OR pipeline_id IN (SELECT id FROM pipelines WHERE usuario_id = ${uid}))` : "";
+  const conta = (like) => db.prepare(`SELECT COUNT(*) c FROM eventos e JOIN leads l ON l.id = e.lead_id
+    WHERE e.tipo='ligacao' AND e.detalhe LIKE ? AND e.criado_em >= ${desde}${doDono}`).get(like + "%").c;
 
-  const ligacoes = db.prepare(`SELECT COUNT(*) c FROM eventos WHERE tipo='ligacao' AND criado_em >= ${desde}`).get().c;
+  const ligacoes = db.prepare(`SELECT COUNT(*) c FROM eventos e JOIN leads l ON l.id = e.lead_id
+    WHERE e.tipo='ligacao' AND e.criado_em >= ${desde}${doDono}`).get().c;
   const naoAtendeu = conta("nao_atendeu");
   const conectou = conta("conectou") + conta("decisor") + conta("reuniao"); // quem falou com alguém
   const decisores = conta("decisor") + conta("reuniao");                    // chegou no decisor
@@ -1347,17 +1378,23 @@ app.get("/api/dashboard/prospeccao", auth, (req, res) => {
   }
 
   // série diária + produtividade
-  const serie = db.prepare(`SELECT date(criado_em) d, COUNT(*) ligacoes,
-      SUM(detalhe LIKE 'reuniao%') reunioes, SUM(detalhe LIKE 'decisor%' OR detalhe LIKE 'reuniao%') decisores
-    FROM eventos WHERE tipo='ligacao' AND criado_em >= ${desde} GROUP BY date(criado_em) ORDER BY d`).all();
+  const serie = db.prepare(`SELECT date(e.criado_em) d, COUNT(*) ligacoes,
+      SUM(e.detalhe LIKE 'reuniao%') reunioes, SUM(e.detalhe LIKE 'decisor%' OR e.detalhe LIKE 'reuniao%') decisores
+    FROM eventos e JOIN leads l ON l.id = e.lead_id
+    WHERE e.tipo='ligacao' AND e.criado_em >= ${desde}${doDono} GROUP BY date(e.criado_em) ORDER BY d`).all();
   const diasComLigacao = serie.length || 1;
   const porDia = Math.round(ligacoes / diasComLigacao);
 
   // ranking por pessoa (quem está ligando e convertendo)
-  const porPessoa = db.prepare(`SELECT COALESCE(u.nome,'—') pessoa, COUNT(*) ligacoes,
+  // ranking sempre com a equipe TODA (é o comparativo entre as pessoas)
+  const porPessoa = db.prepare(`SELECT COALESCE(u.nome, dono.nome, '—') pessoa, COUNT(*) ligacoes,
       SUM(e.detalhe LIKE 'reuniao%') reunioes
-    FROM eventos e LEFT JOIN leads l ON l.id = e.lead_id LEFT JOIN usuarios u ON u.id = l.usuario_id
-    WHERE e.tipo='ligacao' AND e.criado_em >= ${desde} GROUP BY u.id ORDER BY ligacoes DESC LIMIT 8`).all();
+    FROM eventos e LEFT JOIN leads l ON l.id = e.lead_id
+      LEFT JOIN usuarios u ON u.id = l.usuario_id
+      LEFT JOIN pipelines p ON p.id = l.pipeline_id
+      LEFT JOIN usuarios dono ON dono.id = p.usuario_id
+    WHERE e.tipo='ligacao' AND e.criado_em >= ${desde}
+    GROUP BY COALESCE(u.id, dono.id) ORDER BY ligacoes DESC LIMIT 8`).all();
 
   res.json({
     dias, ligacoes, naoAtendeu, conectou, decisores, reunioes, recusou,
@@ -1372,9 +1409,10 @@ app.get("/api/dashboard/prospeccao", auth, (req, res) => {
     },
     mercado: { ligacoes_por_reuniao: B.mercado_ligacoes_por_reuniao },
     diagnostico, serie, porPessoa,
+    usuario_id: uid,
     // fila de trabalho: quem está pra ligar hoje
     aLigar: db.prepare(`SELECT COUNT(*) c FROM leads l JOIN pipelines p ON p.id = l.pipeline_id
-      WHERE p.tipo='ligacao' AND l.status IN ('novo','tentativa') AND l.eh_teste=0`).get().c,
+      WHERE p.tipo='ligacao' AND l.status IN ('novo','tentativa') AND l.eh_teste=0${doDono}`).get().c,
   });
 });
 
@@ -1384,8 +1422,14 @@ app.get("/api/dashboard/prospeccao", auth, (req, res) => {
 app.get("/api/dashboard/geral", auth, (req, res) => {
   const dias = Math.min(90, Math.max(1, Number(req.query.dias) || 30));
   const desde = `datetime('now','-${dias} days')`;
-  const evt = (tipo) => db.prepare(`SELECT COUNT(*) c FROM eventos WHERE tipo=? AND criado_em >= ${desde}`).get(tipo).c;
-  const lig = (like) => db.prepare(`SELECT COUNT(*) c FROM eventos WHERE tipo='ligacao' AND detalhe LIKE ? AND criado_em >= ${desde}`).get(like + "%").c;
+  // filtro por pessoa (mesma regra do dashboard de prospecção)
+  const uid = req.query.usuario_id ? Number(req.query.usuario_id) : null;
+  const doDono = uid ? ` AND l.id IN (SELECT id FROM leads WHERE usuario_id = ${uid}
+    OR pipeline_id IN (SELECT id FROM pipelines WHERE usuario_id = ${uid}))` : "";
+  const evt = (tipo) => db.prepare(`SELECT COUNT(*) c FROM eventos e JOIN leads l ON l.id = e.lead_id
+    WHERE e.tipo=? AND e.criado_em >= ${desde}${doDono}`).get(tipo).c;
+  const lig = (like) => db.prepare(`SELECT COUNT(*) c FROM eventos e JOIN leads l ON l.id = e.lead_id
+    WHERE e.tipo='ligacao' AND e.detalhe LIKE ? AND e.criado_em >= ${desde}${doDono}`).get(like + "%").c;
   const pct = (a, b) => (b ? Math.round((a / b) * 1000) / 10 : 0);
 
   // canal DISPARO
@@ -1393,7 +1437,8 @@ app.get("/api/dashboard/geral", auth, (req, res) => {
   const respostasD = evt("resposta");
   const reunioesD = evt("reuniao");
   // canal LIGACAO
-  const ligacoes = db.prepare(`SELECT COUNT(*) c FROM eventos WHERE tipo='ligacao' AND criado_em >= ${desde}`).get().c;
+  const ligacoes = db.prepare(`SELECT COUNT(*) c FROM eventos e JOIN leads l ON l.id = e.lead_id
+    WHERE e.tipo='ligacao' AND e.criado_em >= ${desde}${doDono}`).get().c;
   const reunioesL = lig("reuniao");
   const decisoresL = lig("decisor") + reunioesL;
 
@@ -1405,13 +1450,15 @@ app.get("/api/dashboard/geral", auth, (req, res) => {
       COALESCE(SUM(CASE WHEN e.e_ganho=1 THEN l.valor_venda END),0) ganho,
       COALESCE(SUM(CASE WHEN e.e_ganho=0 AND e.e_perdido=0 THEN l.valor_venda END),0) aberto,
       COALESCE(SUM(CASE WHEN e.e_perdido=1 THEN l.valor_venda END),0) perdido
-    FROM leads l LEFT JOIN etapas e ON e.id = l.etapa_id WHERE l.eh_teste=0`).get();
+    FROM leads l LEFT JOIN etapas e ON e.id = l.etapa_id WHERE l.eh_teste=0${doDono}`).get();
 
-  // por pipeline (quanto cada funil vale)
+  // por pipeline (quanto cada funil vale) — filtrado pelo dono quando pedido
   const porPipeline = db.prepare(`SELECT p.nome, p.tipo, COUNT(l.id) leads,
-      COALESCE(SUM(l.valor_venda),0) valor
+      COALESCE(SUM(l.valor_venda),0) valor,
+      (SELECT nome FROM usuarios u WHERE u.id = p.usuario_id) dono
     FROM pipelines p LEFT JOIN leads l ON l.pipeline_id = p.id AND l.eh_teste=0
-    WHERE p.arquivada=0 GROUP BY p.id ORDER BY valor DESC`).all();
+    WHERE p.arquivada=0 ${uid ? `AND (p.usuario_id = ${uid} OR p.usuario_id IS NULL)` : ""}
+    GROUP BY p.id ORDER BY valor DESC`).all();
 
   res.json({
     dias,

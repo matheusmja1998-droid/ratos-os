@@ -9,6 +9,33 @@
     --bg:#f6f8f7; --surface:#ffffff; --border:#e2e8e4; --text:#14201a; --muted:#5f6f66;
     --verde:#16a34a; --verde-esc:#166534; --verde-soft:#e8f7ee; --vermelho:#dc2626; --amarelo:#d97706;
   }
+  /* TEMA ESCURO: só troca os tokens, o resto do CSS segue igual */
+  html[data-tema="dark"] {
+    --bg:#111614; --surface:#1a221e; --border:#2c3833; --text:#e6efe9; --muted:#93a69c;
+    --verde:#22c55e; --verde-esc:#4ade80; --verde-soft:#17301f; --vermelho:#f87171; --amarelo:#fbbf24;
+    color-scheme:dark;
+  }
+  /* no escuro, os blocos claros fixos do painel precisam de contraste */
+  html[data-tema="dark"] .lead-card.atrasado { background:#3a1f1f; border-color:#7f3a3a; }
+  html[data-tema="dark"] .lead-card.atrasado .nome { color:#ffb4ab; }
+  html[data-tema="dark"] .bolha.user { background:#26302b; }
+  html[data-tema="dark"] input, html[data-tema="dark"] select, html[data-tema="dark"] textarea {
+    background:var(--surface); color:var(--text); border-color:var(--border); }
+  html[data-tema="dark"] .pf-bar { filter:brightness(.62) saturate(1.25); }
+  html[data-tema="dark"] .pf-bar input { color:#f2f7f4; }
+  html[data-tema="dark"] .pf-clique, html[data-tema="dark"] .kanban-vazio { background:var(--surface); }
+  html[data-tema="dark"] { --coluna-bg:#151d19; }
+  /* blocos com cor fixa dentro dos cards/painel: fundo escuro + texto legivel
+     (nada de filter aqui — apagava o texto) */
+  html[data-tema="dark"] .lead-card [style*="background:#fff"],
+  html[data-tema="dark"] .lead-card [style*="background:#eef"],
+  html[data-tema="dark"] .lead-card [style*="background:#f4f6f5"],
+  html[data-tema="dark"] #painel-notas [style*="background:#eef6ff"],
+  html[data-tema="dark"] #painel-notas [style*="background:#fff"] {
+    background:#232e28 !important; border-color:#36463e !important; color:#dfe9e3 !important; }
+  html[data-tema="dark"] .lead-card b, html[data-tema="dark"] #painel-notas b { color:#f0f6f2; }
+  html[data-tema="dark"] .tag { background:#2a3833; color:#bfd6c9; }
+  html[data-tema="dark"] .divisor::before { background:var(--border); }
   * { box-sizing:border-box; margin:0; }
   body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text); }
   header { background:var(--surface); border-bottom:1px solid var(--border); padding:12px 20px; display:flex; align-items:center; gap:16px; position:sticky; top:0; z-index:10; }
@@ -47,7 +74,7 @@
   .kanban { display:flex; gap:12px; overflow-x:auto; padding-bottom:14px; scroll-snap-type:x proximity; }
   .kanban::-webkit-scrollbar { height:10px; }
   .kanban::-webkit-scrollbar-thumb { background:var(--border); border-radius:5px; }
-  .coluna { min-width:250px; width:250px; flex:0 0 auto; scroll-snap-align:start; background:#eef1ef; border-radius:12px; padding:10px; max-height:calc(100vh - 240px); display:flex; flex-direction:column; }
+  .coluna { min-width:250px; width:250px; flex:0 0 auto; scroll-snap-align:start; background:var(--coluna-bg, #eef1ef); border-radius:12px; padding:10px; max-height:calc(100vh - 240px); display:flex; flex-direction:column; }
   .coluna.drop { background:var(--verde-soft); outline:2px dashed var(--verde); }
   .coluna h3 { font-size:12px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
   .coluna h3 b { color:var(--verde-esc); }
@@ -199,6 +226,7 @@
     <button data-aba="config" onclick="aba('config')"><span>⚙️</span><span class="lbl">Config</span></button>
     <button data-aba="assinatura" id="nav-assinatura" style="display:none" onclick="aba('assinatura')"><span>💳</span><span class="lbl">Assinatura</span></button>
     <button data-aba="admin" id="nav-admin" style="display:none" onclick="aba('admin')"><span>👑</span><span class="lbl">Admin</span></button>
+    <button onclick="toggleTema()" title="alternar tema claro/escuro"><span id="tema-ico">🌙</span><span class="lbl" id="tema-lbl">Tema escuro</span></button>
   </nav>
   <div class="sb-status" id="status-chip">…</div>
 </aside>
@@ -206,7 +234,10 @@
   <div id="aba-dashboard" style="display:none">
     <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap">
       <h2 id="dash-titulo" style="font-size:18px; color:var(--verde-esc)">📊 Visão geral</h2>
-      <select id="dash-dias" onchange="carregarDashboard()" style="margin-left:auto; font-size:13px">
+      <select id="dash-usuario" onchange="carregarDashboard()" style="margin-left:auto; font-size:13px" title="de quem são os números">
+        <option value="">👥 Equipe toda</option>
+      </select>
+      <select id="dash-dias" onchange="carregarDashboard()" style="font-size:13px"
         <option value="7">últimos 7 dias</option>
         <option value="30" selected>últimos 30 dias</option>
         <option value="90">últimos 90 dias</option>
@@ -1460,6 +1491,19 @@ async function abrirConversa(id, auto) {
 let notasAbertas = localStorage.getItem("notas_abertas") === "1";
 let threadAberta = null;
 
+// ---- tema claro/escuro (fica salvo no navegador) ----
+function aplicarTema(t) {
+  document.documentElement.setAttribute("data-tema", t);
+  localStorage.setItem("sdr_tema", t);
+  const esc = t === "dark";
+  if ($("#tema-ico")) $("#tema-ico").textContent = esc ? "☀️" : "🌙";
+  if ($("#tema-lbl")) $("#tema-lbl").textContent = esc ? "Tema claro" : "Tema escuro";
+}
+function toggleTema() {
+  aplicarTema(document.documentElement.getAttribute("data-tema") === "dark" ? "light" : "dark");
+}
+aplicarTema(localStorage.getItem("sdr_tema") || "light");
+
 // ---- divisória arrastável entre a conversa e as notas ----
 // Arrasta pra ESQUERDA = notas maiores. Pra DIREITA = conversa maior.
 // A largura fica salva no navegador; duplo clique volta ao padrão.
@@ -2095,9 +2139,27 @@ function trocarDash(qual) {
   localStorage.setItem("dash_atual", qual);
   carregarDashboard(); // ele cuida das abas e do título
 }
+// "de quem são os números": equipe toda, ou uma pessoa específica
+function dashQS() {
+  const u = $("#dash-usuario")?.value;
+  return `dias=${$("#dash-dias")?.value || 30}${u ? "&usuario_id=" + u : ""}`;
+}
+async function preencherSeletorPessoas() {
+  const sel = $("#dash-usuario");
+  if (!sel || sel.dataset.pronto) return;
+  const us = await api("/api/usuarios").catch(() => []);
+  if (!Array.isArray(us) || !us.length) return;
+  const atual = sel.value;
+  sel.innerHTML = `<option value="">👥 Equipe toda</option>` +
+    us.filter((u) => u.ativo).map((u) => `<option value="${u.id}" ${String(u.id) === atual ? "selected" : ""}>👤 ${u.nome}</option>`).join("");
+  sel.dataset.pronto = "1";
+}
 async function carregarDashboard() {
+  await preencherSeletorPessoas();
   document.querySelectorAll(".dash-tab").forEach((b) => b.classList.toggle("sec", b.dataset.dash !== dashAtual));
-  $("#dash-titulo").textContent = { geral: "📊 Visão geral", disparo: "💬 Dashboard de Disparo", prospeccao: "📞 Dashboard de Prospecção" }[dashAtual];
+  const quem = $("#dash-usuario")?.selectedOptions?.[0]?.text || "";
+  const sufixo = $("#dash-usuario")?.value ? ` · ${quem.replace("👤 ", "")}` : "";
+  $("#dash-titulo").textContent = { geral: "📊 Visão geral", disparo: "💬 Dashboard de Disparo", prospeccao: "📞 Dashboard de Prospecção" }[dashAtual] + sufixo;
   if (dashAtual === "geral") return dashGeral();
   if (dashAtual === "prospeccao") return dashProspeccao();
   return dashDisparo();
@@ -2121,7 +2183,7 @@ function barraBench(b, sufixo = "%") {
 }
 
 async function dashGeral() {
-  const d = await api("/api/dashboard/geral?dias=" + $("#dash-dias").value);
+  const d = await api("/api/dashboard/geral?" + dashQS());
   const c = d.canais, t = d.totais, v = d.valor;
   const kpi = (num, rot, sub, cor) => `<div class="card metrica"><div class="num" ${cor ? `style="color:${cor}"` : ""}>${num}</div><div class="rot">${rot}</div>${sub ? `<div style="font-size:11px;color:var(--muted);margin-top:2px">${sub}</div>` : ""}</div>`;
   $("#dash-corpo").innerHTML = `
@@ -2171,7 +2233,7 @@ async function dashGeral() {
 }
 
 async function dashProspeccao() {
-  const d = await api("/api/dashboard/prospeccao?dias=" + $("#dash-dias").value);
+  const d = await api("/api/dashboard/prospeccao?" + dashQS());
   const b = d.benchmarks;
   const kpi = (num, rot, sub) => `<div class="card metrica"><div class="num">${num}</div><div class="rot">${rot}</div>${sub ? `<div style="font-size:11px;color:var(--muted);margin-top:2px">${sub}</div>` : ""}</div>`;
   const maxS = Math.max(1, ...d.serie.map((s) => s.ligacoes || 0));
@@ -2230,7 +2292,7 @@ async function dashProspeccao() {
 
 async function dashDisparo() {
   const dias = $("#dash-dias").value;
-  const d = await api("/api/dashboard?dias=" + dias);
+  const d = await api("/api/dashboard?" + dashQS());
   const kpi = (num, rot, sub) => `<div class="card metrica"><div class="num">${num}</div><div class="rot">${rot}</div>${sub ? `<div style="font-size:11px;color:var(--muted);margin-top:2px">${sub}</div>` : ""}</div>`;
   const semaforo = (b) => b.ok ? "🟢" : (b.atual > 0 ? "🟡" : "🔴");
   const maxSerie = Math.max(1, ...d.serie.map((s) => s.disparos || 0));

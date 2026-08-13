@@ -630,7 +630,7 @@ export const getInstanciaPorToken = (token) =>
 export const criarInstanciaDB = (nome) =>
   db.prepare("INSERT INTO instancias (nome) VALUES (?)").run(nome).lastInsertRowid;
 export const atualizarInstancia = (id, campos) => {
-  const permitidos = ["nome", "uazapi_token", "numero", "status", "disparos_hoje", "cota_dia"];
+  const permitidos = ["nome", "uazapi_token", "numero", "status", "disparos_hoje", "cota_dia", "pipeline_id", "usuario_id"];
   const sets = [], vals = [];
   for (const k of permitidos) if (campos[k] !== undefined) { sets.push(`${k} = ?`); vals.push(campos[k]); }
   if (!sets.length) return;
