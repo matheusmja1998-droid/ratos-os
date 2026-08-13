@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Prospecção Açougues BH — L.M Agência</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: #0A0A0A;
+  color: #FFFFFF;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  padding: 40px 60px;
+  min-height: 100vh;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 30px;
+  border-bottom: 2px solid #111;
+  margin-bottom: 40px;
+}
+.brand {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: #00E676;
+}
+.brand .sub {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 6px;
+  color: #888;
+  margin-top: 4px;
+}
+.meta-info {
+  text-align: right;
+  font-size: 14px;
+  color: #888;
+  letter-spacing: 1px;
+}
+h1 {
+  font-size: 54px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+h1 .accent { color: #00E676; }
+.lead {
+  font-size: 20px;
+  color: #BBB;
+  max-width: 1100px;
+  margin-bottom: 50px;
+  line-height: 1.4;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-bottom: 50px;
+}
+.stat {
+  background: #111;
+  border-radius: 12px;
+  padding: 24px 26px;
+  border-left: 4px solid #00E676;
+}
+.stat .num {
+  font-size: 42px;
+  font-weight: 800;
+  color: #00E676;
+  line-height: 1;
+}
+.stat .lbl {
+  font-size: 12px;
+  font-weight: 600;
+  color: #888;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 12px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #0F0F0F;
+  border-radius: 12px;
+  overflow: hidden;
+}
+thead {
+  background: #161616;
+  border-bottom: 2px solid #00E676;
+}
+th {
+  text-align: left;
+  padding: 18px 16px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #00E676;
+  text-transform: uppercase;
+}
+td {
+  padding: 18px 16px;
+  border-bottom: 1px solid #1A1A1A;
+  font-size: 14px;
+  color: #DDD;
+  vertical-align: top;
+  line-height: 1.4;
+}
+tr:hover td { background: #131313; }
+.num { color:#666; font-weight:800; font-size:18px; width:40px; }
+.empresa strong { color:#FFF; font-size:15px; }
+.meta { color:#666; font-size:12px; }
+.badge {
+  display: inline-block;
+  background: #00E676;
+  color: #0A0A0A;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.dor { color:#FF8888; font-style: italic; font-size:13px; max-width:280px; }
+.gancho { color:#9FFFC2; font-size:13px; max-width:380px; }
+.contato a { color:#00E676; text-decoration:none; }
+.contato a:hover { text-decoration:underline; }
+.footer {
+  margin-top: 60px;
+  padding-top: 30px;
+  border-top: 1px solid #222;
+  text-align: center;
+  font-size: 13px;
+  color: #555;
+  letter-spacing: 2px;
+}
+.disclaimer {
+  background: #151515;
+  border-left: 4px solid #FFC040;
+  padding: 16px 24px;
+  margin: 40px 0;
+  font-size: 13px;
+  color: #BBB;
+  border-radius: 8px;
+  line-height: 1.5;
+}
+.disclaimer strong { color: #FFC040; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">L.M<span class="sub">CONSULTORIA COMERCIAL</span></div>
+  <div class="meta-info">
+    PROSPECÇÃO · AÇOUGUES · BELO HORIZONTE<br>
+    Fonte: Google Maps via Apify + enriquecimento IA
+  </div>
+</header>
+
+<h1>30 açougues em BH<br>com <span class="accent">lógica de abordagem pronta.</span></h1>
+<p class="lead">Lista com empresa, bairro, porte estimado, telefone, dor principal extraída do tipo de negócio e lógica de abordagem personalizada (economia / autonomia / sustentabilidade). Sem digitação manual. Sem 2 semanas de Google Maps.</p>
+
+<div class="stats">
+  <div class="stat"><div class="num">30</div><div class="lbl">Empresas mapeadas</div></div>
+  <div class="stat"><div class="num">2</div><div class="lbl">Atacado / distribuição</div></div>
+  <div class="stat"><div class="num">5</div><div class="lbl">Boutiques de carnes</div></div>
+  <div class="stat"><div class="num">9</div><div class="lbl">Consolidados / referência</div></div>
+  <div class="stat"><div class="num">14</div><div class="lbl">Açougues de bairro</div></div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Empresa</th>
+      <th>Porte</th>
+      <th>Rating</th>
+      <th>Contato</th>
+      <th>Dor principal</th>
+      <th>Lógica de abordagem</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td class="num">1</td>
+      <td class="empresa"><strong>Terneiro Carnes</strong><br><span class="meta">Santa Helena · Açougue gourmet</span></td>
+      <td class="porte"><span class="badge">Açougue De Referência</span></td>
+      <td class="rating">⭐ 4.5<br><span class="meta">955 reviews</span></td>
+      <td class="contato">+55 31 99610-7095<br><a href="https://terneiro-carnes.onbeef.app.br/" target="_blank">site</a></td>
+      <td class="dor">Movimento alto, refrigeração no limite, energia comendo parte da margem mesmo com bom giro.</td>
+      <td class="gancho">Economia mensal direta (giro alto = consumo alto = conta pesada) · Autonomia da câmara se faltar luz (proteção do estoque) · Sustentabilidade como diferencial pra fidelizar a clientela do bairro.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">2</td>
+      <td class="empresa"><strong>Açougue Montes Claros</strong><br><span class="meta">Cardoso · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue Consolidado</span></td>
+      <td class="rating">⭐ 4.7<br><span class="meta">71 reviews</span></td>
+      <td class="contato">+55 31 3383-7340<br><span style="color:#888;">Instagram</span></td>
+      <td class="dor">Operação enxuta, margem fina, dono toma decisão de compra — energia é dor visível todo mês.</td>
+      <td class="gancho">Economia direta na conta (dor mensal visível no caixa) · Autonomia se a luz cair (refrigeração não pode parar) · Sustentabilidade como vantagem local (poucos açougues do bairro têm solar).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">3</td>
+      <td class="empresa"><strong>Casa de Carnes Diamante</strong><br><span class="meta">Diamante · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue De Bairro</span></td>
+      <td class="rating">⭐ 4.8<br><span class="meta">29 reviews</span></td>
+      <td class="contato">+55 31 3384-8133<br><span style="color:#555;">—</span></td>
+      <td class="dor">Margem fina, dono na operação, conta de luz pesa direto no fluxo de caixa do mês.</td>
+      <td class="gancho">Economia na conta mensal (alivia fluxo de caixa apertado) · Autonomia da câmara fria se faltar luz (sobrevivência do negócio) · Sustentabilidade como diferencial pro consumidor consciente do bairro.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">4</td>
+      <td class="empresa"><strong>Casa de Carne Oliveira Lima</strong><br><span class="meta">Miramar (Barreiro) · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue De Bairro</span></td>
+      <td class="rating">⭐ 4.8<br><span class="meta">37 reviews</span></td>
+      <td class="contato">+55 31 3383-6671<br><span style="color:#555;">—</span></td>
+      <td class="dor">Margem fina, dono na operação, conta de luz pesa direto no fluxo de caixa do mês.</td>
+      <td class="gancho">Economia na conta mensal (alivia fluxo de caixa apertado) · Autonomia da câmara fria se faltar luz (sobrevivência do negócio) · Sustentabilidade como diferencial pro consumidor consciente do bairro.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">5</td>
+      <td class="empresa"><strong>Casa de Carnes Aragon</strong><br><span class="meta">Teixeira Dias · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue Consolidado</span></td>
+      <td class="rating">⭐ 4.3<br><span class="meta">40 reviews</span></td>
+      <td class="contato">+55 31 3384-3387<br><span style="color:#555;">—</span></td>
+      <td class="dor">Operação enxuta, margem fina, dono toma decisão de compra — energia é dor visível todo mês.</td>
+      <td class="gancho">Economia direta na conta (dor mensal visível no caixa) · Autonomia se a luz cair (refrigeração não pode parar) · Sustentabilidade como vantagem local (poucos açougues do bairro têm solar).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">6</td>
+      <td class="empresa"><strong>Acolgue do Cláudio</strong><br><span class="meta">Olhos d&#x27;Água · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue De Bairro</span></td>
+      <td class="rating">⭐ 4.9<br><span class="meta">22 reviews</span></td>
+      <td class="contato">+55 31 3288-3534<br><span style="color:#555;">—</span></td>
+      <td class="dor">Margem fina, dono na operação, conta de luz pesa direto no fluxo de caixa do mês.</td>
+      <td class="gancho">Economia na conta mensal (alivia fluxo de caixa apertado) · Autonomia da câmara fria se faltar luz (sobrevivência do negócio) · Sustentabilidade como diferencial pro consumidor consciente do bairro.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">7</td>
+      <td class="empresa"><strong>Açougue do Cláudio</strong><br><span class="meta">Pilar · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue De Bairro</span></td>
+      <td class="rating">⭐ 4.7<br><span class="meta">16 reviews</span></td>
+      <td class="contato">+55 31 3288-3027<br><span style="color:#555;">—</span></td>
+      <td class="dor">Margem fina, dono na operação, conta de luz pesa direto no fluxo de caixa do mês.</td>
+      <td class="gancho">Economia na conta mensal (alivia fluxo de caixa apertado) · Autonomia da câmara fria se faltar luz (sobrevivência do negócio) · Sustentabilidade como diferencial pro consumidor consciente do bairro.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">8</td>
+      <td class="empresa"><strong>Açougue - Casa de Carnes Bife de Boi</strong><br><span class="meta">Vila Pinho Vale do Jatobá · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue De Bairro</span></td>
+      <td class="rating">⭐ 4.8<br><span class="meta">4 reviews</span></td>
+      <td class="contato">+55 31 98865-0558<br><span style="color:#555;">—</span></td>
+      <td class="dor">Margem fina, dono na operação, conta de luz pesa direto no fluxo de caixa do mês.</td>
+      <td class="gancho">Economia na conta mensal (alivia fluxo de caixa apertado) · Autonomia da câmara fria se faltar luz (sobrevivência do negócio) · Sustentabilidade como diferencial pro consumidor consciente do bairro.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">9</td>
+      <td class="empresa"><strong>Barão da Carne</strong><br><span class="meta">Tirol · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue De Referência</span></td>
+      <td class="rating">⭐ 4<br><span class="meta">107 reviews</span></td>
+      <td class="contato">+55 31 3309-4203<br><span style="color:#555;">—</span></td>
+      <td class="dor">Movimento alto, refrigeração no limite, energia comendo parte da margem mesmo com bom giro.</td>
+      <td class="gancho">Economia mensal direta (giro alto = consumo alto = conta pesada) · Autonomia da câmara se faltar luz (proteção do estoque) · Sustentabilidade como diferencial pra fidelizar a clientela do bairro.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">10</td>
+      <td class="empresa"><strong>Açougue</strong><br><span class="meta">Santa Helena · Atacadista de carnes</span></td>
+      <td class="porte"><span class="badge">Açougue Consolidado</span></td>
+      <td class="rating">⭐ 4<br><span class="meta">63 reviews</span></td>
+      <td class="contato">-<br><span style="color:#555;">—</span></td>
+      <td class="dor">Operação enxuta, margem fina, dono toma decisão de compra — energia é dor visível todo mês.</td>
+      <td class="gancho">Economia direta na conta (dor mensal visível no caixa) · Autonomia se a luz cair (refrigeração não pode parar) · Sustentabilidade como vantagem local (poucos açougues do bairro têm solar).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">11</td>
+      <td class="empresa"><strong>Boutique da Carne</strong><br><span class="meta">Bonsucesso · Açougue</span></td>
+      <td class="porte"><span class="badge">Boutique De Carnes</span></td>
+      <td class="rating">⭐ 4.4<br><span class="meta">104 reviews</span></td>
+      <td class="contato">+55 31 3582-4687<br><span style="color:#555;">—</span></td>
+      <td class="dor">Climatização forte + iluminação de vitrine + câmaras = conta de luz pesando muito num negócio de ticket alto.</td>
+      <td class="gancho">Economia que vira investimento em premium (fachada, vitrine, carnes nobres) · Autonomia da vitrine se a luz cair (cliente boutique não tolera operação parada) · Sustentabilidade como narrativa de marca premium.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">12</td>
+      <td class="empresa"><strong>Casa de Carnes Camargos Diniz</strong><br><span class="meta">Santa Helena · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue De Bairro</span></td>
+      <td class="rating">⭐ 4.7<br><span class="meta">18 reviews</span></td>
+      <td class="contato">+55 31 3381-5551<br><span style="color:#555;">—</span></td>
+      <td class="dor">Margem fina, dono na operação, conta de luz pesa direto no fluxo de caixa do mês.</td>
+      <td class="gancho">Economia na conta mensal (alivia fluxo de caixa apertado) · Autonomia da câmara fria se faltar luz (sobrevivência do negócio) · Sustentabilidade como diferencial pro consumidor consciente do bairro.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">13</td>
+      <td class="empresa"><strong>Casa de Carnes Mota</strong><br><span class="meta">Vila Santa Rita · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue De Bairro</span></td>
+      <td class="rating">⭐ 4.7<br><span class="meta">23 reviews</span></td>
+      <td class="contato">+55 31 99424-0608<br><span style="color:#555;">—</span></td>
+      <td class="dor">Margem fina, dono na operação, conta de luz pesa direto no fluxo de caixa do mês.</td>
+      <td class="gancho">Economia na conta mensal (alivia fluxo de caixa apertado) · Autonomia da câmara fria se faltar luz (sobrevivência do negócio) · Sustentabilidade como diferencial pro consumidor consciente do bairro.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">14</td>
+      <td class="empresa"><strong>Casa de Carnes Dois Irmãos</strong><br><span class="meta">Independência · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue De Bairro</span></td>
+      <td class="rating">⭐ 4.5<br><span class="meta">17 reviews</span></td>
+      <td class="contato">+55 31 98903-5329<br><span style="color:#555;">—</span></td>
+      <td class="dor">Margem fina, dono na operação, conta de luz pesa direto no fluxo de caixa do mês.</td>
+      <td class="gancho">Economia na conta mensal (alivia fluxo de caixa apertado) · Autonomia da câmara fria se faltar luz (sobrevivência do negócio) · Sustentabilidade como diferencial pro consumidor consciente do bairro.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">15</td>
+      <td class="empresa"><strong>CARNES NOBRES BH</strong><br><span class="meta">Vila Santa Rita · Açougue</span></td>
+      <td class="porte"><span class="badge">Boutique De Carnes</span></td>
+      <td class="rating">⭐ 5<br><span class="meta">46 reviews</span></td>
+      <td class="contato">+55 31 98455-8368<br><span style="color:#888;">Instagram</span></td>
+      <td class="dor">Climatização forte + iluminação de vitrine + câmaras = conta de luz pesando muito num negócio de ticket alto.</td>
+      <td class="gancho">Economia que vira investimento em premium (fachada, vitrine, carnes nobres) · Autonomia da vitrine se a luz cair (cliente boutique não tolera operação parada) · Sustentabilidade como narrativa de marca premium.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">16</td>
+      <td class="empresa"><strong>Boutique da Carne</strong><br><span class="meta">Milionários · Açougue</span></td>
+      <td class="porte"><span class="badge">Boutique De Carnes</span></td>
+      <td class="rating">⭐ 4.8<br><span class="meta">42 reviews</span></td>
+      <td class="contato">+55 31 3336-1238<br><span style="color:#888;">Instagram</span></td>
+      <td class="dor">Climatização forte + iluminação de vitrine + câmaras = conta de luz pesando muito num negócio de ticket alto.</td>
+      <td class="gancho">Economia que vira investimento em premium (fachada, vitrine, carnes nobres) · Autonomia da vitrine se a luz cair (cliente boutique não tolera operação parada) · Sustentabilidade como narrativa de marca premium.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">17</td>
+      <td class="empresa"><strong>Casa De Carnes Azevedo</strong><br><span class="meta">Paulo VI · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue Consolidado</span></td>
+      <td class="rating">⭐ 4.9<br><span class="meta">54 reviews</span></td>
+      <td class="contato">+55 31 3021-5310<br><span style="color:#555;">—</span></td>
+      <td class="dor">Operação enxuta, margem fina, dono toma decisão de compra — energia é dor visível todo mês.</td>
+      <td class="gancho">Economia direta na conta (dor mensal visível no caixa) · Autonomia se a luz cair (refrigeração não pode parar) · Sustentabilidade como vantagem local (poucos açougues do bairro têm solar).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">18</td>
+      <td class="empresa"><strong>Casa de Carnes Manancial</strong><br><span class="meta">Paulo VI · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue De Bairro</span></td>
+      <td class="rating">⭐ 5<br><span class="meta">19 reviews</span></td>
+      <td class="contato">+55 31 98755-3073<br><span style="color:#555;">—</span></td>
+      <td class="dor">Margem fina, dono na operação, conta de luz pesa direto no fluxo de caixa do mês.</td>
+      <td class="gancho">Economia na conta mensal (alivia fluxo de caixa apertado) · Autonomia da câmara fria se faltar luz (sobrevivência do negócio) · Sustentabilidade como diferencial pro consumidor consciente do bairro.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">19</td>
+      <td class="empresa"><strong>Açougue Prime Carnes Minas Caixa</strong><br><span class="meta">Minas Caixa · Açougue gourmet</span></td>
+      <td class="porte"><span class="badge">Boutique De Carnes</span></td>
+      <td class="rating">⭐ 5<br><span class="meta">132 reviews</span></td>
+      <td class="contato">+55 31 98261-1907<br><span style="color:#555;">—</span></td>
+      <td class="dor">Climatização forte + iluminação de vitrine + câmaras = conta de luz pesando muito num negócio de ticket alto.</td>
+      <td class="gancho">Economia que vira investimento em premium (fachada, vitrine, carnes nobres) · Autonomia da vitrine se a luz cair (cliente boutique não tolera operação parada) · Sustentabilidade como narrativa de marca premium.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">20</td>
+      <td class="empresa"><strong>Frigo Palmas</strong><br><span class="meta">Ribeiro de Abreu · Açougue</span></td>
+      <td class="porte"><span class="badge">Atacado/Distribuição</span></td>
+      <td class="rating">⭐ 4.8<br><span class="meta">127 reviews</span></td>
+      <td class="contato">+55 31 3434-3005<br><a href="https://abrir.link/Qtxcx" target="_blank">site</a></td>
+      <td class="dor">Câmaras frias rodando 24/7 são o maior custo fixo depois da carne — qualquer aumento de tarifa some com a margem.</td>
+      <td class="gancho">Economia de energia em escala (corte direto no custo fixo dominante) · Autonomia se a CEMIG cair (câmara fria parada = mercadoria perdida em horas) · Sustentabilidade pra negociar com supermercado/atacado cliente.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">21</td>
+      <td class="empresa"><strong>Açougue Asa Da Gaivota</strong><br><span class="meta">Nazare · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue De Bairro</span></td>
+      <td class="rating">⭐ 4.1<br><span class="meta">28 reviews</span></td>
+      <td class="contato">+55 31 3282-3982<br><span style="color:#555;">—</span></td>
+      <td class="dor">Margem fina, dono na operação, conta de luz pesa direto no fluxo de caixa do mês.</td>
+      <td class="gancho">Economia na conta mensal (alivia fluxo de caixa apertado) · Autonomia da câmara fria se faltar luz (sobrevivência do negócio) · Sustentabilidade como diferencial pro consumidor consciente do bairro.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">22</td>
+      <td class="empresa"><strong>Baiano&#x27;s Carnes</strong><br><span class="meta">Paulo VI · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue De Bairro</span></td>
+      <td class="rating">⭐ 4.9<br><span class="meta">26 reviews</span></td>
+      <td class="contato">-<br><span style="color:#555;">—</span></td>
+      <td class="dor">Margem fina, dono na operação, conta de luz pesa direto no fluxo de caixa do mês.</td>
+      <td class="gancho">Economia na conta mensal (alivia fluxo de caixa apertado) · Autonomia da câmara fria se faltar luz (sobrevivência do negócio) · Sustentabilidade como diferencial pro consumidor consciente do bairro.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">23</td>
+      <td class="empresa"><strong>Casa de Carnes Vilela</strong><br><span class="meta">Tupi · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue De Bairro</span></td>
+      <td class="rating">⭐ 4.5<br><span class="meta">20 reviews</span></td>
+      <td class="contato">+55 31 3568-9880<br><span style="color:#555;">—</span></td>
+      <td class="dor">Margem fina, dono na operação, conta de luz pesa direto no fluxo de caixa do mês.</td>
+      <td class="gancho">Economia na conta mensal (alivia fluxo de caixa apertado) · Autonomia da câmara fria se faltar luz (sobrevivência do negócio) · Sustentabilidade como diferencial pro consumidor consciente do bairro.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">24</td>
+      <td class="empresa"><strong>GUARANI CARNES</strong><br><span class="meta">Guarani · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue De Bairro</span></td>
+      <td class="rating">⭐ 4.7<br><span class="meta">7 reviews</span></td>
+      <td class="contato">+55 31 3427-5830<br><a href="https://sites.google.com/view/guarani-carnes/in%C3%ADcio" target="_blank">site</a></td>
+      <td class="dor">Margem fina, dono na operação, conta de luz pesa direto no fluxo de caixa do mês.</td>
+      <td class="gancho">Economia na conta mensal (alivia fluxo de caixa apertado) · Autonomia da câmara fria se faltar luz (sobrevivência do negócio) · Sustentabilidade como diferencial pro consumidor consciente do bairro.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">25</td>
+      <td class="empresa"><strong>VMA Carnes</strong><br><span class="meta">São Pedro Venda Nova · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue Consolidado</span></td>
+      <td class="rating">⭐ 4.7<br><span class="meta">70 reviews</span></td>
+      <td class="contato">+55 31 3080-4444<br><a href="https://vmacarnes.com/contato" target="_blank">site</a></td>
+      <td class="dor">Operação enxuta, margem fina, dono toma decisão de compra — energia é dor visível todo mês.</td>
+      <td class="gancho">Economia direta na conta (dor mensal visível no caixa) · Autonomia se a luz cair (refrigeração não pode parar) · Sustentabilidade como vantagem local (poucos açougues do bairro têm solar).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">26</td>
+      <td class="empresa"><strong>Açougue Baianão Carnes</strong><br><span class="meta">Floramar · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue Consolidado</span></td>
+      <td class="rating">⭐ 4.6<br><span class="meta">46 reviews</span></td>
+      <td class="contato">+55 31 3434-6022<br><span style="color:#555;">—</span></td>
+      <td class="dor">Operação enxuta, margem fina, dono toma decisão de compra — energia é dor visível todo mês.</td>
+      <td class="gancho">Economia direta na conta (dor mensal visível no caixa) · Autonomia se a luz cair (refrigeração não pode parar) · Sustentabilidade como vantagem local (poucos açougues do bairro têm solar).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">27</td>
+      <td class="empresa"><strong>Boi Chefe</strong><br><span class="meta">Guarani · Açougue</span></td>
+      <td class="porte"><span class="badge">Açougue Consolidado</span></td>
+      <td class="rating">⭐ 4.6<br><span class="meta">52 reviews</span></td>
+      <td class="contato">+55 31 98782-0253<br><span style="color:#555;">—</span></td>
+      <td class="dor">Operação enxuta, margem fina, dono toma decisão de compra — energia é dor visível todo mês.</td>
+      <td class="gancho">Economia direta na conta (dor mensal visível no caixa) · Autonomia se a luz cair (refrigeração não pode parar) · Sustentabilidade como vantagem local (poucos açougues do bairro têm solar).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">28</td>
+      <td class="empresa"><strong>Xavier carnes Pedro Primeiro</strong><br><span class="meta">Itapoã · Açougue</span></td>
+      <td class="porte"><span class="badge">Boutique De Carnes</span></td>
+      <td class="rating">⭐ 4.2<br><span class="meta">264 reviews</span></td>
+      <td class="contato">+55 31 3441-9810<br><span style="color:#555;">—</span></td>
+      <td class="dor">Climatização forte + iluminação de vitrine + câmaras = conta de luz pesando muito num negócio de ticket alto.</td>
+      <td class="gancho">Economia que vira investimento em premium (fachada, vitrine, carnes nobres) · Autonomia da vitrine se a luz cair (cliente boutique não tolera operação parada) · Sustentabilidade como narrativa de marca premium.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">29</td>
+      <td class="empresa"><strong>Central Carnes</strong><br><span class="meta">Serra Verde · Instalação de armazenamento a frio</span></td>
+      <td class="porte"><span class="badge">Atacado/Distribuição</span></td>
+      <td class="rating">⭐ 4.7<br><span class="meta">36 reviews</span></td>
+      <td class="contato">+55 31 3451-1755<br><span style="color:#555;">—</span></td>
+      <td class="dor">Câmaras frias rodando 24/7 são o maior custo fixo depois da carne — qualquer aumento de tarifa some com a margem.</td>
+      <td class="gancho">Economia de energia em escala (corte direto no custo fixo dominante) · Autonomia se a CEMIG cair (câmara fria parada = mercadoria perdida em horas) · Sustentabilidade pra negociar com supermercado/atacado cliente.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">30</td>
+      <td class="empresa"><strong>Açougue Tavares</strong><br><span class="meta">Conjunto Paulo VI · Loja</span></td>
+      <td class="porte"><span class="badge">Açougue De Bairro</span></td>
+      <td class="rating">⭐ 5<br><span class="meta">14 reviews</span></td>
+      <td class="contato">+55 31 98745-5803<br><span style="color:#555;">—</span></td>
+      <td class="dor">Margem fina, dono na operação, conta de luz pesa direto no fluxo de caixa do mês.</td>
+      <td class="gancho">Economia na conta mensal (alivia fluxo de caixa apertado) · Autonomia da câmara fria se faltar luz (sobrevivência do negócio) · Sustentabilidade como diferencial pro consumidor consciente do bairro.</td>
+    </tr>
+    
+  </tbody>
+</table>
+
+<div class="footer">
+  L.M CONSULTORIA COMERCIAL · MATHEUS JARDIM · (31) 98331-7347
+</div>
+
+</body>
+</html>

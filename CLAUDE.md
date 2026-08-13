@@ -12,6 +12,8 @@ Workspace de operações das duas agências do Matheus: WinVision e L.M Agência
 - `templates/ferramentas/catalogo.md` — APIs e ferramentas disponíveis pra usar em skills
 - `winvision/` — clientes, propostas e conteúdo da WinVision
 - `lm/` — clientes, propostas e conteúdo da L.M Agência
+- `conteudo/cockpit/carrosseis/` — carrosséis do Cockpit (PNG via Playwright)
+- `conteudo/cockpit/videos/` — vídeos do Cockpit (MP4 via Remotion). Projeto Remotion mora em `_remotion/` dentro dessa pasta. Cada vídeo gerado fica em subpasta `AAAA-MM-DD_slug/` com `video.mp4` e `props.json`. Skill: `/cockpit-video-bastidor`.
 - `tarefas.md` — lista de tarefas corrente
 
 ## Sobre o negócio
@@ -36,31 +38,13 @@ Meta financeira: R$50k/mês (gap atual de R$36k).
 - Jonas / Hypertech (solar — meta R$20M)
 - Dr. Fábio / IOT (ortopedia, Varginha)
 - Clínica Comtato
-
-## O que mais produzimos aqui
-
-- Análise de relatórios e dados de performance
-- Análise comercial
-- Criativos (tráfego pago e orgânico)
-- Produção de conteúdo pra redes sociais
-- Propostas comerciais
-- Relatórios pra clientes
-- Prospecção
+- Rafaelly (pediatra, infoprodutos)
 
 ## Tom de voz
 
 Tom informal, direto e sem enrolação. Escrever como se estivesse conversando.
 
 Evitar: travessão (—), frases genéricas de IA, bullet points desnecessários, linguagem formal ou corporativa.
-
-## Ferramentas conectadas
-
-- [ ] Gmail MCP
-- [ ] Google Calendar MCP
-- [ ] Canva MCP
-- [ ] Notion MCP
-
-*(Marcar conforme for instalando)*
 
 ---
 

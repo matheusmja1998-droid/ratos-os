@@ -253,6 +253,26 @@ O Claude DEVE seguir estas regras ao executar operacoes:
 7. **Nunca hardcodar tokens** -- sempre usar a env var META_ADS_TOKEN
 8. **Nunca assumir origem de dados** -- ao mostrar insights no nivel da conta, SEMPRE quebrar por campanha antes de atribuir resultados a uma campanha especifica. Nunca dizer "esse gasto e da campanha X" sem ter confirmado com insights por campanha
 
+## Princípios Sobral (linha de raciocínio pra sugestões)
+
+Quando o usuário pedir **análise estratégica, sugestão de melhoria ou diagnóstico** (não só execução técnica), consultar as notas de aulas do Pedro Sobral no Obsidian do Matheus.
+
+**Localização**: `/Users/matheusjardim/claude/obsidian/Matheus/Trabalho/Aprendizado/Cursos/Pedro Sobral — Lives Subido/`
+
+**Sempre começar lendo o índice** (`Pedro Sobral — Índice de Lives.md`) — tem glossário denso com todos os frameworks + mapa de qual live cobre qual tema.
+
+**Lives mais relevantes pra Meta Ads**:
+- L361 — Andrômeda + Advantage+ (8 regras de ouro)
+- L367 — 7 formas de segmentar
+- L372 — Copy (GCC, 7 fatores de segmentação, 8-15 conceitos distintos)
+- L375 — WhatsApp (3 filtros de qualidade + cliente oculto)
+- L381 — Formulário nativo (lead scoring + lógica condicional)
+- L382 — Botão turbinar (Meta Business Suite)
+
+Pra recomendação acionável, sempre **citar a fonte** ("Pela Live 361, anúncios muito semelhantes a Meta considera 1 só pra Andrômeda — recomendo gerar 8-15 conceitos distintos..."). Se o cenário não tem cobertura, dizer explicitamente.
+
+A skill `ads-ratos` tem um mapa completo de problema→live em `references/principios-sobral.md` se precisar de mais detalhe.
+
 ## Padroes de campanha (CRITICO)
 
 **Arquivo:** `references/padroes-campanha.md`

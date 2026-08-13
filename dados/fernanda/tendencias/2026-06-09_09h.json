@@ -1,0 +1,101 @@
+{
+  "campanhas": [
+    {
+      "name": "[AGV_JUN_26]_[FASE01]_[LEADS]_[ADV+]_[FRIO]_[NOVA_PÁGINA_FB]_[TODOS_PAISES]_[C21]",
+      "comparacao_semanal": {
+        "tem_comparacao": true,
+        "spend_atual": 631.52,
+        "spend_anterior": 312.89,
+        "deltas": {
+          "cpl": -1.5,
+          "cpm": 4.9,
+          "ctr_link": 40.1,
+          "hook_rate": 10.0,
+          "frequency": 1.5,
+          "connect_rate": -3.1,
+          "tx_conversao_pagina": -21.8,
+          "leads": 105.0
+        }
+      },
+      "ads": [
+        {
+          "name": "JUN_26_CAP_VD_16_GRANDES_EMPRESAS_ESTAO_INVESTINDO_NISSO_FEED_",
+          "serie_dias": 1,
+          "fadiga": {
+            "insuficiente": true,
+            "dias": 1
+          }
+        },
+        {
+          "name": "JUN_26_CAP_VD_26_COMO_VOCÊ_PODE_CONSERTAR_A_SUA_VIDA_EM_APENAS_1_DIA_FEED_",
+          "serie_dias": 2,
+          "fadiga": {
+            "insuficiente": true,
+            "dias": 2
+          }
+        }
+      ]
+    },
+    {
+      "name": "[AGV_JUN_26]_[FASE01]_[LEADS]_[ADV+]_[FRIO]_[NOVA_PÁGINA_FB]_[TODOS_PAISES]_[C13]",
+      "comparacao_semanal": {
+        "tem_comparacao": true,
+        "spend_atual": 4064.39,
+        "spend_anterior": 5887.71,
+        "deltas": {
+          "cpl": -15.9,
+          "cpm": -14.3,
+          "ctr_link": 14.6,
+          "hook_rate": 4.8,
+          "frequency": 0.0,
+          "connect_rate": -6.5,
+          "tx_conversao_pagina": -5.0,
+          "leads": -18.0
+        }
+      },
+      "ads": [
+        {
+          "name": "JUN_26_CAP_VD_14_CHURRASCO_.mp4",
+          "serie_dias": 3,
+          "fadiga": {
+            "insuficiente": false,
+            "dias": 3,
+            "sinais": [],
+            "tem_fadiga": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "[AGV_JUN_26]_[FASE01]_[LEADS]_[ADV+]_[FRIO]_[NOVA_PÁGINA_FB]_[TODOS_PAISES]_[C12]",
+      "comparacao_semanal": {
+        "tem_comparacao": true,
+        "spend_atual": 3705.71,
+        "spend_anterior": 7774.59,
+        "deltas": {
+          "cpl": -21.2,
+          "cpm": -2.6,
+          "ctr_link": 5.7,
+          "hook_rate": -1.2,
+          "frequency": 0.0,
+          "connect_rate": -2.4,
+          "tx_conversao_pagina": 19.9,
+          "leads": -39.5
+        }
+      },
+      "ads": [
+        {
+          "name": "AVIAO",
+          "serie_dias": 3,
+          "fadiga": {
+            "insuficiente": false,
+            "dias": 3,
+            "sinais": [],
+            "tem_fadiga": false
+          }
+        }
+      ]
+    }
+  ],
+  "ads_com_fadiga": []
+}

@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 1920px; height: 1080px;
+  background: #0A0A0A;
+  color: #FFFFFF;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.slide {
+  width: 1920px; height: 1080px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 120px;
+  text-align: center;
+}
+
+.brand {
+  position: absolute;
+  top: 60px;
+  left: 120px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #00E676;
+  text-align: left;
+}
+.brand .sub {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 6px;
+  color: #999;
+  margin-top: 4px;
+}
+
+.slide-num {
+  position: absolute;
+  bottom: 60px;
+  right: 120px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #666;
+  letter-spacing: 2px;
+}
+
+.eyebrow {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  color: #00E676;
+  text-transform: uppercase;
+  margin-bottom: 60px;
+}
+
+/* Ícone container — núcleo do design V2 */
+.icon {
+  width: 360px;
+  height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 70px;
+  position: relative;
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: #00E676;
+  stroke-width: 4;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 24px rgba(0,230,118,0.45)) drop-shadow(0 0 48px rgba(0,230,118,0.25));
+}
+
+.icon svg .danger { stroke: #FF4444; }
+.icon svg .accent { stroke: #00E676; }
+.icon svg .muted { stroke: #555; }
+
+/* Frase âncora — texto curto embaixo do ícone */
+.anchor {
+  font-size: 64px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  max-width: 1500px;
+}
+.anchor .accent { color: #00E676; }
+.anchor .danger { color: #FF4444; }
+.anchor .muted { color: #888; }
+
+.sub-anchor {
+  font-size: 26px;
+  font-weight: 500;
+  color: #999;
+  margin-top: 30px;
+  max-width: 1200px;
+  line-height: 1.4;
+}
+
+/* Variante: número/dado gigante (mas menor que V1) */
+.big-number {
+  font-size: 240px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -8px;
+  color: #00E676;
+  margin-bottom: 30px;
+  filter: drop-shadow(0 0 30px rgba(0,230,118,0.35));
+}
+
+.footer-line {
+  position: absolute;
+  bottom: 60px;
+  left: 120px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #00E676;
+  letter-spacing: 3px;
+}
+
+/* Variante: 2 elementos lado a lado (apenas pra capa e ctas) */
+.two-elements {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 100px;
+  margin-bottom: 70px;
+}
+
+.cta-box {
+  margin-top: 60px;
+  padding: 32px 60px;
+  border: 2px solid #00E676;
+  border-radius: 999px;
+  font-size: 30px;
+  font-weight: 700;
+  color: #00E676;
+  letter-spacing: 1px;
+  box-shadow: 0 0 32px rgba(0,230,118,0.3);
+}

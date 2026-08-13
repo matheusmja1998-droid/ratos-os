@@ -219,6 +219,11 @@ def cmd_duplicate_adset(args):
         "daily_budget", "lifetime_budget", "bid_amount", "bid_strategy",
         "promoted_object", "destination_type",
     ]
+    # Em campanha CBO o budget fica na campanha; adset nao pode ter budget proprio.
+    # --no-budget pula daily/lifetime_budget pra permitir duplicar ABO -> CBO.
+    if getattr(args, "no_budget", False):
+        copy_fields = [f for f in copy_fields
+                       if f not in ("daily_budget", "lifetime_budget")]
     for field in copy_fields:
         if field in data and data[field] is not None:
             params[field] = data[field]
@@ -366,6 +371,8 @@ def main():
     p.add_argument("--id", required=True, help="ID do ad set original")
     p.add_argument("--campaign", help="ID da campanha destino (padrao: mesma do original)")
     p.add_argument("--name", help="Nome do novo ad set")
+    p.add_argument("--no-budget", dest="no_budget", action="store_true",
+                   help="Nao copiar daily/lifetime_budget (necessario ao mover ABO -> campanha CBO)")
 
     # duplicate-campaign
     p = sub.add_parser("duplicate-campaign", help="Duplica uma campanha")

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding L.M — Dia 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#080808;
+    --bg2:#111114;
+    --green:#00E878;
+    --green2:#8DFFC8;
+    --white:#FFFFFF;
+    --gray:#9A9AA5;
+    --red:#FF4D4D;
+    --line:linear-gradient(90deg,#00E878 0%,#8DFFC8 100%);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#000;font-family:'Plus Jakarta Sans',sans-serif;color:var(--white)}
+  .deck{display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px 0}
+  .slide{
+    width:1280px;height:720px;background:var(--bg);position:relative;overflow:hidden;
+    border:1px solid #1d1d22;border-radius:20px;
+    display:flex;flex-direction:column;justify-content:center;padding:80px;
+  }
+  .slide::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--line);
+  }
+  .glow{position:absolute;border-radius:50%;filter:blur(120px);opacity:.18;pointer-events:none}
+  .glow.g1{width:480px;height:480px;background:var(--green);top:-180px;right:-120px}
+  .glow.g2{width:380px;height:380px;background:var(--green2);bottom:-160px;left:-100px}
+  .num{position:absolute;top:40px;right:56px;font-size:15px;font-weight:700;color:#33333a;letter-spacing:1px}
+  .kicker{font-size:15px;font-weight:700;color:var(--green);letter-spacing:3px;text-transform:uppercase;margin-bottom:22px}
+  h1{font-size:72px;font-weight:800;line-height:1.05;letter-spacing:-1.5px}
+  h2{font-size:52px;font-weight:800;line-height:1.08;letter-spacing:-1px;margin-bottom:30px}
+  h2 .hl{color:var(--green)}
+  .sub{font-size:24px;color:var(--gray);font-weight:500;line-height:1.5;max-width:920px}
+  .big{font-size:30px;font-weight:600;line-height:1.45}
+  ul{list-style:none;display:flex;flex-direction:column;gap:18px;margin-top:10px}
+  li{font-size:24px;font-weight:500;display:flex;gap:16px;align-items:flex-start;line-height:1.4}
+  li .dot{color:var(--green);font-weight:800;flex-shrink:0;margin-top:2px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:20px}
+  .card{background:var(--bg2);border:1px solid #22222a;border-radius:16px;padding:34px}
+  .card h3{font-size:24px;font-weight:700;margin-bottom:16px;color:var(--green)}
+  .card.bad h3{color:var(--red)}
+  .card p,.card li{font-size:20px;color:#cfcfd6;line-height:1.45}
+  .card ul{gap:12px}
+  .card li{font-size:19px}
+  .pill{display:inline-block;background:rgba(0,232,120,.12);border:1px solid rgba(0,232,120,.35);color:var(--green);
+    font-size:18px;font-weight:700;padding:8px 18px;border-radius:100px;margin-bottom:24px}
+  .grid-vals{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+  .val{background:var(--bg2);border:1px solid #22222a;border-radius:14px;padding:22px 26px;display:flex;gap:18px;align-items:center}
+  .val .vn{font-size:34px;font-weight:800;color:var(--green);flex-shrink:0;width:46px}
+  .val .vt{font-size:21px;font-weight:600;line-height:1.25}
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:20px}
+  th,td{text-align:left;padding:16px 14px;border-bottom:1px solid #22222a}
+  th{color:var(--green);font-weight:700;font-size:18px;text-transform:uppercase;letter-spacing:1px}
+  td{color:#dcdce2;font-weight:500}
+  .metric-row td:first-child{font-weight:700;color:#fff}
+  .footer-tag{position:absolute;bottom:42px;left:80px;font-size:16px;font-weight:700;color:#33333a;letter-spacing:2px}
+  .logo{font-size:22px;font-weight:800;letter-spacing:-.5px}
+  .logo .dot{color:var(--green)}
+  .center{align-items:center;text-align:center}
+  .center .sub{margin-left:auto;margin-right:auto}
+  .quote{font-size:34px;font-weight:700;line-height:1.3;max-width:980px}
+  .quote .hl{color:var(--green)}
+  .small{font-size:19px;color:var(--gray);margin-top:8px}
+  .stepbox{background:var(--bg2);border:1px solid #22222a;border-radius:16px;padding:30px 34px;margin-top:18px}
+  .stepbox h3{font-size:23px;color:var(--green);font-weight:700;margin-bottom:14px}
+  .stepbox p{font-size:21px;color:#cfcfd6;line-height:1.5}
+  .money{font-size:40px;font-weight:800;color:var(--green)}
+  @media print{
+    body{background:#fff}
+    .deck{gap:0;padding:0}
+    .slide{border-radius:0;border:none;page-break-after:always;width:100vw;height:100vh}
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- 1 CAPA -->
+  <section class="slide center">
+    <div class="glow g1"></div><div class="glow g2"></div>
+    <div class="num">01 / 15</div>
+    <div class="logo" style="margin-bottom:40px">L<span class="dot">.</span>M Agência</div>
+    <div class="kicker">Onboarding · Time Comercial</div>
+    <h1>Bem-vindos ao<br>Time L.M</h1>
+    <p class="sub" style="margin-top:28px">Dia 1. A partir de hoje, vocês fazem parte da operação comercial mais bem-feita do mercado solar B2B brasileiro.</p>
+    <div class="footer-tag">L.M · DIA 1</div>
+  </section>
+
+  <!-- 2 QUEM SOMOS -->
+  <section class="slide">
+    <div class="glow g1"></div>
+    <div class="num">02 / 15</div>
+    <div class="kicker">Quem somos</div>
+    <h2>Dois sócios.<br>Uma <span class="hl">missão.</span></h2>
+    <div class="two">
+      <div class="card">
+        <h3>Valentino Pascual</h3>
+        <p>Head de Prospecção. Constrói a máquina de demanda. Treina o time pra tirar do zero a 5-7 agendamentos/dia em duas semanas.</p>
+      </div>
+      <div class="card">
+        <h3>Matheus Jardim</h3>
+        <p>Head de Vendas. Fecha os contratos. Estrutura a operação, a inteligência e a tecnologia por trás.</p>
+      </div>
+    </div>
+    <p class="big" style="margin-top:34px"><span style="color:var(--green)">Missão:</span> construir a operação comercial mais bem-feita do solar B2B do Brasil. Sem hype, sem promessa fácil.</p>
+    <div class="footer-tag">L.M · DIA 1</div>
+  </section>
+
+  <!-- 3 O QUE A LM FAZ -->
+  <section class="slide">
+    <div class="glow g2"></div>
+    <div class="num">03 / 15</div>
+    <div class="kicker">O que a L.M faz</div>
+    <h2>Estruturação comercial<br>pra <span class="hl">integradoras solares.</span></h2>
+    <div class="two">
+      <div class="card">
+        <h3>Nosso cliente (ICP)</h3>
+        <p>Integradora solar B2B que já fatura, tem time, mas o comercial não roda sozinho. A gente destrava o gargalo de vendas dela.</p>
+      </div>
+      <div class="card">
+        <h3>O seu papel: BDR</h3>
+        <p>Vocês <b style="color:#fff">prospectam e agendam</b> reuniões com esses donos. Quem fecha o contrato é o Matheus ou o Valentino. Vocês geram a demanda.</p>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:30px">Vocês não vendem. Vocês abrem a porta. A gente entra e fecha.</p>
+    <div class="footer-tag">L.M · DIA 1</div>
+  </section>
+
+  <!-- 4 O FIRE TEST -->
+  <section class="slide">
+    <div class="glow g1"></div>
+    <div class="num">04 / 15</div>
+    <div class="kicker">As regras do jogo</div>
+    <h2>O <span class="hl">Fire Test:</span> 45 dias.</h2>
+    <ul>
+      <li><span class="dot">→</span> <b>45 dias</b>, 100% comissão. Sem fixo nesse período.</li>
+      <li><span class="dot">→</span> <b>15%</b> sobre tudo que entrar no caixa de contratos que vierem de quem vocês prospectaram.</li>
+      <li><span class="dot">→</span> <b>Bônus pontuais</b> em dinheiro quando bater meta do dia (varia, não é garantido).</li>
+      <li><span class="dot">→</span> <b>Meta:</b> 2 contratos fechados em 45 dias pra ser efetivado.</li>
+      <li><span class="dot">→</span> <b>Checkpoints</b> no dia 15, 30 e 45.</li>
+    </ul>
+    <p class="small" style="margin-top:26px">Sem rodeio: ou vocês performam e crescem com a gente, ou esse não é o lugar. E tá tudo bem.</p>
+    <div class="footer-tag">L.M · DIA 1</div>
+  </section>
+
+  <!-- 5 APOS O FIRE TEST -->
+  <section class="slide">
+    <div class="glow g2"></div>
+    <div class="num">05 / 15</div>
+    <div class="kicker">Depois dos 45 dias</div>
+    <h2>Passou? Vira <span class="hl">fixo.</span></h2>
+    <div class="two">
+      <div class="card"><h3>Fixo de R$2.100</h3><p>Entra a partir do dia 46, conforme a performance que vocês mostraram no Fire Test.</p></div>
+      <div class="card"><h3>Comissão de 5%</h3><p>Sobre tudo que entrar no caixa dos contratos que vocês trouxerem.</p></div>
+      <div class="card"><h3>Bônus por meta</h3><p>Bonificações pontuais por desempenho, conforme o resultado.</p></div>
+      <div class="card"><h3>Plano de carreira</h3><p>BDR → Closer → Head. Sem teto. Quem entrega, sobe.</p></div>
+    </div>
+    <div class="footer-tag">L.M · DIA 1</div>
+  </section>
+
+  <!-- 6 DREAM PLAN -->
+  <section class="slide">
+    <div class="glow g1"></div>
+    <div class="num">06 / 15</div>
+    <div class="kicker">O Dream Plan</div>
+    <h2>A empresa é o <span class="hl">veículo</span><br>do seu sonho.</h2>
+    <p class="big">Depois do Fire Test, a gente senta com cada um e descobre o teu sonho material — carro, casa, viagem. E monta um bônus específico pra te levar até ele.</p>
+    <p class="big" style="margin-top:30px">O teu trabalho diário vira o caminho pro teu sonho. Cada ligação, cada agendamento, cada contrato te aproxima do que tu quer de verdade.</p>
+    <p class="small" style="margin-top:30px">Aqui o teu sonho é levado a sério. A gente constrói junto.</p>
+    <div class="footer-tag">L.M · DIA 1</div>
+  </section>
+
+  <!-- 7 OS 5 VALORES -->
+  <section class="slide">
+    <div class="glow g2"></div>
+    <div class="num">07 / 15</div>
+    <div class="kicker">A cultura</div>
+    <h2>Os <span class="hl">5 valores</span> da L.M</h2>
+    <div class="grid-vals">
+      <div class="val"><div class="vn">1</div><div class="vt">Faz dobrado, sem mandar</div></div>
+      <div class="val"><div class="vn">2</div><div class="vt">Número na mesa. Hoje.</div></div>
+      <div class="val"><div class="vn">3</div><div class="vt">Se não for excelência, não vai pro cliente</div></div>
+      <div class="val"><div class="vn">4</div><div class="vt">Caminho difícil por escolha</div></div>
+      <div class="val" style="grid-column:1 / -1"><div class="vn">5</div><div class="vt">Palavra vale contrato — combinou, cumpriu</div></div>
+    </div>
+    <p class="small" style="margin-top:24px">Cada um vai ler um valor em voz alta agora.</p>
+    <div class="footer-tag">L.M · DIA 1</div>
+  </section>
+
+  <!-- 8 LINHAS VERMELHAS -->
+  <section class="slide">
+    <div class="glow g1"></div>
+    <div class="num">08 / 15</div>
+    <div class="kicker">O que NÃO toleramos</div>
+    <h2>As <span style="color:var(--red)">linhas vermelhas.</span></h2>
+    <ul>
+      <li><span class="dot" style="color:var(--red)">✕</span> <b>Linguagem de vítima</b> — "o mercado", "o cliente não quis", "ninguém me avisou".</li>
+      <li><span class="dot" style="color:var(--red)">✕</span> <b>Falta de palavra</b> — combinou e não cumpriu. Sumiu sem avisar.</li>
+      <li><span class="dot" style="color:var(--red)">✕</span> <b>Preguiça intelectual</b> — não estudou, não testou, repete o mesmo erro.</li>
+      <li><span class="dot" style="color:var(--red)">✕</span> <b>Falsa modéstia</b> — "tá bom assim", baixar a régua pra ficar confortável.</li>
+      <li><span class="dot" style="color:var(--red)">✕</span> <b>Fazer o mínimo</b> — entregar no prazo e parar, esperar mandão.</li>
+    </ul>
+    <p class="small" style="margin-top:24px">Qualquer uma dessas, a gente trata na hora. Em 48h, sem acúmulo.</p>
+    <div class="footer-tag">L.M · DIA 1</div>
+  </section>
+
+  <!-- 9 QUEM SAO VOCES -->
+  <section class="slide">
+    <div class="glow g2"></div>
+    <div class="num">09 / 15</div>
+    <div class="kicker">Quem são vocês</div>
+    <h2>O time que <span class="hl">começa hoje.</span></h2>
+    <table>
+      <tr><th>Nome</th><th>Mineradora</th><th>Hunter (ligação)</th><th>O que te trouxe</th></tr>
+      <tr class="metric-row"><td>Greice</td><td>8</td><td>9</td><td>2 anos de imobiliária, sabe falar com cliente</td></tr>
+      <tr class="metric-row"><td>Thiago Marques</td><td>5</td><td>10</td><td>Fome e mentalidade de otimização</td></tr>
+      <tr class="metric-row"><td>Amanda</td><td>8</td><td>9</td><td>R$10k em um mês, vendas é escolha de vida</td></tr>
+      <tr class="metric-row"><td>Thiago Cardoso</td><td>7</td><td>8</td><td>10+ anos de comercial, telecom a saúde</td></tr>
+    </table>
+    <p class="small" style="margin-top:24px">Cada um chegou aqui por mérito. Agora é provar todo dia.</p>
+    <div class="footer-tag">L.M · DIA 1</div>
+  </section>
+
+  <!-- 10 O SCRIPT -->
+  <section class="slide">
+    <div class="glow g1"></div>
+    <div class="num">10 / 15</div>
+    <div class="kicker">Como a gente liga</div>
+    <h2>O <span class="hl">script</span> em 3 etapas</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-top:14px">
+      <div class="card" style="padding:26px">
+        <h3 style="font-size:21px">1 · Triagem</h3>
+        <p style="font-size:18px">Despertar curiosidade. Passar pelo porteiro e chegar no decisor.</p>
+        <p style="font-size:16px;color:#9a9aa5;margin-top:14px;font-style:italic">"Tenho um convite pro responsável da empresa. Repassa pra ele?"</p>
+      </div>
+      <div class="card" style="padding:26px">
+        <h3 style="font-size:21px">2 · Convite</h3>
+        <p style="font-size:18px">Apresentar o evento. Tocar na dor: depende de indicação, CAC alto, perde cliente por R$500.</p>
+        <p style="font-size:16px;color:#9a9aa5;margin-top:14px;font-style:italic">"Quinta ao meio-dia, 100+ empresários do mesmo ramo."</p>
+      </div>
+      <div class="card" style="padding:26px">
+        <h3 style="font-size:21px">3 · Autoridade</h3>
+        <p style="font-size:18px">Fechar com clareza. Confirmar presença e dar o próximo passo.</p>
+        <p style="font-size:16px;color:#9a9aa5;margin-top:14px;font-style:italic">"O que tu gostaria de aprender pra sair feliz do evento?"</p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:24px">Objetivo único das 3 etapas: <b style="color:var(--green)">confirmar a presença no evento</b>. O Valentino treina cada uma com vocês.</p>
+    <div class="footer-tag">L.M · DIA 1</div>
+  </section>
+
+  <!-- 11 AS METRICAS -->
+  <section class="slide">
+    <div class="glow g2"></div>
+    <div class="num">11 / 15</div>
+    <div class="kicker">O que medir</div>
+    <h2>As <span class="hl">métricas</span> de todo dia</h2>
+    <table>
+      <tr><th>Métrica</th><th>O que é</th><th>Por que importa</th></tr>
+      <tr class="metric-row"><td>Ligações</td><td>Quantas tentativas no dia</td><td>É o combustível. Sem volume, sem resultado.</td></tr>
+      <tr class="metric-row"><td>Conexões</td><td>Quantas pessoas atenderam de fato</td><td>Mede se a lista e o horário estão certos.</td></tr>
+      <tr class="metric-row"><td>Agendamentos</td><td>Reuniões marcadas</td><td>É o teu placar. O que paga teu bônus.</td></tr>
+      <tr class="metric-row"><td>Comparecimento</td><td>Quantos apareceram na reunião</td><td>Mede a qualidade do teu agendamento.</td></tr>
+    </table>
+    <p class="small" style="margin-top:24px"><b style="color:var(--green)">Número na mesa. Hoje.</b> Sem achismo, sem "tá indo bem".</p>
+    <div class="footer-tag">L.M · DIA 1</div>
+  </section>
+
+  <!-- 12 RELATORIO DIARIO -->
+  <section class="slide">
+    <div class="glow g1"></div>
+    <div class="num">12 / 15</div>
+    <div class="kicker">O relatório diário</div>
+    <h2>Todo fim de dia, <span class="hl">esse texto.</span></h2>
+    <div class="stepbox" style="font-family:monospace;padding:26px 30px">
+      <p style="font-size:16px;line-height:1.75;color:#dcdce2">
+        📊 <b style="color:var(--green)">[NOME] — [DATA]</b><br><br>
+        📞 <b style="color:#fff">Ligações</b><br>
+        ➡️ Ligações discadas:<br>
+        ➡️ Conexões (atenderam):<br>
+        ➡️ Decisores:<br>
+        ➡️ Reuniões marcadas:<br><br>
+        🔁 <b style="color:#fff">Follow-up</b><br>
+        ➡️ Follow-ups enviados:<br>
+        ➡️ Decisores gerados:<br>
+        ➡️ Reuniões geradas:<br><br>
+        🎯 <b style="color:#fff">Geral do Dia</b><br>
+        ➡️ Total de visitas realizadas:<br>
+        ➡️ Principal dificuldade do dia:<br>
+        ➡️ Horas prospectando:
+      </p>
+    </div>
+    <p class="small" style="margin-top:18px">Manda no grupo sem ninguém precisar pedir. Quem é cobrado pra mandar relatório, já tá no caminho errado.</p>
+    <div class="footer-tag">L.M · DIA 1</div>
+  </section>
+
+  <!-- 13 A DAILY -->
+  <section class="slide">
+    <div class="glow g2"></div>
+    <div class="num">13 / 15</div>
+    <div class="kicker">O ritual da manhã</div>
+    <h2>A <span class="hl">daily</span> — 15 minutos</h2>
+    <ul>
+      <li><span class="dot">1</span> <b>Número de ontem</b> — ligações, conexões, agendamentos. Em 60 segundos.</li>
+      <li><span class="dot">2</span> <b>Plano de hoje</b> — meta do dia + qual lead é prioridade.</li>
+      <li><span class="dot">3</span> <b>Onde tô travando</b> — pra gente destravar junto.</li>
+      <li><span class="dot">4</span> <b>Pre-flight</b> — lista aberta, script revisado, "tô no nível hoje?".</li>
+    </ul>
+    <p class="small" style="margin-top:26px">Todo dia útil. Em pé, rápido, sem enrolação. É aqui que a gente alinha o foco e destrava o que tá travado.</p>
+    <div class="footer-tag">L.M · DIA 1</div>
+  </section>
+
+  <!-- 14 DEMO AO VIVO -->
+  <section class="slide center">
+    <div class="glow g1"></div><div class="glow g2"></div>
+    <div class="num">14 / 15</div>
+    <div class="pill">Agora ao vivo</div>
+    <h2 style="text-align:center">O Valentino vai <span class="hl">prospectar</span><br>na frente de vocês.</h2>
+    <p class="sub">Liga de verdade, agora. Vocês observam o tom, a abertura, como passa pelo gatekeeper e como marca a reunião. Anotem tudo.</p>
+    <div class="footer-tag">L.M · DIA 1</div>
+  </section>
+
+  <!-- 15 PRIMEIRA LIGACAO -->
+  <section class="slide center">
+    <div class="glow g2"></div>
+    <div class="num">15 / 15</div>
+    <div class="pill">Sua vez</div>
+    <h2 style="text-align:center">Cada BDR liga <span class="hl">agora.</span></h2>
+    <p class="sub">Uma ou duas ligações, com o Valentino ouvindo. Sem medo de errar — o objetivo é quebrar o gelo da primeira chamada. O medo morre na primeira ligação.</p>
+    <div class="quote" style="margin-top:40px"><span class="hl">"Número na mesa hoje.</span><br>Excelência antes de sair pro cliente."</div>
+    <div class="footer-tag">L.M · DIA 1</div>
+  </section>
+
+</div>
+</body>
+</html>

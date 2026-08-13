@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Facilita AI — Apresentação</title>
+<style>
+  :root {
+    --verde-vivo: #16a34a;
+    --verde-claro: #6cc24a;
+    --verde-tinta: #14532d;
+    --verde-nevoa: #eef7f0;
+    --verde-nevoa-2: #e0f0e4;
+    --ink: #1b2a21;
+    --cinza: #5c6f63;
+    --branco: #ffffff;
+    --ambar: #ca8a04;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink); }
+  .serif { font-family: Georgia, "Times New Roman", serif; }
+
+  .pagina {
+    width: 297mm; height: 210mm;
+    page-break-after: always;
+    position: relative; overflow: hidden;
+    background: var(--branco);
+    padding: 18mm 20mm;
+    display: flex; flex-direction: column;
+  }
+  .pagina:last-child { page-break-after: avoid; }
+
+  /* util */
+  .eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--verde-vivo); margin-bottom: 10px;
+  }
+  h1.display { font-family: Georgia, serif; font-weight: 600; color: var(--verde-tinta); line-height: 1.08; }
+  h2.titulo { font-family: Georgia, serif; font-weight: 600; font-size: 34px; color: var(--verde-tinta); line-height: 1.12; }
+  .sub { color: var(--cinza); font-size: 15px; line-height: 1.55; }
+  .rodape-pag {
+    position: absolute; bottom: 10mm; left: 20mm; right: 20mm;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 10px; color: var(--cinza); letter-spacing: 0.5px;
+  }
+  .rodape-pag b { color: var(--verde-vivo); }
+
+  /* bolhas de chat */
+  .chat {
+    background: #f2ede7;
+    border-radius: 18px; padding: 16px; width: 100%;
+    box-shadow: 0 10px 30px rgba(20,83,45,.12);
+    border: 1px solid #e4ddd4;
+  }
+  .chat-header {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+    background: var(--verde-tinta); border-radius: 12px 12px 0 0; margin: -16px -16px 12px;
+  }
+  .chat-header .avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: linear-gradient(150deg, var(--verde-claro), var(--verde-vivo));
+    display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 14px;
+    font-family: Georgia, serif;
+  }
+  .chat-header .nome { color: #fff; font-size: 13px; font-weight: 600; }
+  .chat-header .status { color: #a7d8b7; font-size: 10px; }
+  .bolha {
+    max-width: 82%; padding: 8px 12px; border-radius: 12px; font-size: 12.5px; line-height: 1.45;
+    margin-bottom: 7px; position: relative;
+  }
+  .bolha .hora { display: block; font-size: 9px; color: rgba(0,0,0,.38); text-align: right; margin-top: 2px; }
+  .bolha.paciente { background: #fff; border-top-left-radius: 3px; margin-right: auto; box-shadow: 0 1px 1px rgba(0,0,0,.06); }
+  .bolha.ia { background: #d9fdd3; border-top-right-radius: 3px; margin-left: auto; box-shadow: 0 1px 1px rgba(0,0,0,.06); }
+
+  /* cards */
+  .card {
+    background: var(--verde-nevoa); border-radius: 16px; padding: 22px;
+    border: 1px solid var(--verde-nevoa-2);
+  }
+  .num-grande { font-family: Georgia, serif; font-size: 64px; font-weight: 700; color: var(--verde-vivo); line-height: 1; }
+  .badge {
+    display: inline-block; background: var(--verde-vivo); color: #fff; font-weight: 700;
+    font-size: 14px; padding: 10px 22px; border-radius: 999px; letter-spacing: 0.3px;
+  }
+  .badge.claro { background: var(--verde-nevoa); color: var(--verde-tinta); border: 2px solid var(--verde-vivo); }
+
+  .logo-img { display: block; }
+
+  /* pagina 1 — capa */
+  .capa { justify-content: center; }
+  .capa .circulo {
+    position: absolute; right: -70mm; top: -55mm; width: 190mm; height: 190mm; border-radius: 50%;
+    background: radial-gradient(circle at 35% 40%, var(--verde-nevoa) 0%, var(--verde-nevoa-2) 60%, #d2e9d8 100%);
+  }
+  .capa .chat-flutuante { position: absolute; right: 18mm; top: 42mm; width: 88mm; transform: rotate(2deg); }
+  .capa h1.display { font-size: 54px; max-width: 150mm; margin: 18px 0 14px; }
+  .capa .sub { font-size: 18px; max-width: 125mm; margin-bottom: 26px; }
+
+  /* grades */
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .feature { display: flex; gap: 14px; align-items: flex-start; }
+  .feature .ico {
+    width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+    background: var(--verde-nevoa); border: 1px solid var(--verde-nevoa-2);
+    display: grid; place-items: center; font-size: 21px;
+  }
+  .feature h3 { font-size: 15.5px; color: var(--verde-tinta); margin-bottom: 3px; }
+  .feature p { font-size: 12.5px; color: var(--cinza); line-height: 1.5; }
+
+  .passo { display: flex; gap: 16px; align-items: flex-start; }
+  .passo .n {
+    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+    background: var(--verde-vivo); color: #fff; font-family: Georgia, serif;
+    font-size: 20px; font-weight: 700; display: grid; place-items: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ PÁGINA 1 — CAPA ============ -->
+<section class="pagina capa">
+  <div class="circulo"></div>
+  <img class="logo-img" src="__LOGO__" alt="Facilita AI" style="width: 74mm; margin-left: -6mm;">
+  <h1 class="display">Sua clínica atendendo no WhatsApp <em style="color: var(--verde-vivo); font-style: normal;">24 horas por dia.</em></h1>
+  <p class="sub">A recepcionista de inteligência artificial que marca, confirma, remarca e recupera consultas sozinha. Enquanto sua equipe cuida de quem está na clínica.</p>
+  <div><span class="badge">🎁 Teste grátis por 14 dias</span></div>
+
+  <div class="chat chat-flutuante">
+    <div class="chat-header">
+      <div class="avatar">✚</div>
+      <div>
+        <div class="nome">Clínica Vida Leve</div>
+        <div class="status">online agora</div>
+      </div>
+    </div>
+    <div class="bolha paciente">Oi! Queria marcar uma consulta 🙏<span class="hora">22:47</span></div>
+    <div class="bolha ia">Oi! Claro 😊 Me conta: qual é a sua necessidade e você prefere manhã ou tarde?<span class="hora">22:47</span></div>
+    <div class="bolha paciente">Dor no joelho, pode ser de manhã<span class="hora">22:48</span></div>
+    <div class="bolha ia">Tenho quinta às 9h ou sexta às 10h30 com o Dr. João. Qual fica melhor?<span class="hora">22:48</span></div>
+  </div>
+
+  <div class="rodape-pag"><span><b>Facilita AI</b> · atendimento inteligente para clínicas</span><span>01</span></div>
+</section>
+
+<!-- ============ PÁGINA 2 — A DOR ============ -->
+<section class="pagina">
+  <div class="eyebrow">O problema</div>
+  <h2 class="titulo" style="max-width: 190mm;">O que sua clínica perde todo dia<br>sem perceber</h2>
+
+  <div class="grid-3" style="margin-top: 14mm;">
+    <div class="card">
+      <div class="num-grande">30%</div>
+      <h3 style="color: var(--verde-tinta); font-size: 16px; margin: 10px 0 6px;">das consultas viram falta</h3>
+      <p class="sub" style="font-size: 13px;">É a média de no-show em clínicas que não confirmam presença. Cada cadeira vazia é receita que não volta mais.</p>
+    </div>
+    <div class="card">
+      <div class="num-grande">7<span style="font-size: 34px;">em</span>10</div>
+      <h3 style="color: var(--verde-tinta); font-size: 16px; margin: 10px 0 6px;">pacientes preferem WhatsApp</h3>
+      <p class="sub" style="font-size: 13px;">Ligar virou incômodo. Quem não responde rápido no WhatsApp perde o paciente pra clínica que responde.</p>
+    </div>
+    <div class="card" style="background: #fdf6e7; border-color: #f3e5c4;">
+      <div class="num-grande" style="color: var(--ambar);">18h</div>
+      <h3 style="color: var(--verde-tinta); font-size: 16px; margin: 10px 0 6px;">depois disso, ninguém responde</h3>
+      <p class="sub" style="font-size: 13px;">Boa parte das mensagens chega fora do expediente. Sem resposta na hora, o paciente marca no concorrente.</p>
+    </div>
+  </div>
+
+  <div style="margin-top: 12mm; padding: 18px 24px; background: var(--verde-tinta); border-radius: 14px; color: #fff;">
+    <span class="serif" style="font-size: 19px;">Se cada consulta vale R$ 150 a R$ 400, quantos milhares de reais escaparam da sua agenda esse mês?</span>
+  </div>
+
+  <div class="rodape-pag"><span><b>Facilita AI</b> · atendimento inteligente para clínicas</span><span>02</span></div>
+</section>
+
+<!-- ============ PÁGINA 3 — A SOLUÇÃO (CHAT) ============ -->
+<section class="pagina">
+  <div style="display: flex; gap: 14mm; align-items: center; flex: 1;">
+    <div style="flex: 1.15;">
+      <div class="eyebrow">A solução</div>
+      <h2 class="titulo">Uma IA que atende como sua melhor recepcionista</h2>
+      <div style="margin-top: 10mm; display: grid; gap: 14px;">
+        <div class="feature"><div class="ico">⚡</div><div><h3>Responde na hora, a qualquer hora</h3><p>Madrugada, domingo, feriado. O paciente nunca fica no vácuo.</p></div></div>
+        <div class="feature"><div class="ico">🎙</div><div><h3>Entende áudio</h3><p>Paciente manda áudio? Ela ouve, entende e responde normalmente.</p></div></div>
+        <div class="feature"><div class="ico">🏥</div><div><h3>Pergunta convênio ou particular</h3><p>Já qualifica o paciente e registra tudo na consulta pra recepção ver.</p></div></div>
+        <div class="feature"><div class="ico">📅</div><div><h3>Marca direto na agenda do médico</h3><p>Sincronizada com o Google Calendar de cada profissional. Sem conflito de horário: o sistema não deixa marcar uma consulta em cima da outra.</p></div></div>
+        <div class="feature"><div class="ico">🙋</div><div><h3>Passa pra um humano quando precisa</h3><p>Dúvida clínica ou paciente pedindo atendente? Sua equipe é avisada e assume na hora.</p></div></div>
+      </div>
+    </div>
+    <div style="flex: 0.85;">
+      <div class="chat">
+        <div class="chat-header">
+          <div class="avatar">✚</div>
+          <div><div class="nome">Sua Clínica</div><div class="status">online agora</div></div>
+        </div>
+        <div class="bolha paciente">seria unimed<span class="hora">17:56</span></div>
+        <div class="bolha ia">Perfeito! Unimed a gente aceita sim. Qual é o seu nome? 😊<span class="hora">17:56</span></div>
+        <div class="bolha paciente">Matheus<span class="hora">17:56</span></div>
+        <div class="bolha ia">Prazer, Matheus! O Dr. João tem quinta às 9h ou sexta às 10h30. Qual prefere?<span class="hora">17:57</span></div>
+        <div class="bolha paciente">quinta 9h<span class="hora">17:57</span></div>
+        <div class="bolha ia">Pronto, Matheus! ✅ Consulta marcada: quinta, 9h, com o Dr. João, pela Unimed. Um dia antes eu te lembro por aqui!<span class="hora">17:57</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="rodape-pag"><span><b>Facilita AI</b> · atendimento inteligente para clínicas</span><span>03</span></div>
+</section>
+
+<!-- ============ PÁGINA 4 — ANTI NO-SHOW ============ -->
+<section class="pagina">
+  <div class="eyebrow">Receita protegida</div>
+  <h2 class="titulo">O sistema que segura sua receita</h2>
+  <p class="sub" style="margin-top: 8px; max-width: 170mm;">Marcar consulta é só o começo. O Facilita AI trabalha a agenda inteira, do lembrete à recuperação de paciente sumido.</p>
+
+  <div class="grid-2" style="margin-top: 10mm; gap: 18px;">
+    <div class="card">
+      <div style="font-size: 30px; margin-bottom: 8px;">✅</div>
+      <h3 class="serif" style="font-size: 19px; color: var(--verde-tinta); margin-bottom: 6px;">Confirmação automática na véspera</h3>
+      <p class="sub" style="font-size: 13px;">Um dia antes, o paciente recebe a mensagem e confirma com uma resposta. Quem não vem avisa antes, e a vaga não morre.</p>
+    </div>
+    <div class="card">
+      <div style="font-size: 30px; margin-bottom: 8px;">⏳</div>
+      <h3 class="serif" style="font-size: 19px; color: var(--verde-tinta); margin-bottom: 6px;">Lista de espera inteligente</h3>
+      <p class="sub" style="font-size: 13px;">Alguém cancelou? O próximo da fila recebe na hora: "abriu uma vaga quinta às 9h, quer?". Cadeira vazia preenchida sozinha.</p>
+    </div>
+    <div class="card">
+      <div style="font-size: 30px; margin-bottom: 8px;">🔔</div>
+      <h3 class="serif" style="font-size: 19px; color: var(--verde-tinta); margin-bottom: 6px;">Recall de retorno</h3>
+      <p class="sub" style="font-size: 13px;">Paciente que consultou há 3, 6 ou 12 meses e sumiu? A IA chama sozinha pra remarcar o retorno. Agenda cheia sem gastar em anúncio.</p>
+    </div>
+    <div class="card">
+      <div style="font-size: 30px; margin-bottom: 8px;">⭐</div>
+      <h3 class="serif" style="font-size: 19px; color: var(--verde-tinta); margin-bottom: 6px;">Avaliações no Google</h3>
+      <p class="sub" style="font-size: 13px;">Depois da consulta, a IA pede a avaliação no momento certo. Sua reputação no Google cresce no automático.</p>
+    </div>
+  </div>
+
+  <div class="rodape-pag"><span><b>Facilita AI</b> · atendimento inteligente para clínicas</span><span>04</span></div>
+</section>
+
+<!-- ============ PÁGINA 5 — PAINEL ============ -->
+<section class="pagina">
+  <div class="eyebrow">Gestão</div>
+  <h2 class="titulo">Você vê tudo. Você controla tudo.</h2>
+  <p class="sub" style="margin-top: 8px; max-width: 175mm;">Um painel simples, feito pra recepção usar sem treinamento. Tudo que a IA faz fica registrado e visível.</p>
+
+  <div class="grid-3" style="margin-top: 10mm; gap: 16px;">
+    <div class="feature"><div class="ico">📅</div><div><h3>Agenda semanal completa</h3><p>Segunda a domingo, todos os profissionais, sincronizada com o Google Calendar de cada médico.</p></div></div>
+    <div class="feature"><div class="ico">📝</div><div><h3>Resumo pronto de cada conversa</h3><p>A secretária abre e já sabe: o que o paciente relatou, convênio e próxima consulta. Sem ler o papo todo.</p></div></div>
+    <div class="feature"><div class="ico">🙋</div><div><h3>Assumir com 1 clique</h3><p>Sua equipe assume qualquer conversa na hora, responde pela tela, e devolve pra IA quando quiser.</p></div></div>
+    <div class="feature"><div class="ico">✏️</div><div><h3>Alterações com motivo</h3><p>Remarcou ou cancelou? Fica registrado quem, quando e por quê. Auditoria completa no log.</p></div></div>
+    <div class="feature"><div class="ico">📊</div><div><h3>Relatório no seu WhatsApp</h3><p>Toda semana o dono recebe: consultas marcadas, faltas evitadas, avaliações pedidas. O retorno na sua mão.</p></div></div>
+    <div class="feature"><div class="ico">📱</div><div><h3>Seu número, sua marca</h3><p>Funciona no WhatsApp que sua clínica já usa. O paciente nem percebe que é IA.</p></div></div>
+  </div>
+
+  <div style="margin-top: 11mm; padding: 16px 22px; background: var(--verde-nevoa); border-left: 4px solid var(--verde-vivo); border-radius: 10px;">
+    <span class="serif" style="font-size: 16px; color: var(--verde-tinta);">A IA trabalha. Sua equipe manda. Qualquer conversa pode ser assumida por um humano a qualquer momento, e o paciente também pode pedir um atendente quando quiser.</span>
+  </div>
+
+  <div class="rodape-pag"><span><b>Facilita AI</b> · atendimento inteligente para clínicas</span><span>05</span></div>
+</section>
+
+<!-- ============ PÁGINA 6 — O SISTEMA POR DENTRO (PRINT REAL) ============ -->
+<section class="pagina" style="background: linear-gradient(180deg, var(--verde-nevoa) 0%, #fff 55%);">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;">
+    <div>
+      <div class="eyebrow">Sistema real</div>
+      <h2 class="titulo">A agenda da sua clínica, viva e organizada</h2>
+    </div>
+    <p class="sub" style="max-width: 78mm; font-size: 12.5px; padding-bottom: 4px;">Print real do sistema: semana completa, todos os profissionais, cada consulta com paciente e horário. Tudo que a IA marca aparece aqui na hora.</p>
+  </div>
+
+  <!-- moldura de navegador com o print real -->
+  <div style="margin-top: 7mm; border-radius: 14px; overflow: hidden; box-shadow: 0 18px 50px rgba(20,83,45,.22); border: 1px solid #d8e5db; background: #fff;">
+    <div style="display: flex; align-items: center; gap: 6px; padding: 9px 14px; background: #f0f4f1; border-bottom: 1px solid #e0e8e2;">
+      <span style="width: 10px; height: 10px; border-radius: 50%; background: #f87171;"></span>
+      <span style="width: 10px; height: 10px; border-radius: 50%; background: #fbbf24;"></span>
+      <span style="width: 10px; height: 10px; border-radius: 50%; background: #34d399;"></span>
+      <span style="flex: 1; text-align: center; font-size: 10.5px; color: var(--cinza); background: #fff; border-radius: 6px; padding: 3px 12px; margin: 0 40px; border: 1px solid #e0e8e2;">app.facilita.ai — Agenda</span>
+    </div>
+    <img src="__SHOT_AGENDA__" alt="Agenda do Facilita AI" style="display: block; width: 100%;">
+  </div>
+
+  <div style="display: flex; gap: 10px; margin-top: 6mm; justify-content: center;">
+    <span class="badge claro" style="font-size: 11.5px; padding: 7px 14px;">📅 Semana completa, seg a dom</span>
+    <span class="badge claro" style="font-size: 11.5px; padding: 7px 14px;">🚫 Impossível marcar consulta em cima de outra</span>
+    <span class="badge claro" style="font-size: 11.5px; padding: 7px 14px;">🔄 Sincronizada com o Google Calendar do médico</span>
+  </div>
+
+  <div class="rodape-pag"><span><b>Facilita AI</b> · atendimento inteligente para clínicas</span><span>06</span></div>
+</section>
+
+<!-- ============ PÁGINA 7 — PREÇO ============ -->
+<section class="pagina">
+  <div class="eyebrow">Investimento</div>
+  <h2 class="titulo">Quanto custa ter recepção 24 horas?</h2>
+
+  <div style="display: flex; gap: 16px; margin-top: 10mm; align-items: stretch;">
+    <div class="card" style="flex: 1; opacity: .8;">
+      <div style="font-size: 13px; font-weight: 700; color: var(--cinza); text-transform: uppercase; letter-spacing: 1px;">Recepcionista extra</div>
+      <div class="serif" style="font-size: 40px; color: var(--cinza); margin: 10px 0 4px;">R$ 2.500<span style="font-size: 16px;">+/mês</span></div>
+      <p class="sub" style="font-size: 12.5px;">Salário + encargos + férias + 13º. Trabalha 8h por dia, 5 dias por semana. Não atende de madrugada nem no domingo.</p>
+    </div>
+
+    <div style="flex: 1.4; background: var(--verde-tinta); border-radius: 18px; padding: 26px; color: #fff; position: relative; box-shadow: 0 16px 40px rgba(20,83,45,.28);">
+      <div style="position: absolute; top: -12px; left: 26px;"><span class="badge" style="font-size: 12px; padding: 7px 16px;">🎁 Comece com 14 dias grátis</span></div>
+      <div style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #a7d8b7; margin-top: 8px;">Facilita AI</div>
+      <div style="font-size: 14px; color: #a7d8b7; margin-top: 10px;">a partir de</div>
+      <div class="serif" style="font-size: 52px; margin: 2px 0 2px;">R$ 297<span style="font-size: 26px;">,90</span><span style="font-size: 18px; color: #a7d8b7;">/mês</span></div>
+      <div style="font-size: 13px; color: #a7d8b7; margin-bottom: 14px;">após os 14 dias de teste · tudo incluso</div>
+      <div style="display: grid; gap: 7px; font-size: 13.5px;">
+        <div>✓ Atendimento e agendamento 24h no WhatsApp</div>
+        <div>✓ Confirmação de véspera + lista de espera + recall</div>
+        <div>✓ Painel completo com agenda, conversas e relatórios</div>
+        <div>✓ Suporte e todas as atualizações incluídas</div>
+        <div>✓ Sem fidelidade: cancela quando quiser</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 9mm; display: flex; gap: 14px; align-items: center;">
+    <div class="card" style="flex: 1; padding: 14px 20px;">
+      <p class="sub" style="font-size: 13px;"><b style="color: var(--verde-tinta);">Faz a conta:</b> duas faltas evitadas no mês e ele já se pagou. Todo o resto é lucro na sua agenda.</p>
+    </div>
+    <div class="card" style="flex: 1; padding: 14px 20px;">
+      <p class="sub" style="font-size: 13px;"><b style="color: var(--verde-tinta);">O valor exato depende do tamanho da clínica</b> (número de profissionais). No teste grátis você já recebe o valor certinho da sua.</p>
+    </div>
+  </div>
+
+  <div class="rodape-pag"><span><b>Facilita AI</b> · atendimento inteligente para clínicas</span><span>07</span></div>
+</section>
+
+<!-- ============ PÁGINA 7 — CTA ============ -->
+<section class="pagina" style="justify-content: center;">
+  <div style="position: absolute; left: -60mm; bottom: -70mm; width: 170mm; height: 170mm; border-radius: 50%; background: radial-gradient(circle at 60% 40%, var(--verde-nevoa) 0%, var(--verde-nevoa-2) 70%);"></div>
+
+  <div style="text-align: center; position: relative;">
+    <img class="logo-img" src="__LOGO__" alt="Facilita AI" style="width: 58mm; margin: 0 auto 10mm;">
+    <h2 class="display serif" style="font-size: 44px; color: var(--verde-tinta); max-width: 200mm; margin: 0 auto 8mm; line-height: 1.15;">Ativar leva menos de um dia.<br>Testar não custa nada.</h2>
+
+    <div style="display: flex; gap: 20px; max-width: 230mm; margin: 0 auto; text-align: left;">
+      <div class="passo" style="flex: 1;"><div class="n">1</div><div><h3 style="color: var(--verde-tinta); font-size: 15px; margin-bottom: 3px;">Responde essa mensagem</h3><p class="sub" style="font-size: 12.5px;">Manda um "QUERO TESTAR" pra quem te enviou essa apresentação.</p></div></div>
+      <div class="passo" style="flex: 1;"><div class="n">2</div><div><h3 style="color: var(--verde-tinta); font-size: 15px; margin-bottom: 3px;">A gente configura junto</h3><p class="sub" style="font-size: 12.5px;">Uma chamada rápida: dados da clínica, profissionais, horários e conectar seu WhatsApp.</p></div></div>
+      <div class="passo" style="flex: 1;"><div class="n">3</div><div><h3 style="color: var(--verde-tinta); font-size: 15px; margin-bottom: 3px;">Sua clínica atende sozinha</h3><p class="sub" style="font-size: 12.5px;">No mesmo dia, a IA já marca, confirma e protege sua agenda por 14 dias grátis.</p></div></div>
+    </div>
+
+    <div style="margin-top: 12mm;"><span class="badge" style="font-size: 16px; padding: 13px 30px;">🎁 Quero meus 14 dias grátis</span></div>
+  </div>
+
+  <div class="rodape-pag"><span><b>Facilita AI</b> · atendimento inteligente para clínicas</span><span>08</span></div>
+</section>
+
+</body>
+</html>

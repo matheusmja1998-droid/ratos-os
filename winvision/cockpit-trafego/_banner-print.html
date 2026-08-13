@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1280px; height: 380px; overflow: hidden; }
+  body {
+    background: #0A0A0F;
+    font-family: 'Fraunces', serif;
+    color: #fff;
+    padding: 50px 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  body::before {
+    content: '';
+    position: absolute;
+    top: -120px;
+    right: -120px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(0, 217, 255, 0.20) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  body::after {
+    content: '';
+    position: absolute;
+    bottom: -150px;
+    left: -150px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(176, 38, 255, 0.20) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .left {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    max-width: 640px;
+  }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #00D9FF;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .tag::before {
+    content: '';
+    width: 26px;
+    height: 1px;
+    background: linear-gradient(90deg, #00D9FF, #B026FF);
+  }
+  .title {
+    font-size: 56px;
+    font-weight: 500;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    color: #fff;
+    margin-bottom: 22px;
+  }
+  .title em { font-style: italic; color: #00D9FF; font-weight: 500; }
+  .sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: #A8A8B8;
+    line-height: 1.5;
+    max-width: 540px;
+  }
+  .right {
+    position: relative;
+    z-index: 2;
+    text-align: right;
+  }
+  .price-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #A8A8B8;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+  }
+  .price {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 130px;
+    color: #00D9FF;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+  }
+  .price-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #6B6B7A;
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+  <div class="left">
+    <div class="tag">COCKPIT TRÁFEGO</div>
+    <h1 class="title">Opere Meta, Google e GA4 <em>conversando com o Claude Code.</em></h1>
+    <p class="sub">5 skills prontas. Setup em 12 minutos. Relatório do cliente em 30 segundos. Pagamento único, sem mensalidade.</p>
+  </div>
+  <div class="right">
+    <div class="price-label">apenas</div>
+    <div class="price">R$67</div>
+    <div class="price-meta">à vista no Pix</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instalação do Claude Code | Cockpit Tráfego</title>
+<meta name="description" content="Tutorial de instalação do Claude Code no Mac e Windows. Passo a passo do zero.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<style>
+  .os-tabs {
+    display: flex;
+    gap: 12px;
+    margin: 32px 0 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .os-tab {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--gray);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .os-tab:hover { color: var(--white); }
+  .os-tab.active {
+    color: var(--cyan);
+    border-bottom-color: var(--cyan);
+  }
+  .os-content { display: none; }
+  .os-content.active { display: block; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav__inner">
+    <a class="nav__logo" href="/">Co<em>ckp</em>it Tráfego</a>
+    <a class="nav__back" href="https://agenciawinvision.com.br/cockpit-trafeg/">Voltar pra LP →</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero__tag">Tutorial</div>
+    <h1 class="hero__title">Instalação do <em>Claude Code</em>.</h1>
+    <p class="hero__sub">Passo a passo do zero. Escolhe teu sistema operacional abaixo. Em 8 a 12 minutos tu sai com tudo instalado e autenticado.</p>
+  </div>
+</header>
+
+<section class="content">
+  <div class="container">
+
+    <div class="os-tabs" role="tablist">
+      <button class="os-tab active" data-os="mac">MAC</button>
+      <button class="os-tab" data-os="windows">WINDOWS</button>
+    </div>
+
+    <!-- ============ MAC ============ -->
+    <div class="os-content active" id="os-mac">
+
+      <h2>Pré-requisitos no Mac</h2>
+      <p>Antes de instalar o Claude Code, é necessário ter o <strong>Node.js</strong>. Se tu nunca mexeu com ferramentas de desenvolvimento, provavelmente não tem ainda.</p>
+      <p>Baixa o instalador do macOS no site oficial: <a href="https://nodejs.org/pt/download/" target="_blank">nodejs.org/pt/download</a> — executa normalmente.</p>
+
+      <div class="step">
+        <div class="step__num">01</div>
+        <div class="step__title">Instalar Claude Code via terminal</div>
+        <p>Abre o terminal usando <code>Command + Espaço</code> e digitando <em>"terminal"</em>. Cola:</p>
+        <div class="terminal">
+          <div class="terminal__bar">
+            <span class="terminal__dot terminal__dot--r"></span>
+            <span class="terminal__dot terminal__dot--y"></span>
+            <span class="terminal__dot terminal__dot--g"></span>
+          </div>
+          <div class="terminal__body"><span class="terminal__prompt">$</span> <span class="terminal__cmd">npm install -g @anthropic-ai/claude-code</span></div>
+        </div>
+        <p>Pressiona Enter e confirma com <strong>Y</strong> quando solicitado. Depois testa:</p>
+        <div class="terminal">
+          <div class="terminal__bar">
+            <span class="terminal__dot terminal__dot--r"></span>
+            <span class="terminal__dot terminal__dot--y"></span>
+            <span class="terminal__dot terminal__dot--g"></span>
+          </div>
+          <div class="terminal__body"><span class="terminal__prompt">$</span> <span class="terminal__cmd">claude --version</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__num">02</div>
+        <div class="step__title">Instalar o VS Code</div>
+        <p>Baixa do site oficial: <a href="https://code.visualstudio.com/" target="_blank">code.visualstudio.com</a></p>
+        <p>Ao abrir pela primeira vez, fecha qualquer chat lateral que aparecer. O VS Code é onde tu vai rodar o Cockpit.</p>
+      </div>
+
+      <div class="step">
+        <div class="step__num">03</div>
+        <div class="step__title">Instalar a extensão do Claude Code</div>
+        <p>No VS Code, clica no ícone de extensões (quadradinhos na barra lateral esquerda).</p>
+        <p>Procura por <strong>"Claude Code"</strong> e instala a versão <strong>oficial da Anthropic</strong>.</p>
+        <div class="callout callout--warn">
+          <div class="callout__label">Atenção</div>
+          <p>Tem versões falsas com nome parecido. Confirma que o autor é <strong>Anthropic</strong>.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__num">04</div>
+        <div class="step__title">Autenticar</div>
+        <p>Usa a barra de comandos (<code>Cmd + Shift + P</code>) e digita <em>"Claude Code"</em>. Escolhe <strong>"abrir em nova aba"</strong>.</p>
+        <p>Na primeira vez, clica no botão azul de autenticar. O navegador abre pra tu autorizar a conexão com tua conta Claude.</p>
+      </div>
+
+      <div class="callout">
+        <div class="callout__label">Conta necessária</div>
+        <p>Claude Code funciona apenas com contas <strong>Claude Pro</strong> ou superiores (a partir de US$ 20/mês).</p>
+      </div>
+
+    </div>
+
+    <!-- ============ WINDOWS ============ -->
+    <div class="os-content" id="os-windows">
+
+      <div class="step">
+        <div class="step__num">01</div>
+        <div class="step__title">Baixar e instalar o VS Code</div>
+        <p>Baixa o instalador direto do site oficial: <a href="https://code.visualstudio.com/" target="_blank">code.visualstudio.com</a></p>
+        <p>Roda o instalador, aceita os padrões, finaliza. Abre o VS Code.</p>
+      </div>
+
+      <div class="step">
+        <div class="step__num">02</div>
+        <div class="step__title">Instalar a extensão Claude Code</div>
+        <p>No VS Code, clica no ícone de extensões (quadradinhos na barra lateral esquerda).</p>
+        <p>Procura por <strong>"Claude Code"</strong> e instala a versão <strong>oficial da Anthropic</strong>.</p>
+        <div class="callout callout--warn">
+          <div class="callout__label">Atenção</div>
+          <p>Tem várias extensões com nome parecido. Confirma que o autor é <strong>Anthropic</strong> antes de instalar.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__num">03</div>
+        <div class="step__title">Autenticar</div>
+        <p>Abre a barra de comandos (<code>Ctrl + Shift + P</code>) e digita <em>"Claude Code"</em>. Escolhe <strong>"abrir em nova aba"</strong>.</p>
+        <p>Clica no botão azul de autenticação. O navegador vai abrir pra tu autorizar a conexão com tua conta Claude.</p>
+      </div>
+
+      <div class="step">
+        <div class="step__num">04</div>
+        <div class="step__title">Confirmar instalação</div>
+        <p>Com tudo conectado, digita um comando teste no chat. Se respondeu, tá funcionando.</p>
+      </div>
+
+      <div class="callout">
+        <div class="callout__label">Conta necessária</div>
+        <p>Claude Code funciona apenas com contas <strong>Claude Pro</strong> ou superiores (a partir de US$ 20/mês).</p>
+      </div>
+
+    </div>
+
+    <div class="summary">
+      <div class="summary__tag">Próximo passo</div>
+      <h3>Conectar o Meta Ads</h3>
+      <p>Com o Claude Code instalado, hora de conectar a tua conta de Meta Ads pra começar a operar.</p>
+      <p><a href="/meta-ads">Tutorial de integração Meta Ads →</a></p>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__nav">
+      <a class="footer__link" href="https://agenciawinvision.com.br/cockpit-trafeg/">← LP do produto</a>
+      <a class="footer__link" href="/meta-ads">Tutorial Meta Ads →</a>
+    </div>
+    <div class="footer__copy">© 2026 Cockpit Tráfego.</div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.os-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const os = tab.dataset.os;
+      document.querySelectorAll('.os-tab').forEach(t => t.classList.toggle('active', t.dataset.os === os));
+      document.querySelectorAll('.os-content').forEach(c => c.classList.toggle('active', c.id === 'os-' + os));
+    });
+  });
+</script>
+
+</body>
+</html>

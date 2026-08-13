@@ -1,0 +1,57 @@
+{
+  "campanhas": [
+    {
+      "name": "[AGV_JUN_26]_[FASE01]_[LEADS]_[ADV+]_[FRIO]_[NOVA_PÁGINA_FB]_[TODOS_PAISES]_[C13]",
+      "comparacao_semanal": null,
+      "ads": [
+        {
+          "name": "JUN_26_CAP_VD_14_CHURRASCO_.mp4",
+          "serie_dias": 1,
+          "fadiga": {
+            "insuficiente": true,
+            "dias": 1
+          }
+        },
+        {
+          "name": "JUN_26_CAP_VD_19_MAIOR_PESADELO_.mp4",
+          "serie_dias": 1,
+          "fadiga": {
+            "insuficiente": true,
+            "dias": 1
+          }
+        },
+        {
+          "name": "JUN_26_CAP_VD_8_10_ANOS_FEED_.mp4",
+          "serie_dias": 1,
+          "fadiga": {
+            "insuficiente": true,
+            "dias": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "[AGV_JUN_26]_[FASE01]_[LEADS]_[ADV+]_[FRIO]_[NOVA_PÁGINA_FB]_[TODOS_PAISES]_[C12]",
+      "comparacao_semanal": null,
+      "ads": [
+        {
+          "name": "JUN_26_CAP_VD_5.2_ELON_MUSK_PREPARAND O_UM_DOS_MAIORES_MOVIMENTOS_DA-HISTO",
+          "serie_dias": 1,
+          "fadiga": {
+            "insuficiente": true,
+            "dias": 1
+          }
+        },
+        {
+          "name": "AVIAO",
+          "serie_dias": 1,
+          "fadiga": {
+            "insuficiente": true,
+            "dias": 1
+          }
+        }
+      ]
+    }
+  ],
+  "ads_com_fadiga": []
+}

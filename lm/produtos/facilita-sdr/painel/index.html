@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Facilita SDR</title>
+<style>
+  :root {
+    --bg:#f6f8f7; --surface:#ffffff; --border:#e2e8e4; --text:#14201a; --muted:#5f6f66;
+    --verde:#16a34a; --verde-esc:#166534; --verde-soft:#e8f7ee; --vermelho:#dc2626; --amarelo:#d97706;
+  }
+  * { box-sizing:border-box; margin:0; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text); }
+  header { background:var(--surface); border-bottom:1px solid var(--border); padding:12px 20px; display:flex; align-items:center; gap:16px; position:sticky; top:0; z-index:10; }
+  header h1 { font-size:18px; color:var(--verde-esc); }
+  header h1 span { color:var(--verde); }
+  nav { display:flex; gap:4px; flex-wrap:wrap; }
+  nav button { border:none; background:none; padding:8px 14px; border-radius:8px; cursor:pointer; font-size:14px; color:var(--muted); }
+  nav button.on { background:var(--verde-soft); color:var(--verde-esc); font-weight:600; }
+  #status-chip { margin-left:auto; font-size:12px; padding:4px 10px; border-radius:999px; background:var(--verde-soft); color:var(--verde-esc); }
+  #status-chip.off { background:#fde8e8; color:var(--vermelho); }
+  /* layout com sidebar vertical recolhível */
+  .layout { display:flex; min-height:100vh; }
+  #sidebar { width:210px; flex:0 0 210px; background:var(--surface); border-right:1px solid var(--border); display:flex; flex-direction:column; position:sticky; top:0; height:100vh; transition:width .18s, flex-basis .18s; }
+  .sb-top { display:flex; align-items:center; gap:8px; padding:14px 16px; border-bottom:1px solid var(--border); }
+  .sb-top h1 { font-size:17px; color:var(--verde-esc); white-space:nowrap; overflow:hidden; }
+  .sb-top h1 span { color:var(--verde); }
+  #sb-toggle { margin-left:auto; border:none; background:var(--verde-soft); color:var(--verde-esc); width:26px; height:26px; border-radius:7px; cursor:pointer; font-size:14px; flex-shrink:0; }
+  #sidebar nav { display:flex; flex-direction:column; gap:2px; padding:10px 8px; flex:1; overflow-y:auto; }
+  #sidebar nav button { display:flex; align-items:center; gap:11px; border:none; background:none; padding:10px 12px; border-radius:9px; cursor:pointer; font-size:14px; color:var(--text); text-align:left; white-space:nowrap; }
+  #sidebar nav button > span:first-child { font-size:16px; width:20px; text-align:center; flex-shrink:0; }
+  #sidebar nav button:hover { background:var(--bg); }
+  #sidebar nav button.on { background:var(--verde-soft); color:var(--verde-esc); font-weight:600; }
+  .sb-status { padding:10px 16px; border-top:1px solid var(--border); font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; }
+  /* recolhido: só ícones */
+  #sidebar.recolhido { width:60px; flex-basis:60px; }
+  #sidebar.recolhido .sb-top h1, #sidebar.recolhido .lbl, #sidebar.recolhido .sb-status { display:none; }
+  #sidebar.recolhido #sb-toggle { margin:0 auto; }
+  #sidebar.recolhido nav button { justify-content:center; padding:10px 0; }
+  main { padding:20px; margin:0 auto; flex:1; min-width:0; max-width:1300px; }
+  @media (max-width:760px){ #sidebar{width:56px;flex-basis:56px} #sidebar .sb-top h1,#sidebar .lbl,#sidebar .sb-status{display:none} #sidebar nav button{justify-content:center;padding:10px 0} }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px; }
+  .grid-metricas { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:20px; }
+  .metrica .num { font-size:26px; font-weight:700; color:var(--verde-esc); }
+  .metrica .rot { font-size:12px; color:var(--muted); }
+  /* kanban */
+  .kanban { display:flex; gap:12px; overflow-x:auto; padding-bottom:14px; scroll-snap-type:x proximity; }
+  .kanban::-webkit-scrollbar { height:10px; }
+  .kanban::-webkit-scrollbar-thumb { background:var(--border); border-radius:5px; }
+  .coluna { min-width:250px; width:250px; flex:0 0 auto; scroll-snap-align:start; background:#eef1ef; border-radius:12px; padding:10px; max-height:calc(100vh - 240px); display:flex; flex-direction:column; }
+  .coluna.drop { background:var(--verde-soft); outline:2px dashed var(--verde); }
+  .coluna h3 { font-size:12px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .coluna h3 b { color:var(--verde-esc); }
+  .coluna h3 .limpar { margin-left:auto; cursor:pointer; color:var(--vermelho); font-size:14px; opacity:.5; }
+  .coluna h3 .limpar:hover { opacity:1; }
+  .coluna-body { overflow-y:auto; flex:1; }
+  .lead-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px 12px 8px; margin-bottom:8px; cursor:grab; font-size:13px; position:relative; }
+  .lead-card:hover { border-color:var(--verde); }
+  .lead-card.arrastando { opacity:.4; }
+  /* tarefa vencida: o card inteiro fica vermelho pra saltar aos olhos no Kanban */
+  .lead-card.atrasado { border-color:#e57373; background:#fff5f5; box-shadow:inset 3px 0 0 #d93025; }
+  #btn-atrasadas.on { background:#d93025; color:#fff; border-color:#d93025; }
+
+  /* ---- personalizador de funil (estilo Kommo, na identidade verde da casa) ---- */
+  @keyframes pf-in { from { opacity:0; transform:translateY(14px) scale(.97); } to { opacity:1; transform:none; } }
+  .pf-modal { animation:pf-in .18s ease-out; }
+  .pf-bar { display:flex; align-items:center; gap:8px; padding:11px 14px; border-radius:9px; margin-bottom:7px;
+    transition:transform .12s, box-shadow .12s; }
+  .pf-bar:hover { transform:translateX(2px); box-shadow:0 2px 8px rgba(0,0,0,.08); }
+  .pf-bar .pf-grip { color:rgba(0,0,0,.25); font-size:13px; letter-spacing:-1px; cursor:default; user-select:none; }
+  .pf-bar input { flex:1; min-width:0; border:none; background:transparent; font-size:14px; font-weight:600;
+    color:#2c3530; padding:0; outline:none; }
+  .pf-bar input:focus { border-bottom:2px solid rgba(0,0,0,.25); }
+  .pf-bar .pf-x { cursor:pointer; color:rgba(0,0,0,.3); font-size:15px; padding:0 2px; opacity:0; transition:opacity .12s; }
+  .pf-bar:hover .pf-x { opacity:1; }
+  .pf-bar .pf-x:hover { color:#d93025; }
+  .pf-badge { font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.4px;
+    padding:2px 7px; border-radius:99px; background:rgba(0,0,0,.10); color:rgba(0,0,0,.55); white-space:nowrap; }
+  .pf-add { display:flex; align-items:center; gap:8px; padding:11px 14px; border-radius:9px; margin-bottom:7px;
+    border:2px dashed var(--border); color:var(--muted); }
+  .pf-add input { flex:1; border:none; background:transparent; font-size:13.5px; outline:none; }
+  .pf-clique { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:9px;
+    background:#fafbfa; border:1px solid var(--border); margin-bottom:7px; }
+  .pf-clique b { min-width:128px; font-size:13px; }
+  .pf-clique select { flex:1; font-size:13px; padding:6px 9px; border-radius:7px; }
+  .pf-passos { display:flex; gap:6px; align-items:center; font-size:11.5px; color:var(--muted); }
+  .pf-passos .on { color:var(--verde-esc); font-weight:700; }
+  .nf-tipo { flex:1; border:2px solid var(--border); border-radius:11px; padding:13px 12px; cursor:pointer;
+    text-align:center; transition:border-color .12s, background .12s; }
+  .nf-tipo.on { border-color:var(--verde); background:var(--verde-soft); }
+  .nf-tipo .ic { font-size:22px; }
+  .nf-tipo b { display:block; font-size:13px; margin-top:4px; }
+  .nf-tipo span { display:block; font-size:11px; color:var(--muted); margin-top:2px; }
+  .lead-card .nome { font-weight:600; padding-right:20px; }
+  .lead-card .sub { color:var(--muted); font-size:12px; }
+  .lead-card .excluir { position:absolute; top:6px; right:8px; color:var(--muted); cursor:pointer; font-size:14px; opacity:0; }
+  .lead-card:hover .excluir { opacity:.6; }
+  .lead-card .excluir:hover { opacity:1; color:var(--vermelho); }
+  .dica-scroll { font-size:12px; color:var(--muted); margin-bottom:8px; }
+  .tag { display:inline-block; font-size:11px; padding:1px 8px; border-radius:999px; background:var(--verde-soft); color:var(--verde-esc); margin-top:4px; }
+  .tag.quente { background:#fef3c7; color:var(--amarelo); }
+  /* conversa */
+  /* Conversas ocupa a tela TODA sem scroll na pagina: scroll so DENTRO de cada
+     coluna (lista, mensagens, notas). */
+  .conversas-wrap { display:grid; grid-template-columns:320px 1fr; gap:14px; height:calc(100vh - 88px); min-height:0; }
+  .lista-conv { overflow-y:auto; min-height:0; }
+  /* com notas: lista continua (mais estreita, encostada na esquerda), conversa
+     centralizada no meio, notas na direita */
+  .conversas-wrap.com-notas { grid-template-columns:250px 1fr 372px; }
+  .painel-notas { display:none; overflow-y:auto; min-height:0; padding:14px 16px; }
+  .conversas-wrap.com-notas .painel-notas { display:block; }
+  .nota-linha { display:grid; grid-template-columns:118px 1fr; gap:4px 8px; font-size:12.5px; padding:5px 0; border-bottom:1px dashed var(--border); align-items:start; }
+  .nota-linha > span:first-child { color:var(--muted); }
+  .conv-item.pendente .conv-nome { font-weight:800; }
+  .conv-item.pendente { background:#fffdf5; }
+  .conv-item { padding:10px 12px; border-radius:10px; cursor:pointer; border:1px solid transparent; }
+  .conv-item:hover, .conv-item.on { background:var(--verde-soft); }
+  .chat { display:flex; flex-direction:column; min-height:0; overflow:hidden; }
+  /* com notas abertas o main larga o limite de largura: a tela inteira e da conversa */
+  body.conv-full main { max-width:none; }
+  .chat-msgs { flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:6px; }
+  .bolha { max-width:75%; padding:8px 12px; border-radius:12px; font-size:14px; white-space:pre-wrap; }
+  .bolha.user { align-self:flex-start; background:#eef1ef; }
+  .bolha.assistant { align-self:flex-end; background:#d9fdd3; }
+  .bolha.sistema { align-self:center; background:#fef3c7; font-size:12px; color:var(--amarelo); }
+  .bolha .hora { display:block; font-size:10px; color:var(--muted); margin-top:2px; }
+  .chat-envio { display:flex; gap:8px; padding:10px; border-top:1px solid var(--border); }
+  .chat-envio textarea { flex:1; border:1px solid var(--border); border-radius:10px; padding:10px; resize:none; font-family:inherit; font-size:14px; }
+  .chat-topo { padding:10px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  /* forms */
+  input, select, textarea { border:1px solid var(--border); border-radius:8px; padding:9px 12px; font-size:14px; font-family:inherit; background:var(--surface); color:var(--text); }
+  label { font-size:12px; color:var(--muted); display:block; margin:10px 0 4px; }
+  .btn { background:var(--verde); color:#fff; border:none; border-radius:9px; padding:9px 16px; font-size:14px; font-weight:600; cursor:pointer; }
+  .btn:hover { background:var(--verde-esc); }
+  .btn.sec { background:var(--surface); color:var(--text); border:1px solid var(--border); }
+  .btn.perigo { background:var(--vermelho); }
+  .btn.mini { padding:5px 10px; font-size:12px; }
+  .filtro-ia.on { background:var(--verde); color:#fff; border-color:var(--verde); }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th { text-align:left; font-size:12px; color:var(--muted); padding:8px; border-bottom:1px solid var(--border); }
+  td { padding:8px; border-bottom:1px solid var(--border); }
+  .duas-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  #login { max-width:360px; margin:80px auto; }
+  .aviso { background:#fef3c7; border-radius:8px; padding:10px 12px; font-size:13px; color:#92400e; margin:10px 0; }
+  @media (max-width:800px){ .conversas-wrap{grid-template-columns:1fr; height:auto} .duas-col{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<div id="login" class="card" style="display:none">
+  <h2 style="color:var(--verde-esc); margin-bottom:10px">⚡ Facilita <span style="color:var(--verde)">SDR</span></h2>
+  <label>Email</label>
+  <input id="in-email" type="email" style="width:100%" placeholder="seu@email.com" autocomplete="username">
+  <label>Senha</label>
+  <input id="in-senha" type="password" style="width:100%" autocomplete="current-password" onkeydown="if(event.key==='Enter')logar()">
+  <div style="margin-top:14px"><button class="btn" style="width:100%" onclick="logar()">Entrar</button></div>
+  <div id="login-erro" style="color:var(--vermelho); font-size:13px; margin-top:8px"></div>
+  <details style="margin-top:12px"><summary style="font-size:12px; color:var(--muted); cursor:pointer">avançado</summary>
+    <label>Endereço da API (VPS)</label>
+    <input id="in-api" style="width:100%">
+  </details>
+  <p style="font-size:11.5px; color:var(--muted); margin-top:14px; text-align:center">
+    <a id="lnk-termos" href="#" target="_blank" style="color:var(--muted)">Termos de uso</a> ·
+    <a id="lnk-priv" href="#" target="_blank" style="color:var(--muted)">Privacidade</a>
+  </p>
+</div>
+
+<div id="app" style="display:none">
+<div class="layout">
+<aside id="sidebar">
+  <div class="sb-top">
+    <h1 id="titulo-app">⚡ Facilita <span>SDR</span></h1>
+    <button id="sb-toggle" onclick="toggleSidebar()" title="recolher/expandir">⟨</button>
+  </div>
+  <nav>
+    <button data-aba="dashboard" onclick="aba('dashboard')"><span>📈</span><span class="lbl">Dashboard</span></button>
+    <button data-aba="pipeline" class="on" onclick="aba('pipeline')"><span>📊</span><span class="lbl">Pipeline</span></button>
+    <button data-aba="conversas" onclick="aba('conversas')"><span>💭</span><span class="lbl">Conversas <span id="badge-quente"></span></span></button>
+    <button data-aba="campanhas" onclick="aba('campanhas')"><span>📣</span><span class="lbl">Campanhas</span></button>
+    <button data-aba="reunioes" onclick="aba('reunioes')"><span>📅</span><span class="lbl">Reuniões</span></button>
+    <button data-aba="cerebro" onclick="aba('cerebro')"><span>🧠</span><span class="lbl">Cérebro</span></button>
+    <button data-aba="assistente" onclick="aba('assistente')"><span>💬</span><span class="lbl">Assistente</span></button>
+    <button data-aba="testar" onclick="aba('testar')"><span>🧪</span><span class="lbl">Testar</span></button>
+    <button data-aba="equipe" id="nav-equipe" style="display:none" onclick="aba('equipe')"><span>👥</span><span class="lbl">Equipe</span></button>
+    <button data-aba="config" onclick="aba('config')"><span>⚙️</span><span class="lbl">Config</span></button>
+    <button data-aba="assinatura" id="nav-assinatura" style="display:none" onclick="aba('assinatura')"><span>💳</span><span class="lbl">Assinatura</span></button>
+    <button data-aba="admin" id="nav-admin" style="display:none" onclick="aba('admin')"><span>👑</span><span class="lbl">Admin</span></button>
+  </nav>
+  <div class="sb-status" id="status-chip">…</div>
+</aside>
+<main>
+  <div id="aba-dashboard" style="display:none">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap">
+      <h2 id="dash-titulo" style="font-size:18px; color:var(--verde-esc)">📊 Visão geral</h2>
+      <select id="dash-dias" onchange="carregarDashboard()" style="margin-left:auto; font-size:13px">
+        <option value="7">últimos 7 dias</option>
+        <option value="30" selected>últimos 30 dias</option>
+        <option value="90">últimos 90 dias</option>
+      </select>
+    </div>
+    <div style="display:flex; gap:5px; margin-bottom:14px; flex-wrap:wrap">
+      <button class="btn mini dash-tab on" data-dash="geral" onclick="trocarDash('geral')">📊 Geral</button>
+      <button class="btn mini dash-tab sec" data-dash="disparo" onclick="trocarDash('disparo')">💬 Disparo</button>
+      <button class="btn mini dash-tab sec" data-dash="prospeccao" onclick="trocarDash('prospeccao')">📞 Prospecção</button>
+    </div>
+    <div id="dash-corpo">carregando…</div>
+  </div>
+
+  <div id="aba-pipeline">
+    <div id="checklist"></div>
+    <div class="grid-metricas" id="metricas"></div>
+
+    <!-- barra da pipeline: escolher funil, valor total e gestao -->
+    <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px; flex-wrap:wrap">
+      <select id="sel-pipeline" onchange="trocarPipeline(this.value)" style="font-size:14px; font-weight:600; padding:6px 10px; min-width:190px"></select>
+      <span onclick="renomearFunilRapido()" title="renomear este funil" style="cursor:pointer; font-size:13px; color:var(--muted)">✏️</span>
+      <span id="pipe-total" class="tag" style="font-size:13px"></span>
+      <span id="pipe-valor" class="tag" style="background:#e7f7ef; color:#0b6b46; font-size:13px; font-weight:700"></span>
+      <button class="btn mini sec" data-precisa="editar_pipeline" onclick="abrirPersonalizarFunil()">⚙️ personalizar funil</button>
+      <button class="btn mini" data-precisa="editar_lead" onclick="abrirNovoLead()">+ lead manual</button>
+    </div>
+
+    <div style="display:flex; gap:8px; align-items:center; margin-bottom:10px; flex-wrap:wrap">
+      <input id="busca-pipe" placeholder="🔍 buscar por clínica, telefone ou contato" style="flex:1; min-width:220px" oninput="renderKanban()">
+      <div style="display:flex; gap:4px; flex-wrap:wrap">
+        <button class="btn mini sec filtro-ia on" data-filtro="todos" onclick="setFiltroIA('todos')">Todas</button>
+        <button class="btn mini sec filtro-ia" data-filtro="ia" onclick="setFiltroIA('ia')">🤖 IA atendendo</button>
+        <button class="btn mini sec filtro-ia" data-filtro="humano" onclick="setFiltroIA('humano')">🙋 com humano</button>
+      </div>
+      <button class="btn mini sec" id="btn-atrasadas" onclick="toggleAtrasadas()">🔴 tarefas atrasadas</button>
+      <select id="filtro-nicho" onchange="renderKanban()" style="font-size:13px"><option value="">Todos os nichos</option></select>
+      <select id="filtro-tag" onchange="renderKanban()" style="font-size:13px"><option value="">Todas as tags</option></select>
+      <span id="busca-pipe-contador" style="font-size:13px; color:var(--muted)"></span>
+    </div>
+    <div class="dica-scroll">↔ arrasta pro lado pra ver todas as etapas · segura e arrasta um card pra mudar de etapa · card vermelho = tarefa atrasada</div>
+    <div class="kanban" id="kanban"></div>
+  </div>
+
+  <div id="aba-conversas" style="display:none">
+    <div class="conversas-wrap">
+      <div class="card lista-conv">
+        <input id="busca-conv" style="width:100%; margin-bottom:6px" placeholder="buscar clínica ou telefone" oninput="renderListaConv()">
+        <select id="filtro-etapa-conv" style="width:100%; margin-bottom:10px; font-size:13px" onchange="renderListaConv()">
+          <option value="">todas as etapas</option>
+          <option value="disparado">Disparados</option>
+          <option value="respondeu">Responderam</option>
+          <option value="em_conversa">Em conversa</option>
+          <option value="decisor">Contato c/ decisor</option>
+          <option value="negociando">Negociando reunião</option>
+          <option value="reuniao_marcada">Reunião marcada</option>
+          <option value="compareceu">Compareceu</option>
+          <option value="fechado">Fechados</option>
+          <option value="perdido">Perdidos</option>
+          <option value="optout">Opt-out</option>
+          <option value="sem_whatsapp">Sem WhatsApp</option>
+          <option value="__humano">🙋 com humano (pausadas)</option>
+        </select>
+        <div id="lista-conv"></div>
+      </div>
+      <div class="card chat" id="chat"><div style="margin:auto; color:var(--muted)">escolhe uma conversa aí do lado</div></div>
+      <div class="card painel-notas" id="painel-notas"></div>
+    </div>
+  </div>
+
+  <div id="aba-equipe" style="display:none">
+    <div class="card" style="margin-bottom:12px">
+      <b style="font-size:15px">👥 Equipe</b>
+      <div style="font-size:12.5px; color:var(--muted); margin-top:4px">
+        Quem trabalha no CRM. Cada pessoa entra com o e-mail e senha dela, e vê/faz só o que o papel permite.
+      </div>
+      <div id="lista-usuarios" style="margin-top:12px"></div>
+    </div>
+    <div class="card">
+      <b style="font-size:14px">Adicionar pessoa</b>
+      <div style="display:grid; gap:7px; margin-top:9px; max-width:520px">
+        <div style="display:flex; gap:6px">
+          <input id="u-nome" placeholder="Nome" style="flex:1; font-size:13px; padding:7px 10px">
+          <input id="u-email" placeholder="email@empresa.com" style="flex:1; font-size:13px; padding:7px 10px">
+        </div>
+        <div style="display:flex; gap:6px">
+          <input id="u-senha" type="password" placeholder="senha de acesso" style="flex:1; font-size:13px; padding:7px 10px">
+          <select id="u-papel" style="flex:1; font-size:13px">
+            <option value="operador">Operador (trabalha os leads)</option>
+            <option value="gestor">Gestor (tudo, menos cobrança e usuários)</option>
+            <option value="admin">Administrador (tudo)</option>
+            <option value="leitor">Leitor (só visualiza)</option>
+          </select>
+        </div>
+        <button class="btn" onclick="criarUsuario()">adicionar à equipe</button>
+      </div>
+      <div style="margin-top:12px; font-size:12px; color:var(--muted); line-height:1.6">
+        <b>O que cada papel pode:</b><br>
+        <b>Administrador</b> — tudo: leads, pipelines, campanhas, WhatsApp, equipe e cobrança.<br>
+        <b>Gestor</b> — tudo do operacional (leads, pipelines, campanhas, WhatsApp, relatórios). Não mexe em equipe nem cobrança.<br>
+        <b>Operador</b> — o SDR: vê e move card, conversa, cria tarefa, importa lista, vê dashboard. Não edita pipeline nem conecta WhatsApp.<br>
+        <b>Leitor</b> — só olha (relatório/auditoria).
+      </div>
+    </div>
+  </div>
+
+  <div id="aba-campanhas" style="display:none">
+    <div class="duas-col">
+      <div class="card">
+        <h3 style="margin-bottom:10px" id="c-titulo">Nova campanha</h3>
+        <label>Nome</label><input id="c-nome" style="width:100%" placeholder="Clínicas BH agosto">
+        <label>Aberturas (1 por linha, sorteadas; usa {nome_clinica} e {cidade}; escreve como TU falaria)</label>
+        <textarea id="c-aberturas" rows="4" style="width:100%">Oi, tudo bem? Aqui é o Matheus. Consigo falar com o responsável da {nome_clinica}?
+Opa, tudo certo? Matheus aqui. Quem é o responsável pela {nome_clinica}?
+Oi! Aqui é o Matheus. Preciso falar com quem cuida da {nome_clinica}, é você?</textarea>
+        <p style="font-size:12px; color:var(--muted); margin:6px 0 0">💡 Quem responder, a IA conduz sozinha. Quem engajar e sumir, a IA reengaja automático (você vê a tarefa no lead). Não precisa configurar follow-up aqui.</p>
+        <div class="duas-col">
+          <div><label>Máximo de mensagens por dia</label><input id="c-teto" type="number" value="25" style="width:100%" oninput="renderDivisao()"></div>
+          <div><label>Horário de disparo</label><input id="c-janela" value="08:30-18:00" style="width:100%"></div>
+        </div>
+        <div class="duas-col">
+          <div><label>Intervalo mínimo (minutos)</label><input id="c-cadmin" type="number" value="3" style="width:100%"></div>
+          <div><label>Intervalo máximo (minutos)</label><input id="c-cadmax" type="number" value="7" style="width:100%"></div>
+        </div>
+        <p style="font-size:12px; color:var(--muted); margin-top:6px">Cada disparo espera um tempo aleatório entre o mínimo e o máximo (parece humano, evita bloqueio). Ex: 3 a 7 min.</p>
+        <label>Divisão do volume diário</label>
+        <div style="display:flex; align-items:center; gap:8px">
+          <input id="c-pctreeng" type="range" min="0" max="100" value="30" step="5" style="flex:1" oninput="renderDivisao()">
+          <span id="c-pctlabel" style="font-size:13px; min-width:130px; text-align:right"></span>
+        </div>
+        <p style="font-size:12px; color:var(--muted); margin-top:4px">Quanto do teto vai pra reengajar leads que esfriaram. O resto (e a sobra, se não houver reengajamento) vira contatos novos.</p>
+        <div style="margin-top:12px">
+          <button class="btn" id="c-botao" onclick="salvarCampanha()">Criar campanha</button>
+          <button class="btn sec" id="c-cancelar" style="display:none" onclick="cancelarEdicao()">cancelar edição</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:4px">Importar leads</h3>
+        <div style="font-size:12.5px; color:var(--muted); margin-bottom:10px">
+          Toda lista entra por aqui. Escolhe pra onde vai e o sistema já organiza.
+        </div>
+
+        <!-- 1) planilha modelo -->
+        <div style="background:var(--verde-soft); border-radius:8px; padding:10px 12px; margin-bottom:12px">
+          <b style="font-size:13px">📄 Modelo de planilha</b>
+          <div style="font-size:12px; color:var(--muted); margin:4px 0 7px">
+            Baixa o modelo, preenche com os teus leads e sobe aqui. Só <b>nome</b> e <b>telefone</b> são obrigatórios.
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center">
+            <button class="btn mini" onclick="baixarModelo()">⬇️ baixar modelo (CSV)</button>
+            <a id="link-drive-modelo" href="#" target="_blank" class="btn mini sec" style="display:none; text-decoration:none">📗 copiar planilha do Drive</a>
+            <span onclick="verColunasModelo()" style="font-size:11.5px; color:var(--verde); cursor:pointer; font-weight:600">ver colunas aceitas</span>
+          </div>
+        </div>
+
+        <!-- 2) destino da importacao -->
+        <div style="display:grid; gap:7px; margin-bottom:10px">
+          <div>
+            <div style="font-size:12px; color:var(--muted); margin-bottom:3px">Importar para:</div>
+            <select id="imp-pipeline" onchange="mudouPipelineImport()" style="width:100%; font-size:13px; padding:6px 9px"></select>
+            <div id="imp-aviso" style="font-size:11.5px; color:var(--muted); margin-top:4px"></div>
+          </div>
+          <div>
+            <div style="font-size:12px; color:var(--muted); margin-bottom:3px">Tag da lista (pra filtrar depois):</div>
+            <input id="imp-tag" placeholder="ex: clínicas-bh-agosto" style="width:100%; font-size:13px; padding:6px 9px">
+          </div>
+        </div>
+
+        <input type="file" id="csv-file" accept=".csv">
+        <div style="margin-top:10px"><button class="btn" onclick="importarCSV()">Importar leads</button></div>
+        <div id="import-res" style="font-size:13px; margin-top:8px; color:var(--muted)"></div>
+        <hr style="border:none; border-top:1px solid var(--border); margin:16px 0">
+        <h3 style="margin-bottom:10px">Campanhas</h3>
+        <div id="lista-campanhas"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="aba-reunioes" style="display:none">
+    <div style="display:flex; gap:8px; align-items:center; margin-bottom:12px; flex-wrap:wrap">
+      <h2 style="font-size:17px; color:var(--verde-esc)">📅 Agenda</h2>
+      <select id="agenda-closer" onchange="carregarAgenda()" style="font-size:13px"></select>
+      <div style="display:flex; gap:4px; align-items:center; margin-left:8px">
+        <button class="btn mini sec" onclick="mudarSemana(-1)">‹</button>
+        <button class="btn mini sec" onclick="mudarSemana(0)">hoje</button>
+        <button class="btn mini sec" onclick="mudarSemana(1)">›</button>
+        <b id="agenda-semana-rotulo" style="font-size:13.5px; margin-left:6px"></b>
+      </div>
+      <span id="agenda-status" style="font-size:12px; color:var(--muted); margin-left:auto"></span>
+    </div>
+    <div class="card" style="padding:0; overflow:hidden">
+      <div id="agenda-grade">carregando…</div>
+    </div>
+  </div>
+
+  <div id="aba-cerebro" style="display:none">
+    <div class="aviso">🧠 Tudo que tu escrever aqui entra na cabeça da IA com <b>prioridade máxima</b>: quando conflitar com o comportamento padrão, o teu texto vence. Salvou, valeu na próxima mensagem (testa na aba Testar). O fluxo fixo continua: pedir responsável → confirmar → áudio → agendar.</div>
+    <div class="duas-col">
+      <div class="card">
+        <h3>Diretrizes gerais</h3>
+        <p style="font-size:12px; color:var(--muted); margin:4px 0">Como falar, o que nunca dizer, tom, tamanho das mensagens.</p>
+        <textarea id="tr-treino_geral" rows="8" style="width:100%" placeholder="Ex: Se apresenta como Rê, da equipe do Matheus. Nunca usar a palavra 'robô'. Mensagens de no máximo 2 linhas. Se falarem de concorrente X, dizer que..."></textarea>
+      </div>
+      <div class="card">
+        <h3>Pitch, produto e preço</h3>
+        <p style="font-size:12px; color:var(--muted); margin:4px 0">O que dizer sobre a Facilita, os argumentos, casos, o que responder sobre valor.</p>
+        <textarea id="tr-treino_pitch" rows="8" style="width:100%" placeholder="Ex: O argumento principal é X. Falar do caso da clínica de pneumo assim: ... Sobre preço, dizer: ..."></textarea>
+      </div>
+      <div class="card">
+        <h3>Objeções e respostas</h3>
+        <p style="font-size:12px; color:var(--muted); margin:4px 0">Uma por linha: objeção → como responder.</p>
+        <textarea id="tr-treino_objecoes" rows="8" style="width:100%" placeholder="Ex:
+'já tenho secretária' → A IA não substitui, tira o telefone da frente dela...
+'não tenho tempo' → Justamente, a call é de 20min e...
+'manda por escrito' → Posso mandar sim, mas em 20min ao vivo tu vê funcionando..."></textarea>
+      </div>
+      <div class="card">
+        <h3>Exemplo de conversa perfeita</h3>
+        <p style="font-size:12px; color:var(--muted); margin:4px 0">Cola aqui uma conversa modelo (LEAD: ... / VOCÊ: ...). A IA imita o estilo.</p>
+        <textarea id="tr-treino_exemplo" rows="8" style="width:100%" placeholder="LEAD: oi quem é?
+VOCÊ: Opa! Aqui é da equipe do Matheus...
+LEAD: ..."></textarea>
+      </div>
+    </div>
+    <div style="margin-top:14px"><button class="btn" onclick="salvarTreino()">💾 Salvar treinamento</button> <span id="tr-ok" style="color:var(--verde); font-size:13px"></span></div>
+  </div>
+
+  <div id="aba-testar" style="display:none">
+    <div class="duas-col">
+      <div class="card chat" style="height:calc(100vh - 220px)">
+        <div class="chat-topo"><b>🧪 Simulador</b> <span style="color:var(--muted); font-size:13px">tu é o dono da clínica, a IA responde de verdade (nada sai pro WhatsApp)</span>
+          <button class="btn mini sec" onclick="simReset()">reiniciar conversa</button></div>
+        <div class="chat-msgs" id="sim-msgs"><div style="margin:auto; color:var(--muted); font-size:13px">manda a primeira mensagem como se fosse a clínica respondendo o disparo</div></div>
+        <div class="chat-envio">
+          <textarea id="sim-texto" rows="2" placeholder="responde como se fosse a clínica..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();simEnviar()}"></textarea>
+          <button class="btn" onclick="simEnviar()">Enviar</button>
+        </div>
+      </div>
+      <div class="card" style="align-self:start">
+        <h3 style="margin-bottom:6px">📱 Teste REAL no WhatsApp</h3>
+        <p style="font-size:13px; color:var(--muted); margin-bottom:8px">Cadastra um telefone teu (ou de alguém do time) como lead de teste. A IA manda a abertura de verdade pra esse número e conduz o fluxo completo: responsável → áudio → reunião na agenda. Precisa do WhatsApp conectado.</p>
+        <label>Telefone (com DDD)</label>
+        <input id="real-tel" style="width:100%" placeholder="31999998888">
+        <label>Nome da clínica fictícia</label>
+        <input id="real-nome" style="width:100%" value="Clínica Teste Real">
+        <div style="margin-top:10px"><button class="btn" onclick="testarReal()">Disparar teste real</button></div>
+        <div id="real-res" style="font-size:13px; margin-top:8px; color:var(--muted)"></div>
+        <p style="font-size:12px; color:var(--muted); margin-top:10px">Leads de teste NÃO aparecem no pipeline nem nas métricas. Pra ver a conversa do teste real, acompanha no WhatsApp mesmo (ou clica abaixo).</p>
+        <div style="margin-top:6px"><button class="btn sec mini" onclick="verTestes()">ver conversas de teste</button></div>
+        <div id="lista-testes" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="aba-assistente" style="display:none">
+    <div class="aviso">💬 Conversa comigo que eu monto o cérebro da tua IA sozinho. Só responder as perguntas. Tudo que eu escrever aparece na aba 🧠 Cérebro pra tu revisar depois.</div>
+    <div class="card chat" style="height:calc(100vh - 240px); max-width:720px">
+      <div class="chat-msgs" id="ent-msgs"></div>
+      <div id="ent-badge" style="padding:0 12px; font-size:12px; color:var(--verde-esc)"></div>
+      <div class="chat-envio">
+        <textarea id="ent-texto" rows="2" placeholder="responde aqui…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();entEnviar()}"></textarea>
+        <button class="btn" onclick="entEnviar()">Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="aba-assinatura" style="display:none">
+    <div class="card" style="max-width:480px">
+      <h3 style="margin-bottom:8px">💳 Sua assinatura</h3>
+      <div id="assin-corpo" style="font-size:14px">carregando…</div>
+    </div>
+  </div>
+
+  <div id="aba-admin" style="display:none">
+    <div class="card">
+      <h3 style="margin-bottom:4px">👑 Visão do dono — todas as contas</h3>
+      <div id="admin-resumo" style="font-size:13px; color:var(--muted); margin-bottom:10px"></div>
+      <table id="admin-tabela"></table>
+    </div>
+  </div>
+
+  <div id="aba-config" style="display:none">
+    <div class="duas-col">
+      <div class="card">
+        <h3 style="margin-bottom:6px">📱 Meus WhatsApps</h3>
+        <p style="font-size:12px; color:var(--muted); margin:4px 0 8px">Com mais de um número, os disparos são distribuídos automaticamente entre eles (rotação), protegendo cada chip.</p>
+        <div id="lista-whats"></div>
+        <div style="margin-top:8px"><button class="btn sec mini" onclick="addWhats()">+ adicionar WhatsApp</button> <span id="whats-msg" style="font-size:12px; color:var(--muted)"></span></div>
+        <div id="qr-area" style="margin-top:10px"></div>
+        <div id="sec-chave" style="display:none">
+          <hr style="border:none; border-top:1px solid var(--border); margin:16px 0">
+          <h3>🔑 Chave da IA (Anthropic)</h3>
+          <p style="font-size:12.5px; color:var(--muted); margin:4px 0 8px">Sua IA usa a sua conta da Anthropic (você paga só o que usar, centavos por conversa). <a id="lnk-tutorial" href="#" target="_blank" style="color:var(--verde)">como gerar minha chave →</a></p>
+          <div id="chave-status" style="font-size:13px; margin-bottom:8px"></div>
+          <input id="chave-input" style="width:100%; font-family:monospace" placeholder="sk-ant-api03-...">
+          <div style="margin-top:8px"><button class="btn sec" onclick="salvarChave()">Validar e salvar</button> <span id="chave-msg" style="font-size:13px; color:var(--muted)"></span></div>
+        </div>
+        <hr style="border:none; border-top:1px solid var(--border); margin:16px 0">
+        <h3 id="lbl-audio">Áudio da minha empresa</h3>
+        <p style="font-size:13px; color:var(--muted); margin:6px 0">Enviado quando o lead confirma que é o responsável. OGG/MP3/M4A.</p>
+        <div id="audio-player" style="margin:8px 0"></div>
+        <input type="file" id="audio-file" accept="audio/*">
+        <div style="margin-top:8px"><button class="btn sec" onclick="subirAudio()">Subir/trocar áudio</button> <span id="audio-status" style="font-size:13px; color:var(--muted)"></span></div>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:6px">Agenda Google (Meet automático)</h3>
+        <p style="font-size:12px; color:var(--muted); margin-bottom:8px">Conecte sua agenda 1 vez. Reunião marcada pela IA vira evento na agenda com link do Meet gerado sozinho. Se o Google avisar "app não verificado": Avançado → Ir para o app.</p>
+        <div id="gcal-status" style="font-size:13px; color:var(--muted)">verificando…</div>
+        <hr style="border:none; border-top:1px solid var(--border); margin:14px 0">
+        <h3 style="margin-bottom:6px">Horários de reunião</h3>
+        <p style="font-size:13px; color:var(--muted)">Formato: dias|horas → <code>1,2,3,4,5|10:00,11:00,15:00,16:00</code> (1=seg … 7=dom)</p>
+        <label id="lbl-slots1">Meus horários</label><input id="cfg-slots_matheus" style="width:100%">
+        <label id="lbl-meet1">Meu link do Meet</label><input id="cfg-meet_matheus" style="width:100%" placeholder="https://meet.google.com/xxx-xxxx-xxx">
+        <div class="so-interno">
+          <label>Slots Valentino</label><input id="cfg-slots_valentino" style="width:100%">
+          <label>Link Meet Valentino</label><input id="cfg-meet_valentino" style="width:100%">
+          <label>Valentino ativo? (1 = sim, 0 = não)</label><input id="cfg-closer_valentino_ativo" style="width:100%">
+        </div>
+        <label>Link da apresentação (a IA manda pro intermediário junto do áudio)</label><input id="cfg-link_apresentacao" style="width:100%" placeholder="https://...">
+        <div style="margin-top:12px"><button class="btn" onclick="salvarConfig()">Salvar</button> <span id="cfg-ok" style="color:var(--verde); font-size:13px"></span></div>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+// hora local de SP a partir do timestamp UTC do banco ("2026-08-12 09:07:30")
+function horaSP(ts) {
+  if (!ts) return "";
+  const d = new Date(ts.replace(" ", "T") + "Z"); // marca como UTC
+  if (isNaN(d)) return String(ts).slice(11, 16);
+  return d.toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" });
+}
+function dataHoraSP(ts) {
+  if (!ts) return "";
+  const d = new Date(ts.replace(" ", "T") + "Z");
+  if (isNaN(d)) return String(ts).slice(5, 16).replace("T", " ");
+  return d.toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+}
+// Se o painel foi servido pelo PRÓPRIO container (cliente abre o endereço dele),
+// a API é a mesma origem — nunca aponta pro servidor de outra pessoa.
+// Só o painel espelho na Vercel (origem *.vercel.app) usa o endereço salvo/avançado.
+const naVercel = location.host.includes("vercel.app") || location.protocol === "file:";
+let API = naVercel
+  ? (localStorage.getItem("sdr_api") || "https://sdr.2-25-138-60.sslip.io")
+  : location.origin;
+let SENHA = localStorage.getItem("sdr_senha") || "";
+let estado = null, leads = [], convAberta = null, pollTimer = null;
+
+const STATUS_COLS = [
+  ["novo", "Novos"], ["disparado", "Disparados"], ["respondeu", "Responderam"],
+  ["em_conversa", "Em conversa"], ["decisor", "Contato c/ decisor"], ["negociando", "Negociando reunião"],
+  ["reuniao_marcada", "Reunião marcada"],
+  ["compareceu", "Compareceu"], ["trial", "Trial Facilita"], ["fechado", "Fechados"], ["perdido", "Perdidos"],
+  ["sem_whatsapp", "Sem WhatsApp"],
+];
+
+async function api(caminho, opts = {}) {
+  const r = await fetch(API + caminho, {
+    ...opts,
+    headers: { "Authorization": "Bearer " + SENHA, ...(opts.body && !(opts.body instanceof FormData) ? { "Content-Type": "application/json" } : {}), ...(opts.headers || {}) },
+  });
+  if (r.status === 401) { mostrarLogin("senha inválida"); throw new Error("401"); }
+  return r.json();
+}
+
+function mostrarLogin(erro) {
+  $("#login").style.display = "block"; $("#app").style.display = "none";
+  if (!naVercel) { const av = document.querySelector("#login details"); if (av) av.style.display = "none"; }
+  $("#in-api").value = API; $("#login-erro").textContent = erro || "";
+  $("#lnk-termos").href = API + "/termos"; $("#lnk-priv").href = API + "/privacidade";
+  carregarMarca();
+}
+async function logar() {
+  API = $("#in-api").value.replace(/\/$/, "") || API;
+  try {
+    const r = await fetch(API + "/api/login", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: $("#in-email").value, senha: $("#in-senha").value }),
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) return $("#login-erro").textContent = d.erro || "API não respondeu (" + r.status + ")";
+    SENHA = d.token;
+    localStorage.setItem("sdr_api", API); localStorage.setItem("sdr_senha", SENHA);
+    iniciar();
+  } catch (e) { $("#login-erro").textContent = "não alcancei a API: " + e.message; }
+}
+
+function aba(nome) {
+  document.querySelectorAll("nav button").forEach((b) => b.classList.toggle("on", b.dataset.aba === nome));
+  ["dashboard", "pipeline", "conversas", "campanhas", "reunioes", "cerebro", "assistente", "testar", "config", "assinatura", "admin", "equipe"].forEach((a) => { const el = $("#aba-" + a); if (el) el.style.display = a === nome ? "" : "none"; });
+  if (nome === "equipe") renderEquipe();
+  if (nome === "campanhas") { carregarCampanhas(); prepararImportacao(); }
+  if (nome === "reunioes") carregarAgenda();
+  if (nome === "config") carregarConfig();
+  if (nome === "testar") simCarregar();
+  if (nome === "cerebro") carregarTreino();
+  if (nome === "assinatura") carregarAssinatura();
+  if (nome === "admin") carregarAdmin();
+  if (nome === "dashboard") carregarDashboard();
+}
+
+// ---- cérebro (treinamento) ----
+const TREINO_KEYS = ["treino_geral", "treino_pitch", "treino_objecoes", "treino_exemplo"];
+async function carregarTreino() {
+  const c = await api("/api/config");
+  for (const k of TREINO_KEYS) $("#tr-" + k).value = c[k] || "";
+}
+async function salvarTreino() {
+  const body = {};
+  for (const k of TREINO_KEYS) body[k] = $("#tr-" + k).value;
+  await api("/api/config", { method: "POST", body: JSON.stringify(body) });
+  $("#tr-ok").textContent = "salvo ✓ (testa na aba Testar)"; setTimeout(() => $("#tr-ok").textContent = "", 3000);
+}
+
+// ---- simulador ----
+function simRender(d) {
+  $("#sim-msgs").innerHTML = (d.mensagens || []).map((m) => `
+    <div class="bolha ${m.role}">${m.texto}<span class="hora">${horaSP(m.criado_em)}</span></div>`).join("") +
+    (d.reuniao ? `<div class="bolha sistema">📅 reunião marcada: ${d.reuniao.inicio.replace("T", " ")} com ${d.reuniao.closer}</div>` : "");
+  const box = $("#sim-msgs"); box.scrollTop = box.scrollHeight;
+}
+async function simCarregar() { simRender(await api("/api/simular", { method: "POST", body: JSON.stringify({}) })); }
+async function simReset() { simRender(await api("/api/simular", { method: "POST", body: JSON.stringify({ reset: true }) })); }
+async function simEnviar() {
+  const t = $("#sim-texto").value.trim(); if (!t) return;
+  $("#sim-texto").value = "";
+  $("#sim-msgs").innerHTML += `<div class="bolha user">${t}</div><div class="bolha sistema">IA pensando…</div>`;
+  $("#sim-msgs").scrollTop = $("#sim-msgs").scrollHeight;
+  simRender(await api("/api/simular", { method: "POST", body: JSON.stringify({ texto: t }) }));
+}
+async function testarReal() {
+  $("#real-res").textContent = "disparando…";
+  const r = await api("/api/testar-real", { method: "POST", body: JSON.stringify({ telefone: $("#real-tel").value, nome: $("#real-nome").value }) });
+  $("#real-res").textContent = r.ok ? "✅ " + r.msg : "❌ " + r.erro;
+}
+async function verTestes() {
+  const ts = await api("/api/leads?incluir_teste=1");
+  const testes = ts.filter((l) => l.eh_teste || String(l.telefone).startsWith("0000") || l.origem_lista === "teste-real");
+  $("#lista-testes").innerHTML = testes.length
+    ? testes.map((l) => `<div style="display:flex; gap:8px; align-items:center; padding:6px 0; border-bottom:1px solid var(--border)">
+        <span style="flex:1; font-size:13px">${l.nome_clinica} · ${l.telefone} <span class="tag">${l.status}</span></span>
+        <button class="btn mini sec" onclick="abrirConversa(${l.id}); aba('conversas')">ver</button>
+        <button class="btn mini perigo" onclick="excluirLead(${l.id},'${(l.nome_clinica||'').replace(/'/g,'')}'); verTestes()">✕</button>
+      </div>`).join("")
+    : '<div style="font-size:13px; color:var(--muted)">nenhum teste ativo</div>';
+}
+
+async function atualizar() {
+  estado = await api("/api/estado");
+  leads = await api("/api/leads");
+  const st = estado.instancia.status;
+  const chip = $("#status-chip");
+  chip.textContent = "WhatsApp: " + st + (estado.instancia.detalhe ? " (" + estado.instancia.detalhe + ")" : "") + " · hoje: " + estado.metricas.disparosHoje + " disparos";
+  chip.style.color = st === "conectado" ? "var(--verde-esc)" : "var(--vermelho)";
+  const quentes = leads.filter((l) => l.ia_pausada && !["optout","descartado","perdido","fechado"].includes(l.status)).length;
+  $("#badge-quente").textContent = quentes ? "🔥" + quentes : "";
+  renderMetricas(); renderListaConv(); renderChecklist();
+  // Kanban vem da API por pipeline (colunas configuráveis): carrega na 1a vez,
+  // depois só redesenha com o que já está em memória pra não pesar o refresh.
+  if (!kanbanDados) await carregarPipelines(); else renderKanban();
+}
+
+// METRICAS DO FUNIL SELECIONADO (nao do sistema inteiro). Cada funil mostra
+// os numeros DELE: disparo ve disparos/respostas, ligacao ve ligacoes/decisores.
+function renderMetricas() {
+  const m = kanbanDados?.metricas;
+  const taxa = (a, b) => b ? Math.round(a / b * 100) + "%" : "–";
+  let cards;
+  if (m?.tipo === "ligacao") {
+    cards = [
+      ["Ligações", m.ligacoes], ["Atendeu", m.atendeu + " (" + taxa(m.atendeu, m.ligacoes) + ")"],
+      ["Decisores", m.decisores + " (" + taxa(m.decisores, m.atendeu) + ")"],
+      ["Reuniões", m.reunioes + " (" + taxa(m.reunioes, m.decisores) + ")"],
+      ["Valor no funil", money(kanbanDados?.valor_total || 0)],
+    ];
+  } else if (m) {
+    cards = [
+      ["Disparos", m.disparos], ["Respostas", m.respostas + " (" + taxa(m.respostas, m.disparos) + ")"],
+      ["Reuniões", m.reunioes + " (" + taxa(m.reunioes, m.disparos) + "/disp)"],
+      ["Hoje", (estado?.metricas?.disparosHoje ?? 0) + " disparos"], ["Opt-outs", m.optouts],
+    ];
+  } else {
+    const g = estado.metricas; // fallback antes do kanban carregar
+    cards = [["Disparos", g.disparos], ["Respostas", g.respostas], ["Reuniões", g.reunioes], ["Hoje", g.disparosHoje + " disparos"], ["Opt-outs", g.optouts]];
+  }
+  $("#metricas").innerHTML = cards.map(([r, n]) => `<div class="card metrica"><div class="num">${n}</div><div class="rot">${r}</div></div>`).join("");
+}
+
+let filtroIA = "todos";
+function setFiltroIA(f) {
+  filtroIA = f;
+  document.querySelectorAll(".filtro-ia").forEach((b) => b.classList.toggle("on", b.dataset.filtro === f));
+  renderKanban();
+}
+// "com humano" = IA pausada numa conversa que ainda está viva (não em etapa final)
+const FINAIS = ["fechado", "perdido", "descartado", "optout", "sem_whatsapp"];
+// ---- KANBAN por PIPELINE (colunas vem do banco, nao sao mais fixas) ----
+let pipelines = [];        // todas as pipelines com suas etapas
+let pipelineAtual = Number(localStorage.getItem("pipeline_atual")) || null;
+let kanbanDados = null;    // {pipeline, colunas, total, valor_total, nichos, tags}
+let soAtrasadas = false;
+
+const money = (v) => "R$ " + Number(v || 0).toLocaleString("pt-BR", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+
+async function carregarPipelines() {
+  pipelines = await api("/api/pipelines");
+  if (!pipelines.length) return;
+  if (!pipelines.some((p) => p.id === pipelineAtual)) pipelineAtual = pipelines[0].id;
+  const sel = $("#sel-pipeline");
+  if (sel) sel.innerHTML = pipelines.map((p) =>
+    `<option value="${p.id}" ${p.id === pipelineAtual ? "selected" : ""}>${p.tipo === "ligacao" ? "📞" : "💬"} ${p.nome}</option>`).join("")
+    + `<option value="__novo">＋ adicionar funil de vendas</option>`;
+  await carregarKanban();
+}
+function trocarPipeline(id) {
+  if (id === "__novo") { // "adicionar funil" mora dentro do seletor, igual no Kommo
+    $("#sel-pipeline").value = String(pipelineAtual);
+    return modalNovoFunil();
+  }
+  pipelineAtual = Number(id);
+  localStorage.setItem("pipeline_atual", pipelineAtual);
+  const sel = $("#sel-pipeline"); if (sel && sel.value !== String(pipelineAtual)) sel.value = String(pipelineAtual);
+  carregarKanban();
+}
+function toggleAtrasadas() {
+  soAtrasadas = !soAtrasadas;
+  $("#btn-atrasadas")?.classList.toggle("on", soAtrasadas);
+  carregarKanban();
+}
+async function carregarKanban() {
+  if (!pipelineAtual) return;
+  const qs = new URLSearchParams();
+  if (soAtrasadas) qs.set("atrasadas", "1");
+  const nicho = $("#filtro-nicho")?.value; if (nicho) qs.set("nicho", nicho);
+  const tag = $("#filtro-tag")?.value; if (tag) qs.set("tag", tag);
+  kanbanDados = await api(`/api/kanban/${pipelineAtual}?${qs}`);
+  if (estado) renderMetricas(); // topo mostra as métricas DESTE funil
+  // preenche os filtros com o que existe nessa pipeline (preservando a escolha)
+  for (const [id, lista, rot] of [["#filtro-nicho", kanbanDados.nichos, "Todos os nichos"], ["#filtro-tag", kanbanDados.tags, "Todas as tags"]]) {
+    const el = $(id); if (!el) continue;
+    const atual = el.value;
+    el.innerHTML = `<option value="">${rot}</option>` + lista.map((v) => `<option value="${v}" ${v === atual ? "selected" : ""}>${v}</option>`).join("");
+  }
+  renderKanban();
+}
+
+function renderKanban() {
+  if (!kanbanDados) return;
+  const busca = ($("#busca-pipe")?.value || "").toLowerCase().trim();
+  const soDigitos = busca.replace(/\D/g, "");
+  const casaBusca = (l) => !busca ||
+    (l.nome_clinica || "").toLowerCase().includes(busca) ||
+    (l.nome_contato || "").toLowerCase().includes(busca) ||
+    (l.cidade || "").toLowerCase().includes(busca) ||
+    (soDigitos && ((l.telefone || "").includes(soDigitos) || (l.telefone_decisor || "").includes(soDigitos)));
+  const casaIA = (l) => {
+    if (filtroIA === "todos") return true;
+    const emConversa = !FINAIS.includes(l.status) && l.status !== "novo";
+    if (filtroIA === "humano") return emConversa && l.ia_pausada;
+    if (filtroIA === "ia") return emConversa && !l.ia_pausada;
+    return true;
+  };
+
+  let totalVis = 0, valorVis = 0;
+  const html = kanbanDados.colunas.map((col) => {
+    const doStatus = col.leads.filter((l) => casaBusca(l) && casaIA(l));
+    const valor = doStatus.reduce((s, l) => s + (Number(l.valor_venda) || 0), 0);
+    totalVis += doStatus.length; valorVis += valor;
+    const limpar = doStatus.length ? `<span class="limpar" title="excluir todos dessa etapa" onclick="event.stopPropagation(); limparColuna('${col.chave || ""}','${col.nome}',${doStatus.length})">🗑</span>` : "";
+    return `<div class="coluna" data-etapa="${col.id}"
+        ondragover="event.preventDefault(); this.classList.add('drop')"
+        ondragleave="this.classList.remove('drop')"
+        ondrop="soltarCard(event, ${col.id})">
+      <h3>${col.nome} <b>${doStatus.length}</b>${limpar}
+        ${valor ? `<div style="font-size:11.5px; color:#0b6b46; font-weight:700; margin-top:2px">${money(valor)}</div>` : ""}</h3>
+      <div class="coluna-body">` +
+      doStatus.slice(0, 60).map((l) => cardLead(l)).join("") + "</div></div>";
+  }).join("");
+  $("#kanban").innerHTML = html;
+  if ($("#busca-pipe-contador")) $("#busca-pipe-contador").textContent = busca ? `${totalVis} encontrado(s)` : "";
+  if ($("#pipe-total")) $("#pipe-total").textContent = `${totalVis} leads`;
+  if ($("#pipe-valor")) $("#pipe-valor").textContent = money(valorVis);
+}
+
+// card do lead: vermelho quando tem tarefa atrasada
+function cardLead(l) {
+  const atrasada = l.tarefa_atrasada;
+  const tel = l.telefone_decisor || l.telefone;
+  return `
+    <div class="lead-card${atrasada ? " atrasado" : ""}" draggable="true"
+        ondragstart="arrastarCard(event, ${l.id})"
+        ondragend="this.classList.remove('arrastando')"
+        onclick="abrirConversa(${l.id}); aba('conversas')">
+      <span class="excluir" title="excluir lead" onclick="event.stopPropagation(); excluirLead(${l.id}, '${(l.nome_clinica || "").replace(/'/g, "")}')">✕</span>
+      <div class="nome">${l.nome_clinica}</div>
+      <div class="sub">📱 ${l.telefone}${l.cidade && l.cidade !== "Teste" ? " · " + l.cidade : ""}${l.nome_contato ? " · " + l.nome_contato : ""} <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.nome_clinica + " " + (l.cidade || ""))}" target="_blank" onclick="event.stopPropagation()" title="ver no Google Maps" style="color:var(--verde); text-decoration:none">🔎</a></div>
+      ${Number(l.valor_venda) ? `<div style="margin-top:5px; font-size:13px; font-weight:700; color:#0b6b46">${money(l.valor_venda)}</div>` : ""}
+      ${l.telefone_decisor ? `<div style="margin-top:6px; padding:6px 8px; background:#fff7e6; border:1px solid #f0c674; border-radius:6px; font-size:12px">
+        📞 <b>decisor:</b> ${l.telefone_decisor}
+        <a href="https://wa.me/${l.telefone_decisor}" target="_blank" onclick="event.stopPropagation()" style="color:var(--verde); font-weight:600; margin-left:4px">WhatsApp ↗</a>
+        <a href="tel:+${l.telefone_decisor}" onclick="event.stopPropagation()" style="color:#2563eb; font-weight:600; margin-left:4px">ligar ↗</a></div>` : ""}
+      ${l.tarefa ? `<div style="margin-top:6px; padding:5px 8px; background:${atrasada ? "#fdecec" : "#fff8e1"}; border:1px solid ${atrasada ? "#e88" : "#e8b93a"}; border-radius:6px; font-size:11.5px; color:${atrasada ? "#b3261e" : "#a8641e"}">
+        ${atrasada ? "🔴" : "📌"} <b>${l.tarefa.tipo === "reuniao" ? "reunião" : l.tarefa.tipo === "ligacao" ? "ligar" : "tarefa"}:</b> ${l.tarefa.texto}${l.tarefa.quando ? " · " + l.tarefa.quando : ""}${l.tarefa.hora ? " " + l.tarefa.hora : ""}
+        ${atrasada ? " <b>(atrasada)</b>" : ""}</div>` : ""}
+      ${previewMsg(l)}
+      <div style="margin-top:5px; display:flex; gap:5px; align-items:center; flex-wrap:wrap">
+        ${l.ia_pausada ? '<span class="tag quente">humano no comando</span>' : ""}
+        ${l.tag_importacao ? `<span class="tag" style="background:#eef2ff; color:#3949ab">🏷 ${l.tag_importacao}</span>` : ""}
+        ${l.nicho ? `<span class="tag">${l.nicho}</span>` : ""}
+      </div>
+    </div>`;
+}
+
+// ============================================================
+// EQUIPE (usuarios + permissoes)
+// ============================================================
+let eu = null; // { id, nome, papel, permissoes: [...] }
+const euPode = (acao) => !!eu && eu.permissoes.includes(acao);
+
+const PAPEIS = {
+  admin: { rot: "Administrador", cor: "#6b4ea8", bg: "#f0ecff" },
+  gestor: { rot: "Gestor", cor: "#0b6b46", bg: "#e7f7ef" },
+  operador: { rot: "Operador", cor: "#1e5aa8", bg: "#eef6ff" },
+  leitor: { rot: "Leitor", cor: "#777", bg: "#f0f0f0" },
+};
+
+async function carregarEu() {
+  eu = await api("/api/eu").catch(() => null);
+  if (!eu) return;
+  // esconde o que o papel não pode fazer
+  const nav = $("#nav-equipe");
+  if (nav) nav.style.display = euPode("gerir_usuarios") ? "" : "none";
+  document.querySelectorAll("[data-precisa]").forEach((el) => {
+    el.style.display = euPode(el.dataset.precisa) ? "" : "none";
+  });
+}
+
+async function renderEquipe() {
+  const us = await api("/api/usuarios").catch(() => []);
+  if (us.erro) return;
+  $("#lista-usuarios").innerHTML = us.map((u) => {
+    const p = PAPEIS[u.papel] || PAPEIS.leitor;
+    return `<div style="display:flex; gap:8px; align-items:center; padding:9px 0; border-bottom:1px solid var(--border); flex-wrap:wrap; ${u.ativo ? "" : "opacity:.45"}">
+      <div style="flex:1; min-width:150px">
+        <b style="font-size:13.5px">${u.nome}</b>${u.id === eu?.id ? ' <span style="font-size:11px; color:var(--muted)">(você)</span>' : ""}
+        <div style="font-size:12px; color:var(--muted)">${u.email}${u.ultimo_acesso ? " · último acesso " + dataHoraSP(u.ultimo_acesso) : " · nunca entrou"}</div>
+      </div>
+      <select onchange="mudarPapel(${u.id}, this.value)" style="font-size:12px; background:${p.bg}; color:${p.cor}; font-weight:600">
+        ${Object.entries(PAPEIS).map(([k, v]) => `<option value="${k}" ${u.papel === k ? "selected" : ""}>${v.rot}</option>`).join("")}
+      </select>
+      <button class="btn mini sec" onclick="trocarSenha(${u.id}, '${u.nome.replace(/'/g, "")}')">senha</button>
+      ${u.id === eu?.id ? "" : `<button class="btn mini ${u.ativo ? "perigo" : "sec"}" onclick="toggleUsuario(${u.id}, ${u.ativo ? 0 : 1})">${u.ativo ? "desativar" : "reativar"}</button>`}
+    </div>`;
+  }).join("") || '<div style="color:var(--muted); font-size:13px">só você por enquanto</div>';
+}
+
+async function criarUsuario() {
+  const body = {
+    nome: $("#u-nome").value.trim(),
+    email: $("#u-email").value.trim(),
+    senha: $("#u-senha").value,
+    papel: $("#u-papel").value,
+  };
+  if (!body.nome || !body.email || !body.senha) return alert("preenche nome, email e senha");
+  const r = await api("/api/usuarios", { method: "POST", body: JSON.stringify(body) });
+  if (r?.erro) return alert(r.erro);
+  $("#u-nome").value = ""; $("#u-email").value = ""; $("#u-senha").value = "";
+  renderEquipe();
+}
+async function mudarPapel(id, papel) {
+  await api("/api/usuario/" + id, { method: "PATCH", body: JSON.stringify({ papel }) });
+  renderEquipe();
+}
+async function trocarSenha(id, nome) {
+  const senha = prompt(`Nova senha pra ${nome}:`);
+  if (!senha) return;
+  await api("/api/usuario/" + id, { method: "PATCH", body: JSON.stringify({ senha }) });
+  alert("senha trocada");
+}
+async function toggleUsuario(id, ativo) {
+  if (!ativo && !confirm("Desativar essa pessoa? Ela perde o acesso, mas o histórico dela fica.")) return;
+  await api("/api/usuario/" + id, { method: "PATCH", body: JSON.stringify({ ativo }) });
+  renderEquipe();
+}
+
+// ---- MODAL generico (usado por pipelines, lead manual, usuarios) ----
+function modal(titulo, corpoHtml, largura = 520) {
+  fecharModal();
+  const d = document.createElement("div");
+  d.id = "modal-bg";
+  d.style.cssText = "position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:999; display:flex; align-items:flex-start; justify-content:center; padding:40px 16px; overflow:auto";
+  d.onclick = (e) => { if (e.target === d) fecharModal(); };
+  d.innerHTML = `<div class="card" style="max-width:${largura}px; width:100%; padding:16px 18px">
+    <div style="display:flex; align-items:center; margin-bottom:12px">
+      <b style="flex:1; font-size:15px">${titulo}</b>
+      <span onclick="fecharModal()" style="cursor:pointer; color:var(--muted); font-size:18px">✕</span>
+    </div>${corpoHtml}</div>`;
+  document.body.appendChild(d);
+}
+const fecharModal = () => document.getElementById("modal-bg")?.remove();
+
+// ---- GESTOR DE PIPELINES ----
+async function abrirGestorPipelines() {
+  const r = await api("/api/instancias").catch(() => []);
+  const ws = Array.isArray(r) ? r : (r.instancias || []); // a rota devolve {instancias:[...]}
+  const RESULTADOS_LIG = [["nao_atendeu", "não atendeu"], ["conectou", "atendeu"], ["decisor", "falei c/ decisor"], ["reuniao", "marquei reunião"], ["recusou", "recusou"]];
+  const lista = pipelines.map((p) => {
+    let mapa = {}; try { mapa = JSON.parse(p.mapa_ligacao || "{}"); } catch {}
+    return `
+    <div class="card" style="padding:10px 12px; margin-bottom:8px">
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap">
+        <b style="flex:1">${p.tipo === "ligacao" ? "📞" : "💬"} ${p.nome}</b>
+        <span class="tag">${p.leads} leads</span>
+        ${p.whatsapp_nome ? `<span class="tag" style="background:#e7f7ef; color:#0b6b46">📱 ${p.whatsapp_nome}</span>` : ""}
+        <button class="btn mini sec" onclick="renomearPipeline(${p.id}, '${p.nome.replace(/'/g, "")}')">renomear</button>
+        <button class="btn mini perigo" onclick="arquivarPipeline(${p.id})">arquivar</button>
+      </div>
+
+      <!-- ETAPAS: clica no nome pra renomear, ✕ exclui (se vazia), + adiciona -->
+      <div style="margin-top:8px; display:flex; gap:4px; flex-wrap:wrap; align-items:center">
+        ${p.etapas.map((e) => `<span class="tag" style="display:inline-flex; gap:4px; align-items:center; font-size:11.5px">
+          <span onclick="renomearEtapa(${e.id}, '${(e.nome || "").replace(/'/g, "")}')" style="cursor:pointer" title="clica pra renomear">${e.nome}</span>
+          <span onclick="excluirEtapaUI(${e.id})" style="cursor:pointer; color:var(--muted)" title="excluir etapa">✕</span>
+        </span>`).join('<span style="color:var(--muted); font-size:11px">→</span>')}
+        <button class="btn mini sec" style="font-size:11px" onclick="novaEtapa(${p.id})">+ etapa</button>
+      </div>
+
+      ${p.tipo === "disparo" ? `<div style="margin-top:8px; display:flex; gap:6px; align-items:center; font-size:12.5px">
+        <span style="color:var(--muted)">WhatsApp desta pipeline:</span>
+        <select onchange="vincularWhats(${p.id}, this.value)" style="font-size:12px">
+          <option value="">— nenhum —</option>
+          ${ws.map((i) => `<option value="${i.id}" ${p.instancia_id === i.id ? "selected" : ""}>${i.nome || "WhatsApp " + i.id} (${i.status})</option>`).join("")}
+        </select></div>` : ""}
+
+      ${p.tipo === "ligacao" ? `<div style="margin-top:8px; padding:8px 10px; background:#eef6ff; border-radius:7px">
+        <b style="font-size:12px; color:#1e5aa8">📞 Pra onde vai o lead em cada clique da ligação</b>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(215px, 1fr)); gap:4px 10px; margin-top:6px">
+          ${RESULTADOS_LIG.map(([v, rot]) => `<label style="display:flex; gap:5px; align-items:center; font-size:11.5px">
+            <span style="min-width:92px">${rot} →</span>
+            <select onchange="salvarMapaLigacao(${p.id}, '${v}', this.value)" style="flex:1; font-size:11.5px; padding:2px 4px">
+              <option value="">(não move)</option>
+              ${p.etapas.map((e) => `<option value="${e.id}" ${Number(mapa[v]) === e.id ? "selected" : ""}>${e.nome}</option>`).join("")}
+            </select>
+          </label>`).join("")}
+        </div>
+      </div>` : ""}
+    </div>`;
+  }).join("");
+
+  modal("Pipelines", `
+    ${lista}
+    <div class="card" style="padding:12px; background:var(--verde-soft)">
+      <b style="font-size:13px">Criar nova pipeline</b>
+      <div style="display:flex; gap:6px; margin-top:8px; flex-wrap:wrap">
+        <input id="np-nome" placeholder="nome (ex: Ligação BH)" style="flex:1; min-width:160px; font-size:13px; padding:6px 9px">
+        <select id="np-tipo" style="font-size:13px">
+          <option value="disparo">💬 Disparo (WhatsApp automático)</option>
+          <option value="ligacao">📞 Ligação (prospecção manual)</option>
+        </select>
+        <button class="btn mini" onclick="criarPipeline()">criar</button>
+      </div>
+      <div style="margin-top:6px; font-size:11.5px; color:var(--muted)">
+        Disparo já nasce com: Novos → Disparado → Respondeu → Em conversa → Decisor → Negociando → Reunião → Ganhou/Perdido<br>
+        Ligação já nasce com: Novos → Tentando contato → Conectou → Falou c/ decisor → Reunião → Ganhou/Perdido
+      </div>
+    </div>`, 640);
+}
+async function criarPipeline() {
+  const nome = $("#np-nome").value.trim();
+  if (!nome) return alert("dá um nome pra pipeline");
+  const r = await api("/api/pipelines", { method: "POST", body: JSON.stringify({ nome, tipo: $("#np-tipo").value }) });
+  if (r?.erro) return alert(r.erro);
+  fecharModal(); await carregarPipelines(); abrirGestorPipelines();
+}
+async function renomearPipeline(id, atual) {
+  const nome = prompt("Novo nome da pipeline:", atual);
+  if (!nome) return;
+  await api("/api/pipeline/" + id, { method: "PATCH", body: JSON.stringify({ nome }) });
+  fecharModal(); await carregarPipelines(); abrirGestorPipelines();
+}
+async function arquivarPipeline(id) {
+  if (!confirm("Arquivar essa pipeline? Ela some da lista (os leads precisam ser movidos antes).")) return;
+  const r = await api("/api/pipeline/" + id, { method: "DELETE" });
+  if (r?.erro) return alert(r.erro);
+  fecharModal(); await carregarPipelines(); abrirGestorPipelines();
+}
+async function vincularWhats(pipelineId, instanciaId) {
+  await api("/api/pipeline/" + pipelineId, { method: "PATCH", body: JSON.stringify({ instancia_id: instanciaId ? Number(instanciaId) : null }) });
+  await carregarPipelines();
+}
+
+// ---- editor de ETAPAS da pipeline ----
+async function novaEtapa(pipelineId) {
+  const nome = prompt("Nome da nova etapa (ex: Ligação discada):");
+  if (!nome) return;
+  const r = await api(`/api/pipeline/${pipelineId}/etapas`, { method: "POST", body: JSON.stringify({ nome }) });
+  if (r?.erro) return alert(r.erro);
+  await carregarPipelines(); abrirGestorPipelines();
+}
+async function renomearEtapa(etapaId, atual) {
+  const nome = prompt("Novo nome da etapa:", atual);
+  if (!nome || nome === atual) return;
+  await api("/api/etapa/" + etapaId, { method: "PATCH", body: JSON.stringify({ nome }) });
+  await carregarPipelines(); abrirGestorPipelines(); carregarKanban();
+}
+async function excluirEtapaUI(etapaId) {
+  if (!confirm("Excluir essa etapa? Só dá se ela estiver vazia.")) return;
+  const r = await api("/api/etapa/" + etapaId, { method: "DELETE" });
+  if (r?.erro) return alert(r.erro);
+  await carregarPipelines(); abrirGestorPipelines(); carregarKanban();
+}
+// clique da ligação -> etapa escolhida (salva o mapa inteiro da pipeline)
+async function salvarMapaLigacao(pipelineId, resultado, etapaId) {
+  const p = pipelines.find((x) => x.id === pipelineId);
+  let mapa = {}; try { mapa = JSON.parse(p?.mapa_ligacao || "{}"); } catch {}
+  if (etapaId) mapa[resultado] = Number(etapaId); else delete mapa[resultado];
+  await api("/api/pipeline/" + pipelineId, { method: "PATCH", body: JSON.stringify({ mapa_ligacao: JSON.stringify(mapa) }) });
+  if (p) p.mapa_ligacao = JSON.stringify(mapa); // atualiza em memória sem redesenhar o modal
+}
+
+// ============================================================
+// PERSONALIZAR FUNIL (estilo Kommo): edita o funil SELECIONADO.
+// Passo 1 = fases (digita direto na barra). Passo 2 (só ligação) =
+// pra onde o lead vai em cada clique da ligação. Tudo em modal, sem popup feio.
+// ============================================================
+const PF_CORES = ["#cfe3f8", "#f8d9ec", "#fdf3c0", "#fbdfba", "#e4d7f7", "#cdeedd", "#f0e2d0", "#d8e8f0"];
+const PF_CLIQUES = [["nao_atendeu", "não atendeu"], ["conectou", "atendeu"], ["decisor", "falei c/ decisor"], ["reuniao", "marquei reunião"], ["recusou", "recusou"]];
+let pfPassoAtual = 1;
+
+async function abrirPersonalizarFunil() {
+  pfPassoAtual = 1;
+  pipelines = await api("/api/pipelines"); // estado fresco
+  pfRender();
+}
+
+function pfCorEtapa(e, i) {
+  if (e.e_ganho) return "#c9efd9";
+  if (e.e_perdido) return "#e9e9e9";
+  return PF_CORES[i % PF_CORES.length];
+}
+
+function pfRender() {
+  const p = pipelines.find((x) => x.id === pipelineAtual);
+  if (!p) return;
+  const ehLigacao = p.tipo === "ligacao";
+  let mapa = {}; try { mapa = JSON.parse(p.mapa_ligacao || "{}"); } catch {}
+
+  const passo1 = `
+    <div style="font-size:12.5px; color:var(--muted); margin-bottom:12px">
+      Essas são as fases do seu fluxo de trabalho. Clica no nome pra editar, digita embaixo pra criar uma nova.
+    </div>
+    ${p.etapas.map((e, i) => `
+      <div class="pf-bar" style="background:${pfCorEtapa(e, i)}">
+        <span class="pf-grip">⠿</span>
+        <input value="${(e.nome || "").replace(/"/g, "&quot;")}" onchange="pfRenomearEtapa(${e.id}, this.value)" title="clica pra editar o nome">
+        ${e.e_entrada ? '<span class="pf-badge">entrada</span>' : ""}
+        ${e.e_ganho ? '<span class="pf-badge" style="background:rgba(11,107,70,.18); color:#0b6b46">ganhou</span>' : ""}
+        ${e.e_perdido ? '<span class="pf-badge">perdido</span>' : ""}
+        ${e.e_ganho || e.e_perdido || e.e_entrada ? "" : `<span class="pf-x" onclick="pfExcluirEtapa(${e.id})" title="excluir fase">✕</span>`}
+      </div>`).join("")}
+    <div class="pf-add">
+      <span style="font-size:15px">＋</span>
+      <input id="pf-nova-etapa" placeholder="digita o nome da nova fase e aperta Enter" onkeydown="if(event.key==='Enter')pfAddEtapa()">
+    </div>
+    ${p.tipo === "disparo" ? `<div style="display:flex; gap:8px; align-items:center; margin-top:14px; padding:10px 12px; background:var(--verde-soft); border-radius:9px; font-size:13px">
+      <span>📱 WhatsApp deste funil:</span>
+      <select id="pf-whats" onchange="vincularWhats(${p.id}, this.value)" style="flex:1; font-size:12.5px"></select>
+    </div>` : ""}`;
+
+  const passo2 = `
+    <div style="font-size:12.5px; color:var(--muted); margin-bottom:12px">
+      Quando você registrar uma ligação, o lead anda sozinho pro card que você escolher aqui.
+    </div>
+    ${PF_CLIQUES.map(([v, rot]) => `
+      <div class="pf-clique">
+        <b>📞 ${rot}</b>
+        <span style="color:var(--muted)">→</span>
+        <select onchange="salvarMapaLigacao(${p.id}, '${v}', this.value)">
+          <option value="">(não move o lead)</option>
+          ${p.etapas.map((e) => `<option value="${e.id}" ${Number(mapa[v]) === e.id ? "selected" : ""}>${e.nome}</option>`).join("")}
+        </select>
+      </div>`).join("")}`;
+
+  modal(`<input id="pf-nome-funil" value="${(p.nome || "").replace(/"/g, "&quot;")}"
+      onchange="pfRenomearFunil(this.value)"
+      style="border:none; background:transparent; font-size:16px; font-weight:700; outline:none; width:100%; padding:0"
+      title="clica pra renomear o funil">`, `
+    <div class="pf-modal">
+      <div id="pf-erro" style="display:none; margin-bottom:10px; padding:8px 11px; background:#fdecec; border:1px solid #e88; border-radius:8px; font-size:12.5px; color:#b3261e"></div>
+      ${pfPassoAtual === 1 ? passo1 : passo2}
+      <div style="display:flex; align-items:center; margin-top:16px">
+        ${ehLigacao ? `<div class="pf-passos">
+          <span class="${pfPassoAtual === 1 ? "on" : ""}">1 · Fases</span><span>—</span>
+          <span class="${pfPassoAtual === 2 ? "on" : ""}">2 · Cliques da ligação</span>
+        </div>` : ""}
+        <span onclick="pfArquivar()" style="margin-left:${ehLigacao ? "14px" : "0"}; font-size:11.5px; color:var(--muted); cursor:pointer; text-decoration:underline">arquivar funil</span>
+        <div style="margin-left:auto; display:flex; gap:8px">
+          ${pfPassoAtual === 2 ? `<button class="btn mini sec" onclick="pfPasso(1)">← voltar</button>` : ""}
+          ${ehLigacao && pfPassoAtual === 1
+            ? `<button class="btn" onclick="pfPasso(2)">avançar →</button>`
+            : `<button class="btn" onclick="pfConcluir()">concluir ✓</button>`}
+        </div>
+      </div>
+    </div>`, 540);
+  if (p.tipo === "disparo") pfCarregarWhats(p);
+}
+
+function pfErro(msg) {
+  const el = $("#pf-erro");
+  if (!el) return alert(msg);
+  el.textContent = msg; el.style.display = "";
+  setTimeout(() => { if (el) el.style.display = "none"; }, 4000);
+}
+function pfPasso(n) { pfPassoAtual = n; pfRender(); }
+async function pfConcluir() { fecharModal(); await carregarPipelines(); carregarKanban(); }
+
+async function pfRenomearFunil(nome) {
+  if (!nome.trim()) return;
+  await api("/api/pipeline/" + pipelineAtual, { method: "PATCH", body: JSON.stringify({ nome: nome.trim() }) });
+  const p = pipelines.find((x) => x.id === pipelineAtual); if (p) p.nome = nome.trim();
+}
+async function pfRenomearEtapa(id, nome) {
+  if (!nome.trim()) return pfRender();
+  await api("/api/etapa/" + id, { method: "PATCH", body: JSON.stringify({ nome: nome.trim() }) });
+  const p = pipelines.find((x) => x.id === pipelineAtual);
+  const e = p?.etapas.find((x) => x.id === id); if (e) e.nome = nome.trim();
+}
+async function pfAddEtapa() {
+  const inp = $("#pf-nova-etapa");
+  const nome = inp?.value.trim();
+  if (!nome) return;
+  const r = await api(`/api/pipeline/${pipelineAtual}/etapas`, { method: "POST", body: JSON.stringify({ nome }) });
+  if (r?.erro) return pfErro(r.erro);
+  pipelines = await api("/api/pipelines");
+  pfRender();
+  setTimeout(() => $("#pf-nova-etapa")?.focus(), 60); // segue digitando a próxima
+}
+async function pfExcluirEtapa(id) {
+  const r = await api("/api/etapa/" + id, { method: "DELETE" });
+  if (r?.erro) return pfErro(r.erro);
+  pipelines = await api("/api/pipelines");
+  pfRender();
+}
+async function pfArquivar() {
+  const p = pipelines.find((x) => x.id === pipelineAtual);
+  if (!confirm(`Arquivar o funil "${p?.nome}"? Os leads precisam ser movidos antes.`)) return;
+  const r = await api("/api/pipeline/" + pipelineAtual, { method: "DELETE" });
+  if (r?.erro) return pfErro(r.erro);
+  fecharModal(); pipelineAtual = null; await carregarPipelines(); carregarKanban();
+}
+async function pfCarregarWhats(p) {
+  const r = await api("/api/instancias").catch(() => ({}));
+  const ws = Array.isArray(r) ? r : (r.instancias || []);
+  const sel = $("#pf-whats");
+  if (sel) sel.innerHTML = `<option value="">— nenhum —</option>` +
+    ws.map((i) => `<option value="${i.id}" ${p.instancia_id === i.id ? "selected" : ""}>${i.nome || "WhatsApp " + i.id} (${i.status})</option>`).join("");
+}
+
+// renomear rápido pelo ✏️ do lado do nome do funil (mini-modal bonito, sem popup nativo)
+function renomearFunilRapido() {
+  const p = pipelines.find((x) => x.id === pipelineAtual);
+  if (!p) return;
+  modal("Renomear funil", `
+    <div style="display:grid; gap:10px">
+      <input id="rf-nome" value="${(p.nome || "").replace(/"/g, "&quot;")}" style="font-size:14px; padding:9px 12px">
+      <button class="btn" onclick="rfSalvar()">salvar</button>
+    </div>`, 380);
+  setTimeout(() => { const i = $("#rf-nome"); i?.focus(); i?.select(); i?.addEventListener("keydown", (e) => { if (e.key === "Enter") rfSalvar(); }); }, 80);
+}
+async function rfSalvar() {
+  const nome = $("#rf-nome")?.value.trim();
+  if (!nome) return;
+  await api("/api/pipeline/" + pipelineAtual, { method: "PATCH", body: JSON.stringify({ nome }) });
+  fecharModal(); await carregarPipelines();
+}
+
+// ---- NOVO FUNIL (nasce padrão, personaliza depois — igual Kommo) ----
+let nfTipo = "ligacao";
+function modalNovoFunil() {
+  nfTipo = "ligacao";
+  modal("Novo funil de vendas", `
+    <div style="display:grid; gap:10px">
+      <input id="nf-nome" placeholder="nome do funil (ex: Valentino, Clínicas BH...)" style="font-size:14px; padding:9px 12px">
+      <div style="display:flex; gap:8px">
+        <div class="nf-tipo on" data-nf="ligacao" onclick="nfEscolher('ligacao')">
+          <div class="ic">📞</div><b>Ligação</b><span>prospecção manual por telefone</span>
+        </div>
+        <div class="nf-tipo" data-nf="disparo" onclick="nfEscolher('disparo')">
+          <div class="ic">💬</div><b>Disparo</b><span>WhatsApp automático com IA</span>
+        </div>
+      </div>
+      <div style="font-size:11.5px; color:var(--muted)">O funil nasce com as fases padrão — depois é só personalizar do teu jeito.</div>
+      <button class="btn" onclick="nfCriar()">criar funil</button>
+    </div>`, 430);
+  setTimeout(() => $("#nf-nome")?.focus(), 80);
+}
+function nfEscolher(t) {
+  nfTipo = t;
+  document.querySelectorAll(".nf-tipo").forEach((el) => el.classList.toggle("on", el.dataset.nf === t));
+}
+async function nfCriar() {
+  const nome = $("#nf-nome")?.value.trim();
+  if (!nome) return alert("dá um nome pro funil");
+  const r = await api("/api/pipelines", { method: "POST", body: JSON.stringify({ nome, tipo: nfTipo }) });
+  if (r?.erro) return alert(r.erro);
+  fecharModal();
+  pipelineAtual = r.id; localStorage.setItem("pipeline_atual", r.id);
+  await carregarPipelines();
+  abrirPersonalizarFunil(); // já cai na personalização do funil novo
+}
+
+// ---- LEAD MANUAL ----
+function abrirNovoLead() {
+  modal("Novo lead", `
+    <div style="display:grid; gap:8px">
+      <input id="nl-nome" placeholder="Nome da empresa *" style="font-size:13px; padding:7px 10px">
+      <div style="display:flex; gap:6px">
+        <input id="nl-tel" placeholder="Telefone * (31 99999-8888)" style="flex:1; font-size:13px; padding:7px 10px">
+        <input id="nl-valor" type="number" placeholder="Valor R$" style="width:120px; font-size:13px; padding:7px 10px">
+      </div>
+      <div style="display:flex; gap:6px">
+        <input id="nl-cidade" placeholder="Cidade" style="flex:1; font-size:13px; padding:7px 10px">
+        <input id="nl-nicho" placeholder="Nicho" style="flex:1; font-size:13px; padding:7px 10px">
+      </div>
+      <div style="display:flex; gap:6px">
+        <input id="nl-decisor-nome" placeholder="Nome do decisor" style="flex:1; font-size:13px; padding:7px 10px">
+        <input id="nl-decisor-tel" placeholder="Telefone do decisor" style="flex:1; font-size:13px; padding:7px 10px">
+      </div>
+      <input id="nl-tag" placeholder="Tag (ex: lista-ago-bh)" style="font-size:13px; padding:7px 10px">
+      <div style="display:flex; gap:6px; align-items:center">
+        <span style="font-size:12.5px; color:var(--muted)">Pipeline:</span>
+        <select id="nl-pipeline" style="flex:1; font-size:13px">
+          ${pipelines.map((p) => `<option value="${p.id}" ${p.id === pipelineAtual ? "selected" : ""}>${p.tipo === "ligacao" ? "📞" : "💬"} ${p.nome}</option>`).join("")}
+        </select>
+      </div>
+      <label style="font-size:12.5px; display:flex; gap:6px; align-items:center">
+        <input type="checkbox" id="nl-fila" checked> entrar na fila de disparo (se a pipeline for de disparo)
+      </label>
+      <button class="btn" onclick="salvarNovoLead()">criar lead</button>
+    </div>`);
+}
+async function salvarNovoLead() {
+  const body = {
+    nome_clinica: $("#nl-nome").value.trim(),
+    telefone: $("#nl-tel").value.trim(),
+    cidade: $("#nl-cidade").value.trim() || null,
+    nicho: $("#nl-nicho").value.trim() || null,
+    valor_venda: Number($("#nl-valor").value) || 0,
+    nome_decisor: $("#nl-decisor-nome").value.trim() || null,
+    telefone_decisor: $("#nl-decisor-tel").value.trim() || null,
+    tag_importacao: $("#nl-tag").value.trim() || "manual",
+    pipeline_id: Number($("#nl-pipeline").value),
+    entrar_na_fila: $("#nl-fila").checked,
+  };
+  if (!body.nome_clinica || !body.telefone) return alert("nome e telefone são obrigatórios");
+  const r = await api("/api/leads", { method: "POST", body: JSON.stringify(body) });
+  if (r?.erro) return alert(r.erro);
+  fecharModal(); await carregarKanban(); atualizar();
+}
+
+function previewMsg(l) {
+  if (!l.ultima_msg) return "";
+  const eLead = l.ultima_role === "user";
+  const txt = l.ultima_msg.replace(/\s+/g, " ").trim().slice(0, 90);
+  // lead = borda azul + "clínica:", nossa = borda verde + "eu:"
+  const cor = eLead ? "#2563eb" : "var(--verde)";
+  const quem = eLead ? "clínica" : "eu";
+  return `<div style="margin-top:6px; padding:6px 8px; background:#f4f6f5; border-left:3px solid ${cor}; border-radius:4px; font-size:12px; color:var(--muted); line-height:1.35">
+    <b style="color:${cor}">${quem}:</b> ${txt}${l.ultima_msg.length > 90 ? "…" : ""}</div>`;
+}
+
+let cardArrastado = null;
+function arrastarCard(ev, id) { cardArrastado = id; ev.target.classList.add("arrastando"); ev.dataTransfer.effectAllowed = "move"; }
+// soltar num etapa_id: serve pra mudar de etapa E pra mudar de PIPELINE.
+// Cair na etapa de entrada de uma pipeline de disparo recoloca o lead na fila de envio.
+async function soltarCard(ev, etapaId) {
+  ev.preventDefault();
+  document.querySelectorAll(".coluna.drop").forEach((c) => c.classList.remove("drop"));
+  if (!cardArrastado) return;
+  const id = cardArrastado; cardArrastado = null;
+  const r = await api("/api/lead/" + id + "/mover", { method: "POST", body: JSON.stringify({ etapa_id: Number(etapaId) }) });
+  if (r?.erro) return alert(r.erro);
+  await carregarKanban();
+  atualizar();
+}
+// mover pra OUTRA pipeline (pelo painel de notas, sem arrastar)
+async function moverParaPipeline(leadId, etapaId) {
+  const r = await api("/api/lead/" + leadId + "/mover", { method: "POST", body: JSON.stringify({ etapa_id: Number(etapaId) }) });
+  if (r?.erro) return alert(r.erro);
+  await carregarKanban();
+  if (convAberta === leadId) abrirConversa(leadId);
+  atualizar();
+}
+async function excluirLead(id, nome) {
+  if (!confirm(`Excluir "${nome}" de vez? Apaga a conversa e o histórico.`)) return;
+  await api("/api/lead/" + id, { method: "DELETE" });
+  atualizar();
+}
+async function limparColuna(status, rotulo, qtd) {
+  if (!confirm(`Excluir TODOS os ${qtd} leads da etapa "${rotulo}"? Não dá pra desfazer.`)) return;
+  const r = await api("/api/leads/excluir-status", { method: "POST", body: JSON.stringify({ status }) });
+  alert(`${r.excluidos} leads excluídos`);
+  atualizar();
+}
+
+function renderListaConv() {
+  const busca = ($("#busca-conv").value || "").toLowerCase();
+  const etapa = $("#filtro-etapa-conv")?.value || "";
+  const comMsg = leads.filter((l) => !["novo"].includes(l.status))
+    .filter((l) => !etapa || (etapa === "__humano" ? l.ia_pausada : l.status === etapa))
+    .filter((l) => !busca || (l.nome_clinica + l.telefone + (l.cidade || "")).toLowerCase().includes(busca));
+  // NEGRITO = precisa de mim (lead falou por último e a IA não vai responder).
+  // Se a IA está tocando a conversa, fica normal.
+  $("#lista-conv").innerHTML = comMsg.map((l) => `
+    <div class="conv-item ${convAberta === l.id ? "on" : ""}${l.precisa_resposta ? " pendente" : ""}" onclick="abrirConversa(${l.id})">
+      <div class="conv-nome" style="font-weight:600; font-size:14px">${l.precisa_resposta ? "🔴 " : l.ia_pausada ? "🔥 " : ""}${l.nome_clinica}</div>
+      <div style="font-size:12px; color:var(--muted)">${l.telefone} · ${l.status}</div>
+    </div>`).join("") || '<div style="color:var(--muted); font-size:13px">nenhuma conversa ainda</div>';
+}
+
+// card verde do topo da conversa: aberto/fechado (fica salvo entre conversas)
+let resumoAberto = localStorage.getItem("resumo_aberto") !== "0";
+function toggleResumo() {
+  resumoAberto = !resumoAberto;
+  localStorage.setItem("resumo_aberto", resumoAberto ? "1" : "0");
+  const corpo = $("#resumo-corpo"), seta = $("#resumo-seta");
+  if (corpo) corpo.style.display = resumoAberto ? "" : "none";
+  if (seta) seta.textContent = resumoAberto ? "▼" : "▶";
+}
+
+async function abrirConversa(id, auto) {
+  // se for auto-refresh e o usuario esta digitando NESSA conversa (mensagem, nota
+  // OU tarefa), NAO redesenha — senao o campo perde texto e foco. Volta no proximo tick.
+  if (auto) {
+    const cx = $("#chat-texto"), nt = $("#nota-input"), tf = $("#tarefa-input");
+    const digitando = (el) => el && (document.activeElement === el || el.value.trim());
+    if (convAberta === id && (digitando(cx) || digitando(nt) || digitando(tf))) return;
+  }
+  convAberta = id;
+  const rascunho = $("#chat-texto")?.value || ""; // preserva o que estava digitado
+  const rascunhoNota = $("#nota-input")?.value || ""; // idem pra nota
+  const rascunhoTarefa = $("#tarefa-input")?.value || ""; // idem pra tarefa
+  // thread: se o usuario escolheu uma conversa paralela (decisor), busca só ela
+  const d = await api("/api/lead/" + id + (threadAberta ? "?thread=" + threadAberta : ""));
+  const l = d.lead;
+  // se a thread escolhida não é desse lead, volta pra conversa principal
+  if (threadAberta && !(d.threads || []).some((t) => t.id === threadAberta)) threadAberta = null;
+  $("#chat").innerHTML = `
+    <div class="chat-topo">
+      <b>${l.nome_clinica}</b> <span style="color:var(--muted); font-size:13px">${l.telefone} ${l.cidade ? "· " + l.cidade : ""}</span>
+      <button class="btn mini ${l.ia_pausada ? "" : "sec"}" onclick="toggleIA(${l.id}, ${l.ia_pausada ? 0 : 1})">${l.ia_pausada ? "🤖 Devolver pra IA" : "🙋 Assumir conversa"}</button>
+      <select onchange="mudarStatus(${l.id}, this.value)" style="font-size:12px">
+        ${STATUS_COLS.map(([s, r]) => `<option value="${s}" ${l.status === s ? "selected" : ""}>${r}</option>`).join("")}
+        <option value="optout" ${l.status === "optout" ? "selected" : ""}>Opt-out</option>
+        <option value="descartado" ${l.status === "descartado" ? "selected" : ""}>Descartado</option>
+      </select>
+      ${d.reuniao ? `<span class="tag">📅 ${d.reuniao.inicio.replace("T", " ")} · ${d.reuniao.closer}</span>` : ""}
+      <button class="btn mini ${notasAbertas ? "" : "sec"}" style="margin-left:auto" onclick="toggleNotas()">📋 ${notasAbertas ? "fechar notas" : "notas"}</button>
+      <button class="btn mini perigo" onclick="excluirLead(${l.id}, '${(l.nome_clinica || "").replace(/'/g, "")}')">🗑</button>
+    </div>
+    ${(d.threads || []).length > 1 ? `<div style="padding:6px 14px; border-bottom:1px solid var(--border); display:flex; gap:6px; align-items:center; flex-wrap:wrap; background:#fafbfa">
+      <span style="font-size:11.5px; color:var(--muted)">conversas:</span>
+      ${d.threads.map((t) => `<button class="btn mini ${threadAberta === t.id ? "" : "sec"}" style="font-size:11.5px" onclick="abrirThread(${l.id}, ${t.id})">${t.rotulo || t.telefone}${t.nao_lida ? " 🔴" : ""}</button>`).join("")}
+    </div>` : ""}
+    <div class="chat-msgs" id="chat-msgs">${d.mensagens.map((m) => `
+      <div class="bolha ${m.role}">${m.texto}<span class="hora">${horaSP(m.criado_em)}</span></div>`).join("")}</div>
+    <div class="chat-envio">
+      <textarea id="chat-texto" rows="2" placeholder="responder como humano (pausa a IA)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMsg(${l.id})}"></textarea>
+      <button class="btn" onclick="enviarMsg(${l.id})">Enviar</button>
+    </div>`;
+  renderPainelNotas(d);
+  if (rascunho) $("#chat-texto").value = rascunho; // devolve o texto que estava sendo digitado
+  if (rascunhoNota && $("#nota-input")) $("#nota-input").value = rascunhoNota; // idem pra nota
+  if (rascunhoTarefa && $("#tarefa-input")) $("#tarefa-input").value = rascunhoTarefa; // idem pra tarefa
+  const box = $("#chat-msgs"); box.scrollTop = box.scrollHeight;
+  renderListaConv();
+  // resumo IA sob demanda (cacheado no servidor; atualiza o bloco quando chegar)
+  api("/api/lead/" + id + "/resumo").then((r) => {
+    const el = $("#resumo-ia");
+    if (el && convAberta === id) el.innerHTML = r.resumo ? r.resumo : '<span style="color:var(--muted)">resumo aparece após a primeira resposta do lead</span>';
+  });
+}
+
+// ============================================================
+// PAINEL DE NOTAS (direita) — a ficha completa do lead
+// Ordem dos campos definida pelo Matheus. Abrir recolhe a lista da esquerda
+// e centraliza a conversa.
+// ============================================================
+let notasAbertas = localStorage.getItem("notas_abertas") === "1";
+let threadAberta = null;
+
+function toggleNotas() {
+  notasAbertas = !notasAbertas;
+  localStorage.setItem("notas_abertas", notasAbertas ? "1" : "0");
+  document.querySelector(".conversas-wrap")?.classList.toggle("com-notas", notasAbertas);
+  // abrir as notas recolhe o menu da esquerda e larga o limite de largura:
+  // lista encosta na esquerda, conversa centraliza, notas na direita
+  $("#sidebar")?.classList.toggle("recolhido", notasAbertas);
+  document.body.classList.toggle("conv-full", notasAbertas);
+  if (convAberta) abrirConversa(convAberta);
+}
+
+// telefone clicável: ligar (VoIP/discador) ou abrir conversa no WhatsApp
+function linhaTelefone(l, t) {
+  const num = t.numero;
+  const ehDecisor = t.tipo === "decisor";
+  return `<div style="display:flex; gap:5px; align-items:center; margin-bottom:3px; flex-wrap:wrap">
+    <b style="font-size:12.5px">${num}</b>
+    ${t.rotulo ? `<span style="color:var(--muted); font-size:11.5px">${t.rotulo}</span>` : ""}
+    <a href="tel:+${num}" title="ligar (abre o discador/VoIP)" style="color:#2563eb; font-size:11.5px; font-weight:600; text-decoration:none">📞 ligar</a>
+    <span onclick="conversarCom(${l.id}, '${num}', '${(t.rotulo || "").replace(/'/g, "")}')" title="abrir conversa aqui no sistema" style="cursor:pointer; color:var(--verde); font-size:11.5px; font-weight:600">💬 mensagem</span>
+    ${ehDecisor ? "" : `<span onclick="excluirTelefone(${t.id}, ${l.id})" style="cursor:pointer; color:var(--muted); font-size:11px">✕</span>`}
+  </div>`;
+}
+
+function renderPainelNotas(d) {
+  const el = $("#painel-notas");
+  if (!el) return;
+  document.querySelector(".conversas-wrap")?.classList.toggle("com-notas", notasAbertas);
+  document.body.classList.toggle("conv-full", notasAbertas);
+  if (!notasAbertas) { el.innerHTML = ""; return; }
+  const l = d.lead;
+  const pipes = d.pipelines || [];
+  const pipeAtual = pipes.find((p) => p.id === l.pipeline_id);
+  const tels = d.telefones || [];
+  const abertas = (d.tarefas || []).filter((t) => !t.feita);
+
+  el.innerHTML = `
+    <!-- 1. NOME DA EMPRESA -->
+    <div style="margin-bottom:10px">
+      <b style="font-size:15px">${l.nome_clinica}</b>
+      <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.nome_clinica + " " + (l.cidade || ""))}" target="_blank" style="color:var(--verde); font-size:11.5px; font-weight:600; margin-left:6px">ver no Google ↗</a>
+    </div>
+
+    <!-- 2. RESUMO DO ATENDIMENTO DA IA -->
+    <div style="background:var(--verde-soft); border-radius:8px; padding:9px 11px; margin-bottom:10px">
+      <div style="font-size:11px; color:var(--muted); font-weight:600; margin-bottom:4px">RESUMO DO ATENDIMENTO</div>
+      <div id="resumo-ia" style="font-size:12.5px; white-space:pre-wrap; line-height:1.4">${d.resumo || '<span style="color:var(--muted)">gerando resumo…</span>'}</div>
+    </div>
+
+    <!-- 3. TAG DA IMPORTACAO -->
+    <div class="nota-linha"><span>🏷 Tag</span><span>${l.tag_importacao || l.origem_lista || "<i style='color:var(--muted)'>sem tag</i>"}</span></div>
+
+    <!-- 4. ETAPA + PIPELINE (com botao pra mudar) -->
+    <div class="nota-linha"><span>📊 Etapa</span><span>
+      <select onchange="moverParaPipeline(${l.id}, this.value)" style="width:100%; font-size:12px; padding:4px 6px">
+        ${pipes.map((p) => `<optgroup label="${p.tipo === "ligacao" ? "📞" : "💬"} ${p.nome}">
+          ${p.etapas.map((e) => `<option value="${e.id}" ${e.id === l.etapa_id ? "selected" : ""}>${e.nome}</option>`).join("")}
+        </optgroup>`).join("")}
+      </select>
+      <div style="font-size:11px; color:var(--muted); margin-top:2px">pipeline: ${pipeAtual?.nome || "—"}</div>
+    </span></div>
+
+    <!-- responsavel pelo lead -->
+    <div class="nota-linha"><span>👤 Responsável</span><span>
+      <select onchange="editarCampo(${l.id}, 'usuario_id', this.value)" style="width:100%; font-size:12px; padding:4px 6px">
+        <option value="">— ninguém —</option>
+        ${(d.usuarios || []).map((u) => `<option value="${u.id}" ${u.id === l.usuario_id ? "selected" : ""}>${u.nome}</option>`).join("")}
+      </select></span></div>
+
+    <!-- 5. VALOR DA VENDA -->
+    <div class="nota-linha"><span>💰 Valor</span><span>
+      <input type="number" value="${l.valor_venda || ""}" placeholder="0,00" style="width:100%; font-size:12.5px; padding:4px 7px"
+        onchange="editarCampo(${l.id}, 'valor_venda', this.value)"></span></div>
+
+    <!-- 6. TELEFONES DA EMPRESA (varios) -->
+    <div class="nota-linha"><span>📱 Telefones</span><span>
+      ${tels.filter((t) => t.tipo !== "decisor").map((t) => linhaTelefone(l, t)).join("") || "<i style='color:var(--muted)'>nenhum</i>"}
+      <div style="display:flex; gap:4px; margin-top:4px">
+        <input id="novo-tel" placeholder="+ outro telefone" style="flex:1; min-width:0; font-size:11.5px; padding:4px 7px" onkeydown="if(event.key==='Enter')addTelefone(${l.id})">
+        <button class="btn mini sec" style="font-size:11px" onclick="addTelefone(${l.id})">add</button>
+      </div></span></div>
+
+    <!-- 7. NICHO -->
+    <div class="nota-linha"><span>🏥 Nicho</span><span>
+      <input value="${l.nicho || ""}" placeholder="ex: Odontologia" style="width:100%; font-size:12.5px; padding:4px 7px"
+        onchange="editarCampo(${l.id}, 'nicho', this.value)"></span></div>
+
+    <!-- 8. NOME DO DECISOR -->
+    <div class="nota-linha"><span>👔 Decisor</span><span>
+      <input value="${l.nome_decisor || ""}" placeholder="nome do decisor" style="width:100%; font-size:12.5px; padding:4px 7px"
+        onchange="editarCampo(${l.id}, 'nome_decisor', this.value)"></span></div>
+
+    <!-- 9. TELEFONE DO DECISOR -->
+    <div class="nota-linha"><span>📞 Tel. decisor</span><span>
+      ${tels.filter((t) => t.tipo === "decisor").map((t) => linhaTelefone(l, t)).join("") || `
+        <div style="display:flex; gap:4px">
+          <input id="novo-tel-decisor" placeholder="telefone do decisor" style="flex:1; min-width:0; font-size:11.5px; padding:4px 7px" onkeydown="if(event.key==='Enter')addTelefoneDecisor(${l.id})">
+          <button class="btn mini sec" style="font-size:11px" onclick="addTelefoneDecisor(${l.id})">add</button>
+        </div>`}</span></div>
+
+    <!-- 10. NOME DA ATENDENTE -->
+    <div class="nota-linha"><span>🙋 Atendente</span><span>
+      <input value="${l.nome_atendente || l.nome_contato || ""}" placeholder="quem atendeu" style="width:100%; font-size:12.5px; padding:4px 7px"
+        onchange="editarCampo(${l.id}, 'nome_atendente', this.value)"></span></div>
+
+    <!-- 11. GOOGLE MEU NEGOCIO -->
+    <div class="nota-linha"><span>🌐 Google Meu Negócio</span><span>
+      ${l.google_negocio ? `<a href="${l.google_negocio}" target="_blank" style="color:var(--verde); font-size:12px">abrir ↗</a> ` : ""}
+      <input value="${l.google_negocio || ""}" placeholder="link do GMN" style="width:100%; font-size:11.5px; padding:4px 7px; margin-top:2px"
+        onchange="editarCampo(${l.id}, 'google_negocio', this.value)"></span></div>
+
+    <!-- REGISTRO DE LIGACAO (alimenta o dashboard de prospecção).
+         O botao do ULTIMO resultado registrado fica verde (marcado). -->
+    ${pipeAtual?.tipo === "ligacao" ? `<div style="margin-top:12px; padding:10px 11px; background:#eef6ff; border:1px solid #b6d4f5; border-radius:8px">
+      <b style="font-size:12.5px; color:#1e5aa8">📞 Registrar ligação</b>
+      <div style="font-size:11.5px; color:var(--muted); margin:3px 0 7px">O card se move sozinho conforme o resultado.</div>
+      <div style="display:flex; gap:4px; flex-wrap:wrap">
+        ${[["nao_atendeu", "não atendeu"], ["conectou", "atendeu"], ["decisor", "falei c/ decisor"], ["reuniao", "marquei reunião"], ["recusou", "recusou"]]
+          .map(([v, r]) => `<button class="btn mini ${d.ultima_ligacao === v ? "" : "sec"}" style="font-size:11px" onclick="registrarLigacao(${l.id}, '${v}')">${d.ultima_ligacao === v ? "✓ " : ""}${r}</button>`).join("")}
+      </div>
+    </div>` : ""}
+
+    <!-- 12. CAMPO NOTA / TAREFA -->
+    <div style="margin-top:14px; border-top:2px solid var(--border); padding-top:10px">
+      <div style="display:flex; gap:5px; margin-bottom:7px">
+        <button id="btn-modo-nota" class="btn mini ${modoNota === "nota" ? "" : "sec"}" style="flex:1" onclick="setModoNota('nota')">📝 Nota</button>
+        <button id="btn-modo-tarefa" class="btn mini ${modoNota === "tarefa" ? "" : "sec"}" style="flex:1" onclick="setModoNota('tarefa')">📌 Tarefa</button>
+      </div>
+      <div id="form-nota" style="${modoNota === "nota" ? "" : "display:none"}">
+        <input id="nota-input" placeholder="ex: liguei, não atendeu" style="width:100%; font-size:12.5px; padding:6px 9px" onkeydown="if(event.key==='Enter')addNota(${l.id})">
+        <button class="btn mini" style="width:100%; margin-top:5px" onclick="addNota(${l.id})">salvar nota</button>
+      </div>
+      <div id="form-tarefa" style="${modoNota === "tarefa" ? "" : "display:none"}">
+        <input id="tarefa-input" placeholder="ex: ligar pro Marcelo" style="width:100%; font-size:12.5px; padding:6px 9px" onkeydown="if(event.key==='Enter')addTarefa(${l.id})">
+        <div style="display:flex; gap:4px; margin-top:5px">
+          <input id="tarefa-quando" type="date" style="flex:1; min-width:0; font-size:11.5px; padding:4px 6px">
+          <input id="tarefa-hora" type="time" style="width:90px; font-size:11.5px; padding:4px 6px">
+        </div>
+        <div style="display:flex; gap:4px; margin-top:5px">
+          <select id="tarefa-tipo" style="flex:1; font-size:11.5px; padding:4px 6px">
+            <option value="followup">🔔 Follow-up</option>
+            <option value="ligacao">📞 Ligação</option>
+            <option value="reuniao">📅 Reunião (vai pra agenda)</option>
+          </select>
+          <select id="tarefa-usuario" style="flex:1; font-size:11.5px; padding:4px 6px">
+            ${(d.usuarios || []).map((u) => `<option value="${u.id}">${u.nome}</option>`).join("")}
+          </select>
+        </div>
+        <button class="btn mini" style="width:100%; margin-top:5px" onclick="addTarefa(${l.id})">salvar tarefa</button>
+      </div>
+    </div>
+
+    <!-- lista de tarefas e notas -->
+    ${abertas.length ? `<div style="margin-top:12px">
+      <div style="font-size:11px; color:var(--muted); font-weight:600; margin-bottom:5px">TAREFAS ABERTAS</div>
+      ${abertas.map((t) => `<div style="font-size:12px; padding:5px 7px; margin-bottom:4px; border-radius:6px; background:${tarefaAtrasada(t) ? "#fdecec" : "#fff8e1"}; border:1px solid ${tarefaAtrasada(t) ? "#e88" : "#e8b93a"}; display:flex; gap:5px; align-items:flex-start">
+        <input type="checkbox" onchange="marcarTarefa(${t.id}, this.checked, ${l.id})" style="cursor:pointer; margin-top:2px">
+        <span style="flex:1">${t.tipo === "reuniao" ? "📅" : t.tipo === "ligacao" ? "📞" : "🔔"} ${t.texto}
+          ${t.quando ? `<div style="color:var(--muted); font-size:11px">${t.quando}${t.hora ? " às " + t.hora : ""}${t.usuario_nome ? " · " + t.usuario_nome : ""}${tarefaAtrasada(t) ? " <b style='color:#b3261e'>(atrasada)</b>" : ""}</div>` : ""}</span>
+        <span onclick="excluirTarefa(${t.id}, ${l.id})" style="cursor:pointer; color:var(--muted)">✕</span>
+      </div>`).join("")}</div>` : ""}
+    ${(d.notas || []).length ? `<div style="margin-top:12px">
+      <div style="font-size:11px; color:var(--muted); font-weight:600; margin-bottom:5px">NOTAS</div>
+      ${d.notas.map((n) => `<div style="font-size:12px; padding:5px 0; border-bottom:1px dashed var(--border); display:flex; gap:6px">
+        <span style="color:var(--muted); white-space:nowrap; font-size:11px">${dataHoraSP(n.criado_em)}</span>
+        <span style="flex:1">${n.texto}${n.usuario_nome ? `<span style="color:var(--muted)"> — ${n.usuario_nome}</span>` : ""}</span>
+        <span onclick="excluirNota(${n.id}, ${l.id})" style="cursor:pointer; color:var(--muted)">✕</span>
+      </div>`).join("")}</div>` : ""}`;
+}
+
+const hojeISO = () => new Date().toLocaleDateString("sv-SE", { timeZone: "America/Sao_Paulo" });
+const tarefaAtrasada = (t) => !!(t.quando && !t.feita && t.quando < hojeISO());
+
+// alterna o campo digitavel entre NOTA e TAREFA (mesmo espaco, um seletor)
+let modoNota = "nota";
+function setModoNota(m) {
+  modoNota = m;
+  $("#form-nota").style.display = m === "nota" ? "" : "none";
+  $("#form-tarefa").style.display = m === "tarefa" ? "" : "none";
+  $("#btn-modo-nota")?.classList.toggle("sec", m !== "nota");
+  $("#btn-modo-tarefa")?.classList.toggle("sec", m !== "tarefa");
+  (m === "nota" ? $("#nota-input") : $("#tarefa-input"))?.focus();
+}
+
+// registra o resultado da ligação: vira evento (dashboard) e move o card
+async function registrarLigacao(id, resultado) {
+  const obs = ["reuniao", "recusou"].includes(resultado)
+    ? prompt(resultado === "reuniao" ? "Anota o combinado (dia/hora):" : "Por que recusou?") : null;
+  if (obs === null && ["reuniao", "recusou"].includes(resultado)) return; // cancelou
+  const r = await api("/api/lead/" + id + "/ligacao", { method: "POST", body: JSON.stringify({ resultado, obs: obs || "" }) });
+  if (r?.erro) return alert(r.erro);
+  abrirConversa(id); carregarKanban(); atualizar();
+}
+
+async function editarCampo(id, campo, valor) {
+  await api("/api/lead/" + id, { method: "PATCH", body: JSON.stringify({ [campo]: valor === "" ? null : valor }) });
+  await carregarKanban(); atualizar();
+}
+async function addTelefone(id) {
+  const n = $("#novo-tel").value.trim(); if (!n) return;
+  const r = await api("/api/lead/" + id + "/telefones", { method: "POST", body: JSON.stringify({ numero: n, tipo: "empresa" }) });
+  if (r?.erro) return alert(r.erro);
+  abrirConversa(id);
+}
+async function addTelefoneDecisor(id) {
+  const n = $("#novo-tel-decisor").value.trim(); if (!n) return;
+  const r = await api("/api/lead/" + id + "/telefones", { method: "POST", body: JSON.stringify({ numero: n, tipo: "decisor", rotulo: "Decisor" }) });
+  if (r?.erro) return alert(r.erro);
+  abrirConversa(id);
+}
+async function excluirTelefone(telId, leadId) {
+  await api("/api/telefone/" + telId, { method: "DELETE" });
+  abrirConversa(leadId);
+}
+// abrir conversa paralela com um numero do MESMO lead (nao cria card novo)
+async function conversarCom(leadId, numero, rotulo) {
+  const r = await api("/api/lead/" + leadId + "/threads", { method: "POST", body: JSON.stringify({ telefone: numero, rotulo: rotulo || "Contato" }) });
+  if (r?.erro) return alert(r.erro);
+  threadAberta = r.thread.id;
+  abrirConversa(leadId);
+}
+async function abrirThread(leadId, threadId) {
+  threadAberta = threadId;
+  abrirConversa(leadId);
+}
+
+async function addNota(id) {
+  const t = $("#nota-input").value.trim(); if (!t) return;
+  await api("/api/lead/" + id + "/notas", { method: "POST", body: JSON.stringify({ texto: t }) });
+  abrirConversa(id); atualizar();
+}
+async function excluirNota(notaId, leadId) {
+  await api("/api/nota/" + notaId, { method: "DELETE" });
+  abrirConversa(leadId); atualizar();
+}
+// tarefas MINHAS (manuais) — nao disparam nada, so lembram no card
+async function addTarefa(id) {
+  const t = $("#tarefa-input").value.trim(); if (!t) return;
+  const body = {
+    texto: t,
+    quando: $("#tarefa-quando")?.value || null,
+    hora: $("#tarefa-hora")?.value || null,
+    tipo: $("#tarefa-tipo")?.value || "followup",
+    usuario_id: Number($("#tarefa-usuario")?.value) || null,
+  };
+  if (body.tipo === "reuniao" && (!body.quando || !body.hora))
+    return alert("pra virar reunião na agenda, preenche o dia E a hora");
+  const r = await api("/api/lead/" + id + "/tarefas", { method: "POST", body: JSON.stringify(body) });
+  if (r?.agenda?.erro) alert(r.agenda.erro);
+  else if (r?.agenda?.id) alert("Reunião criada e já subiu pra agenda ✅");
+  abrirConversa(id); atualizar(); carregarKanban();
+}
+async function marcarTarefa(tarefaId, feita, leadId) {
+  await api("/api/tarefa/" + tarefaId, { method: "PATCH", body: JSON.stringify({ feita: feita ? 1 : 0 }) });
+  abrirConversa(leadId); atualizar();
+}
+async function excluirTarefa(tarefaId, leadId) {
+  await api("/api/tarefa/" + tarefaId, { method: "DELETE" });
+  abrirConversa(leadId); atualizar();
+}
+let enviandoMsg = false; // trava: duplo clique no Enviar não pode duplicar
+async function enviarMsg(id) {
+  const cx = $("#chat-texto");
+  const t = cx?.value.trim();
+  if (!t || enviandoMsg) return;
+  enviandoMsg = true;
+  cx.value = ""; // limpa JÁ — senão a proteção de rascunho devolvia o texto enviado
+  try {
+    // thread paralela aberta (decisor): a mensagem sai pro numero DELA
+    const r = await api("/api/lead/" + id + "/mensagem", { method: "POST", body: JSON.stringify({ texto: t, thread_id: threadAberta || undefined }) });
+    if (r?.erro) { if ($("#chat-texto")) $("#chat-texto").value = t; return alert(r.erro); } // falhou: devolve o texto
+    await abrirConversa(id);
+  } finally { enviandoMsg = false; }
+}
+async function toggleIA(id, pausar) {
+  await api("/api/lead/" + id + "/ia", { method: "POST", body: JSON.stringify({ pausar: Boolean(pausar) }) });
+  await atualizar(); abrirConversa(id);
+}
+async function mudarStatus(id, status) {
+  await api("/api/lead/" + id, { method: "PATCH", body: JSON.stringify({ status }) });
+  atualizar();
+}
+
+// campanhas
+let campEditando = null, campanhasCache = [];
+async function carregarCampanhas() {
+  setTimeout(() => { try { renderDivisao(); } catch {} }, 50);
+  const cs = await api("/api/campanhas");
+  campanhasCache = cs;
+  $("#lista-campanhas").innerHTML = cs.map((c) => `
+    <div style="border:1px solid var(--border); border-radius:10px; padding:10px 12px; margin-bottom:8px">
+      <b>${c.nome}</b> <span class="tag">${c.status}</span>
+      <div style="font-size:13px; color:var(--text); margin-top:4px">
+        <b>Hoje: ${c.disparados_hoje}/${c.teto_dia}</b> mensagens <span style="color:var(--muted)">(${c.aberturas_hoje || 0} aberturas + reengajamentos · ${c.na_fila} na fila)</span>
+      </div>
+      <div style="font-size:12px; color:var(--muted)">${c.disparados} processados no total · 1 a cada ${c.cadencia_min_seg / 60}–${c.cadencia_max_seg / 60} min · ${c.janela_inicio}–${c.janela_fim}${c.sem_whatsapp ? ` · ${c.sem_whatsapp} sem WhatsApp (não contam)` : ""}</div>
+      <div style="margin-top:6px; display:flex; gap:6px; flex-wrap:wrap">
+        ${c.status !== "ativa" ? `<button class="btn mini" onclick="patchCampanha(${c.id},'ativa')">▶ Ativar</button>` : `<button class="btn mini sec" onclick="patchCampanha(${c.id},'pausada')">⏸ Pausar</button>`}
+        <button class="btn mini sec" onclick="editarCampanha(${c.id})">✏️ mensagens</button>
+        <button class="btn mini sec" onclick="vincularLeads(${c.id})">+ vincular leads</button>
+      </div>
+    </div>`).join("") || '<div style="color:var(--muted); font-size:13px">nenhuma campanha</div>';
+}
+function editarCampanha(id) {
+  const c = campanhasCache.find((x) => x.id === id);
+  if (!c) return;
+  campEditando = id;
+  $("#c-titulo").textContent = `✏️ Editando: ${c.nome}`;
+  $("#c-botao").textContent = "💾 Salvar alterações";
+  $("#c-cancelar").style.display = "";
+  $("#c-nome").value = c.nome;
+  $("#c-teto").value = c.teto_dia;
+  $("#c-janela").value = `${c.janela_inicio}-${c.janela_fim}`;
+  $("#c-cadmin").value = Math.round(c.cadencia_min_seg / 60);
+  $("#c-cadmax").value = Math.round(c.cadencia_max_seg / 60);
+  $("#c-pctreeng").value = c.pct_reengajar ?? 30; renderDivisao();
+  const porTipo = (t) => c.templates.filter((x) => x.tipo === t).map((x) => x.texto).join("\n");
+  $("#c-aberturas").value = porTipo("abertura");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+function cancelarEdicao() {
+  campEditando = null;
+  $("#c-titulo").textContent = "Nova campanha";
+  $("#c-botao").textContent = "Criar campanha";
+  $("#c-cancelar").style.display = "none";
+  $("#c-nome").value = "";
+}
+function renderDivisao() {
+  const teto = Number($("#c-teto").value) || 25;
+  const pct = Number($("#c-pctreeng").value);
+  const reeng = Math.round(teto * pct / 100);
+  const novos = teto - reeng;
+  $("#c-pctlabel").innerHTML = `<b>${novos}</b> novos (${100-pct}%) · <b>${reeng}</b> reeng. (${pct}%)`;
+}
+async function salvarCampanha() {
+  const [ji, jf] = ($("#c-janela").value || "08:30-18:00").split("-");
+  const linhas = (id) => $(id).value.split("\n").map((s) => s.trim()).filter(Boolean);
+  const cadMin = (Number($("#c-cadmin").value) || 3) * 60;
+  const cadMax = (Number($("#c-cadmax").value) || 7) * 60;
+  const cfg = { teto_dia: Number($("#c-teto").value) || 25, janela_inicio: ji, janela_fim: jf,
+    cadencia_min_seg: cadMin, cadencia_max_seg: Math.max(cadMax, cadMin), pct_reengajar: Number($("#c-pctreeng").value) };
+  if (campEditando) {
+    await api("/api/campanha/" + campEditando + "/templates", { method: "PATCH", body: JSON.stringify({
+      aberturas: linhas("#c-aberturas"),
+    }) });
+    await api("/api/campanha/" + campEditando, { method: "PATCH", body: JSON.stringify(cfg) });
+    cancelarEdicao();
+  } else {
+    const r = await api("/api/campanhas", { method: "POST", body: JSON.stringify({
+      nome: $("#c-nome").value, ...cfg, aberturas: linhas("#c-aberturas"),
+    }) });
+    if (r.ok) $("#c-nome").value = "";
+  }
+  carregarCampanhas();
+}
+async function patchCampanha(id, status) { await api("/api/campanha/" + id, { method: "PATCH", body: JSON.stringify({ status }) }); carregarCampanhas(); }
+async function vincularLeads(id) {
+  const cidade = prompt("Filtrar por cidade? (vazio = todos os leads novos)") || "";
+  const r = await api("/api/campanha/" + id + "/leads", { method: "POST", body: JSON.stringify({ cidade }) });
+  alert(r.vinculados + " leads vinculados"); carregarCampanhas();
+}
+// ---- IMPORTACAO (aba Campanhas) ----
+// Preenche o seletor de pipelines de destino. Pipeline de DISPARO joga o lead
+// na fila de envio do WhatsApp dela; pipeline de LIGACAO só monta a lista pra ligar.
+async function prepararImportacao() {
+  // busca direto da API: a aba Campanhas pode abrir antes do Kanban ter carregado
+  if (!pipelines.length) pipelines = await api("/api/pipelines").catch(() => []);
+  const sel = $("#imp-pipeline");
+  if (sel) {
+    sel.innerHTML = pipelines.map((p) =>
+      `<option value="${p.id}" ${p.id === pipelineAtual ? "selected" : ""}>${p.tipo === "ligacao" ? "📞 Ligação" : "💬 Disparo"} — ${p.nome}${p.whatsapp_nome ? " (" + p.whatsapp_nome + ")" : ""}</option>`).join("");
+    mudouPipelineImport();
+  }
+  const m = await api("/api/modelo-importacao").catch(() => null);
+  const link = $("#link-drive-modelo");
+  if (link && m?.drive_url) { link.href = m.drive_url; link.style.display = ""; }
+}
+function mudouPipelineImport() {
+  const p = pipelines.find((x) => x.id === Number($("#imp-pipeline")?.value));
+  const av = $("#imp-aviso");
+  if (!p || !av) return;
+  av.innerHTML = p.tipo === "disparo"
+    ? (p.whatsapp_nome
+      ? `Os leads entram na <b>fila de disparo</b> e saem pelo WhatsApp <b>${p.whatsapp_nome}</b>.`
+      : `⚠️ Essa pipeline de disparo <b>não tem WhatsApp vinculado</b>. Vincula em Pipeline → ⚙️ pipelines.`)
+    : `Os leads entram na coluna <b>Novos</b> pra você ligar. Nada é enviado automaticamente.`;
+}
+function baixarModelo() {
+  window.open(API + "/api/modelo-importacao.csv?t=" + encodeURIComponent(SENHA), "_blank");
+}
+async function verColunasModelo() {
+  const m = await api("/api/modelo-importacao");
+  modal("Colunas aceitas na importação", `
+    <div style="font-size:12.5px; color:var(--muted); margin-bottom:9px">
+      A ordem não importa: o sistema acha as colunas pelo nome. Só <b>nome</b> e <b>telefone</b> são obrigatórios.
+    </div>
+    ${m.colunas.map((c) => `<div style="display:flex; gap:8px; padding:4px 0; border-bottom:1px dashed var(--border); font-size:12.5px">
+      <code style="min-width:150px; color:var(--verde); font-weight:600">${c.campo}</code>
+      <span>${c.desc}</span></div>`).join("")}
+    <button class="btn mini" style="margin-top:11px; width:100%" onclick="baixarModelo()">⬇️ baixar modelo preenchido</button>`, 520);
+}
+async function importarCSV() {
+  const f = $("#csv-file").files[0];
+  if (!f) return alert("escolhe o arquivo CSV primeiro");
+  const pipelineId = Number($("#imp-pipeline")?.value) || pipelineAtual;
+  const fd = new FormData();
+  fd.append("csv", f);
+  fd.append("pipeline_id", pipelineId);
+  fd.append("tag", $("#imp-tag")?.value.trim() || "");
+  $("#import-res").textContent = "importando…";
+  const r = await api("/api/importar", { method: "POST", body: fd });
+  if (!r.ok) { $("#import-res").textContent = "erro: " + r.erro; return; }
+  $("#import-res").innerHTML = `✅ <b>${r.novos} novos</b> · ${r.repetidos} já existiam · ${r.semTel} sem telefone
+    <div style="margin-top:3px">foram pra <b>${r.pipeline}</b>${r.tag ? ` com a tag <b>${r.tag}</b>` : ""}${r.na_fila ? " e já estão na fila de disparo" : ""}</div>
+    ${r.aviso ? `<div style="color:#a8641e; margin-top:3px">⚠️ ${r.aviso}</div>` : ""}`;
+  atualizar(); carregarKanban();
+}
+
+// ---- AGENDA em grade semanal (estilo Google Calendar) ----
+let agendaEventos = [];       // cache dos eventos carregados
+let semanaOffset = 0;         // 0 = semana atual, 1 = próxima, -1 = anterior
+
+function mudarSemana(delta) {
+  semanaOffset = delta === 0 ? 0 : semanaOffset + delta;
+  renderGradeSemana();
+}
+// segunda-feira da semana (offset em semanas a partir da atual), em fuso SP
+function segundaDaSemana(offset) {
+  const hoje = new Date(hojeISO() + "T12:00:00");
+  const diaSem = (hoje.getDay() + 6) % 7; // 0 = segunda
+  const seg = new Date(hoje);
+  seg.setDate(hoje.getDate() - diaSem + offset * 7);
+  return seg;
+}
+const isoDia = (dt) => dt.toISOString().slice(0, 10);
+
+async function carregarAgenda() {
+  const closer = $("#agenda-closer")?.value || "";
+  const d = await api(`/api/agenda?dias=28${closer ? "&closer=" + closer : ""}`);
+  const sel = $("#agenda-closer");
+  if (sel && !sel.dataset.pronto && d.closers?.length) {
+    sel.innerHTML = d.closers.map((c) => `<option value="${c}" ${c === d.closer ? "selected" : ""}>agenda do ${c}</option>`).join("");
+    sel.dataset.pronto = "1";
+    sel.style.display = d.closers.length > 1 ? "" : "none";
+  }
+  $("#agenda-status").innerHTML = d.conectada
+    ? `🟢 agenda do <b>${d.closer}</b> conectada`
+    : `🔴 agenda do <b>${d.closer}</b> não conectada · <span onclick="aba('config')" style="color:var(--verde); cursor:pointer; font-weight:600">conectar</span>`;
+  agendaEventos = d.conectada ? d.eventos : null;
+  renderGradeSemana();
+}
+
+function renderGradeSemana() {
+  const el = $("#agenda-grade");
+  if (!el) return;
+  if (agendaEventos === null) {
+    el.innerHTML = `<div style="padding:20px; font-size:13px; color:var(--muted)">
+      Conecta a agenda em <b>Config</b> pra ver a semana aqui e pra reunião marcada no CRM cair direto no Google Calendar.</div>`;
+    $("#agenda-semana-rotulo").textContent = "";
+    return;
+  }
+  const seg = segundaDaSemana(semanaOffset);
+  const dias = [...Array(7)].map((_, i) => { const dt = new Date(seg); dt.setDate(seg.getDate() + i); return dt; });
+  const hoje = hojeISO();
+  const rot = (dt) => `${String(dt.getDate()).padStart(2, "0")}/${String(dt.getMonth() + 1).padStart(2, "0")}`;
+  $("#agenda-semana-rotulo").textContent = `${rot(dias[0])} – ${rot(dias[6])}`;
+  const nomes = ["seg", "ter", "qua", "qui", "sex", "sáb", "dom"];
+
+  el.innerHTML = `<div style="display:grid; grid-template-columns:repeat(7, 1fr); min-height:430px">
+    ${dias.map((dt, i) => {
+      const dia = isoDia(dt);
+      const ehHoje = dia === hoje;
+      const evs = agendaEventos
+        .filter((e) => (e.inicio || "").slice(0, 10) === dia)
+        .sort((a, b) => (a.inicio || "").localeCompare(b.inicio || ""));
+      return `<div style="border-right:1px solid var(--border); ${i === 6 ? "border-right:none;" : ""} display:flex; flex-direction:column; min-width:0">
+        <div style="padding:8px 6px; text-align:center; border-bottom:1px solid var(--border); background:${ehHoje ? "var(--verde-soft)" : "#fafbfa"}">
+          <div style="font-size:10.5px; color:var(--muted); text-transform:uppercase">${nomes[i]}</div>
+          <div style="font-size:15px; font-weight:${ehHoje ? "800" : "600"}; color:${ehHoje ? "var(--verde-esc)" : "var(--text)"}">${dt.getDate()}</div>
+        </div>
+        <div style="flex:1; padding:4px; display:flex; flex-direction:column; gap:3px; overflow-y:auto; background:${ehHoje ? "#f7fcf9" : "transparent"}">
+          ${evs.map((e) => `<div ${e.meet ? `onclick="window.open('${e.meet}','_blank')"` : ""}
+            style="${e.meet ? "cursor:pointer; " : ""}padding:4px 6px; background:${e.diaInteiro ? "#f0f0f0" : "var(--verde-soft)"}; border-left:3px solid ${e.diaInteiro ? "#bbb" : "var(--verde)"}; border-radius:4px; font-size:11px; line-height:1.3; overflow:hidden"
+            title="${(e.titulo || "").replace(/"/g, "&quot;")}${e.meet ? " (clica pra abrir o Meet)" : ""}">
+            <b>${e.diaInteiro ? "dia todo" : (e.inicio || "").slice(11, 16)}</b> ${e.titulo.length > 34 ? e.titulo.slice(0, 34) + "…" : e.titulo}
+          </div>`).join("") || ""}
+        </div>
+      </div>`;
+    }).join("")}
+  </div>`;
+}
+
+// reunioes
+async function carregarReunioes() {
+  if (!$("#tab-reunioes")) return; // a tabela saiu da aba Reuniões (virou grade semanal)
+  const rs = await api("/api/reunioes");
+  $("#tab-reunioes").innerHTML = "<tr><th>Quando</th><th>Clínica</th><th>Closer</th><th>Dor</th><th>Status</th><th></th></tr>" +
+    rs.map((r) => `<tr>
+      <td>${r.inicio.replace("T", " ")}</td><td>${r.nome_clinica}<br><small style="color:var(--muted)">${r.telefone}</small></td>
+      <td>${r.closer}</td><td style="font-size:12px">${r.dor || ""}</td><td>${r.status}</td>
+      <td>${["marcada", "remarcada"].includes(r.status) ? `
+        <button class="btn mini" onclick="patchReuniao(${r.id},'realizada')">✅</button>
+        <button class="btn mini sec" onclick="patchReuniao(${r.id},'no_show')">👻 no-show</button>
+        <button class="btn mini perigo" onclick="patchReuniao(${r.id},'cancelada')">✖</button>` : ""}</td>
+    </tr>`).join("");
+}
+async function patchReuniao(id, status) { await api("/api/reuniao/" + id, { method: "PATCH", body: JSON.stringify({ status }) }); carregarReunioes(); }
+
+// config
+async function carregarConfig() {
+  const c = await api("/api/config");
+  for (const k of ["slots_matheus", "slots_valentino", "meet_matheus", "meet_valentino", "closer_valentino_ativo", "link_apresentacao"]) {
+    const el = $("#cfg-" + k); if (el) el.value = c[k] || (k.startsWith("slots") ? "1,2,3,4,5|10:00,11:00,15:00,16:00" : k === "closer_valentino_ativo" ? "1" : "");
+  }
+  carregarAudio();
+  carregarWhats();
+  api("/api/gcal-status").then((g) => {
+    const linha = (nome, ok) => `<div style="display:flex; align-items:center; gap:10px; margin:6px 0">
+      <span style="min-width:150px"><b>${nome[0].toUpperCase() + nome.slice(1)}</b>: ${ok ? "✅ agenda conectada" : "❌ não conectada"}</span>
+      <a class="btn mini ${ok ? "sec" : ""}" href="${API}/api/gcal/conectar?closer=${nome}&t=${SENHA}" target="_blank">${ok ? "🔄 reconectar" : "🔗 Conectar agenda"}</a>
+    </div>`;
+    $("#gcal-status").innerHTML = linha("matheus", g.matheus) + linha("valentino", g.valentino);
+  });
+}
+async function salvarConfig() {
+  const body = {};
+  for (const k of ["slots_matheus", "slots_valentino", "meet_matheus", "meet_valentino", "closer_valentino_ativo", "link_apresentacao"]) body[k] = $("#cfg-" + k).value;
+  await api("/api/config", { method: "POST", body: JSON.stringify(body) });
+  $("#cfg-ok").textContent = "salvo ✓"; setTimeout(() => $("#cfg-ok").textContent = "", 2000);
+}
+async function carregarAudio() {
+  const a = await api("/api/audio-info");
+  if (a.configurado) {
+    const det = a.info ? ` · ${a.info.nome} (${a.info.kb}KB, ${String(a.info.em).replace("T", " ")})` : "";
+    $("#audio-status").innerHTML = `✅ <b>áudio configurado</b>${det}`;
+    $("#audio-player").innerHTML = `<audio controls style="width:100%" src="${API}/api/audio-arquivo?t=${SENHA}&v=${Date.now()}"></audio>
+      <div style="font-size:12px; color:var(--muted)">👆 esse é o áudio que a IA manda pro lead</div>`;
+  } else {
+    $("#audio-status").textContent = "⚠️ sem áudio ainda — a IA conduz só por texto";
+    $("#audio-player").innerHTML = "";
+  }
+}
+async function subirAudio() {
+  const f = $("#audio-file").files[0];
+  if (!f) return $("#audio-status").textContent = "escolhe o arquivo primeiro";
+  $("#audio-status").textContent = "subindo…";
+  const fd = new FormData(); fd.append("audio", f);
+  const r = await api("/api/audio", { method: "POST", body: fd });
+  if (!r.ok) return $("#audio-status").textContent = "❌ erro: " + r.erro;
+  carregarAudio();
+  carregarWhats();
+}
+async function carregarWhats() {
+  const d = await api("/api/instancias");
+  const insts = d.instancias || [];
+  $("#lista-whats").innerHTML = insts.map((i) => `
+    <div style="padding:8px 0; border-bottom:1px solid var(--border); font-size:13.5px">
+      <div style="display:flex; align-items:center; gap:8px">
+        <span style="width:9px; height:9px; border-radius:999px; background:${i.status === "conectado" ? "var(--verde)" : "var(--vermelho)"}"></span>
+        <span style="flex:1"><b>${i.nome}</b> <span style="color:var(--muted); font-size:12px">${i.numero || "não conectado"} · ${i.status}</span></span>
+        <button class="btn mini sec" onclick="pegarQR(${i.id})">${i.status === "conectado" ? "reconectar" : "conectar (QR)"}</button>
+        <button class="btn mini perigo" onclick="removerWhats(${i.id})">✕</button>
+      </div>
+      <div style="display:flex; align-items:center; gap:6px; margin-top:6px; padding-left:17px; font-size:12.5px; color:var(--muted)">
+        enviar até <input type="number" min="0" value="${i.cota_dia || 0}" onchange="setCota(${i.id}, this.value)" style="width:64px; padding:4px 8px; text-align:center"> msgs/dia por esse número
+        <span style="margin-left:auto">${i.disparos_hoje || 0}${i.cota_dia ? "/" + i.cota_dia : ""} hoje</span>
+      </div>
+    </div>`).join("") || '<div style="font-size:13px; color:var(--muted)">nenhum WhatsApp ainda</div>';
+  const totalCota = insts.reduce((a, i) => a + (i.cota_dia || 0), 0);
+  $("#whats-msg").innerHTML = `${insts.length} de ${d.limite >= 99 ? "∞" : d.limite}` + (totalCota ? ` · split: ${totalCota} msgs/dia no total` : " · 0 = sem limite próprio (rotação automática)");
+}
+async function setCota(id, valor) {
+  await api("/api/instancias", { method: "PATCH", body: JSON.stringify({ id, cota_dia: Number(valor) || 0 }) });
+  carregarWhats();
+}
+async function addWhats() {
+  const r = await api("/api/instancias", { method: "POST", body: JSON.stringify({}) });
+  if (r.erro) return $("#whats-msg").textContent = r.erro;
+  carregarWhats();
+}
+async function removerWhats(id) {
+  if (!confirm("Remover esse WhatsApp?")) return;
+  await api("/api/instancias?id=" + id, { method: "DELETE" });
+  carregarWhats();
+}
+async function pegarQR(instId) {
+  $("#qr-area").innerHTML = "gerando…";
+  const r = await api("/api/qr" + (instId ? "?inst=" + instId : ""));
+  if (r.qrcode) $("#qr-area").innerHTML = `<img src="${r.qrcode}" style="width:240px"><p style="font-size:13px; color:var(--muted)">WhatsApp → Aparelhos conectados → Conectar aparelho</p><button class="btn sec mini" onclick="pegarQR(${instId || ""})">🔄 novo QR</button>`;
+  else { $("#qr-area").innerHTML = `<p>status: <b>${r.status || r.erro}</b></p>`; carregarWhats(); }
+}
+
+// ---- dashboard ----
+const FUNIL_ETAPAS = [["novo","Novos"],["disparado","Disparados"],["respondeu","Responderam"],["em_conversa","Em conversa"],["decisor","Decisor"],["reuniao_marcada","Reunião"],["fechado","Fechados"]];
+// ---- 3 dashboards: geral (une os canais), disparo (WhatsApp), prospecção (ligação) ----
+let dashAtual = localStorage.getItem("dash_atual") || "geral";
+function trocarDash(qual) {
+  dashAtual = qual;
+  localStorage.setItem("dash_atual", qual);
+  carregarDashboard(); // ele cuida das abas e do título
+}
+async function carregarDashboard() {
+  document.querySelectorAll(".dash-tab").forEach((b) => b.classList.toggle("sec", b.dataset.dash !== dashAtual));
+  $("#dash-titulo").textContent = { geral: "📊 Visão geral", disparo: "💬 Dashboard de Disparo", prospeccao: "📞 Dashboard de Prospecção" }[dashAtual];
+  if (dashAtual === "geral") return dashGeral();
+  if (dashAtual === "prospeccao") return dashProspeccao();
+  return dashDisparo();
+}
+
+// barra comparando o que você fez com o benchmark de mercado
+function barraBench(b, sufixo = "%") {
+  const alvo = b.ideal || b.meta;
+  const pctBarra = Math.min(100, Math.round((b.atual / (alvo || 1)) * 100));
+  const cor = b.ok ? "var(--verde)" : (b.atual > 0 ? "#e8a13a" : "#d93025");
+  return `<div style="margin-bottom:11px">
+    <div style="display:flex; font-size:12.5px; margin-bottom:3px">
+      <span style="flex:1">${b.ok ? "🟢" : b.atual > 0 ? "🟡" : "🔴"} ${b.rotulo}</span>
+      <b style="color:${cor}">${b.atual}${sufixo}</b>
+      <span style="color:var(--muted); margin-left:6px">meta ${b.meta}${sufixo}${b.ideal ? `–${b.ideal}${sufixo}` : ""}</span>
+    </div>
+    <div style="height:7px; background:#eef1ef; border-radius:4px; overflow:hidden; position:relative">
+      <div style="height:100%; width:${pctBarra}%; background:${cor}"></div>
+      <div style="position:absolute; left:${Math.min(99, Math.round((b.meta / (alvo || 1)) * 100))}%; top:0; height:100%; width:2px; background:#555"></div>
+    </div></div>`;
+}
+
+async function dashGeral() {
+  const d = await api("/api/dashboard/geral?dias=" + $("#dash-dias").value);
+  const c = d.canais, t = d.totais, v = d.valor;
+  const kpi = (num, rot, sub, cor) => `<div class="card metrica"><div class="num" ${cor ? `style="color:${cor}"` : ""}>${num}</div><div class="rot">${rot}</div>${sub ? `<div style="font-size:11px;color:var(--muted);margin-top:2px">${sub}</div>` : ""}</div>`;
+  $("#dash-corpo").innerHTML = `
+    <div class="grid-metricas" style="margin-bottom:16px">
+      ${kpi(t.toques, "Toques totais", `disparo + ligação · ${d.dias}d`)}
+      ${kpi(t.reunioes, "Reuniões", t.toquesPorReuniao ? `1 a cada ${t.toquesPorReuniao} toques` : "nenhuma ainda")}
+      ${kpi(money(v.aberto), "Em aberto", "valor no funil", "#1e5aa8")}
+      ${kpi(money(v.ganho), "Ganho", "vendas fechadas", "#0b6b46")}
+    </div>
+
+    <div class="duas-col">
+      <div class="card">
+        <h3 style="margin-bottom:10px">Os dois canais</h3>
+        ${[["💬 Disparo (WhatsApp)", c.disparo, "toques", "respostas"], ["📞 Ligação (prospecção)", c.ligacao, "ligações", "decisores"]].map(([rot, ch, l1, l2]) => `
+          <div style="padding:9px 0; border-bottom:1px solid var(--border)">
+            <div style="display:flex; align-items:baseline">
+              <b style="flex:1; font-size:13.5px">${rot}</b>
+              <span style="font-size:17px; font-weight:700; color:var(--verde-esc)">${ch.reunioes}</span>
+              <span style="font-size:11.5px; color:var(--muted); margin-left:4px">reuniões</span>
+            </div>
+            <div style="font-size:12px; color:var(--muted); margin-top:2px">
+              ${ch.toques} ${l1} · ${ch.respostas ?? ch.decisores} ${l2} · conversão ${ch.taxa}%
+            </div>
+          </div>`).join("")}
+        <div style="margin-top:10px; font-size:12.5px; padding:8px 10px; background:var(--verde-soft); border-radius:7px">
+          ${d.melhorCanal === "empate" ? "Os dois canais estão trazendo o mesmo tanto de reunião." :
+            `<b>${d.melhorCanal === "ligacao" ? "📞 Ligação" : "💬 Disparo"}</b> está trazendo mais reunião no período. ` +
+            `Benchmark de mercado: 1 reunião a cada ${d.mercado.ligacoes_por_reuniao} ligações ou ${d.mercado.disparos_por_reuniao} disparos.`}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom:10px">Dinheiro por pipeline</h3>
+        ${d.porPipeline.map((p) => `<div style="display:flex; align-items:center; gap:8px; padding:7px 0; border-bottom:1px solid var(--border)">
+          <span style="flex:1; font-size:13px">${p.tipo === "ligacao" ? "📞" : "💬"} ${p.nome}</span>
+          <span style="font-size:11.5px; color:var(--muted)">${p.leads} leads</span>
+          <b style="color:#0b6b46">${money(p.valor)}</b>
+        </div>`).join("") || '<div style="color:var(--muted); font-size:13px">sem pipelines</div>'}
+        <h3 style="margin:14px 0 8px">Equipe</h3>
+        ${d.equipe.map((e) => `<div style="display:flex; gap:8px; padding:5px 0; font-size:12.5px">
+          <span style="flex:1">${e.nome}</span>
+          <span style="color:var(--muted)">${e.leads} leads</span>
+          ${e.tarefas_abertas ? `<span class="tag" style="background:#fff8e1; color:#a8641e">📌 ${e.tarefas_abertas}</span>` : ""}
+        </div>`).join("")}
+      </div>
+    </div>`;
+}
+
+async function dashProspeccao() {
+  const d = await api("/api/dashboard/prospeccao?dias=" + $("#dash-dias").value);
+  const b = d.benchmarks;
+  const kpi = (num, rot, sub) => `<div class="card metrica"><div class="num">${num}</div><div class="rot">${rot}</div>${sub ? `<div style="font-size:11px;color:var(--muted);margin-top:2px">${sub}</div>` : ""}</div>`;
+  const maxS = Math.max(1, ...d.serie.map((s) => s.ligacoes || 0));
+  $("#dash-corpo").innerHTML = `
+    <div class="grid-metricas" style="margin-bottom:16px">
+      ${kpi(d.ligacoes, "Ligações", `${d.porDia}/dia em média`)}
+      ${kpi(d.conectou, "Conectou", `${d.topo}% de quem atendeu`)}
+      ${kpi(d.decisores, "Decisores", `${d.meio}% de quem conectou`)}
+      ${kpi(d.reunioes, "Reuniões", d.ligacoesPorReuniao ? `1 a cada ${d.ligacoesPorReuniao} ligações` : "nenhuma ainda")}
+    </div>
+
+    <div class="duas-col">
+      <div class="card">
+        <h3 style="margin-bottom:4px">Funil vs Benchmarks de Mercado</h3>
+        <div style="font-size:11.5px; color:var(--muted); margin-bottom:11px">A marca preta é a meta de mercado.</div>
+        ${barraBench(b.topo)}${barraBench(b.meio)}${barraBench(b.fundo)}${barraBench(b.volume, "/dia")}
+        ${d.diagnostico.length ? `<div style="margin-top:12px; padding:10px 12px; background:#fff8e1; border:1px solid #e8b93a; border-radius:8px">
+          <b style="font-size:12.5px; color:#a8641e">⚠️ Onde está travando</b>
+          ${d.diagnostico.map((x) => `<div style="font-size:12.5px; margin-top:5px">
+            <b>${x.nivel.toUpperCase()}</b> em ${x.atual}% (meta ${x.meta}%) → ${x.txt}</div>`).join("")}
+        </div>` : (d.ligacoes >= 10 ? `<div style="margin-top:12px; padding:9px 12px; background:var(--verde-soft); border-radius:8px; font-size:12.5px">
+          🟢 Funil dentro do benchmark. Pra crescer, sobe o volume de ligações.</div>` : `<div style="margin-top:12px; font-size:12.5px; color:var(--muted)">
+          Faz pelo menos 10 ligações pro diagnóstico aparecer.</div>`)}
+        <div style="margin-top:12px; font-size:12px; color:var(--muted)">
+          Mercado gasta <b>${d.mercado.ligacoes_por_reuniao} ligações</b> por reunião.
+          ${d.ligacoesPorReuniao ? `Você está gastando <b style="color:${d.ligacoesPorReuniao <= d.mercado.ligacoes_por_reuniao ? "var(--verde)" : "#d93025"}">${d.ligacoesPorReuniao}</b>.` : ""}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom:10px">Ligações por dia</h3>
+        ${d.serie.length ? `<div style="display:flex; gap:6px; align-items:flex-end; height:120px; margin-bottom:8px; justify-content:${d.serie.length < 6 ? "flex-start" : "space-between"}">
+          ${d.serie.map((s) => `<div style="width:${d.serie.length < 6 ? "46px" : "auto"}; flex:${d.serie.length < 6 ? "0 0 auto" : "1"}; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:2px" title="${s.d}: ${s.ligacoes} ligações, ${s.reunioes} reuniões, ${s.decisores} decisores">
+            <span style="font-size:10.5px; color:var(--muted)">${s.ligacoes}</span>
+            <div style="width:100%; background:var(--verde); height:${Math.max(4, Math.round((s.ligacoes / maxS) * 74))}px; border-radius:3px 3px 0 0"></div>
+            ${s.reunioes ? `<div style="width:100%; background:#1e5aa8; height:${Math.max(4, Math.round((s.reunioes / maxS) * 74))}px" title="${s.reunioes} reuniões"></div>` : ""}
+            <span style="font-size:9.5px; color:var(--muted)">${s.d.slice(8)}/${s.d.slice(5,7)}</span>
+          </div>`).join("")}
+        </div>
+        <div style="font-size:11px; color:var(--muted)"><span style="color:var(--verde)">■</span> ligações · <span style="color:#1e5aa8">■</span> reuniões</div>` :
+        '<div style="color:var(--muted); font-size:13px">nenhuma ligação registrada ainda</div>'}
+
+        <h3 style="margin:16px 0 8px">Quem está ligando</h3>
+        ${d.porPessoa.map((p) => `<div style="display:flex; gap:8px; padding:6px 0; border-bottom:1px solid var(--border); font-size:12.5px">
+          <span style="flex:1">${p.pessoa}</span>
+          <span style="color:var(--muted)">${p.ligacoes} lig.</span>
+          <b style="color:var(--verde-esc)">${p.reunioes} reun.</b>
+        </div>`).join("") || '<div style="color:var(--muted); font-size:12.5px">ninguém ligou ainda</div>'}
+
+        <div style="margin-top:14px; padding:10px 12px; background:#eef6ff; border-radius:8px; font-size:12.5px">
+          📋 <b>${d.aLigar}</b> ${d.aLigar === 1 ? "lead esperando" : "leads esperando"} ligação nas pipelines de prospecção.
+        </div>
+      </div>
+    </div>`;
+}
+
+async function dashDisparo() {
+  const dias = $("#dash-dias").value;
+  const d = await api("/api/dashboard?dias=" + dias);
+  const kpi = (num, rot, sub) => `<div class="card metrica"><div class="num">${num}</div><div class="rot">${rot}</div>${sub ? `<div style="font-size:11px;color:var(--muted);margin-top:2px">${sub}</div>` : ""}</div>`;
+  const semaforo = (b) => b.ok ? "🟢" : (b.atual > 0 ? "🟡" : "🔴");
+  const maxSerie = Math.max(1, ...d.serie.map((s) => s.disparos || 0));
+  const totalFunil = Math.max(1, d.porStatus.novo || 0, ...Object.values(d.porStatus));
+
+  $("#dash-corpo").innerHTML = `
+    <div class="grid-metricas" style="margin-bottom:18px">
+      ${kpi(d.disparos, "Disparos", `~${Math.round(d.disparos/d.dias)}/dia`)}
+      ${kpi(d.respostas, "Respostas", d.taxaResposta + "% dos disparos")}
+      ${kpi(d.decisores, "Decisores", d.taxaDecisor + "% dos disparos")}
+      ${kpi(d.reunioes, "Reuniões", d.taxaReuniaoDisparo + "% dos disparos")}
+      ${kpi(d.leadsComTarefa, "Follow-ups agendados", "IA vai contatar")}
+      ${kpi(d.optouts, "Opt-outs", "")}
+    </div>
+
+    <div class="duas-col" style="margin-bottom:18px">
+      <div class="card">
+        <h3 style="margin-bottom:10px">🎯 Benchmarks de prospecção</h3>
+        <table>
+          <tr><th></th><th>Seu número</th><th>Meta</th><th></th></tr>
+          <tr><td>Disparo → Decisor</td><td><b>${d.bench.disparo_decisor.atual}%</b></td><td>${d.bench.disparo_decisor.min}–${d.bench.disparo_decisor.max}%</td><td>${semaforo(d.bench.disparo_decisor)}</td></tr>
+          <tr><td>Decisor → Reunião</td><td><b>${d.bench.decisor_reuniao.atual}%</b></td><td>${d.bench.decisor_reuniao.min}–${d.bench.decisor_reuniao.max}%</td><td>${semaforo(d.bench.decisor_reuniao)}</td></tr>
+          <tr><td>Disparos por dia</td><td><b>${d.bench.disparos_dia.atual}</b></td><td>≥ ${d.bench.disparos_dia.min}</td><td>${semaforo(d.bench.disparos_dia)}</td></tr>
+        </table>
+        <p style="font-size:11.5px; color:var(--muted); margin-top:8px">🟢 na meta · 🟡 abaixo · 🔴 sem dado. Referência de outbound WhatsApp: uma boa copy gera 8-12% de decisor e 40-50% viram reunião.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:10px">Funil (foto atual)</h3>
+        ${FUNIL_ETAPAS.map(([k,r]) => { const v = d.porStatus[k]||0; return `
+          <div style="margin-bottom:7px">
+            <div style="display:flex; justify-content:space-between; font-size:12.5px"><span>${r}</span><b>${v}</b></div>
+            <div style="height:8px; background:#eef1ef; border-radius:4px; overflow:hidden"><div style="height:100%; width:${Math.round(v/totalFunil*100)}%; background:var(--verde)"></div></div>
+          </div>`; }).join("")}
+        ${(d.porStatus.perdido||d.porStatus.sem_whatsapp) ? `<div style="font-size:11.5px; color:var(--muted); margin-top:8px">perdidos: ${d.porStatus.perdido||0} · sem WhatsApp: ${d.porStatus.sem_whatsapp||0}</div>` : ""}
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px">
+      <h3 style="margin-bottom:12px">Atividade por dia</h3>
+      <div style="display:flex; align-items:flex-end; gap:3px; height:120px">
+        ${d.serie.map((s) => `<div style="flex:1; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:2px" title="${s.d}: ${s.disparos} disparos, ${s.respostas} respostas, ${s.reunioes} reuniões">
+          <div style="width:100%; background:var(--verde); border-radius:2px 2px 0 0; height:${Math.round((s.disparos||0)/maxSerie*100)}%; min-height:2px"></div>
+        </div>`).join("") || '<span style="color:var(--muted); font-size:13px; margin:auto">sem atividade ainda</span>'}
+      </div>
+      <div style="font-size:11px; color:var(--muted); margin-top:4px">barras = disparos/dia</div>
+    </div>
+
+    ${d.porWhats.length > 1 ? `<div class="card" style="margin-bottom:18px">
+      <h3 style="margin-bottom:10px">📱 Split por WhatsApp (hoje)</h3>
+      ${d.porWhats.map((w) => `<div style="display:flex; align-items:center; gap:8px; margin-bottom:6px; font-size:13px">
+        <span style="width:8px;height:8px;border-radius:999px;background:${w.status==="conectado"?"var(--verde)":"var(--vermelho)"}"></span>
+        <span style="flex:1">${w.nome}</span>
+        <span style="color:var(--muted)">${w.disparos_hoje}${w.cota_dia?"/"+w.cota_dia:""} msgs</span>
+      </div>`).join("")}</div>` : ""}
+
+    ${d.motivosPerda.length ? `<div class="card">
+      <h3 style="margin-bottom:8px">Por que perdemos</h3>
+      ${d.motivosPerda.map((m) => `<div style="display:flex; justify-content:space-between; font-size:13px; padding:4px 0; border-bottom:1px solid var(--border)"><span>${m.m}</span><b>${m.c}</b></div>`).join("")}
+    </div>` : ""}`;
+}
+
+// ---- entrevista (assistente que monta o cerebro) ----
+let entHist = [];
+async function entTurno() {
+  $("#ent-msgs").innerHTML += '<div class="bolha sistema">pensando…</div>';
+  const r = await api("/api/entrevista", { method: "POST", body: JSON.stringify({ historico: entHist }) });
+  const box = $("#ent-msgs");
+  box.querySelector(".sistema:last-child")?.remove();
+  if (r.erro) { box.innerHTML += `<div class="bolha sistema">⚠️ ${r.erro}</div>`; return; }
+  entHist.push({ role: "assistant", content: r.mensagem });
+  box.innerHTML += `<div class="bolha user" style="align-self:flex-start">${r.mensagem.replace(/\n/g, "<br>")}</div>`;
+  if (r.campos?.length) $("#ent-badge").textContent = "✓ atualizei: " + r.campos.join(" · ");
+  if (r.concluido) box.innerHTML += '<div class="bolha sistema">✅ Cérebro pronto! Vai na aba Testar conversar com a tua IA, ou revisa na aba 🧠 Cérebro.</div>';
+  box.scrollTop = box.scrollHeight;
+}
+async function entEnviar() {
+  const t = $("#ent-texto").value.trim(); if (!t) return;
+  $("#ent-texto").value = "";
+  entHist.push({ role: "user", content: t });
+  $("#ent-msgs").innerHTML += `<div class="bolha assistant" style="align-self:flex-end">${t}</div>`;
+  entTurno();
+}
+
+// ---- checklist primeiros passos ----
+let cerebroOk = false, chaveInfo = { modo: "plano", configurada: true };
+async function renderChecklist() {
+  const passos = [];
+  if (chaveInfo.modo === "api") passos.push({ ok: chaveInfo.configurada, txt: "Conectar sua chave de IA", aba: "config" });
+  passos.push({ ok: (estado.instancia.conectadas || 0) > 0, txt: "Conectar seu WhatsApp", aba: "config" });
+  passos.push({ ok: cerebroOk, txt: "Configurar sua IA (conversando com o Assistente)", aba: "assistente" });
+  passos.push({ ok: Boolean(estado.campanha), txt: "Importar lista e ativar campanha", aba: "campanhas" });
+  const falta = passos.filter((p) => !p.ok);
+  $("#checklist").innerHTML = falta.length === 0 ? "" : `
+    <div class="card" style="margin-bottom:14px">
+      <b style="font-size:14px">🚀 Primeiros passos (${passos.length - falta.length}/${passos.length})</b>
+      ${passos.map((p, i) => `<div style="display:flex; align-items:center; gap:8px; padding:6px 0; font-size:13.5px; ${i ? "border-top:1px solid var(--border)" : ""}">
+        <span style="width:20px; height:20px; border-radius:999px; display:grid; place-items:center; font-size:12px; background:${p.ok ? "var(--verde)" : "#eef1ef"}; color:${p.ok ? "#fff" : "var(--muted)"}">${p.ok ? "✓" : i + 1}</span>
+        <span style="${p.ok ? "color:var(--muted); text-decoration:line-through" : ""}">${p.txt}</span>
+        ${p.ok ? "" : `<a href="#" onclick="aba('${p.aba}'); return false" style="margin-left:auto; color:var(--verde); font-size:12.5px">resolver →</a>`}
+      </div>`).join("")}
+    </div>`;
+}
+
+// ---- chave anthropic ----
+async function carregarChave() {
+  chaveInfo = await api("/api/chave");
+  if (chaveInfo.modo === "api") {
+    $("#sec-chave").style.display = "";
+    $("#lnk-tutorial").href = API + "/tutorial-chave";
+    $("#chave-status").innerHTML = chaveInfo.configurada
+      ? `✅ chave configurada (origem: ${chaveInfo.origem})` : "⚠️ nenhuma chave — a IA não responde sem ela";
+  }
+}
+async function salvarChave() {
+  $("#chave-msg").textContent = "validando com a Anthropic…";
+  const r = await api("/api/chave", { method: "POST", body: JSON.stringify({ chave: $("#chave-input").value }) });
+  $("#chave-msg").textContent = r.ok ? "✅ válida e salva" : "❌ " + r.erro;
+  if (r.ok) { $("#chave-input").value = ""; carregarChave(); renderChecklist(); }
+}
+
+// ---- assinatura ----
+async function carregarAssinatura() {
+  const a = await api("/api/assinatura");
+  $("#assin-corpo").innerHTML = `
+    <div style="font-size:26px; font-weight:800; color:var(--verde-esc)">R$${a.total}<span style="font-size:14px; color:var(--muted); font-weight:400">/mês</span></div>
+    <div style="color:var(--muted); font-size:13px; margin:4px 0 12px">R$${a.preco_base} base + R$${a.preco_whats} por WhatsApp extra · você tem ${a.whats} número(s)</div>
+    <div style="margin-bottom:12px">status: <b style="color:${a.pausada ? "var(--vermelho)" : "var(--verde-esc)"}">${a.pausada ? "pausada (pagamento pendente)" : a.status}</b></div>
+    ${a.link ? `<a class="btn" href="${a.link}" target="_blank" style="text-decoration:none; display:inline-block">Pagar assinatura</a>`
+      : `<div style="background:var(--verde-soft); border-radius:8px; padding:10px 12px; font-size:13px">O pagamento é combinado direto com o suporte. Qualquer dúvida, chama a gente no WhatsApp.</div>`}`;
+}
+
+// ---- admin (so o interno enxerga) ----
+async function carregarAdmin() {
+  const d = await api("/api/admin/clientes");
+  if (d.erro) return;
+  $("#nav-admin").style.display = "";
+  $("#admin-resumo").textContent = `${d.clientes.length} cliente(s) · MRR estimado R$${d.mrr_estimado}`;
+  $("#admin-tabela").innerHTML = "<tr><th>Cliente</th><th>Email</th><th>Leads</th><th>Disparos</th><th>Respostas</th><th>Reuniões</th><th>Whats</th><th>Status</th></tr>" +
+    d.clientes.map((c) => `<tr>
+      <td><b>${c.nome}</b><br><small style="color:var(--muted)"><a href="${c.url}" target="_blank" style="color:var(--muted)">${c.slug}</a></small></td>
+      <td style="font-size:12.5px">${c.email}</td><td>${c.leads}</td><td>${c.disparos}</td><td>${c.respostas}</td><td>${c.reunioes}</td>
+      <td>${c.whats_conectados > 0 ? "🟢 " + c.whats_conectados : "🔴 0"}</td>
+      <td>${c.erro ? "⚠️ " + c.erro : c.pausada ? "⏸ pausada" : "✅ ativa"}</td>
+    </tr>`).join("");
+}
+
+// ---- marca dinamica (Prospecta nos clientes, Facilita SDR no interno) ----
+async function carregarMarca() {
+  try {
+    const m = await (await fetch(API + "/api/marca")).json();
+    const nome = m.produto || "Facilita SDR";
+    window.__modoCliente = nome !== "Facilita SDR";
+    if (window.__modoCliente) {
+      document.querySelectorAll(".so-interno").forEach((e) => e.style.display = "none");
+      const a = document.getElementById("lbl-audio"); if (a) a.textContent = "Áudio da minha empresa";
+    }
+    document.title = nome;
+    const partes = nome.split(" ");
+    const html = "⚡ " + (partes.length > 1 ? partes.slice(0, -1).join(" ") + " <span>" + partes.at(-1) + "</span>" : "<span>" + nome + "</span>");
+    const ta = document.querySelector("#titulo-app"); if (ta) ta.innerHTML = html;
+    const lt = document.querySelector("#login h2");
+    if (lt) lt.innerHTML = html.replace("<span>", '<span style="color:var(--verde)">');
+  } catch { /* offline */ }
+}
+
+async function carregarExtras() {
+  carregarMarca();
+  await carregarChave();
+  api("/api/config").then((c) => { cerebroOk = Boolean((c.treino_pitch || "").trim() || (c.treino_geral || "").trim()); renderChecklist(); });
+  if (chaveInfo.modo === "api") { $("#nav-assinatura").style.display = ""; }
+  carregarAdmin();
+  if ($("#ent-msgs") && !entHist.length) entTurno(); // primeira pergunta do assistente
+}
+
+function toggleSidebar() {
+  const sb = document.getElementById("sidebar");
+  sb.classList.toggle("recolhido");
+  localStorage.setItem("sdr_sidebar", sb.classList.contains("recolhido") ? "1" : "0");
+  document.getElementById("sb-toggle").textContent = sb.classList.contains("recolhido") ? "⟩" : "⟨";
+}
+
+function iniciar() {
+  $("#login").style.display = "none"; $("#app").style.display = "";
+  if (localStorage.getItem("sdr_sidebar") === "1") { document.getElementById("sidebar").classList.add("recolhido"); document.getElementById("sb-toggle").textContent = "⟩"; }
+  carregarEu(); // quem sou eu + o que meu papel pode (esconde abas/botões)
+  atualizar();
+  carregarExtras();
+  clearInterval(pollTimer);
+  pollTimer = setInterval(() => { atualizar(); if (convAberta && $("#aba-conversas").style.display !== "none") abrirConversa(convAberta, true); }, 12000);
+}
+SENHA ? iniciar() : mostrarLogin();
+</script>
+</body>
+</html>

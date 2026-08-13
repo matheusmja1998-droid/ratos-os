@@ -31,6 +31,26 @@ anotacoes/
 curriculo/
 tarefas.md
 
+# Tokens Google / GTM (NUNCA commitar)
+gtm-oauth-token.json
+*gserviceaccount*.json
+
 # Sistema
 .DS_Store
 node_modules/
+winvision/rota-telegram-tokens.md
+winvision/clientes/escola-avicultores/credenciais/
+
+# === midia pesada fora do git (2026-08-13): GitHub rejeita >100MB e video nao e pra versionamento.
+# Originais ficam no disco, no Drive e no backup da VPS.
+*.mp4
+*.MP4
+*.mov
+*.MOV
+*.avi
+*.part
+dados/cortes-virais-input/
+winvision/app-ditado-prototipo/models/
+lm/pesquisa-mercado/energia-solar/ferramentas/aneel_cache.csv
+*.bin
+*.dmg

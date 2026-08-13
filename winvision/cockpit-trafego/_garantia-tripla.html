@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 600px; height: 200px; overflow: hidden; }
+  body {
+    background: #0A0A0F;
+    font-family: 'Fraunces', serif;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 24px 28px;
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  body::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(0, 217, 255, 0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  body::after {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    left: -80px;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(176, 38, 255, 0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .seal {
+    position: relative;
+    z-index: 2;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: rgba(18, 18, 26, 0.7);
+  }
+  .seal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    padding: 2px;
+    background: linear-gradient(135deg, #00D9FF 0%, #B026FF 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+  .seal__inner {
+    text-align: center;
+    line-height: 1;
+  }
+  .seal__num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 36px;
+    color: #00D9FF;
+    line-height: 0.9;
+  }
+  .seal__label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: #A8A8B8;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+  .seal__bottom {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 14px;
+    color: #fff;
+    margin-top: 4px;
+  }
+  .content {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+  }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #00D9FF;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .title {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .title em { font-style: italic; color: #00D9FF; font-weight: 500; }
+  .desc {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #A8A8B8;
+    line-height: 1.5;
+    max-width: 360px;
+  }
+</style>
+</head>
+<body>
+  <div class="seal">
+    <div class="seal__inner">
+      <div class="seal__num">14</div>
+      <div class="seal__label">DIAS</div>
+      <div class="seal__bottom">Garantia</div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="tag">GARANTIA TRIPLA</div>
+    <h2 class="title">O risco é <em>todo meu.</em></h2>
+    <p class="desc">14 dias incondicional + garantia do primeiro relatório + atualização vitalícia das skills. Tu instala, testa e decide.</p>
+  </div>
+</body>
+</html>

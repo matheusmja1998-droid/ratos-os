@@ -1,0 +1,8 @@
+node_modules/
+.next/
+.env
+db/*.db
+db/*.db-shm
+db/*.db-wal
+*.log
+.vercel

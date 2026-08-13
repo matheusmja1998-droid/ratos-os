@@ -1,0 +1,249 @@
+{
+  "name": "{{WORKFLOW_NAME}}",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 6,12,16 * * *"
+            }
+          ]
+        }
+      },
+      "id": "cron-16h",
+      "name": "Cron 6h, 12h, 16h",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://graph.facebook.com/v21.0/{{AD_ACCOUNT}}/insights",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "level",
+              "value": "account"
+            },
+            {
+              "name": "date_preset",
+              "value": "today"
+            },
+            {
+              "name": "fields",
+              "value": "spend,impressions,clicks,actions"
+            },
+            {
+              "name": "filtering",
+              "value": "[{\"field\":\"campaign.name\",\"operator\":\"CONTAIN\",\"value\":\"{{LANCAMENTO_FILTRO}}\"}]"
+            }
+          ]
+        },
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "options": {}
+      },
+      "id": "fetch-today",
+      "name": "Gasto/Leads Hoje",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1180,
+        0
+      ],
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "{{META_CRED_ID}}",
+          "name": "Guardiao - Meta Ads (Fernanda)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://graph.facebook.com/v21.0/{{AD_ACCOUNT}}/insights",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "level",
+              "value": "account"
+            },
+            {
+              "name": "time_range",
+              "value": "{\"since\":\"{{DATA_INICIO}}\",\"until\":\"{{DATA_FIM}}\"}"
+            },
+            {
+              "name": "fields",
+              "value": "spend,impressions,clicks,actions"
+            },
+            {
+              "name": "filtering",
+              "value": "[{\"field\":\"campaign.name\",\"operator\":\"CONTAIN\",\"value\":\"{{LANCAMENTO_FILTRO}}\"}]"
+            }
+          ]
+        },
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "options": {}
+      },
+      "id": "fetch-lancamento",
+      "name": "Acumulado Lançamento",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -960,
+        0
+      ],
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "{{META_CRED_ID}}",
+          "name": "Guardiao - Meta Ads (Fernanda)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Consolida dados do dia e do lancamento\n\nconst hojeRes = $('Gasto/Leads Hoje').first().json.data || [];\nconst lancRes = $('Acumulado Lançamento').first().json.data || [];\n\nconst hoje = hojeRes[0] || {};\nconst lancamento = lancRes[0] || {};\n\nfunction getLeads(d) {\n  const a = (d.actions || []).find(x => \n    x.action_type === 'offsite_complete_registration_add_meta_leads' ||\n    x.action_type === 'complete_registration'\n  );\n  return a ? parseInt(a.value) : 0;\n}\n\nconst gastoHoje = parseFloat(hoje.spend || 0);\nconst leadsHoje = getLeads(hoje);\nconst cplHoje = leadsHoje > 0 ? gastoHoje / leadsHoje : null;\n\nconst gastoTotal = parseFloat(lancamento.spend || 0);\nconst leadsTotal = getLeads(lancamento);\nconst cplTotal = leadsTotal > 0 ? gastoTotal / leadsTotal : null;\n\n// Metas e datas\nconst META_LEADS = {{META_LEADS}};\nconst CPL_TARGET = 14;\nconst CPL_VIAVEL = 16.17;\nconst INICIO = new Date('{{DATA_INICIO}}');\nconst FIM = new Date('{{DATA_FIM}}');\nconst agora = new Date();\n\nconst diasTotais = Math.ceil((FIM - INICIO) / (1000*60*60*24));\nconst diasPassados = Math.ceil((agora - INICIO) / (1000*60*60*24));\nconst diasRestantes = Math.max(0, Math.ceil((FIM - agora) / (1000*60*60*24)));\n\nconst metaPorDia = META_LEADS / diasTotais;\nconst leadsFaltam = META_LEADS - leadsTotal;\nconst leadsNecessariosPorDia = diasRestantes > 0 ? leadsFaltam / diasRestantes : 0;\n\n// Projecao do dia: se gastou X ate agora, qual seria o total ate 00h?\n// Assumindo que hora atual e ~16h, ja passou 16/24 do dia\nconst horaAtual = agora.getHours() + agora.getMinutes()/60;\nconst fracaoDiaPassada = Math.min(1, horaAtual / 24);\nconst projecaoLeadsHoje = fracaoDiaPassada > 0 ? Math.round(leadsHoje / fracaoDiaPassada) : leadsHoje;\nconst projecaoGastoHoje = fracaoDiaPassada > 0 ? gastoHoje / fracaoDiaPassada : gastoHoje;\n\nreturn [{\n  json: {\n    hoje: {\n      gasto: gastoHoje,\n      leads: leadsHoje,\n      cpl: cplHoje,\n      projecao_leads: projecaoLeadsHoje,\n      projecao_gasto: projecaoGastoHoje\n    },\n    lancamento: {\n      gasto_total: gastoTotal,\n      leads_total: leadsTotal,\n      cpl_medio: cplTotal,\n      meta_leads: META_LEADS,\n      leads_faltam: leadsFaltam,\n      percentual_meta: (leadsTotal / META_LEADS * 100)\n    },\n    calendario: {\n      dias_totais: diasTotais,\n      dias_passados: diasPassados,\n      dias_restantes: diasRestantes,\n      meta_por_dia: metaPorDia,\n      leads_necessarios_por_dia: leadsNecessariosPorDia\n    },\n    targets: {\n      cpl_individual: CPL_TARGET,\n      cpl_viavel_campanha: CPL_VIAVEL\n    }\n  }\n}];"
+      },
+      "id": "consolidate",
+      "name": "Consolidar Dados",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -740,
+        0
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "anthropicApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 700, messages: [{ role: 'user', content: 'Voce e o Guardiao WinVision. Escreva um briefing diario das 16h para o Matheus sobre o lancamento {{LANCAMENTO_FILTRO}} da Fernanda. FORMATO OBRIGATORIO: Responda APENAS com o texto da mensagem pra ser enviada no Telegram. NAO envolva em bloco de codigo (nada de crases). NAO use <!DOCTYPE>, <html>, <body>, <p>, <br>, <head>. As UNICAS tags HTML permitidas sao <b></b> e <i></i>. Use quebras de linha normais (apertar enter). Estrutura da mensagem: linha 1: emoji relogio + <b>BRIEFING 16H — {{LANCAMENTO_FILTRO}}</b>. Linha em branco. <b>Hoje:</b> leads, CPL, gasto, projecao do dia. Linha em branco. <b>Lancamento:</b> acumulado vs meta {{META_LEADS}} (percentual), CPL medio, gasto total. Linha em branco. <b>Ritmo:</b> dias passados e restantes, meta diaria vs leads necessarios/dia. Linha em branco. <b>Veredicto:</b> uma linha: NO RITMO, ABAIXO DO RITMO ou <b>CRITICO — PRECISA ESCALAR URGENTE</b>. Uma frase de justificativa. Referencias: CPL target individual R$14, CPL viavel campanha R$16,17. Dados: ' + JSON.stringify($json) }] }) }}",
+        "options": {}
+      },
+      "id": "claude-briefing",
+      "name": "Claude — Briefing",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -520,
+        0
+      ],
+      "credentials": {
+        "anthropicApi": {
+          "id": "{{ANTHROPIC_CRED_ID}}",
+          "name": "Guardiao - Anthropic"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "{{CHAT_ID}}",
+        "text": "={{ $json.content[0].text }}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "send-telegram",
+      "name": "Enviar no Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -300,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "{{TELEGRAM_CRED_ID}}",
+          "name": "Guardiao - Telegram Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Gasto/Leads Hoje": {
+      "main": [
+        [
+          {
+            "node": "Acumulado Lançamento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Acumulado Lançamento": {
+      "main": [
+        [
+          {
+            "node": "Consolidar Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consolidar Dados": {
+      "main": [
+        [
+          {
+            "node": "Claude — Briefing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude — Briefing": {
+      "main": [
+        [
+          {
+            "node": "Enviar no Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron 6h, 12h, 16h": {
+      "main": [
+        [
+          {
+            "node": "Gasto/Leads Hoje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  }
+}

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conectando o Meta Ads | Cockpit Tráfego</title>
+<meta name="description" content="Tutorial completo de integração do Meta Ads no Cockpit. App, BM, System User Token, conta de anúncios.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav__inner">
+    <a class="nav__logo" href="/">Co<em>ckp</em>it Tráfego</a>
+    <a class="nav__back" href="https://agenciawinvision.com.br/cockpit-trafeg/">Voltar pra LP →</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero__tag">Tutorial</div>
+    <h1 class="hero__title">Conectando o <em>Meta Ads</em> ao Claude Code.</h1>
+    <p class="hero__sub">Passo a passo do App no Meta Developers, System User Token, BM e conta de anúncios. O Claude conduz pelo chat. Esta página é tua referência visual.</p>
+  </div>
+</header>
+
+<section class="content">
+  <div class="container">
+
+    <h2>Antes de começar</h2>
+    <p>Esse é o tutorial mais longo do curso, mas é <strong>uma vez só</strong>. Depois de configurado, qualquer cliente novo é só compartilhar a conta — não precisa refazer App ou Token.</p>
+
+    <div class="callout">
+      <div class="callout__label">Como vai funcionar</div>
+      <p>Tu não precisa decorar nada. Rode <code>/cockpit-meta-ads setup</code> no Claude e ele vai te perguntando o que precisa. Esse tutorial aqui é pra tu acompanhar e ter referência visual.</p>
+    </div>
+
+    <h2>Tudo via chat — começa assim</h2>
+    <div class="terminal">
+      <div class="terminal__bar">
+        <span class="terminal__dot terminal__dot--r"></span>
+        <span class="terminal__dot terminal__dot--y"></span>
+        <span class="terminal__dot terminal__dot--g"></span>
+      </div>
+      <div class="terminal__body"><span class="terminal__prompt">&gt;</span> <span class="terminal__cmd">/cockpit-meta-ads setup</span>
+
+<span class="terminal__ok">✓</span> Vou te guiar pra conectar o Meta Ads.
+<span class="terminal__ok">✓</span> Primeiro precisamos criar um App no Meta for Developers.
+<span class="terminal__ok">✓</span> Já tem App criado ou começamos do zero?</div>
+    </div>
+    <p>A partir daí, segue o que ele pedir. Cada passo abaixo corresponde a uma orientação que o Claude vai te dar.</p>
+
+    <h2>Os 12 passos da integração</h2>
+
+    <div class="step">
+      <div class="step__num">01</div>
+      <div class="step__title">Entrar na conta do Meta Developers</div>
+      <p>Acessa <a href="https://developers.facebook.com" target="_blank">developers.facebook.com</a> e faz login com a conta do Facebook que vai administrar o App.</p>
+      <p>Se nunca usou o Meta for Developers, ele vai pedir verificação rápida (telefone).</p>
+    </div>
+
+    <div class="step">
+      <div class="step__num">02</div>
+      <div class="step__title">Criar o aplicativo</div>
+      <p>Clica em <strong>My Apps</strong> no canto superior direito → <strong>Create App</strong>.</p>
+    </div>
+
+    <div class="step">
+      <div class="step__num">03</div>
+      <div class="step__title">Selecionar tipo: Empresa (Business)</div>
+      <p>Caso de uso: <strong>Other</strong> → Tipo: <strong>Business</strong>.</p>
+      <p>Isso libera as APIs de marketing que tu precisa.</p>
+    </div>
+
+    <div class="step">
+      <div class="step__num">04</div>
+      <div class="step__title">Dar nome ao aplicativo</div>
+      <p>Nome: algo descritivo, ex: <code>Cockpit Tráfego Geral</code> ou <code>Cockpit [Sua Agência]</code>.</p>
+      <p>Email de contato: o teu.</p>
+      <p>Portfólio comercial: seleciona a <strong>BM dona do App</strong>.</p>
+      <div class="callout callout--warn">
+        <div class="callout__label">Arquitetura resiliente (importante)</div>
+        <p>Cria o App numa <strong>BM com pelo menos 3 admins humanos</strong>. NUNCA na BM de cliente (se perder o cliente, perde o App). Nunca em BM com 1 admin só (se o perfil cair, ninguém acessa).</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step__num">05</div>
+      <div class="step__title">Adicionar o produto Marketing API</div>
+      <p>No painel do App, menu lateral → <strong>Add Product</strong>.</p>
+      <p>Procura <strong>Marketing API</strong> e clica em <strong>Set Up</strong>.</p>
+    </div>
+
+    <div class="step">
+      <div class="step__num">06</div>
+      <div class="step__title">Confirmar que tá habilitado</div>
+      <p>Marketing API ficou listada no menu lateral do App. Pronto pra próxima etapa.</p>
+    </div>
+
+    <div class="step">
+      <div class="step__num">07</div>
+      <div class="step__title">Entrar na BM (Business Manager)</div>
+      <p>Acessa <a href="https://business.facebook.com/settings" target="_blank">business.facebook.com/settings</a>.</p>
+      <p>Confirma que tu tá na BM certa (a mesma onde criaste o App).</p>
+    </div>
+
+    <div class="step">
+      <div class="step__num">08</div>
+      <div class="step__title">Usuários → Usuários do Sistema</div>
+      <p>Menu lateral: <strong>Users</strong> → <strong>System Users</strong>.</p>
+    </div>
+
+    <div class="step">
+      <div class="step__num">09</div>
+      <div class="step__title">Criar um novo usuário do sistema</div>
+      <p>Clica em <strong>Add</strong> e cria com:</p>
+      <ul>
+        <li>Nome: <code>Claude Code</code> (ou descritivo do contexto, ex: <code>Claude Code Geral</code>)</li>
+        <li>Role: <strong>Admin</strong></li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step__num">10</div>
+      <div class="step__title">Gerar o token</div>
+      <p>Clica no System User criado → <strong>Generate New Token</strong>.</p>
+      <ul>
+        <li>Seleciona o App criado no passo 02</li>
+        <li>Marca as permissões: <strong><code>ads_management</code></strong> e <strong><code>ads_read</code></strong></li>
+        <li>Clica em <strong>Generate Token</strong></li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step__num">11</div>
+      <div class="step__title">Copiar o token</div>
+      <div class="callout callout--warn">
+        <div class="callout__label">ATENÇÃO</div>
+        <p>O token <strong>só aparece UMA vez</strong>. Copia agora e guarda em lugar seguro. Se perder, tem que gerar outro.</p>
+      </div>
+      <p>Cola o token no chat do Claude quando ele pedir. Ele salva direto no <code>.env</code> da skill — não vaza pra outras sessões.</p>
+    </div>
+
+    <div class="step">
+      <div class="step__num">12</div>
+      <div class="step__title">Adicionar contas de anúncios ao App</div>
+      <p>Pra cada cliente que tu vai gerenciar:</p>
+      <ol>
+        <li>BM do cliente → <strong>Usuários</strong> → <strong>Parceiros</strong></li>
+        <li><strong>+ Adicionar</strong> → cola o ID da BM dona do App</li>
+        <li>Atribuir ativos → <strong>Contas de anúncios</strong> → marca a conta → <strong>Controle total</strong></li>
+      </ol>
+      <p>Depois, na BM dona do App: <strong>Usuários do Sistema</strong> → clica no Claude Code → <strong>Adicionar ativos</strong> → <strong>Contas de anúncios</strong> → marca as novas contas dos clientes → <strong>Controle total</strong>.</p>
+    </div>
+
+    <h2>Validar que tá funcionando</h2>
+    <p>De volta ao chat do Claude:</p>
+    <div class="terminal">
+      <div class="terminal__bar">
+        <span class="terminal__dot terminal__dot--r"></span>
+        <span class="terminal__dot terminal__dot--y"></span>
+        <span class="terminal__dot terminal__dot--g"></span>
+      </div>
+      <div class="terminal__body"><span class="terminal__prompt">&gt;</span> <span class="terminal__cmd">/cockpit-meta-ads listar contas</span>
+
+<span class="terminal__ok">✓</span> Conectado como: [Seu Nome]
+<span class="terminal__ok">✓</span> 4 contas de anúncio encontradas:
+   - act_191737889662177 (Hypertech)
+   - act_1375975899342771 (Liso Ideal)
+   - act_1725538527656776 (EV Cosméticos)
+   - act_9931942036905269 (CA02)</div>
+    </div>
+
+    <p>Apareceu lista? Pronto. <strong>Cockpit Meta-Ads configurado.</strong></p>
+
+    <div class="callout">
+      <div class="callout__label">Próxima conta? Não precisa refazer setup</div>
+      <p>Pra adicionar outro cliente, basta repetir só o passo 12 (compartilhar a conta de anúncios via parceria entre BMs). Token, App e System User permanecem.</p>
+    </div>
+
+    <div class="summary">
+      <div class="summary__tag">Ainda não instalou o Claude Code?</div>
+      <h3>Volta no tutorial de instalação</h3>
+      <p>Esse tutorial assume que tu já tem o Claude Code rodando. Se ainda não instalou, vai lá primeiro.</p>
+      <p><a href="/instalacao">Tutorial de instalação (Mac e Windows) →</a></p>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__nav">
+      <a class="footer__link" href="/instalacao">← Instalação</a>
+      <a class="footer__link" href="https://agenciawinvision.com.br/cockpit-trafeg/">Voltar pra LP →</a>
+    </div>
+    <div class="footer__copy">© 2026 Cockpit Tráfego.</div>
+  </div>
+</footer>
+
+</body>
+</html>

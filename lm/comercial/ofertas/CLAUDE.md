@@ -3,14 +3,17 @@
 ## Funil natural
 ```
 Webinar → Diagnóstico → Ignição Solo (R$497) → Ignição Comercial (R$5k, com crédito de R$497)
+                                                      ↓ done-for-you / recorrência
+                                              Pipeline Comercial (R$1.500/mês + 5%)
 ```
 
-## As 2 ofertas
+## As 3 ofertas
 
 | Oferta | Para quem | Preço | Formato |
 |---|---|---|---|
 | Ignição Solo | Dono solo, sem time, sem budget pra R$5k | R$ 497 | Sessão 90 min |
 | Ignição Comercial | Dono com time comercial, dependente de indicação | R$ 5.000 | 45 dias / 6 semanas |
+| [Pipeline Comercial](pipeline-comercial.md) | Dono afogado que não quer aprender nem montar time, quer a venda entrando | R$ 1.500/mês + 5% | Done-for-you recorrente |
 
 ---
 
@@ -56,10 +59,27 @@ Webinar → Diagnóstico → Ignição Solo (R$497) → Ignição Comercial (R$5
 
 ---
 
+---
+
+## Pipeline Comercial — resumo
+
+**Done-for-you recorrente:** a LM coloca um SDR pra prospectar cliente comercial, qualificar e agendar 20 visitas técnicas/mês na agenda do cliente. O dono só aparece na visita e fecha. A LM não ensina, a LM faz.
+
+**Preço:** R$1.500/mês de fixo (grade por entrega: 20 visitas = R$1.500 / 10 visitas = R$750 / abaixo a gente conversa) + 5% sobre as vendas geradas (comissão 100% da LM).
+
+**Garantia (3 camadas):** grade por visita + skin in the game (só ganho de verdade nos 5% da venda) + mês a mês sem fidelidade.
+
+**Posição:** acima da Ignição Comercial, é o produto de recorrência da LM. Pro avatar afogado que a Ignição não serve.
+
+**Notas internas:** teste de fogo de 45 dias é interno (validação do SDR terceirizado, NÃO vai pro cliente). 1 SDR roda 2 empresas. Margem LM ~R$3.560 a ~R$6.560 por SDR/mês. Detalhes em [pipeline-comercial.md](pipeline-comercial.md).
+
+---
+
 ## Scripts
 Ver pasta `scripts/`:
 - `script-ignicao-comercial.md` — diagnóstico completo, 60 min, 9 blocos
 - `script-ignicao-solo.md` — diagnóstico 30–45 min, com pivot mid-call
+- `script-pipeline-comercial.md` — diagnóstico/fechamento done-for-you, 45–60 min, 9 blocos
 
 ---
 

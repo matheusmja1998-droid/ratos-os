@@ -1,0 +1,97 @@
+{
+  "campanhas": [
+    {
+      "name": "[AGV_JUN_26]_[FASE01]_[LEADS]_[ADV+]_[FRIO]_[NOVA_PÁGINA_FB]_[TODOS_PAISES]_[C21]",
+      "comparacao_semanal": {
+        "tem_comparacao": true,
+        "spend_atual": 646.82,
+        "spend_anterior": 202.43,
+        "deltas": {
+          "cpl": -23.6,
+          "cpm": -1.2,
+          "ctr_link": 49.4,
+          "hook_rate": 20.5,
+          "frequency": 7.8,
+          "connect_rate": 0.3,
+          "tx_conversao_pagina": -13.7,
+          "leads": 318.2
+        }
+      },
+      "ads": [
+        {
+          "name": "JUN_26_CAP_VD_27_GANCHO D_TRANSFORMAÇÃO_DO_MERCADO_DE_TRABALHO_FEED_",
+          "serie_dias": 1,
+          "fadiga": {
+            "insuficiente": true,
+            "dias": 1
+          }
+        },
+        {
+          "name": "JUN_26_CAP_VD_26_COMO_VOCÊ_PODE_CONSERTAR_A_SUA_VIDA_EM_APENAS_1_DIA_FEED_",
+          "serie_dias": 1,
+          "fadiga": {
+            "insuficiente": true,
+            "dias": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "[AGV_JUN_26]_[FASE01]_[LEADS]_[ADV+]_[FRIO]_[NOVA_PÁGINA_FB]_[TODOS_PAISES]_[C13]",
+      "comparacao_semanal": {
+        "tem_comparacao": true,
+        "spend_atual": 3822.57,
+        "spend_anterior": 6406.0,
+        "deltas": {
+          "cpl": -20.5,
+          "cpm": -17.7,
+          "ctr_link": 21.8,
+          "hook_rate": 5.8,
+          "frequency": -5.8,
+          "connect_rate": -5.3,
+          "tx_conversao_pagina": -10.3,
+          "leads": -25.0
+        }
+      },
+      "ads": [
+        {
+          "name": "JUN_26_CAP_VD_14_CHURRASCO_.mp4",
+          "serie_dias": 2,
+          "fadiga": {
+            "insuficiente": true,
+            "dias": 2
+          }
+        }
+      ]
+    },
+    {
+      "name": "[AGV_JUN_26]_[FASE01]_[LEADS]_[ADV+]_[FRIO]_[NOVA_PÁGINA_FB]_[TODOS_PAISES]_[C12]",
+      "comparacao_semanal": {
+        "tem_comparacao": true,
+        "spend_atual": 3650.53,
+        "spend_anterior": 8747.78,
+        "deltas": {
+          "cpl": -20.5,
+          "cpm": -1.4,
+          "ctr_link": 3.9,
+          "hook_rate": -4.1,
+          "frequency": -2.3,
+          "connect_rate": -2.5,
+          "tx_conversao_pagina": 22.7,
+          "leads": -47.5
+        }
+      },
+      "ads": [
+        {
+          "name": "AVIAO",
+          "serie_dias": 2,
+          "fadiga": {
+            "insuficiente": true,
+            "dias": 2
+          }
+        }
+      ]
+    }
+  ],
+  "ads_com_fadiga": []
+}

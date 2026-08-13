@@ -1,0 +1,7 @@
+# Cockpit Orquestradora de Anúncios — cadastro de clientes
+# Estrutura por cliente, multi-plataforma (Meta agora, Google + GA4 em fase 2)
+#
+# Como popular: rodar /cockpit-orquestradora-anuncios setup
+# A skill puxa automaticamente da cockpit-meta-ads/contas.yaml
+
+clientes: []

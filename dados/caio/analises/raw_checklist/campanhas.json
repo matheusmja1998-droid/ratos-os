@@ -1,0 +1,179 @@
+[
+  {
+    "id": "120242222104300244",
+    "name": "[CHECKLIST HONDA]_[VENDAS]_[TESTE_DE_ESCALA]_[FRIO]_[ABO]_[C12]",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES",
+    "daily_budget": "11917"
+  },
+  {
+    "id": "120241161975880244",
+    "name": "[CHECKLIST HONDA]_[VENDAS]_[TESTE_DE_ESCALA]_[FRIO]_[CBO]_[47]_[C11]",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES",
+    "daily_budget": "8999"
+  },
+  {
+    "id": "120240911452710244",
+    "name": "[CHECKLIST HONDA]_[VENDAS]_[TESTE_DE_PAGINA]_[FRIO]_[ABO]_[C10]",
+    "effective_status": "ACTIVE",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120238641070530244",
+    "name": "[CHECKLIST HONDA]_[VENDAS]_[TESTE_DE_ESCALA]_[FRIO]_[CBO]_[C05] TESTE A/B +adv",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES",
+    "daily_budget": "18719"
+  },
+  {
+    "id": "120237571102680244",
+    "name": "[CHECKLIST HONDA]_[VENDAS]_[TESTE_DE_ESCALA]_[FRIO]_[CBO]_[C04] +adv",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES",
+    "daily_budget": "10812"
+  },
+  {
+    "id": "120237569768610244",
+    "name": "[CHECKLIST HONDA]_[VENDAS]_[TESTE_DE_ESCALA]_[FRIO]_[CBO]_[C03]",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES",
+    "daily_budget": "10015"
+  },
+  {
+    "id": "120237428209770244",
+    "name": "[CHECKLIST HONDA]_[VENDAS]_[TESTE_DE_PUBLICO]_[FRIO]_[ABO]_[C02]",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120237298362740244",
+    "name": "[CHECKLIST HONDA]_[VENDAS]_[TESTE_DE_CRIATIVO]_[FRIO]_[ABO]_[C01]",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120216179848150244",
+    "name": "[CHECKLIST HONDA] - [VENDAS]  - [FRIO] - [CBO] - [C08] - Campanha de Compras Advantage+ Campanha",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120216179781880244",
+    "name": "[CHECKLIST YAMAHA] - [VENDAS]  - [QUENTE] - [CBO] - [C09] - Campanha de Compras Advantage+ — Cópia",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120216140316050244",
+    "name": "[CHECKLIST YAMAHA] - [VENDAS]  - [QUENTE] - [CBO] - [C09]",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120216140091800244",
+    "name": "[CHECKLIST HONDA] - [VENDAS]  - [QUENTE] - [CBO] - [C08]",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120212361014900244",
+    "name": "[CHECKLIST YAMAHA]_[VENDAS]_[FRIO]_[TESTE DE CRIATIVO]",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120211880488430244",
+    "name": "[CHECKLIST YAMAHA] - [VENDAS]  - [FRIO] - [CBO] - [C10]",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120211880361890244",
+    "name": "[CHECKLIST HONDA] - [VENDAS]  - [FRIO] - [CBO] - [C09]",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120211292812790244",
+    "name": "[CHECKLIST YAMAHA]_[VENDAS]_[FRIO]_[TESTE DE CRIATIVO]_[C13]",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120211145423960244",
+    "name": "[CHECKLIST YAMAHA ] - [VENDAS]  - [FRIO] - [ABO] - [C12] - Campanha de Compras Advantage+ Campanha",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120211145129430244",
+    "name": "[CHECKLIST YAMAHA ] - [VENDAS]  - [QUENTE] - [ABO] - [C11]",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120211144907510244",
+    "name": "[CHECKLIST ] - [VENDAS]  - [QUENTE] - [PIXEL NOVO] - [C10] - Campanha de Compras Advantage+   Campanha",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120211097358590244",
+    "name": "[CHECKLIST ] - [VENDAS]  - [FRIO] - [CBO] - [C11] - Publico advantage + Criativo dinâmico",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES",
+    "daily_budget": "5000"
+  },
+  {
+    "id": "120211097330070244",
+    "name": "[CHECKLIST ] - [VENDAS]  - [FRIO] - [CBO] - [C11] - Publico advantage",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES",
+    "daily_budget": "5000"
+  },
+  {
+    "id": "120211097244470244",
+    "name": "[CHECKLIST ] - [VENDAS]  - [FRIO] - [CBO] - [C10]",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES",
+    "daily_budget": "5000"
+  },
+  {
+    "id": "120210379362660244",
+    "name": "[CHECKLIST ] - [VENDAS]  - [frio] - [CBO] - [C09] - Campanha de Compras Advantage+  Campanha",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120205165011760244",
+    "name": "[CHECKLIST ] - [VENDAS] - [FRIO] - [TESTE DE CRIATIVOS] - [ABO] - [C02]",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120204507141130244",
+    "name": "[CHECKLIST HONDA] - [VENDAS]  - [QUENTE] - [CBO] - [C07]",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120203965408060244",
+    "name": "[CHECKLIST HONDA ] - [VENDAS] - [TESTE DE PÚBLICOS] - [FRIO] - [CBO] - [C04]",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120203858534110244",
+    "name": "[CHECKLIST HONDA ] - [VENDAS] - [TESTE DE PÚBLICOS] - [FRIO] - [CBO] - [C04]",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES"
+  },
+  {
+    "id": "120200233259560244",
+    "name": "C03 - [CBO][CONVERSÃO][VENDAS][DIRETO][Q] - CHECKLIST HONDA",
+    "effective_status": "PAUSED",
+    "objective": "OUTCOME_SALES",
+    "daily_budget": "6000"
+  }
+]

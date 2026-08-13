@@ -1,0 +1,56 @@
+{
+  "manifest_version": 3,
+  "name": "RatoLead — Prospecção do Cockpit",
+  "version": "1.18.0",
+  "description": "Captura leads do Google Maps, organiza num funil Kanban e aborda no WhatsApp com mensagens personalizadas. Uso próprio.",
+  "permissions": [
+    "tabs",
+    "alarms"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "RatoLead — abrir CRM",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.google.com/maps*",
+        "https://www.google.com.br/maps*",
+        "https://maps.google.com/*"
+      ],
+      "js": ["content/maps.js"],
+      "css": ["content/maps.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "js": ["content/whatsapp.js"],
+      "css": ["content/whatsapp.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "js": ["content/wa_store.js"],
+      "world": "MAIN",
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["crm/panel.html"],
+      "matches": ["https://web.whatsapp.com/*"]
+    }
+  ]
+}

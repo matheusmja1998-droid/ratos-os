@@ -24,16 +24,35 @@ description: >
 
 ---
 
-## Metodologia de análise (como funciona a quebra)
+## Metodologia de análise — critério padronizado (25/06/2026)
 
-O mapeamento é feito cruzando e-mail do comprador com e-mail do lead (equivalente a um PROCV). Compradores que compraram com e-mail diferente do cadastro ficam sem origem — isso é a **quebra**.
+Os KPIs têm dois níveis. Não misturar.
 
-**Como a quebra afeta os números:**
-- Se 25% dos compradores não foram mapeados → quebra = 25%
-- Essa quebra é aplicada proporcionalmente nos leads e no investimento
-- Todos os KPIs (ROAS, conversão, CPL) são calculados **sobre os números ajustados pela quebra**
+### Nível 1 — KPIs de topo (panorama geral e comparativo entre lançamentos)
 
-**Regra de ouro:** nunca calcular ROAS ou conversão sobre o total bruto. Sempre sobre o mapeado (após quebra).
+Calculados sobre números OFICIAIS, sem ajuste de quebra:
+
+- **Faturamento oficial**: o número validado com o cliente (print da plataforma ou webhook na VPS). Documentar a fonte no debrief.
+- **Investimento total** = todas as campanhas com a tag do lançamento (captação + remarketing/vendas), somando todas as BMs do cliente (Fernanda: principal + contingência)
+- **Investimento de lead** = só campanhas com a tag + LEADS
+- **ROAS geral** = faturamento oficial ÷ investimento total
+- **ROAS de lead** = faturamento oficial ÷ investimento de lead
+- **Lucro** = faturamento oficial − investimento total
+- **CPL pago** = investimento de lead ÷ leads pagos (TRF). O orgânico NUNCA entra no denominador (não tem custo de mídia). Dividir pelo total de leads dilui o CPL artificialmente.
+
+### Nível 2 — Drill-down (temperatura, posicionamento, criativos, campanhas, países)
+
+Aqui entra a quebra. O mapeamento cruza e-mail do comprador com e-mail do lead (equivalente a um PROCV). Comprador que comprou com e-mail diferente do cadastro fica sem origem: isso é a **quebra**.
+
+- Quebra % = (compradores − mapeados) ÷ compradores
+- Leads ajustados = leads únicos × (1 − quebra)
+- Spend ajustado (por criativo/campanha) = spend da dimensão × (1 − quebra)
+- Conversão lead→venda = mapeados ÷ leads ajustados
+- ROAS por criativo/campanha = faturamento mapeado da dimensão ÷ spend ajustado da dimensão
+
+**Regra de ouro:** KPIs de topo sempre no critério oficial (nível 1). Análise por dimensão sempre sobre compradores mapeados com ajuste de quebra (nível 2). Reportar sempre a quebra — ela mede a confiabilidade do drill-down.
+
+> Histórico: debriefs gerados antes de 25/06/2026 (ex: AGV_MAR_26 e AGV_MAI_26 da Fernanda) usavam ROAS = fat mapeado ÷ invest ajustado e CPL sobre leads ajustados. Esses números foram republicados no critério padronizado. Não gerar debrief novo no critério antigo.
 
 ---
 
@@ -151,7 +170,7 @@ Consultar `.claude/skills/meta-ads-ratos/contas.yaml`:
 
 Extrair a data mínima e máxima da coluna `data` na planilha de leads.
 
-**5.3 Puxar spend por campanha — filtrado pela tag + LEADS**
+**5.3 Puxar spend por campanha — tag inteira, separando lead de remarketing**
 
 ```bash
 python3 .claude/skills/meta-ads-ratos/scripts/insights.py account \
@@ -162,7 +181,9 @@ python3 .claude/skills/meta-ads-ratos/scripts/insights.py account \
   --limit 200
 ```
 
-Filtrar em Python: manter **apenas campanhas que contenham a tag do lançamento E a palavra LEADS**. Isso exclui outros produtos e fases de vendas que rodaram no mesmo período.
+Se o cliente tem mais de uma conta/BM (Fernanda: principal `act_362367444` + contingência `act_762202656676221`), rodar pra todas e somar.
+
+Filtrar em Python pela **tag do lançamento** (exclui outros produtos rodando na conta no mesmo período) e separar em dois totais:
 
 ```python
 from collections import defaultdict
@@ -170,12 +191,19 @@ from collections import defaultdict
 TAG = 'ANE_ABRIL_26'  # tag informada pelo usuário no Passo 1
 
 camp_spend = defaultdict(float)
+invest_total = 0.0   # todas as campanhas da tag (captação + remarketing/vendas)
+invest_lead = 0.0    # só campanhas da tag com LEADS no nome
 for d in camp_data:
-    if TAG in d['campaign_name'] and 'LEADS' in d['campaign_name']:
-        camp_spend[d['campaign_name']] += float(d['spend'])
+    if TAG in d['campaign_name']:
+        invest_total += float(d['spend'])
+        if 'LEADS' in d['campaign_name']:
+            invest_lead += float(d['spend'])
+            camp_spend[d['campaign_name']] += float(d['spend'])
 
-investimento_total = sum(camp_spend.values())
+invest_rmkt = invest_total - invest_lead
 ```
+
+`invest_total` alimenta o ROAS geral e o lucro. `invest_lead` alimenta o ROAS de lead e o CPL pago. O drill-down por campanha/criativo usa só as campanhas de LEADS.
 
 **5.4 Puxar spend por criativo — filtrado pela tag + LEADS**
 
@@ -195,11 +223,13 @@ for d in ad_data:
         ad_spend[d['ad_name']] += float(d['spend'])
 ```
 
-**5.5 Calcular investimento ajustado**
+**5.5 Calcular investimento ajustado (só pro drill-down)**
 
 ```python
-investimento_ajustado = investimento_total * (1 - quebra_pct)
+invest_lead_ajustado = invest_lead * (1 - quebra_pct)
 ```
+
+O ajuste pela quebra vale só pro nível 2 (análise por dimensão). Os KPIs de topo usam `invest_total` e `invest_lead` sem ajuste.
 
 ---
 
@@ -256,19 +286,27 @@ Verificar `winvision/clientes/[cliente]/lancamentos/`. Se houver debrief anterio
 ## Quebra de mapeamento
 - Compradores totais: X | Mapeados: Y | Quebra: Z%
 
-## Números-chave (sobre mapeado)
+## Números-chave
+
+### Agregado (sobre investimento TOTAL de tráfego)
 | Métrica | Valor |
 |---------|-------|
-| Faturamento bruto total | |
-| Faturamento mapeado | |
-| Investimento Meta (campanhas [TAG] + LEADS) | |
-| Investimento ajustado | |
-| ROAS | |
-| Leads únicos | |
-| Leads ajustados | |
-| Compradores mapeados | |
-| Taxa de conversão | |
-| CPL médio | |
+| Faturamento oficial (documentar fonte) | |
+| Vendas · ticket médio | |
+| Investimento total (lead + remarketing) | |
+| → Investimento lead ([TAG] + LEADS) | |
+| → Investimento remarketing (total − lead) | |
+| ROAS geral (fat ÷ invest total) | |
+| Lucro (fat − invest total) | |
+
+### Lead performance (sobre investimento de lead)
+| Métrica | Valor |
+|---------|-------|
+| ROAS de lead (fat ÷ invest lead) | |
+| CPL pago (invest lead ÷ leads pagos TRF) | |
+| Leads pagos (TRF) · leads orgânicos (ORG) · únicos | |
+| Compradores mapeados · conversão lead→venda | |
+| Quebra de mapeamento | |
 
 ## Por posicionamento
 ## Por temperatura
@@ -330,8 +368,9 @@ open "winvision/clientes/[cliente]/lancamentos/[YYYY-MM]_[tema]_dashboard.html"
 ## Regras
 
 - Sempre usar `data_only=True` no openpyxl
-- **Nunca calcular ROAS ou conversão sobre total bruto** — sempre sobre mapeado
-- **Filtrar spend sempre por tag + LEADS** — nunca puxar spend bruto da conta
+- **KPIs de topo no critério padronizado**: ROAS geral = fat oficial ÷ invest total (com remarketing); CPL = invest lead ÷ leads pagos. Sem ajuste de quebra no topo
+- **Drill-down (criativos, campanhas, temperatura) sempre sobre mapeado** com leads e spend ajustados pela quebra
+- **Filtrar spend sempre pela tag do lançamento** (total) e tag + LEADS (lead) — nunca puxar spend bruto da conta. Somar todas as BMs do cliente
 - Fernanda: incluir países e compliance ("mostrar caminhos", não "ensinar a investir")
 - Output 3 (cliente) nunca expõe quebra nem críticas diretas
 - Análise em prosa + tabelas — não só listas

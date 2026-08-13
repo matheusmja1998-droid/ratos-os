@@ -1,0 +1,54 @@
+<script>
+/* ─── FAQ Accordion ─── */
+document.querySelectorAll('.faq-item__btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const item = btn.parentElement;
+    const panel = item.querySelector('.faq-item__panel');
+    const open = item.classList.toggle('is-open');
+    panel.style.maxHeight = open ? panel.scrollHeight + 'px' : '0px';
+  });
+});
+
+/* ─── Reveal on scroll ─── */
+const io = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-visible');
+        io.unobserve(e.target);
+      }
+    });
+  },
+  { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
+);
+document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+/* ─── Sticky CTA mobile: aparece depois do hero, some no bloco de oferta ─── */
+const stickyCta = document.querySelector('.sticky-cta');
+const hero = document.querySelector('.hero');
+const oferta = document.getElementById('oferta');
+const finalCta = document.querySelector('.final');
+
+function updateStickyCta() {
+  if (!stickyCta) return;
+  const scrollY = window.scrollY;
+  const heroBottom = hero.offsetTop + hero.offsetHeight;
+  const ofertaTop = oferta.offsetTop - 200;
+  const ofertaBottom = oferta.offsetTop + oferta.offsetHeight;
+  const finalTop = finalCta.offsetTop - 200;
+
+  const passedHero = scrollY > heroBottom;
+  const inOferta = scrollY > ofertaTop && scrollY < ofertaBottom;
+  const inFinal = scrollY > finalTop;
+
+  if (passedHero && !inOferta && !inFinal) {
+    stickyCta.classList.add('is-visible');
+  } else {
+    stickyCta.classList.remove('is-visible');
+  }
+}
+
+window.addEventListener('scroll', updateStickyCta, { passive: true });
+window.addEventListener('resize', updateStickyCta);
+updateStickyCta();
+</script>

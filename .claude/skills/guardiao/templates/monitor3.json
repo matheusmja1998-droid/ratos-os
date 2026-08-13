@@ -1,0 +1,229 @@
+{
+  "name": "{{WORKFLOW_NAME}}",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 */2 * * *"
+            }
+          ]
+        }
+      },
+      "id": "cron-2h",
+      "name": "Cron 2h",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://graph.facebook.com/v21.0/{{AD_ACCOUNT}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "account_status,balance,amount_spent,currency,disable_reason,funding_source_details,name"
+            }
+          ]
+        },
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "options": {}
+      },
+      "id": "fetch-account",
+      "name": "Checar Conta",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1180,
+        0
+      ],
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "{{META_CRED_ID}}",
+          "name": "Guardiao - Meta Ads (Fernanda)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Guardiao — Monitor 3: saude da conta Meta\n\nconst d = $input.first().json;\nconst status = d.account_status;\nconst balance = parseInt(d.balance || 0) / 100;  // em reais\nconst disableReason = d.disable_reason || 0;\nconst cardDisplay = (d.funding_source_details && d.funding_source_details.display_string) || 'nao identificado';\n\nconst agora = Date.now();\nconst COOLDOWN_MS = 6 * 60 * 60 * 1000;  // 6h\n\nconst staticData = $getWorkflowStaticData('global');\nif (!staticData.alertas) staticData.alertas = {};\nconst historico = staticData.alertas;\n\n// Mapeamento de account_status\nconst statusMap = {\n  1: 'ACTIVE',\n  2: 'DISABLED',\n  3: 'UNSETTLED',\n  7: 'PENDING_RISK_REVIEW',\n  8: 'PENDING_SETTLEMENT',\n  9: 'IN_GRACE_PERIOD',\n  100: 'PENDING_CLOSURE',\n  101: 'CLOSED'\n};\n\n// Mapeamento de disable_reason\nconst reasonMap = {\n  0: 'nenhum',\n  1: 'ADS_INTEGRITY_POLICY',\n  2: 'ADS_IP_REVIEW',\n  3: 'RISK_PAYMENT',\n  4: 'GRAY_ACCOUNT_SHUT_DOWN',\n  5: 'ADS_AFC_REVIEW',\n  6: 'BUSINESS_INTEGRITY_RAR',\n  7: 'PERMANENT_CLOSE',\n  8: 'UNUSED_RESELLER_ACCOUNT',\n  9: 'UNUSED_ACCOUNT'\n};\n\nconst alertas = [];\n\n// 1. Status da conta\nif (status !== 1) {\n  const key = 'status_' + status;\n  if (!historico[key] || (agora - historico[key]) > COOLDOWN_MS) {\n    alertas.push({\n      tipo: 'conta_desativada',\n      gravidade: 'critico',\n      status_codigo: status,\n      status_texto: statusMap[status] || 'UNKNOWN',\n      disable_reason_codigo: disableReason,\n      disable_reason_texto: reasonMap[disableReason] || 'UNKNOWN',\n      balance,\n      cartao: cardDisplay\n    });\n    historico[key] = agora;\n  }\n}\n\n// 2. Saldo devedor alto (> R$500 em aberto, sinal de cobranca falhando)\nif (balance > 500) {\n  const key = 'balance_alto';\n  if (!historico[key] || (agora - historico[key]) > COOLDOWN_MS) {\n    alertas.push({\n      tipo: 'saldo_devedor_alto',\n      gravidade: balance > 2000 ? 'critico' : 'atencao',\n      balance,\n      cartao: cardDisplay,\n      explicacao: 'Saldo devedor em aberto. Facebook pode estar tentando cobrar no cartao e nao conseguindo. Se continuar subindo, anuncios podem ser pausados automaticamente.'\n    });\n    historico[key] = agora;\n  }\n}\n\n// 3. Balance cresceu muito rapido desde ultima checagem\nif (staticData.ultimo_balance !== undefined && balance > staticData.ultimo_balance + 500) {\n  const key = 'balance_crescendo';\n  if (!historico[key] || (agora - historico[key]) > COOLDOWN_MS) {\n    alertas.push({\n      tipo: 'balance_crescendo_sem_cobranca',\n      gravidade: 'atencao',\n      balance,\n      balance_anterior: staticData.ultimo_balance,\n      diferenca: balance - staticData.ultimo_balance,\n      cartao: cardDisplay,\n      explicacao: 'Saldo devedor cresceu sem ser cobrado. Provavel falha de cobranca no cartao.'\n    });\n    historico[key] = agora;\n  }\n}\n\nstaticData.ultimo_balance = balance;\n\n// Limpar historico antigo\nfor (const k of Object.keys(historico)) {\n  if (agora - historico[k] > 48 * 60 * 60 * 1000) delete historico[k];\n}\n\nif (alertas.length === 0) {\n  return [{json: {nenhum_alerta: true, status_atual: statusMap[status], balance_atual: balance}}];\n}\n\nreturn alertas.map(a => ({json: a}));"
+      },
+      "id": "analyze",
+      "name": "Analisar Saúde",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -960,
+        0
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "has-type",
+              "leftValue": "={{ $json.tipo }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter",
+      "name": "Tem Alerta?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -740,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "anthropicApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 400, messages: [{ role: 'user', content: 'Voce e o Guardiao WinVision. Escreva alerta pra Telegram do Matheus sobre problema na conta de anuncios da Fernanda (VemDoleta CA1). Use APENAS <b></b> e <i></i>, NAO use markdown. FORMATO: Linha 1: se gravidade=critico emoji sirene + <b>GUARDIAO — CONTA EM RISCO</b>, se atencao emoji alerta + <b>GUARDIAO — ATENCAO CONTA</b>. Linha em branco. Explicar o problema em 1-2 linhas com base no campo tipo e explicacao dos dados. Mostrar dados relevantes (status, saldo devedor, cartao). Acao clara pro Matheus: se saldo_devedor ou balance_crescendo -> verificar cartao VISA cadastrado e fazer pagamento manual no Facebook Ads Manager. Se conta_desativada -> entrar no Ads Manager, ver motivo, abrir chamado. Tom direto, curto, maximo 10 linhas. Dados: ' + JSON.stringify($json) }] }) }}",
+        "options": {}
+      },
+      "id": "claude",
+      "name": "Claude — Redige",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -520,
+        0
+      ],
+      "credentials": {
+        "anthropicApi": {
+          "id": "{{ANTHROPIC_CRED_ID}}",
+          "name": "Guardiao - Anthropic"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "{{CHAT_ID}}",
+        "text": "={{ $json.content[0].text }}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "telegram",
+      "name": "Enviar no Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -300,
+        0
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "{{TELEGRAM_CRED_ID}}",
+          "name": "Guardiao - Telegram Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Cron 2h": {
+      "main": [
+        [
+          {
+            "node": "Checar Conta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Checar Conta": {
+      "main": [
+        [
+          {
+            "node": "Analisar Saúde",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analisar Saúde": {
+      "main": [
+        [
+          {
+            "node": "Tem Alerta?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tem Alerta?": {
+      "main": [
+        [
+          {
+            "node": "Claude — Redige",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Claude — Redige": {
+      "main": [
+        [
+          {
+            "node": "Enviar no Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  }
+}

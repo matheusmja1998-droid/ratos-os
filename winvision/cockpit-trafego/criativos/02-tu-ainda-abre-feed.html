@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_base.css">
+<style>
+  html, body { width: 1080px; height: 1080px; }
+  body { padding: 70px 70px; justify-content: space-between; }
+  .top { position: relative; z-index: 2; }
+  .tag { font-size: 20px; margin-bottom: 30px; display: block; }
+  .title { font-size: 72px; }
+  .sub { font-size: 22px; margin-top: 26px; max-width: 880px; }
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 22px;
+    margin-top: 50px;
+    position: relative;
+    z-index: 2;
+  }
+  .skill-card__title { font-size: 30px; }
+  .skill-card__desc { font-size: 16px; }
+  .closer {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    margin-top: 36px;
+    color: #fff;
+    position: relative;
+    z-index: 2;
+  }
+  .closer strong { color: #00D9FF; font-style: italic; font-weight: 500; }
+  .bottom { position: relative; z-index: 2; }
+  .cta { font-size: 24px; margin-top: 16px; }
+</style>
+</head>
+<body class="dark">
+  <div class="halo-tr"></div>
+  <div class="halo-bl"></div>
+
+  <div class="top">
+    <span class="tag">Skills pro Claude Code</span>
+    <h1 class="title">Tu ainda abre o <em>Gerenciador de Anúncios</em> pra tudo?</h1>
+    <p class="sub">Diagnóstico, relatório e otimização sem sair do Claude Code.</p>
+
+    <div class="cards">
+      <div class="skill-card">
+        <div class="skill-card__cmd">/meta-ads</div>
+        <div class="skill-card__title">Meta Ads</div>
+        <div class="skill-card__desc">campanhas, conjuntos, criativos, públicos</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card__cmd">/google-ads</div>
+        <div class="skill-card__title">Google Ads</div>
+        <div class="skill-card__desc">search, performance max, keywords</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card__cmd">/ga4</div>
+        <div class="skill-card__title">Analytics</div>
+        <div class="skill-card__desc">funil, conversões, atribuição</div>
+      </div>
+    </div>
+
+    <p class="closer"><strong>95+ comandos</strong> pra gerenciar tráfego sem abrir uma aba sequer.</p>
+  </div>
+
+  <div class="bottom">
+    <a class="cta">VER COMO FUNCIONA</a>
+  </div>
+  <span class="footer-mark">cockpittrafego.com.br</span>
+</body>
+</html>

@@ -10,5 +10,21 @@
         ]
       }
     ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(curl -s \"https://api.github.com/repos/matheusmja1998-droid/ratos-os\")"
+    ]
+  },
+  "enabledPlugins": {
+    "swiftclip-remotion@swiftclip-tools": true
+  },
+  "extraKnownMarketplaces": {
+    "swiftclip-tools": {
+      "source": {
+        "source": "github",
+        "repo": "zz41354899/SwiftClip"
+      }
+    }
   }
 }

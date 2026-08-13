@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Prospecção Supermercados BH — L.M Agência</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: #0A0A0A;
+  color: #FFFFFF;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  padding: 40px 60px;
+  min-height: 100vh;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 30px;
+  border-bottom: 2px solid #111;
+  margin-bottom: 40px;
+}
+.brand {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: #00E676;
+}
+.brand .sub {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 6px;
+  color: #888;
+  margin-top: 4px;
+}
+.meta-info {
+  text-align: right;
+  font-size: 14px;
+  color: #888;
+  letter-spacing: 1px;
+}
+h1 {
+  font-size: 54px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+h1 .accent { color: #00E676; }
+.lead {
+  font-size: 20px;
+  color: #BBB;
+  max-width: 1100px;
+  margin-bottom: 50px;
+  line-height: 1.4;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 50px;
+}
+.stat {
+  background: #111;
+  border-radius: 12px;
+  padding: 28px 32px;
+  border-left: 4px solid #00E676;
+}
+.stat .num {
+  font-size: 48px;
+  font-weight: 800;
+  color: #00E676;
+  line-height: 1;
+}
+.stat .lbl {
+  font-size: 14px;
+  font-weight: 600;
+  color: #888;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 12px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #0F0F0F;
+  border-radius: 12px;
+  overflow: hidden;
+}
+thead {
+  background: #161616;
+  border-bottom: 2px solid #00E676;
+}
+th {
+  text-align: left;
+  padding: 18px 16px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #00E676;
+  text-transform: uppercase;
+}
+td {
+  padding: 18px 16px;
+  border-bottom: 1px solid #1A1A1A;
+  font-size: 14px;
+  color: #DDD;
+  vertical-align: top;
+  line-height: 1.4;
+}
+tr:hover td { background: #131313; }
+.num { color:#666; font-weight:800; font-size:18px; width:40px; }
+.empresa strong { color:#FFF; font-size:15px; }
+.meta { color:#666; font-size:12px; }
+.badge {
+  display: inline-block;
+  background: #00E676;
+  color: #0A0A0A;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.dor { color:#FF8888; font-style: italic; font-size:13px; max-width:280px; }
+.gancho { color:#9FFFC2; font-size:13px; max-width:380px; }
+.consumo strong { color:#00E676; font-size:16px; }
+.contato a { color:#00E676; text-decoration:none; }
+.contato a:hover { text-decoration:underline; }
+.footer {
+  margin-top: 60px;
+  padding-top: 30px;
+  border-top: 1px solid #222;
+  text-align: center;
+  font-size: 13px;
+  color: #555;
+  letter-spacing: 2px;
+}
+.disclaimer {
+  background: #151515;
+  border-left: 4px solid #FFC040;
+  padding: 16px 24px;
+  margin: 40px 0;
+  font-size: 13px;
+  color: #BBB;
+  border-radius: 8px;
+  line-height: 1.5;
+}
+.disclaimer strong { color: #FFC040; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">L.M<span class="sub">CONSULTORIA COMERCIAL</span></div>
+  <div class="meta-info">
+    PROSPECÇÃO AO VIVO · BELO HORIZONTE · MAIO 2026<br>
+    Fonte: Google Maps via Apify + enriquecimento IA
+  </div>
+</header>
+
+<h1>30 supermercados em BH<br>com <span class="accent">lógica de abordagem pronta.</span></h1>
+<p class="lead">Lista com empresa, bairro, porte estimado, telefone, faixa de consumo energético, dor principal extraída do tipo de negócio e lógica de abordagem personalizada (economia / autonomia / sustentabilidade). Sem digitação manual. Sem 2 semanas de Google Maps.</p>
+
+<div class="stats">
+  <div class="stat"><div class="num">30</div><div class="lbl">Empresas mapeadas</div></div>
+  <div class="stat"><div class="num">19</div><div class="lbl">Redes grandes / atacarejo</div></div>
+  <div class="stat"><div class="num">4</div><div class="lbl">Porte médio</div></div>
+  <div class="stat"><div class="num">7</div><div class="lbl">Porte pequeno / bairro</div></div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Empresa</th>
+      <th>Porte</th>
+      <th>Rating</th>
+      <th>Contato</th>
+      <th>Consumo / Conta</th>
+      <th>Dor principal</th>
+      <th>Lógica de abordagem</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td class="num">1</td>
+      <td class="empresa"><strong>Supermercados BH</strong><br><span class="meta">Flávio Marques Lisboa · Supermercado de descontos</span></td>
+      <td class="porte"><span class="badge">Rede Grande</span></td>
+      <td class="rating">⭐ 4.3<br><span class="meta">2638 reviews</span></td>
+      <td class="contato">+55 31 3387-3600<br><a href="http://www.supermercadosbh.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>60-180</strong> MWh/ano<br><span class="meta">R$ 60-180 mil/mês</span></td>
+      <td class="dor">Operação multi-loja com conta de luz alta em cada unidade — payback agregado é o argumento.</td>
+      <td class="gancho">Economia agregada entre lojas (payback consolidado) · Autonomia se a luz cair em uma das unidades (não para a operação) · Sustentabilidade como narrativa de rede (selo verde nas embalagens, comunicação em loja).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">2</td>
+      <td class="empresa"><strong>Apoio Mineiro Tirol: Atacado, Varejo, Entrega, Belo Horizonte, MG</strong><br><span class="meta">Tirol · Supermercado</span></td>
+      <td class="porte"><span class="badge">Atacarejo Grande</span></td>
+      <td class="rating">⭐ 4.1<br><span class="meta">8625 reviews</span></td>
+      <td class="contato">+55 31 3359-3282<br><a href="https://www.apoioentrega.com/" target="_blank">site</a></td>
+      <td class="consumo"><strong>250-800</strong> MWh/ano<br><span class="meta">R$ 250-800 mil/mês</span></td>
+      <td class="dor">Margem apertada em atacarejo — energia é um dos maiores custos fixos depois de mercadoria.</td>
+      <td class="gancho">Economia de energia em escala (corte direto no maior fixo do atacarejo) · Autonomia se a CEMIG cair (proteção da câmara fria, evita perda de mercadoria) · Sustentabilidade como diferencial pra negociar com fornecedores e marca.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">3</td>
+      <td class="empresa"><strong>SUPERMERCADOS BH</strong><br><span class="meta">Urucuia · Supermercado</span></td>
+      <td class="porte"><span class="badge">Rede Grande</span></td>
+      <td class="rating">⭐ 4.2<br><span class="meta">1787 reviews</span></td>
+      <td class="contato">+55 31 3336-5099<br><a href="http://www.supermercadosbh.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>60-180</strong> MWh/ano<br><span class="meta">R$ 60-180 mil/mês</span></td>
+      <td class="dor">Operação multi-loja com conta de luz alta em cada unidade — payback agregado é o argumento.</td>
+      <td class="gancho">Economia agregada entre lojas (payback consolidado) · Autonomia se a luz cair em uma das unidades (não para a operação) · Sustentabilidade como narrativa de rede (selo verde nas embalagens, comunicação em loja).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">4</td>
+      <td class="empresa"><strong>SUPERMERCADOS BH</strong><br><span class="meta">Santa Helena · Supermercado de descontos</span></td>
+      <td class="porte"><span class="badge">Rede Grande</span></td>
+      <td class="rating">⭐ 4.2<br><span class="meta">5667 reviews</span></td>
+      <td class="contato">+55 31 98313-7197<br><a href="http://www.supermercadosbh.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>60-180</strong> MWh/ano<br><span class="meta">R$ 60-180 mil/mês</span></td>
+      <td class="dor">Operação multi-loja com conta de luz alta em cada unidade — payback agregado é o argumento.</td>
+      <td class="gancho">Economia agregada entre lojas (payback consolidado) · Autonomia se a luz cair em uma das unidades (não para a operação) · Sustentabilidade como narrativa de rede (selo verde nas embalagens, comunicação em loja).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">5</td>
+      <td class="empresa"><strong>Epa Supermercados</strong><br><span class="meta">Araguaia · Supermercado</span></td>
+      <td class="porte"><span class="badge">Rede Grande</span></td>
+      <td class="rating">⭐ 4.4<br><span class="meta">3547 reviews</span></td>
+      <td class="contato">+55 31 3208-2530<br><a href="http://www.epa.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>60-180</strong> MWh/ano<br><span class="meta">R$ 60-180 mil/mês</span></td>
+      <td class="dor">Operação multi-loja com conta de luz alta em cada unidade — payback agregado é o argumento.</td>
+      <td class="gancho">Economia agregada entre lojas (payback consolidado) · Autonomia se a luz cair em uma das unidades (não para a operação) · Sustentabilidade como narrativa de rede (selo verde nas embalagens, comunicação em loja).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">6</td>
+      <td class="empresa"><strong>Epa Supermercados</strong><br><span class="meta">Marilândia Jatobá (Barreiro) · Supermercado</span></td>
+      <td class="porte"><span class="badge">Rede Grande</span></td>
+      <td class="rating">⭐ 4.2<br><span class="meta">2778 reviews</span></td>
+      <td class="contato">-<br><a href="http://www.epa.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>60-180</strong> MWh/ano<br><span class="meta">R$ 60-180 mil/mês</span></td>
+      <td class="dor">Operação multi-loja com conta de luz alta em cada unidade — payback agregado é o argumento.</td>
+      <td class="gancho">Economia agregada entre lojas (payback consolidado) · Autonomia se a luz cair em uma das unidades (não para a operação) · Sustentabilidade como narrativa de rede (selo verde nas embalagens, comunicação em loja).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">7</td>
+      <td class="empresa"><strong>Epa Supermercados</strong><br><span class="meta">Barreiro · Supermercado</span></td>
+      <td class="porte"><span class="badge">Rede Grande</span></td>
+      <td class="rating">⭐ 4.1<br><span class="meta">2034 reviews</span></td>
+      <td class="contato">+55 31 3208-2560<br><a href="http://www.epa.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>60-180</strong> MWh/ano<br><span class="meta">R$ 60-180 mil/mês</span></td>
+      <td class="dor">Operação multi-loja com conta de luz alta em cada unidade — payback agregado é o argumento.</td>
+      <td class="gancho">Economia agregada entre lojas (payback consolidado) · Autonomia se a luz cair em uma das unidades (não para a operação) · Sustentabilidade como narrativa de rede (selo verde nas embalagens, comunicação em loja).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">8</td>
+      <td class="empresa"><strong>Supermercados BH</strong><br><span class="meta">Miramar (Barreiro) · Supermercado</span></td>
+      <td class="porte"><span class="badge">Rede Grande</span></td>
+      <td class="rating">⭐ 4.2<br><span class="meta">3622 reviews</span></td>
+      <td class="contato">+55 31 3321-1429<br><a href="http://www.supermercadosbh.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>60-180</strong> MWh/ano<br><span class="meta">R$ 60-180 mil/mês</span></td>
+      <td class="dor">Operação multi-loja com conta de luz alta em cada unidade — payback agregado é o argumento.</td>
+      <td class="gancho">Economia agregada entre lojas (payback consolidado) · Autonomia se a luz cair em uma das unidades (não para a operação) · Sustentabilidade como narrativa de rede (selo verde nas embalagens, comunicação em loja).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">9</td>
+      <td class="empresa"><strong>Mineirão Atacado e Varejo</strong><br><span class="meta">Petrópolis · Supermercado</span></td>
+      <td class="porte"><span class="badge">Atacarejo</span></td>
+      <td class="rating">⭐ 3.9<br><span class="meta">1960 reviews</span></td>
+      <td class="contato">-<br><span style="color:#555;">—</span></td>
+      <td class="consumo"><strong>80-200</strong> MWh/ano<br><span class="meta">R$ 80-200 mil/mês</span></td>
+      <td class="dor">Margem apertada em atacarejo — energia é um dos maiores custos fixos depois de mercadoria.</td>
+      <td class="gancho">Economia de energia em escala (corte direto no maior fixo do atacarejo) · Autonomia se a CEMIG cair (proteção da câmara fria, evita perda de mercadoria) · Sustentabilidade como diferencial pra negociar com fornecedores e marca.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">10</td>
+      <td class="empresa"><strong>SUPERMERCADOS BH</strong><br><span class="meta">Cardoso · Supermercado de descontos</span></td>
+      <td class="porte"><span class="badge">Rede Grande</span></td>
+      <td class="rating">⭐ 4<br><span class="meta">1799 reviews</span></td>
+      <td class="contato">+55 31 3383-7935<br><a href="http://www.supermercadosbh.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>60-180</strong> MWh/ano<br><span class="meta">R$ 60-180 mil/mês</span></td>
+      <td class="dor">Operação multi-loja com conta de luz alta em cada unidade — payback agregado é o argumento.</td>
+      <td class="gancho">Economia agregada entre lojas (payback consolidado) · Autonomia se a luz cair em uma das unidades (não para a operação) · Sustentabilidade como narrativa de rede (selo verde nas embalagens, comunicação em loja).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">11</td>
+      <td class="empresa"><strong>Supermercado Tirol</strong><br><span class="meta">Tirol · Supermercado</span></td>
+      <td class="porte"><span class="badge">Mercado De Bairro</span></td>
+      <td class="rating">⭐ 4.3<br><span class="meta">572 reviews</span></td>
+      <td class="contato">+55 31 3385-1796<br><span style="color:#888;">Instagram</span></td>
+      <td class="consumo"><strong>5-15</strong> MWh/ano<br><span class="meta">R$ 5-15 mil/mês</span></td>
+      <td class="dor">Margem fina, dono presente no caixa, conta de luz mensal aperta o fluxo.</td>
+      <td class="gancho">Economia direta na conta mensal (dor visível no fluxo de caixa) · Autonomia se a luz cair (mercado de bairro não pode fechar) · Sustentabilidade pra fidelizar cliente local consciente.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">12</td>
+      <td class="empresa"><strong>Epa Supermercados</strong><br><span class="meta">Independência · Supermercado</span></td>
+      <td class="porte"><span class="badge">Rede Grande</span></td>
+      <td class="rating">⭐ 3.9<br><span class="meta">2092 reviews</span></td>
+      <td class="contato">+55 31 3472-5259<br><a href="http://www.epa.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>60-180</strong> MWh/ano<br><span class="meta">R$ 60-180 mil/mês</span></td>
+      <td class="dor">Operação multi-loja com conta de luz alta em cada unidade — payback agregado é o argumento.</td>
+      <td class="gancho">Economia agregada entre lojas (payback consolidado) · Autonomia se a luz cair em uma das unidades (não para a operação) · Sustentabilidade como narrativa de rede (selo verde nas embalagens, comunicação em loja).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">13</td>
+      <td class="empresa"><strong>Supermercados BH Buritis</strong><br><span class="meta">Buritis · Supermercado de descontos</span></td>
+      <td class="porte"><span class="badge">Rede Grande</span></td>
+      <td class="rating">⭐ 4.5<br><span class="meta">1793 reviews</span></td>
+      <td class="contato">+55 31 3378-7148<br><a href="http://www.supermercadosbh.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>60-180</strong> MWh/ano<br><span class="meta">R$ 60-180 mil/mês</span></td>
+      <td class="dor">Operação multi-loja com conta de luz alta em cada unidade — payback agregado é o argumento.</td>
+      <td class="gancho">Economia agregada entre lojas (payback consolidado) · Autonomia se a luz cair em uma das unidades (não para a operação) · Sustentabilidade como narrativa de rede (selo verde nas embalagens, comunicação em loja).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">14</td>
+      <td class="empresa"><strong>Supermercado Bom Sucesso</strong><br><span class="meta">Bonsucesso · Supermercado</span></td>
+      <td class="porte"><span class="badge">Mercado De Bairro</span></td>
+      <td class="rating">⭐ 4.4<br><span class="meta">415 reviews</span></td>
+      <td class="contato">+55 31 3383-8747<br><span style="color:#555;">—</span></td>
+      <td class="consumo"><strong>5-15</strong> MWh/ano<br><span class="meta">R$ 5-15 mil/mês</span></td>
+      <td class="dor">Margem fina, dono presente no caixa, conta de luz mensal aperta o fluxo.</td>
+      <td class="gancho">Economia direta na conta mensal (dor visível no fluxo de caixa) · Autonomia se a luz cair (mercado de bairro não pode fechar) · Sustentabilidade pra fidelizar cliente local consciente.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">15</td>
+      <td class="empresa"><strong>SUPERMERCADOS BH</strong><br><span class="meta">Teixeira Dias · Supermercado de descontos</span></td>
+      <td class="porte"><span class="badge">Rede Grande</span></td>
+      <td class="rating">⭐ 4.1<br><span class="meta">1826 reviews</span></td>
+      <td class="contato">+55 31 3384-4022<br><a href="http://www.supermercadosbh.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>60-180</strong> MWh/ano<br><span class="meta">R$ 60-180 mil/mês</span></td>
+      <td class="dor">Operação multi-loja com conta de luz alta em cada unidade — payback agregado é o argumento.</td>
+      <td class="gancho">Economia agregada entre lojas (payback consolidado) · Autonomia se a luz cair em uma das unidades (não para a operação) · Sustentabilidade como narrativa de rede (selo verde nas embalagens, comunicação em loja).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">16</td>
+      <td class="empresa"><strong>SUPERMERCADOS BH</strong><br><span class="meta">Guarani · Supermercado</span></td>
+      <td class="porte"><span class="badge">Rede Grande</span></td>
+      <td class="rating">⭐ 4.3<br><span class="meta">5315 reviews</span></td>
+      <td class="contato">+55 31 3437-7325<br><a href="http://www.supermercadosbh.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>60-180</strong> MWh/ano<br><span class="meta">R$ 60-180 mil/mês</span></td>
+      <td class="dor">Operação multi-loja com conta de luz alta em cada unidade — payback agregado é o argumento.</td>
+      <td class="gancho">Economia agregada entre lojas (payback consolidado) · Autonomia se a luz cair em uma das unidades (não para a operação) · Sustentabilidade como narrativa de rede (selo verde nas embalagens, comunicação em loja).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">17</td>
+      <td class="empresa"><strong>SUPERMERCADOS BH</strong><br><span class="meta">Jardim Vitoria · Supermercado de descontos</span></td>
+      <td class="porte"><span class="badge">Rede Grande</span></td>
+      <td class="rating">⭐ 4.3<br><span class="meta">3929 reviews</span></td>
+      <td class="contato">+55 31 3447-4763<br><a href="http://www.supermercadosbh.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>60-180</strong> MWh/ano<br><span class="meta">R$ 60-180 mil/mês</span></td>
+      <td class="dor">Operação multi-loja com conta de luz alta em cada unidade — payback agregado é o argumento.</td>
+      <td class="gancho">Economia agregada entre lojas (payback consolidado) · Autonomia se a luz cair em uma das unidades (não para a operação) · Sustentabilidade como narrativa de rede (selo verde nas embalagens, comunicação em loja).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">18</td>
+      <td class="empresa"><strong>Epa Supermercados</strong><br><span class="meta">Venda Nova · Supermercado</span></td>
+      <td class="porte"><span class="badge">Rede Grande</span></td>
+      <td class="rating">⭐ 4.2<br><span class="meta">3674 reviews</span></td>
+      <td class="contato">+55 31 3472-5285<br><a href="http://www.epa.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>60-180</strong> MWh/ano<br><span class="meta">R$ 60-180 mil/mês</span></td>
+      <td class="dor">Operação multi-loja com conta de luz alta em cada unidade — payback agregado é o argumento.</td>
+      <td class="gancho">Economia agregada entre lojas (payback consolidado) · Autonomia se a luz cair em uma das unidades (não para a operação) · Sustentabilidade como narrativa de rede (selo verde nas embalagens, comunicação em loja).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">19</td>
+      <td class="empresa"><strong>Supermercados BH</strong><br><span class="meta">Maria Tereza · Supermercado de descontos</span></td>
+      <td class="porte"><span class="badge">Rede Grande</span></td>
+      <td class="rating">⭐ 4.4<br><span class="meta">565 reviews</span></td>
+      <td class="contato">+55 31 2116-9311<br><a href="https://www.supermercadosbh.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>60-180</strong> MWh/ano<br><span class="meta">R$ 60-180 mil/mês</span></td>
+      <td class="dor">Operação multi-loja com conta de luz alta em cada unidade — payback agregado é o argumento.</td>
+      <td class="gancho">Economia agregada entre lojas (payback consolidado) · Autonomia se a luz cair em uma das unidades (não para a operação) · Sustentabilidade como narrativa de rede (selo verde nas embalagens, comunicação em loja).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">20</td>
+      <td class="empresa"><strong>SUPERMERCADOS BH</strong><br><span class="meta">Serra Verde · Supermercado</span></td>
+      <td class="porte"><span class="badge">Rede Grande</span></td>
+      <td class="rating">⭐ 4.3<br><span class="meta">3419 reviews</span></td>
+      <td class="contato">+55 31 3455-1030<br><a href="http://www.supermercadosbh.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>60-180</strong> MWh/ano<br><span class="meta">R$ 60-180 mil/mês</span></td>
+      <td class="dor">Operação multi-loja com conta de luz alta em cada unidade — payback agregado é o argumento.</td>
+      <td class="gancho">Economia agregada entre lojas (payback consolidado) · Autonomia se a luz cair em uma das unidades (não para a operação) · Sustentabilidade como narrativa de rede (selo verde nas embalagens, comunicação em loja).</td>
+    </tr>
+    
+    <tr>
+      <td class="num">21</td>
+      <td class="empresa"><strong>Uberaba Supermercados</strong><br><span class="meta">Vila Cloris · Supermercado</span></td>
+      <td class="porte"><span class="badge">Rede Média</span></td>
+      <td class="rating">⭐ 4.1<br><span class="meta">2232 reviews</span></td>
+      <td class="contato">+55 31 3454-2675<br><span style="color:#555;">—</span></td>
+      <td class="consumo"><strong>25-60</strong> MWh/ano<br><span class="meta">R$ 25-60 mil/mês</span></td>
+      <td class="dor">Crescendo, mas com margem comprimida — cada R$ economizado em fixo vira investimento de expansão.</td>
+      <td class="gancho">Economia que financia a expansão (a parcela do solar é menor que a economia mensal) · Autonomia da operação se a CEMIG cair · Sustentabilidade como diferencial competitivo no bairro/cidade.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">22</td>
+      <td class="empresa"><strong>Supermercado Opa - Planalto</strong><br><span class="meta">Vila Cloris · Supermercado</span></td>
+      <td class="porte"><span class="badge">Rede Pequena</span></td>
+      <td class="rating">⭐ 4.4<br><span class="meta">1292 reviews</span></td>
+      <td class="contato">-<br><span style="color:#555;">—</span></td>
+      <td class="consumo"><strong>12-30</strong> MWh/ano<br><span class="meta">R$ 12-30 mil/mês</span></td>
+      <td class="dor">Crescendo, mas com margem comprimida — cada R$ economizado em fixo vira investimento de expansão.</td>
+      <td class="gancho">Economia que financia a expansão (a parcela do solar é menor que a economia mensal) · Autonomia da operação se a CEMIG cair · Sustentabilidade como diferencial competitivo no bairro/cidade.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">23</td>
+      <td class="empresa"><strong>Uberaba Supermercados</strong><br><span class="meta">Venda Nova · Supermercado</span></td>
+      <td class="porte"><span class="badge">Rede Média</span></td>
+      <td class="rating">⭐ 4.1<br><span class="meta">3285 reviews</span></td>
+      <td class="contato">+55 31 3451-4692<br><span style="color:#555;">—</span></td>
+      <td class="consumo"><strong>25-60</strong> MWh/ano<br><span class="meta">R$ 25-60 mil/mês</span></td>
+      <td class="dor">Crescendo, mas com margem comprimida — cada R$ economizado em fixo vira investimento de expansão.</td>
+      <td class="gancho">Economia que financia a expansão (a parcela do solar é menor que a economia mensal) · Autonomia da operação se a CEMIG cair · Sustentabilidade como diferencial competitivo no bairro/cidade.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">24</td>
+      <td class="empresa"><strong>Supermercado Boa Ideia Novo Aarão Reis</strong><br><span class="meta">Novo Aarão Reis · Supermercado</span></td>
+      <td class="porte"><span class="badge">Mercado De Bairro</span></td>
+      <td class="rating">⭐ 4.5<br><span class="meta">612 reviews</span></td>
+      <td class="contato">+55 31 98025-4018<br><span style="color:#888;">Instagram</span></td>
+      <td class="consumo"><strong>5-15</strong> MWh/ano<br><span class="meta">R$ 5-15 mil/mês</span></td>
+      <td class="dor">Margem fina, dono presente no caixa, conta de luz mensal aperta o fluxo.</td>
+      <td class="gancho">Economia direta na conta mensal (dor visível no fluxo de caixa) · Autonomia se a luz cair (mercado de bairro não pode fechar) · Sustentabilidade pra fidelizar cliente local consciente.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">25</td>
+      <td class="empresa"><strong>Supermercado Opa</strong><br><span class="meta">Tupi · Supermercado</span></td>
+      <td class="porte"><span class="badge">Rede Pequena</span></td>
+      <td class="rating">⭐ 4.3<br><span class="meta">2076 reviews</span></td>
+      <td class="contato">+55 31 3445-6954<br><span style="color:#555;">—</span></td>
+      <td class="consumo"><strong>12-30</strong> MWh/ano<br><span class="meta">R$ 12-30 mil/mês</span></td>
+      <td class="dor">Crescendo, mas com margem comprimida — cada R$ economizado em fixo vira investimento de expansão.</td>
+      <td class="gancho">Economia que financia a expansão (a parcela do solar é menor que a economia mensal) · Autonomia da operação se a CEMIG cair · Sustentabilidade como diferencial competitivo no bairro/cidade.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">26</td>
+      <td class="empresa"><strong>Supermercado Campeão</strong><br><span class="meta">Nazare · Supermercado</span></td>
+      <td class="porte"><span class="badge">Mercado De Bairro</span></td>
+      <td class="rating">⭐ 4.3<br><span class="meta">363 reviews</span></td>
+      <td class="contato">+55 31 3437-3472<br><span style="color:#888;">Instagram</span></td>
+      <td class="consumo"><strong>5-15</strong> MWh/ano<br><span class="meta">R$ 5-15 mil/mês</span></td>
+      <td class="dor">Margem fina, dono presente no caixa, conta de luz mensal aperta o fluxo.</td>
+      <td class="gancho">Economia direta na conta mensal (dor visível no fluxo de caixa) · Autonomia se a luz cair (mercado de bairro não pode fechar) · Sustentabilidade pra fidelizar cliente local consciente.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">27</td>
+      <td class="empresa"><strong>Uberaba Supermercado</strong><br><span class="meta">Planalto · Supermercado</span></td>
+      <td class="porte"><span class="badge">Rede Média</span></td>
+      <td class="rating">⭐ 4.1<br><span class="meta">3806 reviews</span></td>
+      <td class="contato">+55 31 3494-4624<br><span style="color:#555;">—</span></td>
+      <td class="consumo"><strong>25-60</strong> MWh/ano<br><span class="meta">R$ 25-60 mil/mês</span></td>
+      <td class="dor">Crescendo, mas com margem comprimida — cada R$ economizado em fixo vira investimento de expansão.</td>
+      <td class="gancho">Economia que financia a expansão (a parcela do solar é menor que a economia mensal) · Autonomia da operação se a CEMIG cair · Sustentabilidade como diferencial competitivo no bairro/cidade.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">28</td>
+      <td class="empresa"><strong>Supermercados Paranaiba Planalto</strong><br><span class="meta">Planalto · Supermercado</span></td>
+      <td class="porte"><span class="badge">Rede Média</span></td>
+      <td class="rating">⭐ 4.4<br><span class="meta">1051 reviews</span></td>
+      <td class="contato">+55 31 3454-4600<br><a href="http://www.supermercadosparanaiba.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>25-60</strong> MWh/ano<br><span class="meta">R$ 25-60 mil/mês</span></td>
+      <td class="dor">Crescendo, mas com margem comprimida — cada R$ economizado em fixo vira investimento de expansão.</td>
+      <td class="gancho">Economia que financia a expansão (a parcela do solar é menor que a economia mensal) · Autonomia da operação se a CEMIG cair · Sustentabilidade como diferencial competitivo no bairro/cidade.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">29</td>
+      <td class="empresa"><strong>Supermercado HF</strong><br><span class="meta">Tupi · Supermercado</span></td>
+      <td class="porte"><span class="badge">Mercado De Bairro</span></td>
+      <td class="rating">⭐ 4.2<br><span class="meta">559 reviews</span></td>
+      <td class="contato">+55 31 3445-4355<br><span style="color:#555;">—</span></td>
+      <td class="consumo"><strong>5-15</strong> MWh/ano<br><span class="meta">R$ 5-15 mil/mês</span></td>
+      <td class="dor">Margem fina, dono presente no caixa, conta de luz mensal aperta o fluxo.</td>
+      <td class="gancho">Economia direta na conta mensal (dor visível no fluxo de caixa) · Autonomia se a luz cair (mercado de bairro não pode fechar) · Sustentabilidade pra fidelizar cliente local consciente.</td>
+    </tr>
+    
+    <tr>
+      <td class="num">30</td>
+      <td class="empresa"><strong>SUPERMERCADOS BH</strong><br><span class="meta">Venda Nova · Supermercado de descontos</span></td>
+      <td class="porte"><span class="badge">Rede Grande</span></td>
+      <td class="rating">⭐ 4.2<br><span class="meta">2524 reviews</span></td>
+      <td class="contato">+55 31 3451-6886<br><a href="http://www.supermercadosbh.com.br/" target="_blank">site</a></td>
+      <td class="consumo"><strong>60-180</strong> MWh/ano<br><span class="meta">R$ 60-180 mil/mês</span></td>
+      <td class="dor">Operação multi-loja com conta de luz alta em cada unidade — payback agregado é o argumento.</td>
+      <td class="gancho">Economia agregada entre lojas (payback consolidado) · Autonomia se a luz cair em uma das unidades (não para a operação) · Sustentabilidade como narrativa de rede (selo verde nas embalagens, comunicação em loja).</td>
+    </tr>
+    
+  </tbody>
+</table>
+
+<div class="disclaimer">
+  <strong>Sobre as estimativas:</strong> consumo e conta de luz são faixas empíricas baseadas no porte aparente do negócio (rede, atacarejo, bairro) e benchmarks de mercado pra supermercado no Brasil. Não são números reais da unidade. Servem como ponto de partida pra abordagem — o número exato vem com o diagnóstico.
+</div>
+
+<div class="footer">
+  L.M CONSULTORIA COMERCIAL · MATHEUS JARDIM · (31) 98331-7347
+</div>
+
+</body>
+</html>

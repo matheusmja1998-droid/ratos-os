@@ -1,0 +1,89 @@
+{
+  "name": "Caio — ANE OBRIGADO TRF",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ane-obrigado-trf",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "wh-1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300],
+      "webhookId": "ane-obrigado-trf"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst body = item.body || item;\nconst contact = body.contact || {};\nconst raw = (contact.phone || '').toString();\nlet digits = raw.replace(/\\D+/g, '');\nif (!digits) digits = '550000000000';\nif (!digits.startsWith('55')) digits = '55' + digits;\nconst e164 = '+' + digits;\nreturn [{ json: { ...body, contact, e164 } }];"
+      },
+      "id": "code-2",
+      "name": "Parse Phone (BR → E.164)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.manychat.com/fb/subscriber/createSubscriber",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"first_name\": \"{{ $json.contact.first_name }}\",\n  \"last_name\": \"{{ $json.contact.last_name }}\",\n  \"phone\": \"{{ $json.e164 }}\",\n  \"whatsapp_phone\": \"{{ $json.e164 }}\",\n  \"email\": \"{{ $json.contact.email }}\",\n  \"gender\": \"male\",\n  \"has_opt_in_sms\": true,\n  \"has_opt_in_email\": true,\n  \"consent_phrase\": \"OK\"\n}",
+        "options": {}
+      },
+      "id": "http-3",
+      "name": "ManyChat — createSubscriber",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [700, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "oUxEwLGpXC4JTurb",
+          "name": "ManyChat — Caio (RPC)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.manychat.com/fb/subscriber/addTag",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"subscriber_id\": {{ $json.data.id }},\n  \"tag_id\": 87831500\n}",
+        "options": {}
+      },
+      "id": "http-4",
+      "name": "ManyChat — addTag (87831500)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [980, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "oUxEwLGpXC4JTurb",
+          "name": "ManyChat — Caio (RPC)"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "Parse Phone (BR → E.164)", "type": "main", "index": 0 }]]
+    },
+    "Parse Phone (BR → E.164)": {
+      "main": [[{ "node": "ManyChat — createSubscriber", "type": "main", "index": 0 }]]
+    },
+    "ManyChat — createSubscriber": {
+      "main": [[{ "node": "ManyChat — addTag (87831500)", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

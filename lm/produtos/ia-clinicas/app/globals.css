@@ -1,0 +1,620 @@
+/* Tokens de tema. Claro e o padrao (clinica medica = branco limpo).
+   Escuro entra via [data-theme="dark"] no <html>, salvo em localStorage("tema"). */
+
+:root {
+  --bg: #f5f8fc;            /* branco com leve tom azulado */
+  --surface: #ffffff;
+  --border: #e2e8f2;
+  --border-forte: #c7d5e6;
+  --text: #0f172a;
+  --muted: #64748b;
+  --accent: #2563eb;        /* AZUL — cor primaria do app */
+  --accent-contrast: #ffffff;
+  --accent-soft: #e8f0fe;   /* azul claro pros destaques suaves */
+  --link: #2563eb;
+  --danger: #dc2626;
+  --danger-bg: #fdecec;
+  --ok: #16a34a;            /* verde = sucesso (semantico) */
+  --ok-bg: #e7f6ec;
+  --sombra: 0 1px 2px rgba(16, 24, 40, 0.06);
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: #0f1115;
+  --surface: #171a1f;
+  --border: #2a2e35;
+  --border-forte: #3a3f47;
+  --text: #e8eaed;
+  --muted: #9aa0a6;
+  --accent: #60a5fa;        /* azul claro no escuro */
+  --accent-contrast: #04121f;
+  --accent-soft: #14243d;
+  --link: #60a5fa;
+  --danger: #f87171;
+  --danger-bg: #2a1416;
+  --ok: #22c55e;
+  --ok-bg: #0d2818;
+  --sombra: none;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth; /* indice lateral das Configuracoes desce suave */
+}
+
+/* Logo do sidebar em DUAS versoes: colorida no tema claro, wordmark BRANCO
+   oficial no dark (asset proprio, nao filtro; sem glow — pedido de 11/08).
+   O !important vence o display inline dos <img>. */
+.sidebar-logo {
+  transition: filter 0.2s ease;
+}
+[data-theme="dark"] .sidebar-logo-claro {
+  display: none !important;
+}
+[data-theme="dark"] .sidebar-logo-dark {
+  display: block !important;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+a {
+  color: var(--link);
+}
+
+/* ---- componentes base ---- */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--sombra);
+  /* nunca ultrapassa o container; conteudo largo encolhe/quebra em vez de vazar */
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* colunas de grid encolhem abaixo do conteudo (senao previews longos vazam) */
+.card > * {
+  min-width: 0;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-forte);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  margin-top: 4px;
+  font-family: inherit;
+}
+
+.input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+  border-color: var(--accent);
+}
+
+.rotulo {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 16px;
+  display: block;
+}
+
+.btn-primario {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: inherit;
+}
+
+.btn-primario:disabled {
+  background: var(--border);
+  color: var(--muted);
+  cursor: default;
+}
+
+.btn-fantasma {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border-forte);
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: inherit;
+}
+
+.pagina {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.grid-metricas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.tabela-scroll {
+  overflow-x: auto;
+}
+
+/* ---- indice lateral das Configuracoes (na faixa vazia entre menu e conteudo) ---- */
+.indice-config {
+  position: fixed;
+  left: 264px;
+  top: 120px;
+  width: 150px;
+  display: none; /* so aparece quando tem espaco de sobra */
+  z-index: 30;
+}
+@media (min-width: 1360px) {
+  .indice-config {
+    display: block;
+  }
+}
+.indice-config-item {
+  display: block;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  border-left: 2px solid var(--border);
+}
+.indice-config-item:hover {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* ---- toggle claro/escuro (fixo no canto) ---- */
+
+/* Switch deslizante de tema — canto superior direito */
+.tema-switch {
+  position: fixed;
+  top: 14px;
+  right: 16px;
+  z-index: 100;
+  width: 58px;
+  height: 30px;
+  border-radius: 20px;
+  border: 1px solid var(--border-forte);
+  background: var(--surface);
+  box-shadow: var(--sombra);
+  cursor: pointer;
+  padding: 0;
+  display: block;
+}
+.tema-switch .icone {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  line-height: 1;
+  pointer-events: none;
+}
+.tema-switch .icone.sol { left: 7px; }
+.tema-switch .icone.lua { right: 7px; }
+.tema-switch .bolinha {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  transition: transform 0.2s ease;
+  pointer-events: none;
+}
+.tema-switch .bolinha[data-escuro="1"] { transform: translateX(28px); }
+
+/* Animacao de deslizar da agenda ao trocar de semana */
+@keyframes deslizaFrente {
+  from { opacity: 0.35; transform: translateX(56px); }
+  to   { opacity: 1;    transform: translateX(0); }
+}
+@keyframes deslizaTras {
+  from { opacity: 0.35; transform: translateX(-56px); }
+  to   { opacity: 1;    transform: translateX(0); }
+}
+.desliza-frente { animation: deslizaFrente 0.28s ease-out; }
+.desliza-tras   { animation: deslizaTras 0.28s ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .desliza-frente, .desliza-tras { animation: none; }
+}
+
+/* ---- janela de conversa (formato WhatsApp) ----
+   O paciente fala a ESQUERDA em bolha cinza, a clinica (IA ou atendente) a
+   DIREITA em bolha verde — a mesma leitura que a recepcao ja tem no celular.
+   As cores sao as do proprio WhatsApp (#d9fdd3 no claro, #005c4b no escuro),
+   nao tokens do tema: aqui o objetivo e PARECER o WhatsApp. */
+
+.chat-janela {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--sombra);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  /* rola dentro da propria janela: o cabecalho e a caixa de envio ficam fixos */
+  max-height: 62vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.chat-linha {
+  display: flex;
+  width: 100%;
+}
+.chat-linha.esquerda { justify-content: flex-start; }
+.chat-linha.direita  { justify-content: flex-end; }
+
+.chat-bolha {
+  max-width: 76%;
+  min-width: 92px;
+  border-radius: 10px;
+  padding: 7px 10px 6px;
+  font-size: 14px;
+  line-height: 1.45;
+  position: relative;
+  box-shadow: 0 1px 1px rgba(11, 20, 26, 0.13);
+}
+
+/* PACIENTE: bolha cinza/branca, canto superior esquerdo reto */
+.chat-bolha.paciente {
+  background: #ffffff;
+  color: #111b21;
+  border-top-left-radius: 2px;
+}
+[data-theme="dark"] .chat-bolha.paciente {
+  background: #202c33;
+  color: #e9edef;
+}
+
+/* CLINICA (IA ou atendente): bolha VERDE, canto superior direito reto */
+.chat-bolha.clinica {
+  background: #d9fdd3;
+  color: #111b21;
+  border-top-right-radius: 2px;
+}
+[data-theme="dark"] .chat-bolha.clinica {
+  background: #005c4b;
+  color: #e9edef;
+}
+
+.chat-texto {
+  white-space: pre-wrap;
+  word-break: break-word;
+  /* abre espaco pra hora nao encavalar no fim da ultima linha */
+  padding-right: 46px;
+}
+
+.chat-hora {
+  font-size: 11px;
+  opacity: 0.6;
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
+  line-height: 1;
+}
+
+/* fundo levemente acinzentado atras das bolhas, como o papel de parede do app */
+.chat-janela {
+  background-image: linear-gradient(var(--bg), var(--bg));
+}
+
+/* ---- interruptor deslizante (IA <-> atendente) ---- */
+
+.switch {
+  --alt: 24px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+.switch:disabled { opacity: 0.55; cursor: default; }
+
+.switch-trilho {
+  width: 44px;
+  height: var(--alt);
+  border-radius: 20px;
+  background: var(--border-forte);
+  position: relative;
+  transition: background 0.18s ease;
+  flex-shrink: 0;
+}
+.switch[data-ligado="true"] .switch-trilho { background: var(--ok); }
+
+.switch-bolinha {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform 0.18s ease;
+}
+.switch[data-ligado="true"] .switch-bolinha { transform: translateX(20px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .switch-trilho, .switch-bolinha { transition: none; }
+}
+
+/* ---- quadro Kanban (CRM) ---- */
+
+.kanban {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  /* cada coluna mantem a largura; o quadro rola na horizontal */
+  scroll-snap-type: x proximate;
+  /* area vazia arrasta o quadro (pan) — o cursor avisa que da pra segurar */
+  cursor: grab;
+}
+.kanban.pan-ativo {
+  cursor: grabbing;
+  user-select: none;
+  scroll-snap-type: none; /* o snap brigava com o arrasto */
+}
+
+.kanban-coluna {
+  flex: 0 0 268px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  min-height: 140px;
+  scroll-snap-align: start;
+  /* coluna com MUITOS cards nao estica a pagina inteira (era preciso descer
+     ate o fim pra achar a barra horizontal): ela rola por dentro e a barra do
+     quadro fica sempre a vista. */
+  max-height: 68vh;
+  overflow-y: auto;
+}
+/* realce quando um card esta sendo arrastado por cima */
+.kanban-coluna.alvo {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.kanban-topo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--muted);
+  padding: 2px 4px 10px;
+}
+
+.kanban-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 11px;
+  margin-bottom: 8px;
+  cursor: grab;
+  box-shadow: var(--sombra);
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.kanban-card:active { cursor: grabbing; }
+.kanban-card.arrastando { opacity: 0.45; }
+
+/* ---- shell do painel (sidebar + conteudo) ---- */
+
+.painel-shell {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  /* trava o scroll horizontal: nenhum filho largo empurra a sidebar pra fora */
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  /* FIXA na tela: sticky quebrava porque o .painel-shell tem overflow-x
+     hidden (vira scroll-container e o sticky nunca engata). fixed nao depende
+     de ancestral nenhum — a barra fica sempre visivel ao rolar. */
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px 14px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+}
+
+.sidebar-marca {
+  font-size: 16px;
+  font-weight: 700;
+  padding: 0 12px;
+  white-space: nowrap;
+}
+
+.sidebar-voltar {
+  display: block;
+  padding: 4px 12px 0;
+  font-size: 12px;
+  color: var(--link);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.sidebar-item {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.sidebar-item:hover {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.sidebar-item.ativo {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.sidebar-rodape button {
+  width: 100%;
+}
+
+.painel-conteudo {
+  flex: 1;
+  min-width: 0;
+  /* min-width:0 deixa o flex item encolher; overflow-x contem filhos largos
+     (tabelas, previews de material) sem empurrar a sidebar pra fora da tela.
+     margin-left reserva o espaco da sidebar fixa. */
+  overflow-x: hidden;
+  margin-left: 240px;
+}
+
+/* mobile: sidebar vira barra em cima, nav com scroll horizontal */
+@media (max-width: 760px) {
+  .painel-shell {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    overflow-y: visible;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-marca {
+    padding: 0;
+    font-size: 15px;
+  }
+
+  /* a logo (inline width:100%) ocupava a LINHA INTEIRA da barra e empurrava a
+     navegacao pra fora da tela — nao dava pra trocar de aba no celular (bug
+     real, 11/08). Compacta e deixa a nav com o espaco. */
+  .sidebar > div:first-child {
+    flex-shrink: 0;
+    max-width: 130px;
+  }
+  .sidebar-logo {
+    width: 120px !important;
+    padding: 0 !important;
+  }
+  .sidebar-nav {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sidebar-voltar {
+    display: none;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar-item {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  .sidebar-rodape button {
+    width: auto;
+  }
+
+  .pagina {
+    padding: 20px 16px;
+  }
+
+  .painel-conteudo {
+    margin-left: 0; /* mobile: sidebar vira barra no topo, sem margem lateral */
+  }
+
+  /* iOS da zoom automatico em input com fonte < 16px — no mobile os campos
+     sobem pra 16px e o Safari para de pular a tela ao focar */
+  .input,
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  /* botoes ficam mais faceis de acertar com o dedo */
+  .btn-primario,
+  .btn-fantasma {
+    min-height: 40px;
+  }
+}

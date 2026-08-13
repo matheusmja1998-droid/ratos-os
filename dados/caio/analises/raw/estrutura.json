@@ -1,0 +1,3873 @@
+{
+  "120244831874670244": {
+    "name": "[ANE_JUN_26]_[FASE 01]_[LEADS]_[TESTE_DE_CRIATIVO_DINAMICO]_[FRIO]_[MEC]_[CBO]_[C12]",
+    "adsets": [
+      {
+        "id": "120244831874680244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS",
+        "status": "ACTIVE",
+        "created_time": "2026-05-26T17:32:47-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "90.14",
+        "impressions": "4710",
+        "clicks": "210",
+        "inline_link_clicks": "102",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "20"
+          },
+          {
+            "action_type": "link_click",
+            "value": "102"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "20"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "2299"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "69"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "69"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "2298"
+          },
+          {
+            "action_type": "like",
+            "value": "1"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "87"
+          },
+          {
+            "action_type": "comment",
+            "value": "1"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "20"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "87"
+          },
+          {
+            "action_type": "post",
+            "value": "5"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "20"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_comment",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "81"
+          },
+          {
+            "action_type": "video_view",
+            "value": "2109"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "20"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "81"
+          }
+        ],
+        "cpm": "19.138004",
+        "frequency": "1.105115",
+        "reach": "4262",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120244831874590244",
+        "name": "CRIATIVOS_MEC_MAI_26",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 1,
+    "n_ads": 1
+  },
+  "120244831281380244": {
+    "name": "[ANE_JUN_26]_[FASE 01]_[LEADS]_[TESTE_DE_CRIATIVO_DINAMICO]_[FRIO]_[BIKE]_[CBO]_[C11]",
+    "adsets": [
+      {
+        "id": "120244831281210244",
+        "name": "00_MIX_MECANICO_DE_BIKE",
+        "status": "ACTIVE",
+        "created_time": "2026-05-26T17:27:18-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "137.59",
+        "impressions": "12321",
+        "clicks": "342",
+        "inline_link_clicks": "190",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "31"
+          },
+          {
+            "action_type": "link_click",
+            "value": "190"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "31"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "6687"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "120"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "120"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "2"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "6686"
+          },
+          {
+            "action_type": "like",
+            "value": "1"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "127"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "31"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "129"
+          },
+          {
+            "action_type": "post",
+            "value": "7"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "31"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "2"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "2"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "116"
+          },
+          {
+            "action_type": "video_view",
+            "value": "6369"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "31"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "118"
+          }
+        ],
+        "cpm": "11.167113",
+        "frequency": "1.068882",
+        "reach": "11527",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120244831281120244",
+        "name": "CRIATIVOS_BIKE_MAI_26",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 1,
+    "n_ads": 1
+  },
+  "120244831038620244": {
+    "name": "[ANE_JUN_26]_[FASE 01]_[LEADS]_[TESTE_DE_CRIATIVO_DINAMICO]_[BIKE]_[FRIO]_[CBO]_[C10]",
+    "adsets": [
+      {
+        "id": "120244831038510244",
+        "name": "00_MIX_MECANICO_DE_BIKE",
+        "status": "ACTIVE",
+        "created_time": "2026-05-26T17:14:49-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "96.4",
+        "impressions": "9517",
+        "clicks": "183",
+        "inline_link_clicks": "104",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "17"
+          },
+          {
+            "action_type": "link_click",
+            "value": "104"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "17"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "3797"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "68"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "68"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "1"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "3797"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "77"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "17"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "78"
+          },
+          {
+            "action_type": "post",
+            "value": "11"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "17"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "2"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "2"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "63"
+          },
+          {
+            "action_type": "video_view",
+            "value": "3616"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "17"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "64"
+          }
+        ],
+        "cpm": "10.129242",
+        "frequency": "1.019715",
+        "reach": "9333",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120244831038600244",
+        "name": "CRIATIVOS_BIKE_JUN_26",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 1,
+    "n_ads": 1
+  },
+  "120244830679520244": {
+    "name": "[ANE_JUN_26]_[FASE 01]_[LEADS]_[TESTE_DE_CRIATIVO_DINAMICO]_[FRIO]_[MEC]_[CBO]_[C09]",
+    "adsets": [
+      {
+        "id": "120244830679540244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS",
+        "status": "ACTIVE",
+        "created_time": "2026-05-26T17:11:01-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "93.55",
+        "impressions": "11157",
+        "clicks": "166",
+        "inline_link_clicks": "90",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "17"
+          },
+          {
+            "action_type": "link_click",
+            "value": "90"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "17"
+          },
+          {
+            "action_type": "initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "4449"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "62"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "62"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "2"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "4449"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "71"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "17"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "73"
+          },
+          {
+            "action_type": "post",
+            "value": "11"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "17"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "57"
+          },
+          {
+            "action_type": "onsite_web_initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "omni_initiated_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "video_view",
+            "value": "4288"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "17"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "59"
+          }
+        ],
+        "cpm": "8.38487",
+        "frequency": "1.041542",
+        "reach": "10712",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120244830961630244",
+        "name": "CRIATIVOS_MEC_JUN_26",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 1,
+    "n_ads": 1
+  },
+  "120244626513560244": {
+    "name": "[ANE_JUN_26]_[FASE 05]_[LEADS]_[TESTE_ANDROMEDA]_[FRIO]_[CBO]_[C08] + ADV",
+    "adsets": [
+      {
+        "id": "120244626513550244",
+        "name": "00_ABERTO",
+        "status": "ACTIVE",
+        "created_time": "2026-05-23T13:08:24-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "522.79",
+        "impressions": "41162",
+        "clicks": "1556",
+        "inline_link_clicks": "620",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "117"
+          },
+          {
+            "action_type": "link_click",
+            "value": "620"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "117"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "14882"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "430"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "430"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "9"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "14881"
+          },
+          {
+            "action_type": "like",
+            "value": "1"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "603"
+          },
+          {
+            "action_type": "comment",
+            "value": "11"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "117"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "612"
+          },
+          {
+            "action_type": "post",
+            "value": "16"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "117"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "17"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_comment",
+            "value": "11"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "17"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "550"
+          },
+          {
+            "action_type": "video_view",
+            "value": "13658"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "117"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "559"
+          }
+        ],
+        "cpm": "12.700792",
+        "frequency": "1.462602",
+        "reach": "28143",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120244626539020244",
+        "name": "ANE_MAIJUN_26_CAP_MEC_VD_08",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120244626539050244",
+        "name": "ANE_MAIJUN_26_CAP_MEC_VD_06",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120244626539040244",
+        "name": "ANE_MAIJUN_26_CAP_MEC_VD_10",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120244629706190244",
+        "name": "ANE_JUN_IMG_02",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244629820370244",
+        "name": "ANE_JUN_IMG_04",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244629828270244",
+        "name": "ANE_JUN_IMG_05",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244629513020244",
+        "name": "ANE_JUN_IMG_01",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244629757560244",
+        "name": "ANE_JUN_IMG_03",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244626539030244",
+        "name": "ANE_MAIJUN_26_CAP_MEC_VD_07",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 1,
+    "n_ads": 9
+  },
+  "120244495802380244": {
+    "name": "[ANE_JUN_26]_[FASE 01]_[LEADS]_[TESTE_DE_CRIATIVO]_[FRIO]_[ABO]_[C07]",
+    "adsets": [
+      {
+        "id": "120244910245290244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_MAIJUN_26_CAP_GERAL_VD_16",
+        "status": "ACTIVE",
+        "daily_budget": "2000",
+        "created_time": "2026-05-27T22:55:20-0300"
+      },
+      {
+        "id": "120244910241920244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_MAIJUN_26_CAP_GERAL_VD_15",
+        "status": "PAUSED",
+        "daily_budget": "2000",
+        "created_time": "2026-05-27T22:55:20-0300"
+      },
+      {
+        "id": "120244910231360244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_MAIJUN_26_CAP_GERAL_VD_14",
+        "status": "ACTIVE",
+        "daily_budget": "2000",
+        "created_time": "2026-05-27T22:55:14-0300"
+      },
+      {
+        "id": "120244910217860244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_MAIJUN_26_CAP_GERAL_VD_13",
+        "status": "PAUSED",
+        "daily_budget": "2000",
+        "created_time": "2026-05-27T22:55:07-0300"
+      },
+      {
+        "id": "120244910193520244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_MAIJUN_26_CAP_GERAL_VD_12",
+        "status": "ACTIVE",
+        "daily_budget": "2000",
+        "created_time": "2026-05-27T22:55:14-0300"
+      },
+      {
+        "id": "120244910096740244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_MAIJUN_26_CAP_GERAL_VD_11",
+        "status": "PAUSED",
+        "daily_budget": "2000",
+        "created_time": "2026-05-27T22:55:07-0300"
+      },
+      {
+        "id": "120244496040690244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_MAIJUN_26_CAP_MEC_VD_10",
+        "status": "PAUSED",
+        "daily_budget": "2000",
+        "created_time": "2026-05-21T15:25:27-0300"
+      },
+      {
+        "id": "120244496033250244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_MAIJUN_26_CAP_MEC_VD_09",
+        "status": "PAUSED",
+        "daily_budget": "2000",
+        "created_time": "2026-05-21T15:25:48-0300"
+      },
+      {
+        "id": "120244496019880244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_MAIJUN_26_CAP_MEC_VD_08",
+        "status": "PAUSED",
+        "daily_budget": "2000",
+        "created_time": "2026-05-21T15:25:55-0300"
+      },
+      {
+        "id": "120244495998110244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_MAIJUN_26_CAP_MEC_VD_07",
+        "status": "PAUSED",
+        "daily_budget": "2000",
+        "created_time": "2026-05-21T15:25:55-0300"
+      },
+      {
+        "id": "120244495862230244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_MAIJUN_26_CAP_BIKE_VD_05",
+        "status": "ACTIVE",
+        "daily_budget": "2000",
+        "created_time": "2026-05-21T15:25:41-0300"
+      },
+      {
+        "id": "120244495855040244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_MAIJUN_26_CAP_BIKE_VD_04",
+        "status": "PAUSED",
+        "daily_budget": "2000",
+        "created_time": "2026-05-21T15:25:34-0300"
+      },
+      {
+        "id": "120244495851060244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_MAIJUN_26_CAP_BIKE_VD_03",
+        "status": "PAUSED",
+        "daily_budget": "2000",
+        "created_time": "2026-05-21T15:25:41-0300"
+      },
+      {
+        "id": "120244495840120244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_MAIJUN_26_CAP_BIKE_VD_02",
+        "status": "ACTIVE",
+        "daily_budget": "2000",
+        "created_time": "2026-05-21T15:25:48-0300"
+      },
+      {
+        "id": "120244495802880244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_MAIJUN_26_CAP_MEC_VD_06",
+        "status": "PAUSED",
+        "daily_budget": "2000",
+        "created_time": "2026-05-21T15:25:27-0300"
+      },
+      {
+        "id": "120244495802710244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_MAIJUN_26_CAP_BIKE_VD_01",
+        "status": "ACTIVE",
+        "daily_budget": "2000",
+        "created_time": "2026-05-21T15:25:34-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "900.15",
+        "impressions": "70148",
+        "clicks": "2075",
+        "inline_link_clicks": "990",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "283"
+          },
+          {
+            "action_type": "web_in_store_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "omni_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "link_click",
+            "value": "990"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "283"
+          },
+          {
+            "action_type": "initiate_checkout",
+            "value": "4"
+          },
+          {
+            "action_type": "offsite_purchase_add_20_s_calls",
+            "value": "1"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_initiate_checkout",
+            "value": "4"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "23146"
+          },
+          {
+            "action_type": "purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "754"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "754"
+          },
+          {
+            "action_type": "onsite_conversion.total_messaging_connection",
+            "value": "12"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "9"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "23133"
+          },
+          {
+            "action_type": "like",
+            "value": "13"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "1030"
+          },
+          {
+            "action_type": "comment",
+            "value": "9"
+          },
+          {
+            "action_type": "onsite_web_app_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "283"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "1039"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_2_message_send",
+            "value": "7"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_first_reply",
+            "value": "8"
+          },
+          {
+            "action_type": "post",
+            "value": "43"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "283"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "32"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_comment",
+            "value": "9"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_3_message_send",
+            "value": "5"
+          },
+          {
+            "action_type": "web_app_in_store_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "32"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "937"
+          },
+          {
+            "action_type": "onsite_web_initiate_checkout",
+            "value": "4"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_5_message_send",
+            "value": "6"
+          },
+          {
+            "action_type": "omni_initiated_checkout",
+            "value": "4"
+          },
+          {
+            "action_type": "onsite_web_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_conversation_started_7d",
+            "value": "10"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_conversation_replied_7d",
+            "value": "7"
+          },
+          {
+            "action_type": "video_view",
+            "value": "21113"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "283"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "946"
+          }
+        ],
+        "cpm": "12.832155",
+        "frequency": "1.683175",
+        "reach": "41676",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120244910231350244",
+        "name": "ANE_MAIJUN_26_CAP_GERAL_VD_14",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244910245300244",
+        "name": "ANE_MAIJUN_26_CAP_GERAL_VD_16",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244910241910244",
+        "name": "ANE_MAIJUN_26_CAP_GERAL_VD_15",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244910096730244",
+        "name": "ANE_MAIJUN_26_CAP_GERAL_VD_11",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244910193510244",
+        "name": "ANE_MAIJUN_26_CAP_GERAL_VD_12",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244910217850244",
+        "name": "ANE_MAIJUN_26_CAP_GERAL_VD_13",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244496040700244",
+        "name": "ANE_MAIJUN_26_CAP_MEC_VD_10",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244495998120244",
+        "name": "ANE_MAIJUN_26_CAP_MEC_VD_07",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244495851050244",
+        "name": "ANE_MAIJUN_26_CAP_BIKE_VD_03",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244495802410244",
+        "name": "ANE_MAIJUN_26_CAP_MEC_VD_06",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244495802400244",
+        "name": "ANE_MAIJUN_26_CAP_BIKE_VD_01",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244495855050244",
+        "name": "ANE_MAIJUN_26_CAP_BIKE_VD_04",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244496019860244",
+        "name": "ANE_MAIJUN_26_CAP_MEC_VD_08",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244496033260244",
+        "name": "ANE_MAIJUN_26_CAP_MEC_VD_09",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244495840110244",
+        "name": "ANE_MAIJUN_26_CAP_BIKE_VD_02",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244495862240244",
+        "name": "ANE_MAIJUN_26_CAP_BIKE_VD_05",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 16,
+    "n_ads": 16
+  },
+  "120244494319360244": {
+    "name": "[ANE_JUN_26]_]FASE 03]_[LEADS]_[QUENTE]_[CBO]_[C06]",
+    "adsets": [
+      {
+        "id": "120244494319440244",
+        "name": "00_MIX_QUENTE",
+        "status": "ACTIVE",
+        "created_time": "2026-05-21T14:25:05-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "2150.66",
+        "impressions": "201948",
+        "clicks": "6365",
+        "inline_link_clicks": "2905",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "718"
+          },
+          {
+            "action_type": "link_click",
+            "value": "2905"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "718"
+          },
+          {
+            "action_type": "initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "85866"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "2196"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "2196"
+          },
+          {
+            "action_type": "onsite_conversion.total_messaging_connection",
+            "value": "2"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "41"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "85839"
+          },
+          {
+            "action_type": "like",
+            "value": "27"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "2999"
+          },
+          {
+            "action_type": "comment",
+            "value": "17"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "718"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "3042"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_2_message_send",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_first_reply",
+            "value": "2"
+          },
+          {
+            "action_type": "post",
+            "value": "116"
+          },
+          {
+            "action_type": "onsite_conversion.post_unsave",
+            "value": "2"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "718"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "83"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_comment",
+            "value": "17"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_3_message_send",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "81"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "2742"
+          },
+          {
+            "action_type": "onsite_web_initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_5_message_send",
+            "value": "1"
+          },
+          {
+            "action_type": "omni_initiated_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_conversation_started_7d",
+            "value": "2"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_conversation_replied_7d",
+            "value": "1"
+          },
+          {
+            "action_type": "video_view",
+            "value": "79935"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "718"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "2783"
+          }
+        ],
+        "cpm": "10.649573",
+        "frequency": "1.168491",
+        "reach": "172828",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120244826201980244",
+        "name": "ANE_MAIJUN_26_CAP_BIKE_VD_02",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244494426200244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_05",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120244494426160244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_03",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244494426170244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_01",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244494426180244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_06",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 1,
+    "n_ads": 5
+  },
+  "120244347143830244": {
+    "name": "[ANE_JUN_26]_[FASE 05]_[LEADS]_[TESTE_DE_ESCALA]_[BIKE]_[FRIO]_[CBO]_[C05] + ADV",
+    "adsets": [
+      {
+        "id": "120244347143820244",
+        "name": "00_ABERTO",
+        "status": "ACTIVE",
+        "created_time": "2026-05-19T20:08:58-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "8562.88",
+        "impressions": "1115957",
+        "clicks": "27270",
+        "inline_link_clicks": "14950",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "3263"
+          },
+          {
+            "action_type": "web_in_store_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "omni_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "link_click",
+            "value": "14950"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "3263"
+          },
+          {
+            "action_type": "initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "offsite_purchase_add_20_s_calls",
+            "value": "1"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "481981"
+          },
+          {
+            "action_type": "purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "11347"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "11347"
+          },
+          {
+            "action_type": "onsite_conversion.total_messaging_connection",
+            "value": "8"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "198"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "481903"
+          },
+          {
+            "action_type": "like",
+            "value": "78"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "10867"
+          },
+          {
+            "action_type": "comment",
+            "value": "100"
+          },
+          {
+            "action_type": "onsite_web_app_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "3263"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "11068"
+          },
+          {
+            "action_type": "post_uncomment",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_2_message_send",
+            "value": "4"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_first_reply",
+            "value": "8"
+          },
+          {
+            "action_type": "post",
+            "value": "882"
+          },
+          {
+            "action_type": "onsite_conversion.post_unsave",
+            "value": "2"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "3263"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "426"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_comment",
+            "value": "101"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_3_message_send",
+            "value": "4"
+          },
+          {
+            "action_type": "web_app_in_store_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "424"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "9261"
+          },
+          {
+            "action_type": "onsite_web_initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_5_message_send",
+            "value": "3"
+          },
+          {
+            "action_type": "omni_initiated_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_web_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_conversation_started_7d",
+            "value": "9"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_conversation_replied_7d",
+            "value": "4"
+          },
+          {
+            "action_type": "video_view",
+            "value": "456086"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "3263"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "9459"
+          }
+        ],
+        "cpm": "7.673127",
+        "frequency": "1.294626",
+        "reach": "861992",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120244626289530244",
+        "name": "ANE_MAIJUN_26_CAP_BIKE_VD_02",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120244347143810244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_05",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120244626289540244",
+        "name": "ANE_MAIJUN_26_CAP_BIKE_VD_01",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244626289560244",
+        "name": "ANE_MAIJUN_26_CAP_BIKE_VD_05",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244347143840244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_03",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244347143850244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_01",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244347143800244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_06",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 1,
+    "n_ads": 7
+  },
+  "120244321413770244": {
+    "name": "[ANE_JUN_26]_[FASE 05]_[LEADS]_[TESTE_DE_ESCALA]_[MEC]_[FRIO]_[CBO]_[C04] + ADV",
+    "adsets": [
+      {
+        "id": "120244321413810244",
+        "name": "00_ABERTO",
+        "status": "ACTIVE",
+        "created_time": "2026-05-19T10:09:45-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "4727.53",
+        "impressions": "576183",
+        "clicks": "13124",
+        "inline_link_clicks": "7434",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "1552"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_block",
+            "value": "1"
+          },
+          {
+            "action_type": "link_click",
+            "value": "7434"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "1552"
+          },
+          {
+            "action_type": "initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "244050"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "5412"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "5412"
+          },
+          {
+            "action_type": "onsite_conversion.total_messaging_connection",
+            "value": "11"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "119"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "244019"
+          },
+          {
+            "action_type": "like",
+            "value": "31"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "6276"
+          },
+          {
+            "action_type": "comment",
+            "value": "74"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "1552"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "6397"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_2_message_send",
+            "value": "5"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_first_reply",
+            "value": "11"
+          },
+          {
+            "action_type": "post",
+            "value": "535"
+          },
+          {
+            "action_type": "onsite_conversion.post_unsave",
+            "value": "2"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "1552"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "176"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_comment",
+            "value": "74"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_3_message_send",
+            "value": "2"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "174"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "5372"
+          },
+          {
+            "action_type": "onsite_web_initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_5_message_send",
+            "value": "3"
+          },
+          {
+            "action_type": "omni_initiated_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_conversation_started_7d",
+            "value": "14"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_conversation_replied_7d",
+            "value": "7"
+          },
+          {
+            "action_type": "video_view",
+            "value": "230309"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "1552"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "5491"
+          }
+        ],
+        "cpm": "8.204911",
+        "frequency": "1.166762",
+        "reach": "493831",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120244321623290244",
+        "name": "ANE_ABRMAI_26_CAP_MEC_VD_03",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244321623310244",
+        "name": "ANE_ABR_26_CAP_MEC_VD_09",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244321623320244",
+        "name": "ANE_ABR_26_CAP_MEC_VD_02",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120244321623300244",
+        "name": "ANE_ABR_26_CAP_MEC_VD_13",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244321623330244",
+        "name": "ANE_ABRMAI_26_CAP_MEC_VD_01",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 1,
+    "n_ads": 5
+  },
+  "120244320642370244": {
+    "name": "[ANE_JUN_26]_[FASE 05]_[LEADS]_[TESTE_DE_ESCALA]_[BIKE]_[FRIO]_[CBO]_[C03] + ADV",
+    "adsets": [
+      {
+        "id": "120244320642340244",
+        "name": "00_ABERTO",
+        "status": "ACTIVE",
+        "created_time": "2026-05-19T10:03:47-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "245.37",
+        "impressions": "17396",
+        "clicks": "349",
+        "inline_link_clicks": "193",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "32"
+          },
+          {
+            "action_type": "link_click",
+            "value": "193"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "32"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "7396"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "138"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "138"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "6"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "7393"
+          },
+          {
+            "action_type": "like",
+            "value": "3"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "160"
+          },
+          {
+            "action_type": "comment",
+            "value": "1"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "32"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "166"
+          },
+          {
+            "action_type": "post",
+            "value": "6"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "32"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "7"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_comment",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "7"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "140"
+          },
+          {
+            "action_type": "video_view",
+            "value": "7040"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "32"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "146"
+          }
+        ],
+        "cpm": "14.104967",
+        "frequency": "1",
+        "reach": "17396",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120244321801080244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_03",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244321801090244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_06",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244321801070244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_05",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244321801060244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_01",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 1,
+    "n_ads": 4
+  },
+  "120244202090270244": {
+    "name": "[ANE_JUN_26]_[FASE 05]_[LEADS]_[TESTE_DE_ESCALA]_[MEC]_[FRIO]_[CBO]_[C02]",
+    "adsets": [
+      {
+        "id": "120244202090320244",
+        "name": "00_ABERTO",
+        "status": "ACTIVE",
+        "created_time": "2026-05-18T00:05:19-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "459.17",
+        "impressions": "76152",
+        "clicks": "1450",
+        "inline_link_clicks": "726",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "77"
+          },
+          {
+            "action_type": "link_click",
+            "value": "726"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "77"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "35493"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "485"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "485"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "14"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "35488"
+          },
+          {
+            "action_type": "like",
+            "value": "5"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "538"
+          },
+          {
+            "action_type": "comment",
+            "value": "7"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "77"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "553"
+          },
+          {
+            "action_type": "post_uncomment",
+            "value": "1"
+          },
+          {
+            "action_type": "post",
+            "value": "53"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "77"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "10"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_comment",
+            "value": "8"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "10"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "454"
+          },
+          {
+            "action_type": "video_view",
+            "value": "34224"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "77"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "468"
+          }
+        ],
+        "cpm": "6.029651",
+        "frequency": "1.050068",
+        "reach": "72521",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120244202090310244",
+        "name": "ANE_ABR_26_CAP_MEC_VD_02",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244202090280244",
+        "name": "ANE_ABR_26_CAP_MEC_VD_04",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244202090290244",
+        "name": "ANE_ABR_26_CAP_MEC_VD_03",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244202090300244",
+        "name": "ANE_ABR_26_CAP_MEC_VD_01",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 1,
+    "n_ads": 4
+  },
+  "120244202035740244": {
+    "name": "[ANE_JUN_26]_[FASE 05]_[LEADS]_[TESTE_DE_ESCALA]_[BIKE]_[FRIO]_[CBO]_[C01] + ADV",
+    "adsets": [
+      {
+        "id": "120244202035730244",
+        "name": "00_ABERTO",
+        "status": "ACTIVE",
+        "created_time": "2026-05-18T00:02:44-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "4604.97",
+        "impressions": "370133",
+        "clicks": "13818",
+        "inline_link_clicks": "7350",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "1659"
+          },
+          {
+            "action_type": "link_click",
+            "value": "7350"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "1659"
+          },
+          {
+            "action_type": "initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "180907"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "5417"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "5417"
+          },
+          {
+            "action_type": "onsite_conversion.total_messaging_connection",
+            "value": "12"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "76"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "180869"
+          },
+          {
+            "action_type": "like",
+            "value": "38"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "5165"
+          },
+          {
+            "action_type": "comment",
+            "value": "66"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "1659"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "5241"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_2_message_send",
+            "value": "6"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_first_reply",
+            "value": "11"
+          },
+          {
+            "action_type": "post",
+            "value": "226"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "1659"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "167"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_comment",
+            "value": "66"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_3_message_send",
+            "value": "5"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "167"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "4630"
+          },
+          {
+            "action_type": "onsite_web_initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_5_message_send",
+            "value": "3"
+          },
+          {
+            "action_type": "omni_initiated_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_conversation_started_7d",
+            "value": "13"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_conversation_replied_7d",
+            "value": "8"
+          },
+          {
+            "action_type": "video_view",
+            "value": "168354"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "1659"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "4706"
+          }
+        ],
+        "cpm": "12.441393",
+        "frequency": "1.383752",
+        "reach": "267485",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120244826358940244",
+        "name": "ANE_MAIJUN_26_CAP_BIKE_VD_05",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244826358920244",
+        "name": "ANE_MAIJUN_26_CAP_BIKE_VD_01",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244826358930244",
+        "name": "ANE_MAIJUN_26_CAP_BIKE_VD_02",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244202035750244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_09",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120244202035770244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_08",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120244202035760244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_07",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120244202035780244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_06",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 1,
+    "n_ads": 7
+  },
+  "120243164145350244": {
+    "name": "[ANE_MAI_26]_[FASE 05]_[LEADS]_[TESTE_DE_ESCALA]_[MEC]_[FRIO]_[CBO]_[C08] + ADV",
+    "adsets": [
+      {
+        "id": "120243164145380244",
+        "name": "00_ABERTO",
+        "status": "ACTIVE",
+        "created_time": "2026-04-30T10:52:16-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "3618.5",
+        "impressions": "311607",
+        "clicks": "9879",
+        "inline_link_clicks": "5525",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "1170"
+          },
+          {
+            "action_type": "web_in_store_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "omni_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "link_click",
+            "value": "5525"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "1170"
+          },
+          {
+            "action_type": "initiate_checkout",
+            "value": "7"
+          },
+          {
+            "action_type": "offsite_purchase_add_20_s_calls",
+            "value": "1"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_initiate_checkout",
+            "value": "7"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "188720"
+          },
+          {
+            "action_type": "purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "3898"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "3898"
+          },
+          {
+            "action_type": "onsite_conversion.total_messaging_connection",
+            "value": "3"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "82"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "188695"
+          },
+          {
+            "action_type": "like",
+            "value": "25"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "4755"
+          },
+          {
+            "action_type": "comment",
+            "value": "27"
+          },
+          {
+            "action_type": "onsite_web_app_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "1170"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "4837"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_2_message_send",
+            "value": "1"
+          },
+          {
+            "action_type": "post",
+            "value": "265"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "1170"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "153"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_comment",
+            "value": "27"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_3_message_send",
+            "value": "1"
+          },
+          {
+            "action_type": "web_app_in_store_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "153"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "4228"
+          },
+          {
+            "action_type": "onsite_web_initiate_checkout",
+            "value": "7"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_5_message_send",
+            "value": "1"
+          },
+          {
+            "action_type": "omni_initiated_checkout",
+            "value": "7"
+          },
+          {
+            "action_type": "onsite_web_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_conversation_replied_7d",
+            "value": "3"
+          },
+          {
+            "action_type": "video_view",
+            "value": "178415"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "1170"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "4310"
+          }
+        ],
+        "cpm": "11.612384",
+        "frequency": "1.229457",
+        "reach": "253451",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120243164222780244",
+        "name": "ANE_ABRMAI_26_CAP_MEC_VD_03",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120243164222790244",
+        "name": "ANE_ABRMAI_26_CAP_AMBOS_VD_08",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120243164222770244",
+        "name": "ANE_ABRMAI_26_CAP_AMBOS_VD_10",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 1,
+    "n_ads": 3
+  },
+  "120242784922690244": {
+    "name": "[ANE_MAI_26]_[FASE 01]_[LEADS]_[TESTE_DE_CRIATIVO]_[FRIO]_[ABO]_[C07] v2",
+    "adsets": [
+      {
+        "id": "120242784923030244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_ABRMAI_26_CAP_AMBOS_VD_10",
+        "status": "ACTIVE",
+        "daily_budget": "2000",
+        "created_time": "2026-04-25T08:02:34-0300"
+      },
+      {
+        "id": "120242784922990244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_ABRMAI_26_CAP_MEC_VD_02",
+        "status": "PAUSED",
+        "daily_budget": "2000",
+        "created_time": "2026-04-25T08:02:40-0300"
+      },
+      {
+        "id": "120242784922980244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_ABRMAI_26_CAP_AMBOS_VD_08",
+        "status": "PAUSED",
+        "daily_budget": "2000",
+        "created_time": "2026-04-25T08:02:16-0300"
+      },
+      {
+        "id": "120242784922970244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_ABRMAI_26_CAP_MEC_VD_04",
+        "status": "PAUSED",
+        "daily_budget": "2000",
+        "created_time": "2026-04-25T08:02:16-0300"
+      },
+      {
+        "id": "120242784922960244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_ABRMAI_26_CAP_AMBOS_VD_09",
+        "status": "ACTIVE",
+        "daily_budget": "2000",
+        "created_time": "2026-04-25T08:02:10-0300"
+      },
+      {
+        "id": "120242784922950244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_ABRMAI_26_CAP_MEC_VD_03",
+        "status": "ACTIVE",
+        "daily_budget": "2000",
+        "created_time": "2026-04-25T08:02:22-0300"
+      },
+      {
+        "id": "120242784922940244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_ABRMAI_26_CAP_MEC_VD_01",
+        "status": "PAUSED",
+        "daily_budget": "2000",
+        "created_time": "2026-04-25T08:02:10-0300"
+      },
+      {
+        "id": "120242784922930244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_ABRMAI_26_CAP_AMBOS_VD_08",
+        "status": "ACTIVE",
+        "daily_budget": "2000",
+        "created_time": "2026-04-25T08:02:34-0300"
+      },
+      {
+        "id": "120242784922920244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_ABRMAI_26_CAP_AMBOS_VD_09",
+        "status": "ACTIVE",
+        "daily_budget": "2000",
+        "created_time": "2026-04-25T08:02:23-0300"
+      },
+      {
+        "id": "120242784922910244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_ABRMAI_26_CAP_AMBOS_VD_10",
+        "status": "ACTIVE",
+        "daily_budget": "2000",
+        "created_time": "2026-04-25T08:02:45-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "1732.91",
+        "impressions": "433880",
+        "clicks": "10730",
+        "inline_link_clicks": "4781",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "793"
+          },
+          {
+            "action_type": "web_in_store_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "omni_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "link_click",
+            "value": "4781"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "793"
+          },
+          {
+            "action_type": "initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "offsite_purchase_add_20_s_calls",
+            "value": "1"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "146706"
+          },
+          {
+            "action_type": "purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "3336"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "3336"
+          },
+          {
+            "action_type": "onsite_conversion.total_messaging_connection",
+            "value": "2"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "76"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "146682"
+          },
+          {
+            "action_type": "like",
+            "value": "24"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "3633"
+          },
+          {
+            "action_type": "comment",
+            "value": "35"
+          },
+          {
+            "action_type": "onsite_web_app_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "793"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "3709"
+          },
+          {
+            "action_type": "post",
+            "value": "102"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "793"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "125"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_comment",
+            "value": "35"
+          },
+          {
+            "action_type": "web_app_in_store_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "125"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "3295"
+          },
+          {
+            "action_type": "onsite_web_initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "omni_initiated_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_web_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_conversation_replied_7d",
+            "value": "1"
+          },
+          {
+            "action_type": "video_view",
+            "value": "138268"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "793"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "3371"
+          }
+        ],
+        "cpm": "3.993985",
+        "frequency": "1.259383",
+        "reach": "344518",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120242784923110244",
+        "name": "ANE_ABRMAI_26_CAP_MEC_VD_04",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242784923050244",
+        "name": "ANE_ABRMAI_26_CAP_AMBOS_VD_09",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242784923080244",
+        "name": "ANE_ABRMAI_26_CAP_MEC_VD_01",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242784923140244",
+        "name": "ANE_ABRMAI_26_CAP_AMBOS_VD_10",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242784923120244",
+        "name": "ANE_ABRMAI_26_CAP_AMBOS_VD_08",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242784923090244",
+        "name": "ANE_ABRMAI_26_CAP_AMBOS_VD_10",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242784923100244",
+        "name": "ANE_ABRMAI_26_CAP_AMBOS_VD_09",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242784922880244",
+        "name": "ANE_ABRMAI_26_CAP_MEC_VD_02",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242784923070244",
+        "name": "ANE_ABRMAI_26_CAP_AMBOS_VD_08",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242784923060244",
+        "name": "ANE_ABRMAI_26_CAP_MEC_VD_03",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 10,
+    "n_ads": 10
+  },
+  "120242737252900244": {
+    "name": "[ANE_MAI_26]_[FASE 01]_[LEADS]_[TESTE_DE_CRIATIVO]_[FRIO]_[ABO]_[C06]",
+    "adsets": [
+      {
+        "id": "120242737800710244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_ABRMAI_26_CAP_AMBOS_VD_09",
+        "status": "ACTIVE",
+        "daily_budget": "3000",
+        "created_time": "2026-04-24T20:02:16-0300"
+      },
+      {
+        "id": "120242737775820244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_ABRMAI_26_CAP_AMBOS_VD_08",
+        "status": "ACTIVE",
+        "daily_budget": "3000",
+        "created_time": "2026-04-24T20:02:34-0300"
+      },
+      {
+        "id": "120242737766000244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_ABRMAI_26_CAP_AMBOS_VD_10",
+        "status": "ACTIVE",
+        "daily_budget": "3000",
+        "created_time": "2026-04-24T20:02:10-0300"
+      },
+      {
+        "id": "120242737724900244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_ABRMAI_26_CAP_MEC_VD_02",
+        "status": "ACTIVE",
+        "daily_budget": "3000",
+        "created_time": "2026-04-24T20:02:03-0300"
+      },
+      {
+        "id": "120242737696380244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_ABRMAI_26_CAP_MEC_VD_03",
+        "status": "ACTIVE",
+        "daily_budget": "3000",
+        "created_time": "2026-04-24T20:01:56-0300"
+      },
+      {
+        "id": "120242737679220244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_ABRMAI_26_CAP_MEC_VD_04",
+        "status": "ACTIVE",
+        "daily_budget": "3000",
+        "created_time": "2026-04-24T20:02:28-0300"
+      },
+      {
+        "id": "120242737663280244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_ABRMAI_26_CAP_MEC_VD_01",
+        "status": "ACTIVE",
+        "daily_budget": "3000",
+        "created_time": "2026-04-24T20:02:03-0300"
+      },
+      {
+        "id": "120242737613180244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_ABRMAI_26_CAP_AMBOS_VD_09",
+        "status": "ACTIVE",
+        "daily_budget": "3000",
+        "created_time": "2026-04-24T20:02:16-0300"
+      },
+      {
+        "id": "120242737595180244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_ABRMAI_26_CAP_AMBOS_VD_08",
+        "status": "ACTIVE",
+        "daily_budget": "3000",
+        "created_time": "2026-04-24T20:02:29-0300"
+      },
+      {
+        "id": "120242737577440244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_ABRMAI_26_CAP_AMBOS_VD_10",
+        "status": "ACTIVE",
+        "daily_budget": "3000",
+        "created_time": "2026-04-24T20:02:22-0300"
+      },
+      {
+        "id": "120242737508170244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_ABRMAI_26_CAP_BIKE_VD_05",
+        "status": "ACTIVE",
+        "daily_budget": "3000",
+        "created_time": "2026-04-24T20:02:22-0300"
+      },
+      {
+        "id": "120242737252980244",
+        "name": "00_MIX_MECANICO_DE_BIKE_ANE_ABRMAI_26_CAP_BIKE_VD_06",
+        "status": "ACTIVE",
+        "daily_budget": "3000",
+        "created_time": "2026-04-24T20:01:56-0300"
+      },
+      {
+        "id": "120242737252630244",
+        "name": "05_MANUTENÇÃO_ DE_VEICULOS_ANE_ABRMAI_26_CAP_MEC_VD_05",
+        "status": "ACTIVE",
+        "daily_budget": "3000",
+        "created_time": "2026-04-24T20:02:10-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "373.75",
+        "impressions": "58495",
+        "clicks": "571",
+        "inline_link_clicks": "281",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "6"
+          },
+          {
+            "action_type": "link_click",
+            "value": "281"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "6"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "15644"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "170"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "170"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "7"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "15644"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "150"
+          },
+          {
+            "action_type": "comment",
+            "value": "1"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "6"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "157"
+          },
+          {
+            "action_type": "post",
+            "value": "5"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "6"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "6"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_comment",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "6"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "131"
+          },
+          {
+            "action_type": "video_view",
+            "value": "15213"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "6"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "138"
+          }
+        ],
+        "cpm": "6.389435",
+        "frequency": "1.039523",
+        "reach": "56271",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120242737252400244",
+        "name": "ANE_ABRMAI_26_CAP_MEC_VD_05",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242737679230244",
+        "name": "ANE_ABRMAI_26_CAP_MEC_VD_04",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242737663270244",
+        "name": "ANE_ABRMAI_26_CAP_MEC_VD_01",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242737508160244",
+        "name": "ANE_ABRMAI_26_CAP_BIKE_VD_05",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242737577450244",
+        "name": "ANE_ABRMAI_26_CAP_AMBOS_VD_10",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242737775810244",
+        "name": "ANE_ABRMAI_26_CAP_AMBOS_VD_08",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242737724920244",
+        "name": "ANE_ABRMAI_26_CAP_MEC_VD_02",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242737595190244",
+        "name": "ANE_ABRMAI_26_CAP_AMBOS_VD_08",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242737765990244",
+        "name": "ANE_ABRMAI_26_CAP_AMBOS_VD_10",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242737252410244",
+        "name": "ANE_ABRMAI_26_CAP_BIKE_VD_06",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242737800720244",
+        "name": "ANE_ABRMAI_26_CAP_AMBOS_VD_09",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242737696390244",
+        "name": "ANE_ABRMAI_26_CAP_MEC_VD_03",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242737613190244",
+        "name": "ANE_ABRMAI_26_CAP_AMBOS_VD_09",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 13,
+    "n_ads": 13
+  },
+  "120242646267850244": {
+    "name": "[ANE_MAI_26]_[FASE 02]_[LEADS]_[QUENTE]_[BIKE]_[CBO]_[C05]",
+    "adsets": [
+      {
+        "id": "120242646267870244",
+        "name": "02_PM365",
+        "status": "PAUSED",
+        "created_time": "2026-04-23T08:21:15-0300"
+      },
+      {
+        "id": "120242646267730244",
+        "name": "01_PQ",
+        "status": "PAUSED",
+        "created_time": "2026-04-23T08:21:15-0300"
+      },
+      {
+        "id": "120242646267720244",
+        "name": "00_SPQ",
+        "status": "ACTIVE",
+        "created_time": "2026-04-23T08:21:26-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "5340.44",
+        "impressions": "643320",
+        "clicks": "14419",
+        "inline_link_clicks": "7252",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "1467"
+          },
+          {
+            "action_type": "web_in_store_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "omni_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "link_click",
+            "value": "7252"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "1467"
+          },
+          {
+            "action_type": "initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "offsite_purchase_add_20_s_calls",
+            "value": "1"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "239773"
+          },
+          {
+            "action_type": "purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "5155"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "5155"
+          },
+          {
+            "action_type": "onsite_conversion.total_messaging_connection",
+            "value": "12"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "115"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "239711"
+          },
+          {
+            "action_type": "like",
+            "value": "62"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "5539"
+          },
+          {
+            "action_type": "comment",
+            "value": "42"
+          },
+          {
+            "action_type": "onsite_web_app_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "1467"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "5654"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_2_message_send",
+            "value": "6"
+          },
+          {
+            "action_type": "post",
+            "value": "261"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "1467"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "166"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_comment",
+            "value": "42"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_3_message_send",
+            "value": "7"
+          },
+          {
+            "action_type": "web_app_in_store_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "166"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "4955"
+          },
+          {
+            "action_type": "onsite_web_initiate_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_5_message_send",
+            "value": "6"
+          },
+          {
+            "action_type": "omni_initiated_checkout",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_web_purchase",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_conversation_replied_7d",
+            "value": "7"
+          },
+          {
+            "action_type": "video_view",
+            "value": "226920"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "1467"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "5070"
+          }
+        ],
+        "cpm": "8.301374",
+        "frequency": "1.588825",
+        "reach": "404903",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120242646267830244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_03",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120242646267860244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_04",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120242646267810244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_05",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120242646267780244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_06",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120242646267740244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_03",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120242646267760244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_04",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120242646267710244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_05",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120242646267820244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_05",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242646267790244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_06",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242646267750244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_03",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242646267840244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_06",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242646267770244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_04",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 3,
+    "n_ads": 12
+  },
+  "120242469774560244": {
+    "name": "[ANE_MAI_26]_[FASE 05]_[LEADS]_[TESTE_DE_ESCALA]_[BIKE]_[FRIO]_[CBO]_[C04] + ADV",
+    "adsets": [
+      {
+        "id": "120242469774580244",
+        "name": "00_ABERTO",
+        "status": "ACTIVE",
+        "created_time": "2026-04-20T19:09:50-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "16798.46",
+        "impressions": "3070749",
+        "clicks": "62141",
+        "inline_link_clicks": "35462",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "8092"
+          },
+          {
+            "action_type": "link_click",
+            "value": "35462"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "8092"
+          },
+          {
+            "action_type": "initiate_checkout",
+            "value": "11"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_initiate_checkout",
+            "value": "11"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "1359747"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "26420"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "26420"
+          },
+          {
+            "action_type": "onsite_conversion.total_messaging_connection",
+            "value": "59"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "670"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "1359571"
+          },
+          {
+            "action_type": "like",
+            "value": "176"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "30951"
+          },
+          {
+            "action_type": "comment",
+            "value": "301"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "8092"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "31623"
+          },
+          {
+            "action_type": "post_uncomment",
+            "value": "2"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_2_message_send",
+            "value": "34"
+          },
+          {
+            "action_type": "post",
+            "value": "3235"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "8092"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "1196"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_comment",
+            "value": "303"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_3_message_send",
+            "value": "32"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "1196"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "25549"
+          },
+          {
+            "action_type": "onsite_web_initiate_checkout",
+            "value": "11"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_5_message_send",
+            "value": "29"
+          },
+          {
+            "action_type": "omni_initiated_checkout",
+            "value": "11"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_conversation_replied_7d",
+            "value": "43"
+          },
+          {
+            "action_type": "video_view",
+            "value": "1293158"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "8092"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "26219"
+          }
+        ],
+        "cpm": "5.470476",
+        "frequency": "1.355834",
+        "reach": "2264841",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120242469774610244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_07",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120242469774600244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_08",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242469774570244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_06",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242469774590244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_09",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 1,
+    "n_ads": 4
+  },
+  "120242469722330244": {
+    "name": "[ANE_MAI_26]_[FASE 05]_[LEADS]_[TESTE_DE_ESCALA]_[BIKE]_[FRIO]_[CBO]_[C03] + ADV",
+    "adsets": [
+      {
+        "id": "120242469722320244",
+        "name": "00_ABERTO",
+        "status": "ACTIVE",
+        "created_time": "2026-04-20T19:07:09-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "12449.07",
+        "impressions": "1499071",
+        "clicks": "42053",
+        "inline_link_clicks": "22319",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "4299"
+          },
+          {
+            "action_type": "web_in_store_purchase",
+            "value": "2"
+          },
+          {
+            "action_type": "omni_purchase",
+            "value": "2"
+          },
+          {
+            "action_type": "link_click",
+            "value": "22319"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "4299"
+          },
+          {
+            "action_type": "initiate_checkout",
+            "value": "2"
+          },
+          {
+            "action_type": "offsite_purchase_add_20_s_calls",
+            "value": "2"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_purchase",
+            "value": "2"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_initiate_checkout",
+            "value": "2"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "612777"
+          },
+          {
+            "action_type": "purchase",
+            "value": "2"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "16758"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "16758"
+          },
+          {
+            "action_type": "onsite_conversion.total_messaging_connection",
+            "value": "33"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "266"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "612686"
+          },
+          {
+            "action_type": "like",
+            "value": "91"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "12668"
+          },
+          {
+            "action_type": "comment",
+            "value": "141"
+          },
+          {
+            "action_type": "onsite_web_app_purchase",
+            "value": "2"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "4299"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "12934"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_2_message_send",
+            "value": "11"
+          },
+          {
+            "action_type": "post",
+            "value": "838"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "4299"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "401"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_comment",
+            "value": "141"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_3_message_send",
+            "value": "11"
+          },
+          {
+            "action_type": "web_app_in_store_purchase",
+            "value": "2"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "401"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "11022"
+          },
+          {
+            "action_type": "onsite_web_initiate_checkout",
+            "value": "2"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_5_message_send",
+            "value": "7"
+          },
+          {
+            "action_type": "omni_initiated_checkout",
+            "value": "2"
+          },
+          {
+            "action_type": "onsite_web_purchase",
+            "value": "2"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_conversation_replied_7d",
+            "value": "17"
+          },
+          {
+            "action_type": "video_view",
+            "value": "577699"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "4299"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "11288"
+          }
+        ],
+        "cpm": "8.304523",
+        "frequency": "1.375976",
+        "reach": "1089460",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120244320704570244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_06",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244320704560244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_05",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244320704550244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_03",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120244320704580244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_01",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242469722310244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_04",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120242469722340244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_02",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120242469722300244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_05",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120242469722290244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_03",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242469722350244",
+        "name": "ANE_ABR_26_CAP_BIKE_VD_01",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 1,
+    "n_ads": 9
+  },
+  "120242469665830244": {
+    "name": "[ANE_MAI_26]_[FASE 05]_[LEADS]_[TESTE_DE_ESCALA]_[MEC]_[FRIO]_[CBO]_[C02] + ADV",
+    "adsets": [
+      {
+        "id": "120242469665780244",
+        "name": "00_ABERTO",
+        "status": "ACTIVE",
+        "created_time": "2026-04-20T19:04:23-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "13586.3",
+        "impressions": "1324246",
+        "clicks": "43453",
+        "inline_link_clicks": "23287",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "4701"
+          },
+          {
+            "action_type": "link_click",
+            "value": "23287"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "4701"
+          },
+          {
+            "action_type": "initiate_checkout",
+            "value": "12"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_initiate_checkout",
+            "value": "12"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "685763"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "16519"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "16519"
+          },
+          {
+            "action_type": "onsite_conversion.total_messaging_connection",
+            "value": "40"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "280"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "685621"
+          },
+          {
+            "action_type": "like",
+            "value": "142"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "17407"
+          },
+          {
+            "action_type": "comment",
+            "value": "218"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "4701"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "17687"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_2_message_send",
+            "value": "19"
+          },
+          {
+            "action_type": "post",
+            "value": "844"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "4701"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "581"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_comment",
+            "value": "218"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_3_message_send",
+            "value": "17"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "581"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "15484"
+          },
+          {
+            "action_type": "onsite_web_initiate_checkout",
+            "value": "12"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_5_message_send",
+            "value": "13"
+          },
+          {
+            "action_type": "omni_initiated_checkout",
+            "value": "12"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_conversation_replied_7d",
+            "value": "20"
+          },
+          {
+            "action_type": "video_view",
+            "value": "644927"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "4701"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "15764"
+          }
+        ],
+        "cpm": "10.25965",
+        "frequency": "1.654003",
+        "reach": "800631",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120242469665810244",
+        "name": "ANE_ABR_26_CAP_MEC_VD_14",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120242469665790244",
+        "name": "ANE_ABR_26_CAP_MEC_VD_10",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120242469665820244",
+        "name": "ANE_ABR_26_CAP_MEC_VD_09",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242469665800244",
+        "name": "ANE_ABR_26_CAP_MEC_VD_13",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 1,
+    "n_ads": 4
+  },
+  "120242469590180244": {
+    "name": "[ANE_MAI_26]_[FASE 05]_[LEADS]_[TESTE_DE_ESCALA]_[MEC]_[FRIO]_[CBO]_[C01] + ADV",
+    "adsets": [
+      {
+        "id": "120242469590190244",
+        "name": "00_ABERTO",
+        "status": "ACTIVE",
+        "created_time": "2026-04-20T19:01:52-0300"
+      }
+    ],
+    "insights": [
+      {
+        "spend": "797.26",
+        "impressions": "102976",
+        "clicks": "2391",
+        "inline_link_clicks": "1259",
+        "actions": [
+          {
+            "action_type": "offsite_complete_registration_add_meta_leads",
+            "value": "209"
+          },
+          {
+            "action_type": "link_click",
+            "value": "1259"
+          },
+          {
+            "action_type": "omni_complete_registration",
+            "value": "209"
+          },
+          {
+            "action_type": "initiate_checkout",
+            "value": "2"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_initiate_checkout",
+            "value": "2"
+          },
+          {
+            "action_type": "page_engagement",
+            "value": "49100"
+          },
+          {
+            "action_type": "landing_page_view",
+            "value": "858"
+          },
+          {
+            "action_type": "omni_landing_page_view",
+            "value": "858"
+          },
+          {
+            "action_type": "onsite_conversion.total_messaging_connection",
+            "value": "4"
+          },
+          {
+            "action_type": "onsite_conversion.post_unlike",
+            "value": "22"
+          },
+          {
+            "action_type": "post_engagement",
+            "value": "49094"
+          },
+          {
+            "action_type": "like",
+            "value": "6"
+          },
+          {
+            "action_type": "post_interaction_gross",
+            "value": "1039"
+          },
+          {
+            "action_type": "comment",
+            "value": "12"
+          },
+          {
+            "action_type": "complete_registration",
+            "value": "209"
+          },
+          {
+            "action_type": "post_interaction_net",
+            "value": "1061"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_2_message_send",
+            "value": "1"
+          },
+          {
+            "action_type": "post",
+            "value": "93"
+          },
+          {
+            "action_type": "offsite_complete_registration_add_20_s_calls",
+            "value": "209"
+          },
+          {
+            "action_type": "onsite_conversion.post_save",
+            "value": "20"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_comment",
+            "value": "12"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_user_depth_3_message_send",
+            "value": "1"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_save",
+            "value": "20"
+          },
+          {
+            "action_type": "onsite_conversion.post_net_like",
+            "value": "892"
+          },
+          {
+            "action_type": "onsite_web_initiate_checkout",
+            "value": "2"
+          },
+          {
+            "action_type": "omni_initiated_checkout",
+            "value": "2"
+          },
+          {
+            "action_type": "onsite_conversion.messaging_conversation_replied_7d",
+            "value": "1"
+          },
+          {
+            "action_type": "video_view",
+            "value": "46796"
+          },
+          {
+            "action_type": "offsite_conversion.fb_pixel_complete_registration",
+            "value": "209"
+          },
+          {
+            "action_type": "post_reaction",
+            "value": "914"
+          }
+        ],
+        "cpm": "7.742192",
+        "frequency": "1.073841",
+        "reach": "95895",
+        "date_start": "2026-02-28",
+        "date_stop": "2026-05-28"
+      }
+    ],
+    "ads": [
+      {
+        "id": "120242469590210244",
+        "name": "ANE_ABR_26_CAP_MEC_VD_01",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120242469590160244",
+        "name": "ANE_ABR_26_CAP_MEC_VD_03",
+        "status": "PAUSED"
+      },
+      {
+        "id": "120242469590200244",
+        "name": "ANE_ABR_26_CAP_MEC_VD_02",
+        "status": "ACTIVE"
+      },
+      {
+        "id": "120242469590170244",
+        "name": "ANE_ABR_26_CAP_MEC_VD_04",
+        "status": "ACTIVE"
+      }
+    ],
+    "n_adsets": 1,
+    "n_ads": 4
+  }
+}

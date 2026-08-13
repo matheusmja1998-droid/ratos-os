@@ -1,0 +1,5211 @@
+[{
+  "title": "Terneiro Carnes",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue gourmet",
+  "address": "Av. Olinto Meireles, 2320 - Santa Helena, Belo Horizonte - MG, 30620-330, Brasil",
+  "neighborhood": "Santa Helena",
+  "street": "Av. Olinto Meireles, 2320",
+  "city": "Belo Horizonte",
+  "postalCode": "30620-330",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "https://terneiro-carnes.onbeef.app.br/",
+  "phone": "+55 31 99610-7095",
+  "phoneUnformatted": "+5531996107095",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9878832,
+    "lng": -44.0087131
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJjaOsM429pgARi2GekbrGG5A",
+  "categories": [
+    "Açougue gourmet"
+  ],
+  "fid": "0xa6bd8d33aca38d:0x901bc6ba919e618b",
+  "cid": "10384111870442103179",
+  "reviewsCount": 955,
+  "imagesCount": 173,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.097Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:00 to 20:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega sem contato": true
+      },
+      {
+        "Entrega": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Público": [
+      {
+        "Empresa que acolhe a comunidade LGBTQ+": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Terneiro%20Carnes&query_place_id=ChIJjaOsM429pgARi2GekbrGG5A",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 1,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHaxqMgzW_zk-xZ_u_FHHzkQaMciFRT5BIJq4JRwTDcYRxoSMVk8UsdocXvgcd0SCY12hb4lL3qu_4UixvBwEyOGKjMwyXuCL4tkFsti0ndyQxdDJjgSmt6Ml_dn9LP4JqYp3eN=w408-h306-k-no",
+  "kgmid": "/g/11lgn84fxj"
+},
+{
+  "title": "Açougue Montes Claros",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. Barão de Monte Alto, 11 - Cardoso, Belo Horizonte - MG, 30626-480, Brasil",
+  "neighborhood": "Cardoso",
+  "street": "R. Barão de Monte Alto, 11",
+  "city": "Belo Horizonte",
+  "postalCode": "30626-480",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.instagram.com/acouguemontesclaros",
+  "phone": "+55 31 3383-7340",
+  "phoneUnformatted": "+553133837340",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9964311,
+    "lng": -44.0068706
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.7,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJq4Frlc69pgAR3JDxgoJ0fCY",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6bdce956b81ab:0x267c748282f190dc",
+  "cid": "2773219574444822748",
+  "reviewsCount": 71,
+  "imagesCount": 6,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.100Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:30 to 19:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:30 to 19:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:30 to 19:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:30 to 12:30"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:30 to 19:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:30 to 19:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:30 to 19:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=A%C3%A7ougue%20Montes%20Claros&query_place_id=ChIJq4Frlc69pgAR3JDxgoJ0fCY",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 2,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-proxy/ALd4DhFnTTQnfRmlJ_KCQF7Xs3ay94RIHM6MyDv9MelQk3uRGPM1iD7YoS28w-hb35ce3XHK3E5GcqbS6XFNwpRBrBJN3o87S3c07qdyCnZAAvtNSmbRQ4WzXAQp8zrwbXW8DvINpnveCIbmbDDkv4R_uAw6t12aoMUykFtTHw5OeI7FxB2GZv2tne8w_ZgnHUGOcF5xzgs=w408-h306-k-no",
+  "kgmid": "/g/1td5hbzv"
+},
+{
+  "title": "Casa de Carnes Diamante",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. Souza Dantas, 117 - Diamante, Belo Horizonte - MG, 30660-040, Brasil",
+  "neighborhood": "Diamante",
+  "street": "R. Souza Dantas, 117",
+  "city": "Belo Horizonte",
+  "postalCode": "30660-040",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3384-8133",
+  "phoneUnformatted": "+553133848133",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9844725,
+    "lng": -44.0249747
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.8,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJyXCCLnG-pgARJZqi_bmku_g",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6be712e8270c9:0xf8bba4b9fda29a25",
+  "cid": "17923100260782217765",
+  "reviewsCount": 29,
+  "imagesCount": 23,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.100Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "Fechado"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 19:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      },
+      {
+        "Retirada na loja": true
+      },
+      {
+        "Compras na loja": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": false
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": false
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro de gênero neutro": true
+      }
+    ],
+    "Público": [
+      {
+        "Empresa que acolhe a comunidade LGBTQ+": true
+      },
+      {
+        "Espaço seguro para pessoas transgênero": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Casa%20de%20Carnes%20Diamante&query_place_id=ChIJyXCCLnG-pgARJZqi_bmku_g",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 3,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGoWjSQeT524U2VsJNoyguIKGkQRBZhTDmIMabgQeB-5ibd_DbbAS0g774GrTWHaTdaxrJz4kBo8zsLoeDIcQWtQP-W-muovG9M_AF4q3EQ-NmG4iEa9ijPV8V0rInLlhlMNSC6Ug=w408-h306-k-no",
+  "kgmid": "/g/11cjj04c8g"
+},
+{
+  "title": "Casa de Carne Oliveira Lima",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. Eridano, 597 - Miramar (Barreiro), Belo Horizonte - MG, 30644-100, Brasil",
+  "neighborhood": "Miramar (Barreiro)",
+  "street": "R. Eridano, 597",
+  "city": "Belo Horizonte",
+  "postalCode": "30644-100",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3383-6671",
+  "phoneUnformatted": "+553133836671",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -19.9980451,
+    "lng": -44.0123358
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.8,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJpQ_u9c29pgARl6DISiQqsYc",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6bdcdf5ee0fa5:0x87b12a244ac8a097",
+  "cid": "9777642601359909015",
+  "reviewsCount": 37,
+  "imagesCount": 1,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.100Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 19:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": false
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Casa%20de%20Carne%20Oliveira%20Lima&query_place_id=ChIJpQ_u9c29pgARl6DISiQqsYc",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 4,
+  "isAdvertisement": false,
+  "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=Ttfg7xHthBTPN3QQMQRI9g&cb_client=search.gws-prod.gps&w=408&h=240&yaw=166.33833&pitch=0&thumbfov=100",
+  "kgmid": "/g/1tg6rbz4"
+},
+{
+  "title": "Casa de Carnes Aragon",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. José dos Santos Lage, 454 - Teixeira Dias, Belo Horizonte - MG, 30644-220, Brasil",
+  "neighborhood": "Teixeira Dias",
+  "street": "R. José dos Santos Lage, 454",
+  "city": "Belo Horizonte",
+  "postalCode": "30644-220",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3384-3387",
+  "phoneUnformatted": "+553133843387",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9904252,
+    "lng": -44.0180171
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.3,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ9QYDmde9pgAReMGIx6DA7Fw",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6bdd7990306f5:0x5cecc0a0c788c178",
+  "cid": "6695938542768013688",
+  "reviewsCount": 40,
+  "imagesCount": 5,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.100Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 19:30"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      },
+      {
+        "Retirada na loja": true
+      },
+      {
+        "Compras na loja": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Casa%20de%20Carnes%20Aragon&query_place_id=ChIJ9QYDmde9pgAReMGIx6DA7Fw",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 6,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEMWxK-nMJ3IVhw8SfrrzwxSClazWH1Wmd8yEHFXI0y6FSTqep04XfgBevALYRftTWjRebOREVOP30MguW7sUzk9CQMDJ_ao0nICFaPzRTSA4skr5n740vma5IMLIS4P6ok5jkuPQ=w408-h321-k-no",
+  "kgmid": "/g/1tdz15nt"
+},
+{
+  "title": "Acolgue do Cláudio",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. 21 de Abril - Olhos D'Água, Belo Horizonte - MG, 30390-465, Brasil",
+  "neighborhood": "Olhos d'Água",
+  "street": "R. 21 de Abril",
+  "city": "Belo Horizonte",
+  "postalCode": "30390-465",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3288-3534",
+  "phoneUnformatted": "+553132883534",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.995461,
+    "lng": -43.963582
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.9,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ8zoilWq9pgARetWJ4y4QvY0",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6bd6a95223af3:0x8dbd102ee389d57a",
+  "cid": "10213337323518154106",
+  "reviewsCount": 22,
+  "imagesCount": 5,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.101Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:00 to 19:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": false
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Acolgue%20do%20Cl%C3%A1udio&query_place_id=ChIJ8zoilWq9pgARetWJ4y4QvY0",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 7,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFDs9svQztIZqOCwhTAjdiYNvzr1_51hg_pCSqgWx8q3yX4iu-CdySLsz0873EEMjJrd-8YwgDXBtBsJMPxP8Vzmp-wq3bXHDZ_v2xzVKFYS912Jllc8CTFH5Noo8XHTuRHcDin=w408-h544-k-no",
+  "kgmid": "/g/1wzt3lxr"
+},
+{
+  "title": "Açougue do Cláudio",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "Rua São João do Meriti, 186 - Pilar, Belo Horizonte - MG, 30390-300, Brasil",
+  "neighborhood": "Pilar",
+  "street": "Rua São João do Meriti, 186",
+  "city": "Belo Horizonte",
+  "postalCode": "30390-300",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3288-3027",
+  "phoneUnformatted": "+553132883027",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -19.9968966,
+    "lng": -43.9717455
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.7,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJF0S-fBK9pgARcR90F98CjIc",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6bd127cbe4417:0x878c02df17741f71",
+  "cid": "9767184849054211953",
+  "reviewsCount": 16,
+  "imagesCount": 18,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.101Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:00 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:00 to 19:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": false
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": false
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=A%C3%A7ougue%20do%20Cl%C3%A1udio&query_place_id=ChIJF0S-fBK9pgARcR90F98CjIc",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 8,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGUaPBloeS8IXrHKAH7pKaP2NiHSxncL6DH9_x2yzB8db3MADvE3i6am_m-O7LfJ9p3DbLqQbLoY0lCszS2PgY4UMAY39vtwAteeTuifvTr3o54hBIPcCenmOoPYf-cPKP3R1JAKA=w426-h240-k-no",
+  "kgmid": "/g/1ptvstnvc"
+},
+{
+  "title": "Açougue - Casa de Carnes Bife de Boi",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. Coletora, 715 - Vila Pinho Vale do Jatobá, Belo Horizonte - MG, 30690-050, Brasil",
+  "neighborhood": "Vila Pinho Vale do Jatobá",
+  "street": "R. Coletora, 715",
+  "city": "Belo Horizonte",
+  "postalCode": "30690-050",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 98865-0558",
+  "phoneUnformatted": "+5531988650558",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -20.0040538,
+    "lng": -44.0222353
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.8,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJjQyTu72_pgARQyptxWRfefY",
+  "categories": [
+    "Açougue",
+    "Açougue gourmet"
+  ],
+  "fid": "0xa6bfbdbb930c8d:0xf6795f64c56d2a43",
+  "cid": "17760331491925895747",
+  "reviewsCount": 4,
+  "imagesCount": 17,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.101Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:00 to 20:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      },
+      {
+        "Retirada na loja": true
+      },
+      {
+        "Compras na loja": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Público": [
+      {
+        "Empresa que acolhe a comunidade LGBTQ+": true
+      },
+      {
+        "Espaço seguro para pessoas transgênero": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=A%C3%A7ougue%20-%20Casa%20de%20Carnes%20Bife%20de%20Boi&query_place_id=ChIJjQyTu72_pgARQyptxWRfefY",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 10,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFPNVSNmyeayT1vIlZlXnNWRJlAk1pDTlkvrtOTFTWpvKK0P-K1JAl-RThqRzEPK48Ft7WQzDWQA6kUSDwwvmN43XoeDgooJ0Mbw1C4qtHv0QxtydsPiI2XMqqWbSjn8eNygAhEzA=w408-h408-k-no",
+  "kgmid": "/g/11qg03pv49"
+},
+{
+  "title": "Barão da Carne",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "Av. Bráulio Gomes Nogueira, 846 - Tirol, Belo Horizonte - MG, 30662-090, Brasil",
+  "neighborhood": "Tirol",
+  "street": "Av. Bráulio Gomes Nogueira, 846",
+  "city": "Belo Horizonte",
+  "postalCode": "30662-090",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3309-4203",
+  "phoneUnformatted": "+553133094203",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.987865,
+    "lng": -44.045562
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ_3qq0XS_pgARfF3vm5eXlCk",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6bf74d1aa7aff:0x299497979bef5d7c",
+  "cid": "2996186329520233852",
+  "reviewsCount": 107,
+  "imagesCount": 5,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.101Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 19:30"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      },
+      {
+        "Compras na loja": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Bar%C3%A3o%20da%20Carne&query_place_id=ChIJ_3qq0XS_pgARfF3vm5eXlCk",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 11,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAE3koxoFto8e85G5J2kHZFVDPmX021BGYLSDUbXYCv0ClA0fRO15eOyNMCQcTdzxIseGvcXtnHWqrLLCRX6zdKKVUSpKy2XncgxlHFJXrfis8RCsZbN_3ARrO_sekiqGZ_AawJ_=w408-h883-k-no",
+  "kgmid": "/g/11p61vdpcg"
+},
+{
+  "title": "Açougue",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Atacadista de carnes",
+  "address": "Av. Waldyr Soeiro Emrich, 3350 - Lj 4b - Santa Helena, Belo Horizonte - MG, 30644-000, Brasil",
+  "neighborhood": "Santa Helena",
+  "street": "Av. Waldyr Soeiro Emrich, 3350 - Lj 4b",
+  "city": "Belo Horizonte",
+  "postalCode": "30644-000",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "",
+  "phoneUnformatted": "",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9899223,
+    "lng": -44.0128799
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJG7HrQ5m_pgAR2NUJheoBMsc",
+  "categories": [
+    "Atacadista de carnes",
+    "Açougue"
+  ],
+  "fid": "0xa6bf9943ebb11b:0xc73201ea8509d5d8",
+  "cid": "14353537069149181400",
+  "reviewsCount": 63,
+  "imagesCount": 25,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.101Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:00 to 19:30"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:00 to 19:30"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:00 to 19:30"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 12:30"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:00 to 19:30"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:00 to 19:30"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:00 to 19:30"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=A%C3%A7ougue&query_place_id=ChIJG7HrQ5m_pgAR2NUJheoBMsc",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 12,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGuVTc12UNQgN3KoFirHelKA4QLTfZIDQdKzVSkYJQgLti6W8YyebZq405Z5YTM0YjY8LIR2f-I8uQryKoQSGbEoxeY71ycBbKUkHwjaq0xMKvW7yQrvpzVNHWbWGl7NoUgapE=w507-h240-k-no",
+  "kgmid": "/g/11fq2_ftph"
+},
+{
+  "title": "Boutique da Carne",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. Dr. Cristiano Rezende, 1936 - Bonsucesso, Belo Horizonte - MG, 30622-020, Brasil",
+  "neighborhood": "Bonsucesso",
+  "street": "R. Dr. Cristiano Rezende, 1936",
+  "city": "Belo Horizonte",
+  "postalCode": "30622-020",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3582-4687",
+  "phoneUnformatted": "+553135824687",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9875526,
+    "lng": -43.9899414
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.4,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ9SK9_q69pgARgPYGwNFxxow",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6bdaefebd22f5:0x8cc671d1c006f680",
+  "cid": "10143920356382406272",
+  "reviewsCount": 104,
+  "imagesCount": 19,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.102Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:00 to 20:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Boutique%20da%20Carne&query_place_id=ChIJ9SK9_q69pgARgPYGwNFxxow",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 13,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEhe_1OCQjcFmHA3Hqib-5jflxr5zhUGaYG7uWaswiSmNQcK2DAfzD3N_LHRgwBnSg2y0Z2imx7ZYcj53bZ8nUUYiseI_2Sadu72-lTQh_Hi90Yu9IWmRnW1izi7X_A-1hYC0Fq=w408-h408-k-no",
+  "kgmid": "/g/11j61c62yl"
+},
+{
+  "title": "Casa de Carnes Camargos Diniz",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "Av. Olinto Meireles, 2420 - Santa Helena, Belo Horizonte - MG, 30620-330, Brasil",
+  "neighborhood": "Santa Helena",
+  "street": "Av. Olinto Meireles, 2420",
+  "city": "Belo Horizonte",
+  "postalCode": "30620-330",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3381-5551",
+  "phoneUnformatted": "+553133815551",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9888029,
+    "lng": -44.0083594
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.7,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJy06cjMS9pgARJXg3pH8xNiE",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6bdc48c9c4ecb:0x2136317fa4377825",
+  "cid": "2393154676279703589",
+  "reviewsCount": 18,
+  "imagesCount": 3,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.102Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 12:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:00 to 19:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Casa%20de%20Carnes%20Camargos%20Diniz&query_place_id=ChIJy06cjMS9pgARJXg3pH8xNiE",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 14,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-proxy/ALd4DhE6AQN0LsACHl4tQY1-f-ZdeQj6olnIfu07GUrhfNTQSvg-OiYSbgcYj3jl-AY965hYQ2ThrjldhZwk7qSQhKSRKs0ZEgQBIBUEmdvnlKvQCMCXJtySVaZaHOOUvPeRRxIZRNAktazQ_YDgI71a6iQTRz4GKQW8QsXNp8iuKUTwreQ6nuIPO-RqCWVA_53eIgYAnsA=w408-h306-k-no",
+  "kgmid": "/g/1tk_ky_b"
+},
+{
+  "title": "Casa de Carnes Mota",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "Av. Perimetral, 1645 - Vila Santa Rita, Belo Horizonte - MG, 30670-020, Brasil",
+  "neighborhood": "Vila Santa Rita",
+  "street": "Av. Perimetral, 1645",
+  "city": "Belo Horizonte",
+  "postalCode": "30670-020",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 99424-0608",
+  "phoneUnformatted": "+5531994240608",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -20.0068023,
+    "lng": -44.022103
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.7,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJe0X71IK-pgARWOzfz_U7_KE",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6be82d4fb457b:0xa1fc3bf5cfdfec58",
+  "cid": "11672270261178068056",
+  "reviewsCount": 23,
+  "imagesCount": 0,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.102Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 19:30"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Casa%20de%20Carnes%20Mota&query_place_id=ChIJe0X71IK-pgARWOzfz_U7_KE",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 17,
+  "isAdvertisement": false,
+  "imageUrl": null,
+  "kgmid": "/g/11cjmh4lqz"
+},
+{
+  "title": "Casa de Carnes Dois Irmãos",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. Flôr de Pitangueira, 107 - Independência, Belo Horizonte - MG, 30672-250, Brasil",
+  "neighborhood": "Independência",
+  "street": "R. Flôr de Pitangueira, 107",
+  "city": "Belo Horizonte",
+  "postalCode": "30672-250",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 98903-5329",
+  "phoneUnformatted": "+5531989035329",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -20.0198381,
+    "lng": -44.0289826
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJW5gft6S-pgARlEkWX9zXG4g",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6bea4b71f985b:0x881bd7dc5f164994",
+  "cid": "9807669955017460116",
+  "reviewsCount": 17,
+  "imagesCount": 4,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.102Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 19:45"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 19:45"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 19:45"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 12:45"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 19:45"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 19:45"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 19:45"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Casa%20de%20Carnes%20Dois%20Irm%C3%A3os&query_place_id=ChIJW5gft6S-pgARlEkWX9zXG4g",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 18,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFuSjMVspcypAn4ZziUH27lrb4pGL9W2Gs_MpRVZlKvx7MGPkHHQ5YKP1w7Z40KUwc0BK7LnkmGJgJ2N-BzwvufNollq4IibsFmxYJeL4YzdCFRtYV1eo6OIxZLyeKFppr1p1Bq=w408-h544-k-no",
+  "kgmid": "/g/11bx2gfkj6"
+},
+{
+  "title": "CARNES NOBRES BH",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "Rua José Pedro de Brito 391 Vila Santa Rita (BARREIRO, Belo Horizonte - MG, 30668-590, Brasil",
+  "neighborhood": "Vila Santa Rita",
+  "street": "Rua José Pedro de Brito 391 Vila Santa Rita (BARREIRO",
+  "city": "Belo Horizonte",
+  "postalCode": "30668-590",
+  "state": "MG",
+  "countryCode": "BR",
+  "website": "https://www.instagram.com/carnes_nobres_bh/",
+  "phone": "+55 31 98455-8368",
+  "phoneUnformatted": "+5531984558368",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -20.0090649,
+    "lng": -44.0299494
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJoRs3kSm_pgAR2RwtW6R2tFg",
+  "categories": [
+    "Açougue",
+    "Butique",
+    "Açougue gourmet",
+    "Empório gourmet",
+    "Mercado"
+  ],
+  "fid": "0xa6bf2991371ba1:0x58b476a45b2d1cd9",
+  "cid": "6391864219421973721",
+  "reviewsCount": 46,
+  "imagesCount": 486,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.102Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "18:00 to 22:30"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "18:00 to 00:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 00:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 00:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "18:00 to 22:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "18:00 to 22:30"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "18:00 to 22:30"
+    }
+  ],
+  "additionalOpeningHours": {
+    "Entrega": [
+      {
+        "day": "quinta-feira",
+        "hours": "18:00–23:30"
+      },
+      {
+        "day": "sexta-feira",
+        "hours": "18:00–23:30"
+      },
+      {
+        "day": "sábado",
+        "hours": "18:00–23:30"
+      },
+      {
+        "day": "domingo",
+        "hours": "08:00–23:30"
+      },
+      {
+        "day": "segunda-feira",
+        "hours": "18:00–23:00"
+      },
+      {
+        "day": "terça-feira",
+        "hours": "18:00–23:00"
+      },
+      {
+        "day": "quarta-feira",
+        "hours": "18:00–23:30"
+      }
+    ],
+    "Retirada": [
+      {
+        "day": "quinta-feira",
+        "hours": "08:00–23:30"
+      },
+      {
+        "day": "sexta-feira",
+        "hours": "08:00–23:30"
+      },
+      {
+        "day": "sábado",
+        "hours": "08:00–01:00"
+      },
+      {
+        "day": "domingo",
+        "hours": "08:00–23:30"
+      },
+      {
+        "day": "segunda-feira",
+        "hours": "08:00–23:30"
+      },
+      {
+        "day": "terça-feira",
+        "hours": "08:00–23:30"
+      },
+      {
+        "day": "quarta-feira",
+        "hours": "08:00–23:30"
+      }
+    ],
+    "Acesso": [
+      {
+        "day": "quinta-feira",
+        "hours": "18:00–23:30"
+      },
+      {
+        "day": "sexta-feira",
+        "hours": "18:00–23:30"
+      },
+      {
+        "day": "sábado",
+        "hours": "08:00–01:00"
+      },
+      {
+        "day": "domingo",
+        "hours": "08:00–23:30"
+      },
+      {
+        "day": "segunda-feira",
+        "hours": "18:00–23:30"
+      },
+      {
+        "day": "terça-feira",
+        "hours": "18:00–23:30"
+      },
+      {
+        "day": "quarta-feira",
+        "hours": "18:00–23:30"
+      }
+    ],
+    "Horário de atendimento on-line": [
+      {
+        "day": "quinta-feira",
+        "hours": "07:30–17:00"
+      },
+      {
+        "day": "sexta-feira",
+        "hours": "07:30–17:00"
+      },
+      {
+        "day": "sábado",
+        "hours": "07:30–17:00"
+      },
+      {
+        "day": "domingo",
+        "hours": "07:30–17:00"
+      },
+      {
+        "day": "segunda-feira",
+        "hours": "07:30–17:00"
+      },
+      {
+        "day": "terça-feira",
+        "hours": "07:30–17:00"
+      },
+      {
+        "day": "quarta-feira",
+        "hours": "07:30–17:00"
+      }
+    ]
+  },
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Da empresa": [
+      {
+        "Se identifica como uma empresa de empreendedoras": true
+      }
+    ],
+    "Opções de serviço": [
+      {
+        "Entrega sem contato": true
+      },
+      {
+        "Entrega": true
+      },
+      {
+        "Retirada na loja": true
+      },
+      {
+        "Compras na loja": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Assento com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": false
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": false
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": false
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro de gênero neutro": true
+      },
+      {
+        "Wi-Fi": true
+      },
+      {
+        "Wi-Fi gratuito": true
+      }
+    ],
+    "Público": [
+      {
+        "Espaço seguro para pessoas transgênero": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=CARNES%20NOBRES%20BH&query_place_id=ChIJoRs3kSm_pgAR2RwtW6R2tFg",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 19,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEtp9lfiTI2QUtF05Dg12OTGIdrMx9ltCxoll-ln_oJVNWdyaioL_EikKKtaR9akLpMxJBXpEVPngg8UXzyKtQGs2lYnm2QggvW9u7Tdml2hNy2KAY4z_Mnkb3Usnq4b8XWpRbr7w=w408-h306-k-no",
+  "kgmid": "/g/11rnk6qwn5"
+},
+{
+  "title": "Boutique da Carne",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "897, R. Amilcar Cabral, 251 A - Milionários, Belo Horizonte - MG, 30620-250, Brasil",
+  "neighborhood": "Milionários",
+  "street": "897, R. Amilcar Cabral, 251 A",
+  "city": "Belo Horizonte",
+  "postalCode": "30620-250",
+  "state": "MG",
+  "countryCode": "BR",
+  "website": "https://www.instagram.com/boutiquedacarne.milionarios?igsh=ODl4dTZjeXN1dGV6",
+  "phone": "+55 31 3336-1238",
+  "phoneUnformatted": "+553133361238",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9831858,
+    "lng": -44.003848
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.8,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJUYnCieq9pgARRxdsg9FUKuY",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6bdea89c28951:0xe62a54d1836c1747",
+  "cid": "16585161836575070023",
+  "reviewsCount": 42,
+  "imagesCount": 20,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.104Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 12:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "Fechado"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 19:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Boutique%20da%20Carne&query_place_id=ChIJUYnCieq9pgARRxdsg9FUKuY",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 20,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-proxy/ALd4DhGpHJD8BnhhugMosX_KBr5s_sC1_PHqaea1EScYME9yHnYaVGRUvWtnr_oZ7jj65TgLawliwP9xF_21cMpp863kdPOTRpG0viV0tD76WISFrj6G5BaJQ86WVTNhyA48YDnWKRBa25U-KM555H3CEE53tuYnAyMefWNLmVtquXAxkrolQT2ZtlBRS21HWJN-5lX1M60=w408-h306-k-no",
+  "kgmid": "/g/1pty9qgl0"
+},
+{
+  "title": "Casa De Carnes Azevedo",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. Antônio Mariano de Abreu, 120 - Paulo VI, Belo Horizonte - MG, 31995-000, Brasil",
+  "neighborhood": "Paulo VI",
+  "street": "R. Antônio Mariano de Abreu, 120",
+  "city": "Belo Horizonte",
+  "postalCode": "31995-000",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3021-5310",
+  "phoneUnformatted": "+553130215310",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -19.8364516,
+    "lng": -43.8911793
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.9,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJbyDwp8aEpgARDU5G1zJukVE",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa684c6a7f0206f:0x51916e32d7464e0d",
+  "cid": "5877600153334337037",
+  "reviewsCount": 54,
+  "imagesCount": 5,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.688Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 19:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Casa%20De%20Carnes%20Azevedo&query_place_id=ChIJbyDwp8aEpgARDU5G1zJukVE",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 2,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAH5i_9eOloyu-dnP9LJu-oS682aK7Z_gWFisnA3CScNvutng3W_klWZlu9WDLbrZ3uC-2CSiNmT0nhlFF0fkguhYiZIsCKf7bsWC3yz92EguSjLLWxeMXGgUqFKH-OOVm294Dlf1w=w408-h886-k-no",
+  "kgmid": "/g/11g_z2b0pj"
+},
+{
+  "title": "Casa de Carnes Manancial",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. Assa Peixe, 2 - Paulo VI, Belo Horizonte - MG, 31995-170, Brasil",
+  "neighborhood": "Paulo VI",
+  "street": "R. Assa Peixe, 2",
+  "city": "Belo Horizonte",
+  "postalCode": "31995-170",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 98755-3073",
+  "phoneUnformatted": "+5531987553073",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.841859,
+    "lng": -43.8947923
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJA5ARNc6EpgARGJ8dx33LLlY",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa684ce35119003:0x562ecb7dc71d9f18",
+  "cid": "6210124677262450456",
+  "reviewsCount": 19,
+  "imagesCount": 17,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.688Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 19:30"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 19:30"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 19:30"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 13:30"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 19:30"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 19:30"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 19:30"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Casa%20de%20Carnes%20Manancial&query_place_id=ChIJA5ARNc6EpgARGJ8dx33LLlY",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 3,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGKQ4CPWCsneANhFDAJ2URlAOpSOwjFksopdj7CDOqjUKdcb-7NE2Vlt61pfff-q6RG8xUXaMb7Vat6fhDK_u4x-yJ0D6AKEKdYJqTyfW23KQoRHTMl7BDkl26pmr4zrjTnhSHi=w532-h240-k-no",
+  "kgmid": "/g/11d_pt19bh"
+},
+{
+  "title": "Açougue Prime Carnes Minas Caixa",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue gourmet",
+  "address": "R. Edgard Torres, 727 - Minas Caixa, Belo Horizonte - MG, 31610-510, Brasil",
+  "neighborhood": "Minas Caixa",
+  "street": "R. Edgard Torres, 727",
+  "city": "Belo Horizonte",
+  "postalCode": "31610-510",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 98261-1907",
+  "phoneUnformatted": "+5531982611907",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.8087445,
+    "lng": -43.955729
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJm_iaiNSPpgARozzb2Gkm5EU",
+  "categories": [
+    "Açougue gourmet"
+  ],
+  "fid": "0xa68fd4889af89b:0x45e42669d8db3ca3",
+  "cid": "5036192519358725283",
+  "reviewsCount": 132,
+  "imagesCount": 10,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.688Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 19:59"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 20:10"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:30"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 19:59"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 19:59"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 19:59"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega sem contato": true
+      },
+      {
+        "Entrega": true
+      },
+      {
+        "Compras na loja": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Wi-Fi": true
+      },
+      {
+        "Wi-Fi gratuito": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=A%C3%A7ougue%20Prime%20Carnes%20Minas%20Caixa&query_place_id=ChIJm_iaiNSPpgARozzb2Gkm5EU",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 4,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEAOdSDrkpvscT9nWNDRHnNDin6mbLPTlCQ8Bzt6CUs18HRQvJsbQbKCChjQuE-T9HzNtGtFdDizFpFWFr8Cx4jI8tbP6OsAmMhKcYw6h-fZsC48bEP_dABBjhnC6Oeb_9xewhw8v2z1NKH=w408-h566-k-no",
+  "kgmid": "/g/11s61hnrt5"
+},
+{
+  "title": "Frigo Palmas",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "Rua Frei Luiz de Ravena, 41 - Ribeiro de Abreu, Belo Horizonte - MG, 31870-690, Brasil",
+  "neighborhood": "Ribeiro de Abreu",
+  "street": "Rua Frei Luiz de Ravena, 41",
+  "city": "Belo Horizonte",
+  "postalCode": "31870-690",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "https://abrir.link/Qtxcx",
+  "phone": "+55 31 3434-3005",
+  "phoneUnformatted": "+553134343005",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.8339408,
+    "lng": -43.9033734
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.8,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJL014-9iEpgARZdW4SbpZuNE",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa684d8fb784d2f:0xd1b859ba49b8d565",
+  "cid": "15111927206277338469",
+  "reviewsCount": 127,
+  "imagesCount": 134,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.688Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 19:30"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 19:30"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 19:30"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 19:30"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 19:30"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 19:30"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      },
+      {
+        "Retirada na loja": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Aro de indução magnética": false
+      },
+      {
+        "Assento com acessibilidade para pessoas em cadeira de rodas": false
+      },
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": false
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": false
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ],
+    "Estacionamento": [
+      {
+        "Estacionamento gratuito na rua": true
+      },
+      {
+        "Estacionamento no local": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Frigo%20Palmas&query_place_id=ChIJL014-9iEpgARZdW4SbpZuNE",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 6,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAG87r3EQuFylzI4ajtk-eoJi7QLSI3gYaEHtdWetQhnnW8jTkZJcVkXyAMcyDLWnR9rN8QbKtaDDJwGBSq7VwgH5RrMquvv5dhvUCbz7iz9S549pONPv7U9sAYqVvQqAvTZZ6vsOuondhpG=w408-h510-k-no",
+  "kgmid": "/g/1vb9f92c"
+},
+{
+  "title": "Açougue Asa Da Gaivota",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. Cleanto, 345 - Nazare, Belo Horizonte - MG, 31990-360, Brasil",
+  "neighborhood": "Nazare",
+  "street": "R. Cleanto, 345",
+  "city": "Belo Horizonte",
+  "postalCode": "31990-360",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3282-3982",
+  "phoneUnformatted": "+553132823982",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -19.8449078,
+    "lng": -43.8965451
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.1,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJrcGGctKEpgARvCdpc_Boiz4",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa684d27286c1ad:0x3e8b68f0736927bc",
+  "cid": "4506811234052024252",
+  "reviewsCount": 28,
+  "imagesCount": 1,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.688Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 20:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": false
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=A%C3%A7ougue%20Asa%20Da%20Gaivota&query_place_id=ChIJrcGGctKEpgARvCdpc_Boiz4",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 7,
+  "isAdvertisement": false,
+  "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=cFBKEt_guGKIh9UZ1D5vvg&cb_client=search.gws-prod.gps&w=408&h=240&yaw=264.25974&pitch=0&thumbfov=100",
+  "kgmid": "/g/11bz07gzjv"
+},
+{
+  "title": "Baiano's Carnes",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. Antônio Mariano de Abreu - Paulo VI, Belo Horizonte - MG, 31998-452, Brasil",
+  "neighborhood": "Paulo VI",
+  "street": "R. Antônio Mariano de Abreu",
+  "city": "Belo Horizonte",
+  "postalCode": null,
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "",
+  "phoneUnformatted": "",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -19.8430886,
+    "lng": -43.8966065
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.9,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ6e9v8NGEpgARuk2enMitwUE",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa684d1f06fefe9:0x41c1adc89c9e4dba",
+  "cid": "4738259360103157178",
+  "reviewsCount": 26,
+  "imagesCount": 1,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.688Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 19:30"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Baiano's%20Carnes&query_place_id=ChIJ6e9v8NGEpgARuk2enMitwUE",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 8,
+  "isAdvertisement": false,
+  "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=zDY7zhD1-OqsvdDzux9ESw&cb_client=search.gws-prod.gps&w=408&h=240&yaw=138.06665&pitch=0&thumbfov=100",
+  "kgmid": "/g/11kzchz2d4"
+},
+{
+  "title": "Casa de Carnes Vilela",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. Furquim Werneck, 833 - Tupi, Belo Horizonte - MG, 31840-050, Brasil",
+  "neighborhood": "Tupi",
+  "street": "R. Furquim Werneck, 833",
+  "city": "Belo Horizonte",
+  "postalCode": "31840-050",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3568-9880",
+  "phoneUnformatted": "+553135689880",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -19.8371141,
+    "lng": -43.9208366
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJP7KRcsuapgARndb80bKLhgY",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa69acb7291b23f:0x6868bb2d1fcd69d",
+  "cid": "470216811250243229",
+  "reviewsCount": 20,
+  "imagesCount": 1,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.688Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 20:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 20:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 20:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 20:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 20:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 20:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": false
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Casa%20de%20Carnes%20Vilela&query_place_id=ChIJP7KRcsuapgARndb80bKLhgY",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 9,
+  "isAdvertisement": false,
+  "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=Skr0rT1zZRVRaxTwKgXiNw&cb_client=search.gws-prod.gps&w=408&h=240&yaw=276.79886&pitch=0&thumbfov=100",
+  "kgmid": "/g/1tf2tg5v"
+},
+{
+  "title": "GUARANI CARNES",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "Av. Waldomiro Lobo, 540 - Guarani, Belo Horizonte - MG, 31814-620, Brasil",
+  "neighborhood": "Guarani",
+  "street": "Av. Waldomiro Lobo, 540",
+  "city": "Belo Horizonte",
+  "postalCode": "31814-620",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "https://sites.google.com/view/guarani-carnes/in%C3%ADcio",
+  "phone": "+55 31 3427-5830",
+  "phoneUnformatted": "+553134275830",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.8440598,
+    "lng": -43.9236868
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.7,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJq7zQG8qapgARGjbNO57-SGY",
+  "categories": [
+    "Açougue",
+    "Açougue gourmet"
+  ],
+  "fid": "0xa69aca1bd0bcab:0x6648fe9e3bcd361a",
+  "cid": "7370420745753409050",
+  "reviewsCount": 7,
+  "imagesCount": 48,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.688Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 20:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=GUARANI%20CARNES&query_place_id=ChIJq7zQG8qapgARGjbNO57-SGY",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 10,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHlDR_x7k7_5sakPk5pn7-qAVt2fMG64_7p1yugju680fa2SOBu0cq0a6t685T1V8EC8bZ9t7MTPCGRt3uW0QA_hxlmWjjUcy9uHHm84suzGbSNc52Zq1HApkbNSmChYF3uyl5L=w408-h408-k-no",
+  "kgmid": "/g/11v038k_cs"
+},
+{
+  "title": "VMA Carnes",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "esquina - Av Edgar Torres, R. Cap. Sérgio Píres, Belo Horizonte - MG, 31610-510, Brasil",
+  "neighborhood": "São Pedro Venda Nova",
+  "street": "esquina - Av Edgar Torres, R. Cap. Sérgio Píres",
+  "city": "Belo Horizonte",
+  "postalCode": "31610-510",
+  "state": "MG",
+  "countryCode": "BR",
+  "website": "https://vmacarnes.com/contato",
+  "phone": "+55 31 3080-4444",
+  "phoneUnformatted": "+553130804444",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.8076904,
+    "lng": -43.9547621
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.7,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJHW_d1bmPpgARxiK5NT7NIk8",
+  "categories": [
+    "Açougue",
+    "Açougue gourmet"
+  ],
+  "fid": "0xa68fb9d5dd6f1d:0x4f22cd3e35b922c6",
+  "cid": "5702345745277461190",
+  "reviewsCount": 70,
+  "imagesCount": 12,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.688Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 19:30"
+    }
+  ],
+  "additionalOpeningHours": {
+    "Retirada": [
+      {
+        "day": "quinta-feira",
+        "hours": "08:00–19:30"
+      },
+      {
+        "day": "sexta-feira",
+        "hours": "08:00–19:30"
+      },
+      {
+        "day": "sábado",
+        "hours": "08:00–19:30"
+      },
+      {
+        "day": "domingo",
+        "hours": "08:00–13:00"
+      },
+      {
+        "day": "segunda-feira",
+        "hours": "08:00–19:30"
+      },
+      {
+        "day": "terça-feira",
+        "hours": "08:00–19:30"
+      },
+      {
+        "day": "quarta-feira",
+        "hours": "08:00–19:30"
+      }
+    ],
+    "Horário de atendimento on-line": [
+      {
+        "day": "quinta-feira",
+        "hours": "08:00–19:00"
+      },
+      {
+        "day": "sexta-feira",
+        "hours": "08:00–19:00"
+      },
+      {
+        "day": "sábado",
+        "hours": "08:00–19:00"
+      },
+      {
+        "day": "domingo",
+        "hours": "08:00–13:00"
+      },
+      {
+        "day": "segunda-feira",
+        "hours": "08:00–19:00"
+      },
+      {
+        "day": "terça-feira",
+        "hours": "08:00–19:00"
+      },
+      {
+        "day": "quarta-feira",
+        "hours": "08:00–19:00"
+      }
+    ]
+  },
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega sem contato": true
+      },
+      {
+        "Entrega": true
+      },
+      {
+        "Retirada na loja": true
+      },
+      {
+        "Compras na loja": true
+      },
+      {
+        "Serviços no local": false
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=VMA%20Carnes&query_place_id=ChIJHW_d1bmPpgARxiK5NT7NIk8",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 11,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFNSRmj_cmxtwGML9tYEMLXQkFEx9qpThYVOeW6xK7i2cqSCFFG4U_SC8iZ5MeYLWCat2AnnGCa_BPz6ynczlzyJDtcVZHTthuhsKvhzEz8X-61YHHa3OspiptlW0EsY2xUUpMlRDZX0vaJ=w408-h576-k-no",
+  "kgmid": "/g/11j865d4vm"
+},
+{
+  "title": "Açougue Baianão Carnes",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "Av. José Lopes Muradas, 51 - Floramar, Belo Horizonte - MG, 31742-084, Brasil",
+  "neighborhood": "Floramar",
+  "street": "Av. José Lopes Muradas, 51",
+  "city": "Belo Horizonte",
+  "postalCode": "31742-084",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3434-6022",
+  "phoneUnformatted": "+553134346022",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -19.8335711,
+    "lng": -43.9357075
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.6,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJTwD3ydGFpgARJH6P2sHAjF4",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa685d1c9f7004f:0x5e8cc0c1da8f7e24",
+  "cid": "6813032275132775972",
+  "reviewsCount": 46,
+  "imagesCount": 9,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.688Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 20:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=A%C3%A7ougue%20Baian%C3%A3o%20Carnes&query_place_id=ChIJTwD3ydGFpgARJH6P2sHAjF4",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 13,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAE5347qBpQmA_rVoRI6Ab0WJuNHOgwnK38k9l9eSww2e3dHSyvuF1xl1Zj-VdsRud4q_6CmSraTg_RL4zbTsUn-8vd-_8KB9JkUpdZHVk9uT_IgqfJZV9qajdEIv8TyBmz-SKU=w408-h839-k-no",
+  "kgmid": "/g/11fcsvzp6y"
+},
+{
+  "title": "Boi Chefe",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "Av. Waldomiro Lobo, 480 - Guarani, Belo Horizonte - MG, 31814-620, Brasil",
+  "neighborhood": "Guarani",
+  "street": "Av. Waldomiro Lobo, 480",
+  "city": "Belo Horizonte",
+  "postalCode": "31814-620",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 98782-0253",
+  "phoneUnformatted": "+5531987820253",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.8442557,
+    "lng": -43.92317
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.6,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJncoTbYTDpgAROasAMqkWXr8",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6c3846d13ca9d:0xbf5e16a93200ab39",
+  "cid": "13789484024999226169",
+  "reviewsCount": 52,
+  "imagesCount": 30,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.688Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 20:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      },
+      {
+        "Compras na loja": true
+      }
+    ],
+    "Público": [
+      {
+        "Empresa que acolhe a comunidade LGBTQ+": true
+      },
+      {
+        "Espaço seguro para pessoas transgênero": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ],
+    "Estacionamento": [
+      {
+        "Estacionamento descoberto gratuito": true
+      },
+      {
+        "Estacionamento gratuito na rua": true
+      },
+      {
+        "Estacionamento no local": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Boi%20Chefe&query_place_id=ChIJncoTbYTDpgAROasAMqkWXr8",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 15,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGEX5z-_zMzQ6oZECW85k3115JI6GRprLZRz1uUbZlPYSSnwTRed1_te1Q_75fAoSSiICeHG9CvN03Z4PYNK072uOIUQTugD3hiZA58LpTU5tKmpvr4V7k5DXyK_B04_0Xi_y6IEFQv42M=w408-h544-k-no",
+  "kgmid": "/g/11y5f5rm1k"
+},
+{
+  "title": "Xavier carnes Pedro Primeiro",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "Av. Dom Pedro I, 734 - Itapoã, Belo Horizonte - MG, 31710-000, Brasil",
+  "neighborhood": "Itapoã",
+  "street": "Av. Dom Pedro I, 734",
+  "city": "Belo Horizonte",
+  "postalCode": "31710-000",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3441-9810",
+  "phoneUnformatted": "+553134419810",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.838395,
+    "lng": -43.965784
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.2,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJjVUg8TyQpgARiOUpsKvB1T8",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6903cf120558d:0x3fd5c1abb029e588",
+  "cid": "4599795537567933832",
+  "reviewsCount": 264,
+  "imagesCount": 148,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.688Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 19:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 19:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 19:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 12:30"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 19:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 19:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 19:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ],
+    "Estacionamento": [
+      {
+        "Estacionamento descoberto gratuito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Xavier%20carnes%20Pedro%20Primeiro&query_place_id=ChIJjVUg8TyQpgARiOUpsKvB1T8",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 16,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHddo13xigC2q0qZpd-MLJaMfPo1cDKmMj9LPKJAc5TJ2U3LKxaQntW1K4Eu65xvZsoK5nz48fVxSN2baXuNgB7ojBhO6Am8ch47hZIagDA9DFw-A7qv9S-fAiLPyZRdGUKnmy6BA=w408-h408-k-no",
+  "kgmid": "/g/1pty_h5hz"
+},
+{
+  "title": "Central Carnes",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Instalação de armazenamento a frio",
+  "address": "Av. Leontino Francisco Alves, 163 - Serra Verde, Belo Horizonte - MG, 31630-000, Brasil",
+  "neighborhood": "Serra Verde",
+  "street": "Av. Leontino Francisco Alves, 163",
+  "city": "Belo Horizonte",
+  "postalCode": "31630-000",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3451-1755",
+  "phoneUnformatted": "+553134511755",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -19.7987781,
+    "lng": -43.9538559
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.7,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ8bMYRpuPpgARocl5C3lv_yU",
+  "categories": [
+    "Instalação de armazenamento a frio"
+  ],
+  "fid": "0xa68f9b4618b3f1:0x25ff6f790b79c9a1",
+  "cid": "2738029664138807713",
+  "reviewsCount": 36,
+  "imagesCount": 4,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.688Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 20:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Central%20Carnes&query_place_id=ChIJ8bMYRpuPpgARocl5C3lv_yU",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 18,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-proxy/ALd4DhHGnrWz0lBhYaCxQOJ4H6ZxEvesy2ZX6pRC59mX1qLH2H38HoOqTCISdnLEbfmIJwcmnVrs0qulCa8Y1Au6pjwrFpCCd2sCBTqqinkYs7IsiH-VyPN2lF7p11CmBx9p5inO0R1ufEaWth7zIjc2q-DUCH0NC0Xx28DbQLrNx63wsA6SPfSGad9GU9td2FxQCgiOoIY=w408-h306-k-no",
+  "kgmid": "/g/11bbrhz_kn"
+},
+{
+  "title": "Açougue Tavares",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Loja",
+  "address": "R. Itarumirim, 357 - Conjunto Paulo VI, Belo Horizonte - MG, 31998-060, Brasil",
+  "neighborhood": "Conjunto Paulo VI",
+  "street": "R. Itarumirim, 357",
+  "city": "Belo Horizonte",
+  "postalCode": "31998-060",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 98745-5803",
+  "phoneUnformatted": "+5531987455803",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.830984,
+    "lng": -43.8882525
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ4Vyj2quFpgARPp48I4SQzWE",
+  "categories": [
+    "Loja"
+  ],
+  "fid": "0xa685abdaa35ce1:0x61cd9084233c9e3e",
+  "cid": "7047447889105952318",
+  "reviewsCount": 14,
+  "imagesCount": 11,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.688Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 20:30"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 20:30"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 20:30"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 14:30"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "16:00 to 20:30"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 20:30"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 20:30"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=A%C3%A7ougue%20Tavares&query_place_id=ChIJ4Vyj2quFpgARPp48I4SQzWE",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 19,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHvUz3tJwqnUOP4NnaQUWbb1B3xCtnHNUlqjvxBK6RFxlHk9vk1H9q8NNU_zdyERx9PTPQANDMn09FguP6UI-ETC8n-Y5L-Iu8XJPpVSFu9UvDyDdgRf5S_r-nDeyWt18FQVLkQ=w408-h306-k-no",
+  "kgmid": "/g/11v64wzf5y"
+},
+{
+  "title": "Açougue e Sacolão Do Maná",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. José Lima de Almeida, 341 - Floramar, Belo Horizonte - MG, 31742-033, Brasil",
+  "neighborhood": "Floramar",
+  "street": "R. José Lima de Almeida, 341",
+  "city": "Belo Horizonte",
+  "postalCode": "31742-033",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3227-9997",
+  "phoneUnformatted": "+553132279997",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.8299501,
+    "lng": -43.9363379
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.6,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJe_3co1GFpgAR_MfUxQ4xSMI",
+  "categories": [
+    "Açougue",
+    "Sacolão"
+  ],
+  "fid": "0xa68551a3dcfd7b:0xc248310ec5d4c7fc",
+  "cid": "13999493381199546364",
+  "reviewsCount": 19,
+  "imagesCount": 15,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:05.688Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 19:45"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 19:45"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 19:45"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 12:45"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 19:45"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 19:45"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 19:45"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      },
+      {
+        "Compras na loja": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=A%C3%A7ougue%20e%20Sacol%C3%A3o%20Do%20Man%C3%A1&query_place_id=ChIJe_3co1GFpgAR_MfUxQ4xSMI",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 20,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHAWR_R2U3__7HQtC_XJbJB8H7eBOppHRUPfP1Oem3SDUI8Dbymzyzsosv0chUqZEsD-OPlaQv2z_6pX_aATU7YdvV54-C63ZYZMhZvR8gE7kBF-CFBgD7kdiKfnLdxnTZJcjui=w408-h725-k-no",
+  "kgmid": "/g/1q5cch6_n"
+},
+{
+  "title": "Casa de Carnes A&G",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. Eliana Silva, 10 - Águas Claras, Belo Horizonte - MG, 30670-705, Brasil",
+  "neighborhood": "Águas Claras",
+  "street": "R. Eliana Silva, 10",
+  "city": "Belo Horizonte",
+  "postalCode": "30670-705",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "https://official-website-sales.systeme.io/casa-de-carne-aeg",
+  "phone": "+55 31 99263-9965",
+  "phoneUnformatted": "+5531992639965",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -20.0111817,
+    "lng": -44.0208929
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJI_CcqM2_pgARjaZOocjKDTA",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6bfcda89cf023:0x300dcac8a14ea68d",
+  "cid": "3462646651566335629",
+  "reviewsCount": 6,
+  "reviewsDistribution": {
+    "oneStar": 0,
+    "twoStar": 0,
+    "threeStar": 0,
+    "fourStar": 0,
+    "fiveStar": 6
+  },
+  "imagesCount": 6,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:06.100Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 12:30"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 19:30"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      },
+      {
+        "Retirada na loja": true
+      },
+      {
+        "Compras na loja": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Casa%20de%20Carnes%20A%26G&query_place_id=ChIJI_CcqM2_pgARjaZOocjKDTA",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 27,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAH_bT2XsItXZPs424QX-F0SxLNegFfueNhhm0O-g3n6S7K_WusGWalaH-3d5KTkRJEjkvPhadMeKKWBchliO-9cDbgUZKfuM8DdHqGqm_HOEwp2BXy8QZ-igysphqj0Tug3Kz_60w=w408-h300-k-no",
+  "kgmid": "/g/11vr5vw9kp"
+},
+{
+  "title": "Frigobeto",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Restaurante",
+  "address": "Av. Senador Levindo Coelho, 435 - Independência, Belo Horizonte - MG, 30662-290, Brasil",
+  "neighborhood": "Independência",
+  "street": "Av. Senador Levindo Coelho, 435",
+  "city": "Belo Horizonte",
+  "postalCode": "30662-290",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3385-0851",
+  "phoneUnformatted": "+553133850851",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -19.9912115,
+    "lng": -44.0347992
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.3,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJyxVVFJK-pgARt2dif1SJw3E",
+  "categories": [
+    "Restaurante",
+    "Restaurante de churrasquinho"
+  ],
+  "fid": "0xa6be92145515cb:0x71c389547f6267b7",
+  "cid": "8197546742751848375",
+  "reviewsCount": 333,
+  "reviewsDistribution": {
+    "oneStar": 23,
+    "twoStar": 12,
+    "threeStar": 21,
+    "fourStar": 70,
+    "fiveStar": 207
+  },
+  "imagesCount": 17,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:06.100Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:00 to 19:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Para viagem": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Assento com acessibilidade para pessoas em cadeira de rodas": false
+      }
+    ],
+    "Opções de refeição": [
+      {
+        "Garçons": false
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": false
+      }
+    ],
+    "Ambiente": [
+      {
+        "Tranquilo": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Aceita reservas": false
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Frigobeto&query_place_id=ChIJyxVVFJK-pgARt2dif1SJw3E",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 34,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAE_-5glryxD6adoRxkjOKqVygZ0V67_LbhbzL6yzsf1umWPOaXabbg1ZlObDws6N8RkU7v6crwO4_AaUhgWIAy2jwN2bvwBU_DB69BXkqQeygV3NzeMq-n7a-eepNz16VzPwSuE5w=w408-h306-k-no",
+  "kgmid": "/g/1tdglhfv"
+},
+{
+  "title": "Boi de BH",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. Padre Pedro Pinto, 2900 - Letícia, Belo Horizonte - MG, 31660-000, Brasil",
+  "neighborhood": "Letícia",
+  "street": "R. Padre Pedro Pinto, 2900",
+  "city": "Belo Horizonte",
+  "postalCode": "31660-000",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 98401-7039",
+  "phoneUnformatted": "+5531984017039",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.8039469,
+    "lng": -43.9748112
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.1,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJmTlTk4qPpgAR0k1XCGNIII4",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa68f8a93533999:0x8e20486308574dd2",
+  "cid": "10241265142819409362",
+  "reviewsCount": 84,
+  "reviewsDistribution": {
+    "oneStar": 14,
+    "twoStar": 1,
+    "threeStar": 3,
+    "fourStar": 8,
+    "fiveStar": 58
+  },
+  "imagesCount": 21,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:06.878Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:00 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:00 to 20:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Boi%20de%20BH&query_place_id=ChIJmTlTk4qPpgAR0k1XCGNIII4",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 37,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAE4KyczaUs7Qh5ncABS__sIlZISNWzQdgjiWhjlOsQWlsmTX8Ml4s2kQiQvvAddDWflCtXO6oJs1e3AKDgxRc6L4bPgo76aUsELAAFGx5qPBBYW7P9AA0DCQ6uWrCIoIl2UbbxQ=w408-h544-k-no",
+  "kgmid": "/g/11y9zkrvgd"
+},
+{
+  "title": "Rei da Carne",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. Lucas de Carvalho Santos, 147 - Pongelupe, Belo Horizonte - MG, 30626-722, Brasil",
+  "neighborhood": "Pongelupe",
+  "street": "R. Lucas de Carvalho Santos, 147",
+  "city": "Belo Horizonte",
+  "postalCode": "30626-722",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 97118-8485",
+  "phoneUnformatted": "+5531971188485",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -20.0067002,
+    "lng": -44.0050377
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJCTO4sI69pgARUEazQYn26A0",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6bd8eb0b83309:0xde8f68941b34650",
+  "cid": "1002321986463155792",
+  "reviewsCount": 8,
+  "reviewsDistribution": {
+    "oneStar": 0,
+    "twoStar": 0,
+    "threeStar": 0,
+    "fourStar": 0,
+    "fiveStar": 8
+  },
+  "imagesCount": 11,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:07.215Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Rei%20da%20Carne&query_place_id=ChIJCTO4sI69pgARUEazQYn26A0",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 42,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFCPLHbEeEqzW9Retx-UbKUq8wnhcQv2ycH-2ksHgVCLm9jGlvLw_g662PlnlBXcmFOzJO2U8TUxvpWhhCeYT43nDGp-lJB-hiC-gHPgyRWp97hYIDfC3mzQdRT0TLglJUgHOs=w408-h408-k-no",
+  "kgmid": "/g/11svzgdjjb"
+},
+{
+  "title": "Serradao",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "Vale do Jatoba, Belo Horizonte - MG, 30664-740, Brasil",
+  "neighborhood": "Vale do Jatoba",
+  "street": null,
+  "city": "Belo Horizonte",
+  "postalCode": null,
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3371-3068",
+  "phoneUnformatted": "+553133713068",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -20.0064694,
+    "lng": -44.0348546
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 3.8,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJNXOhwpO-pgARS_wVdA2IB-U",
+  "categories": [
+    "Açougue",
+    "Compras",
+    "Loja"
+  ],
+  "fid": "0xa6be93c2a17335:0xe507880d7415fc4b",
+  "cid": "16503308950886022219",
+  "reviewsCount": 104,
+  "reviewsDistribution": {
+    "oneStar": 21,
+    "twoStar": 3,
+    "threeStar": 7,
+    "fourStar": 21,
+    "fiveStar": 52
+  },
+  "imagesCount": 4,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:07.215Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 12:30"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 19:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Serradao&query_place_id=ChIJNXOhwpO-pgARS_wVdA2IB-U",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 44,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAE0hVfkQ2SH63XwoQbFomjcL1qVdlW3_51dD3s6nLaf8vaiaShN1f8lDGSKpA1jpvBfFf8YStgq7t3P7HBB-yAUFN-IBC21wj24eTweGIPM3dLKy3mxgnMkAmHSTW7ujVR3lx7I=w426-h240-k-no",
+  "kgmid": "/g/11cjmh5bmq"
+},
+{
+  "title": "Casa de Carnes MG",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. Armando Tauil, 122 - Pilar, Belo Horizonte - MG, 30390-280, Brasil",
+  "neighborhood": "Pilar",
+  "street": "R. Armando Tauil, 122",
+  "city": "Belo Horizonte",
+  "postalCode": "30390-280",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3288-1266",
+  "phoneUnformatted": "+553132881266",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -20.0000829,
+    "lng": -43.9701429
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.4,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJiTs_gxG9pgARyvoT_ZHPeMA",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6bd11833f3b89:0xc078cf91fd13faca",
+  "cid": "13869063278410595018",
+  "reviewsCount": 12,
+  "reviewsDistribution": {
+    "oneStar": 0,
+    "twoStar": 1,
+    "threeStar": 1,
+    "fourStar": 2,
+    "fiveStar": 8
+  },
+  "imagesCount": 1,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:07.215Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 19:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Casa%20de%20Carnes%20MG&query_place_id=ChIJiTs_gxG9pgARyvoT_ZHPeMA",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 49,
+  "isAdvertisement": false,
+  "imageUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=Y5msR3Ta17rKYxqVCv1BJA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=294.06302&pitch=0&thumbfov=100",
+  "kgmid": "/g/1tdys099"
+},
+{
+  "title": "Mercadão da Carne",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "Rua Francisco Duarte Mendonça, 735 - Teixeira Dias, Belo Horizonte - MG, 30642-310, Brasil",
+  "neighborhood": "Teixeira Dias",
+  "street": "Rua Francisco Duarte Mendonça, 735",
+  "city": "Belo Horizonte",
+  "postalCode": "30642-310",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3384-6204",
+  "phoneUnformatted": "+553133846204",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -19.9892421,
+    "lng": -44.0141299
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 3.7,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJjxi7Ptq9pgARtaYd9gbkmN8",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6bdda3ebb188f:0xdf98e406f61da6b5",
+  "cid": "16111878385468024501",
+  "reviewsCount": 7,
+  "reviewsDistribution": {
+    "oneStar": 1,
+    "twoStar": 1,
+    "threeStar": 1,
+    "fourStar": 0,
+    "fiveStar": 4
+  },
+  "imagesCount": 9,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:07.216Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:00 to 19:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:00 to 19:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Mercad%C3%A3o%20da%20Carne&query_place_id=ChIJjxi7Ptq9pgARtaYd9gbkmN8",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 50,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-proxy/ALd4DhEP154qmf0fIZMiGkyoKgHcIU2CLxg4JPEyNeqHz_Dn4AL8zG1sZy2VRtLKqbg4OtZh_SixoE-UTSLhcFHBlbnlqGWoumiyZXDqiAHatjJp0YcFoKeoEL7Rc8dA-YXvowZQ8kcvCRHkv-PDCQ50i0kWlUXRNx8Pduu1ATktcTiC-o0CFydVeK-RH3ibgQPuBnhg6fY=w408-h306-k-no",
+  "kgmid": "/g/1q5btwsx2"
+},
+{
+  "title": "Boi valente Casa De Carnes Eireli",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "R. Mariza Afonso, 346 - Independência, Belo Horizonte - MG, 30672-670, Brasil",
+  "neighborhood": "Independência",
+  "street": "R. Mariza Afonso, 346",
+  "city": "Belo Horizonte",
+  "postalCode": "30672-670",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3385-7162",
+  "phoneUnformatted": "+553133857162",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -20.0183814,
+    "lng": -44.0286317
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 3.7,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJGQqNJke_pgARnCpGGx9lqcM",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6bf47268d0a19:0xc3a9651f1b462a9c",
+  "cid": "14098911292736023196",
+  "reviewsCount": 6,
+  "reviewsDistribution": {
+    "oneStar": 2,
+    "twoStar": 0,
+    "threeStar": 0,
+    "fourStar": 0,
+    "fiveStar": 4
+  },
+  "imagesCount": 2,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:07.216Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 12:30"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 19:30"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 19:30"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Boi%20valente%20Casa%20De%20Carnes%20Eireli&query_place_id=ChIJGQqNJke_pgARnCpGGx9lqcM",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 53,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAF-CDGj5hNrKAcbBCLoi_1BeyxllNqwTRb-_917vWwqusYz3QAVtXnBG2Y9Ealr3z4imJY1A2sa1HQl8LTSGX-yJAE46v1T9pJQ2jZjdH1EchVEYiAnsN7rAIjjuc0MHnijGq-l-w=w533-h240-k-no",
+  "kgmid": "/g/11shlvp2dq"
+},
+{
+  "title": "Búfalo Branco",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Açougue",
+  "address": "Av. Olinto Meireles, 489 - Milionários, Belo Horizonte - MG, 30620-000, Brasil",
+  "neighborhood": "Milionários",
+  "street": "Av. Olinto Meireles, 489",
+  "city": "Belo Horizonte",
+  "postalCode": "30620-000",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3381-9566",
+  "phoneUnformatted": "+553133819566",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -19.9959997,
+    "lng": -44.0061211
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 3.3,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJi4YZ0M69pgARISoH-vRkruY",
+  "categories": [
+    "Açougue"
+  ],
+  "fid": "0xa6bdced019868b:0xe6ae64f4fa072a21",
+  "cid": "16622334278000650785",
+  "reviewsCount": 12,
+  "reviewsDistribution": {
+    "oneStar": 4,
+    "twoStar": 1,
+    "threeStar": 0,
+    "fourStar": 1,
+    "fiveStar": 6
+  },
+  "imagesCount": 13,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T18:00:07.216Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "Fechado"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 19:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 19:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=B%C3%BAfalo%20Branco&query_place_id=ChIJi4YZ0M69pgARISoH-vRkruY",
+  "searchPageUrl": "https://www.google.com/maps/search/a%C3%A7ougue/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "açougue",
+  "language": "pt-BR",
+  "rank": 56,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-proxy/ALd4DhGWEThD_EzZII3szCMV6L1MoljGDXWfWVkzoQG6k1Wlf0e9X6Wao-xSdgWQVGWyEs8ivpcLI7_CX7Gxe608ga90hrGPX_5qVQLnFKlrdqkrTt3yNjc0nN-1tQMoEQRZe_VWPBSepzN3h_b7MkLgFvlD5htgnR-JC-EzwAMN9wlk1EPNRn8CzKU6zCYQj_J9wcxDiBU=w408-h306-k-no",
+  "kgmid": "/g/11fs_lrplb"
+}]

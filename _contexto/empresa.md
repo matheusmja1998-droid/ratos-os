@@ -28,11 +28,13 @@
 **Foco:** estruturação comercial B2B para integradoras solares
 **Faturamento:** R$4k/mês
 **Funil:** Webinar → Diagnóstico → Ignição Solo (R$497) → Ignição Comercial (R$5k) → Protocolo Pipeline Zero (R$12-15k)
+**Oferta de recorrência (done-for-you):** Pipeline Comercial — a LM coloca um SDR pra prospectar cliente comercial e agendar 20 visitas/mês; o cliente só fecha. R$1.500/mês (grade: 20 visitas = R$1.500, 10 = R$750) + 5% sobre vendas (comissão 100% da LM). Pro dono afogado que não quer aprender a vender. Criada 17/06/26. Detalhes em `lm/comercial/ofertas/pipeline-comercial.md`.
 
 **Clientes ativos:**
 - Jonas / Hypertech (solar — meta R$20M)
 - Dr. Fábio / IOT (ortopedia, Varginha)
 - Clínica Comtato
+- Rafaelly (pediatra, infoprodutos sobre sono infantil, alimentação etc — 30% de comissão sobre vendas)
 
 ---
 

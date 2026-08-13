@@ -72,6 +72,20 @@ O usuário fornece:
 - Slide 1 (capa): título grande, impactante, chamativo — pode usar verde como cor de destaque na palavra-chave
 - Slide final: só branding e CTA, sem texto longo. Se tiver logo em `marca/`, incluir com largura entre 120-200px
 
+**Regras de responsividade (OBRIGATÓRIO):**
+- Padding lateral mínimo: `88px` — nunca menos. Evita texto colado na borda quando o Instagram comprime a imagem
+- Padding vertical: `88px` topo e base — garante respiro antes da barra de progresso
+- Tamanhos de fonte seguros:
+  - Corpo de texto padrão: **max 38px** (slides com 3+ parágrafos: max 34px)
+  - Títulos / frases de destaque: **max 52px**
+  - Capas (slide 1): **max 78px**
+  - Numbers/stats em evidência: **max 110px**
+  - Labels uppercase: **13px fixo**
+- Nunca usar `font-size` acima desses limites em slides com muito conteúdo
+- Sempre checar mentalmente se o conteúdo cabe em 1350px de altura com o padding definido — se estiver no limite, reduzir fonte ou cortar texto
+- O elemento `.content` deve ter `overflow: hidden` e nunca ultrapassar a altura do body
+- Decorações absolutas (números gigantes de fundo, glows, etc.) nunca devem empurrar o layout — manter `pointer-events: none` e `z-index` baixo
+
 3. Salvar HTMLs em `winvision/conteudo/carrosseis/YYYY-MM-DD_[tema]/instagram/`
 
 4. Renderizar slide 1 primeiro:

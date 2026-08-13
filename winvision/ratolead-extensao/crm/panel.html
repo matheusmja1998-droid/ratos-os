@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RatoLead — CRM</title>
+  <link rel="stylesheet" href="panel.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo"></span>
+      <div>
+        <strong>RatoLead</strong>
+        <span class="sub">Prospecção do Cockpit</span>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-view="funil">Funil</button>
+      <button class="tab" data-view="tarefas">Tarefas <span id="tab-tarefas-badge" class="tab-badge" hidden>0</span></button>
+      <button class="tab" data-view="mensagens">Mensagens prontas</button>
+      <button class="tab" data-view="resumo">Resumo</button>
+      <button class="tab" data-view="config">Configurações</button>
+    </div>
+    <div class="topactions">
+      <input type="search" id="busca" placeholder="Buscar lead…" />
+      <button id="btn-selecionar" class="btn ghost">Selecionar</button>
+      <button id="btn-export" class="btn ghost">Exportar Excel</button>
+      <button id="btn-novo" class="btn">+ Lead manual</button>
+    </div>
+  </header>
+
+  <!-- barra de seleção em massa (aparece no modo seleção) -->
+  <div id="selbar" class="selbar" hidden>
+    <span id="sel-count">0 selecionados</span>
+    <div class="selbar-acoes">
+      <button id="sel-todos" class="btn ghost small">Selecionar todos (visíveis)</button>
+      <span class="sel-mover-grupo">
+        <span class="sel-mover-label">Mover pra:</span>
+        <select id="sel-funil" class="sel-mini" title="Funil de destino"></select>
+        <select id="sel-coluna" class="sel-mini" title="Etapa de destino"></select>
+        <button id="sel-mover" class="btn small">Mover</button>
+      </span>
+      <button id="sel-excluir" class="btn danger small">Excluir</button>
+      <button id="sel-cancelar" class="btn ghost small">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- ============ FUNIL ============ -->
+  <main id="view-funil" class="view active">
+    <!-- barra de filtros -->
+    <div class="filtros">
+      <div class="filtro-grupo funil-sel">
+        <label>Funil</label>
+        <div class="funil-sel-linha">
+          <select id="f-funil"></select>
+          <button id="btn-funil-novo" class="btn ghost small" title="Criar funil">+</button>
+          <button id="btn-funil-editar" class="btn ghost small" title="Editar colunas/nome deste funil">⚙</button>
+        </div>
+      </div>
+      <div class="filtro-grupo">
+        <label>Tag</label>
+        <select id="f-tag"><option value="">Todas</option></select>
+      </div>
+      <div class="filtro-grupo">
+        <label>Nota Google mín.</label>
+        <select id="f-nota">
+          <option value="">Qualquer</option>
+          <option value="3">≥ 3,0</option>
+          <option value="3.5">≥ 3,5</option>
+          <option value="4">≥ 4,0</option>
+          <option value="4.5">≥ 4,5</option>
+        </select>
+      </div>
+      <div class="filtro-grupo">
+        <label>Tarefa</label>
+        <select id="f-tarefa">
+          <option value="">Todas</option>
+          <option value="atrasada">⚠ Atrasadas</option>
+          <option value="hoje">📅 Pra hoje</option>
+          <option value="futura">→ Próximas</option>
+          <option value="sem">Sem tarefa</option>
+        </select>
+      </div>
+      <button id="f-limpar" class="btn ghost small">Limpar filtros</button>
+      <span id="f-resumo" class="f-resumo"></span>
+      <div class="ritmo-wrap">
+        <div class="ritmo" id="ritmo-box" title="Abordagens (WhatsApp) de hoje vs meta">
+          <span class="ritmo-label">💬 Hoje</span>
+          <span class="ritmo-num" id="ritmo-num">0/40</span>
+          <div class="ritmo-bar"><div id="ritmo-fill"></div></div>
+        </div>
+        <div class="ritmo" id="ritmo-lig-box" title="Ligações de hoje vs meta">
+          <span class="ritmo-label">📞 Hoje</span>
+          <span class="ritmo-num" id="ritmo-lig-num">0/50</span>
+          <div class="ritmo-bar"><div id="ritmo-lig-fill"></div></div>
+        </div>
+        <button id="btn-fila" class="btn">▶ Abordar em fila</button>
+        <button id="btn-fila-ligacao" class="btn ghost">📞 Ligar em fila</button>
+      </div>
+    </div>
+    <div id="board" class="board"></div>
+  </main>
+
+  <!-- ============ TAREFAS ============ -->
+  <main id="view-tarefas" class="view">
+    <div class="panel-head">
+      <h2>Tarefas</h2>
+      <p>Tudo que você marcou pra fazer, de todos os funis, junto. As atrasadas vêm primeiro.</p>
+    </div>
+    <div id="tarefas-lista" class="tarefas-lista"></div>
+  </main>
+
+  <!-- ============ RESUMO ============ -->
+  <main id="view-resumo" class="view">
+    <div class="panel-head">
+      <h2>Resumo da semana</h2>
+      <p>Últimos 7 dias comparados com os 7 anteriores, e qual mensagem tá convertendo.</p>
+    </div>
+    <div id="resumo-body" class="resumo-body"></div>
+  </main>
+
+  <!-- ============ MENSAGENS ============ -->
+  <main id="view-mensagens" class="view">
+    <div class="panel-head">
+      <h2>Mensagens prontas</h2>
+      <p>Use <code>{{nome}}</code>, <code>{{categoria}}</code>, <code>{{cidade}}</code>, <code>{{site}}</code> e <code>{{eu}}</code> (seu nome, das Configurações) pra personalizar. Ao abrir o WhatsApp de um lead, esses campos são preenchidos sozinhos e você ajusta antes de enviar.</p>
+      <button id="btn-nova-msg" class="btn">+ Nova mensagem</button>
+    </div>
+    <div id="lista-msgs" class="msgs"></div>
+  </main>
+
+  <!-- ============ CONFIG ============ -->
+  <main id="view-config" class="view">
+    <div class="panel-head"><h2>Configurações</h2></div>
+    <div class="config-card">
+      <label>Seu nome (vira a variável {{eu}} nas mensagens)</label>
+      <input type="text" id="cfg-nome" placeholder="Matheus" />
+      <label>Cidade padrão (fallback pra {{cidade}})</label>
+      <input type="text" id="cfg-cidade" placeholder="Belo Horizonte" />
+      <label>Meta de abordagens (WhatsApp) por dia</label>
+      <input type="number" id="cfg-meta" min="1" max="200" placeholder="40" />
+      <label>Meta de ligações por dia</label>
+      <input type="number" id="cfg-meta-lig" min="1" max="300" placeholder="50" />
+      <label class="chk">
+        <input type="checkbox" id="cfg-agenda" />
+        Criar evento no Google Agenda ao marcar reunião
+      </label>
+      <button id="cfg-salvar" class="btn">Salvar</button>
+      <p id="cfg-status" class="cfg-status"></p>
+    </div>
+    <div class="config-card">
+      <label>Funil de ligação</label>
+      <p class="lead-sub" style="margin:0">Cria um funil pronto com as etapas certas (A ligar → Não atendeu → Atendeu → Decisor → Reunião marcada → Perdeu) pros botões de resultado da fila de ligação funcionarem automático.</p>
+      <button id="cfg-criar-funil-lig" class="btn ghost">Criar funil de ligação</button>
+      <p id="cfg-funil-lig-status" class="cfg-status"></p>
+    </div>
+    <div class="config-card danger">
+      <label>Zona de perigo</label>
+      <button id="cfg-limpar" class="btn danger">Apagar TODOS os leads</button>
+    </div>
+  </main>
+
+  <!-- ============ MODAL LEAD ============ -->
+  <div id="modal-lead" class="modal" hidden>
+    <div class="modal-box">
+      <button class="modal-x" data-close>×</button>
+      <div id="modal-lead-body"></div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL FUNIL (editar nome + colunas) ============ -->
+  <div id="modal-funil" class="modal" hidden>
+    <div class="modal-box">
+      <button class="modal-x" data-close>×</button>
+      <div id="modal-funil-body"></div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL MENSAGEM (compor/enviar) ============ -->
+  <div id="modal-msg" class="modal" hidden>
+    <div class="modal-box narrow">
+      <button class="modal-x" data-close>×</button>
+      <div id="modal-msg-body"></div>
+    </div>
+  </div>
+
+  <script src="../lib/db.js"></script>
+  <script src="panel.js"></script>
+</body>
+</html>

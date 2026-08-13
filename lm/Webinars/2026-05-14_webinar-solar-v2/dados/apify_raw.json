@@ -1,0 +1,5003 @@
+[{
+  "title": "Supermercados BH",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado de descontos",
+  "address": "R. Dr. Cristiano Rezende, 1953 - Flávio Marques Lisboa, Belo Horizonte - MG, 30622-020, Brasil",
+  "neighborhood": "Flávio Marques Lisboa",
+  "street": "R. Dr. Cristiano Rezende, 1953",
+  "city": "Belo Horizonte",
+  "postalCode": "30622-020",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.supermercadosbh.com.br/",
+  "phone": "+55 31 3387-3600",
+  "phoneUnformatted": "+553133873600",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9882546,
+    "lng": -43.9902241
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.3,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJH361cpi9pgAREAldxs3jV0o",
+  "categories": [
+    "Supermercado de descontos",
+    "Loja de bebidas",
+    "Supermercado"
+  ],
+  "fid": "0xa6bd9872b57e1f:0x4a57e3cdc65d0910",
+  "cid": "5357000754716281104",
+  "reviewsCount": 2638,
+  "imagesCount": 64,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.065Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      },
+      {
+        "Retirada na loja": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Supermercados%20BH&query_place_id=ChIJH361cpi9pgAREAldxs3jV0o",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 1,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAERgm_7GmacrVhQmuIj4jEHjJfMNW4gTZcnKJAW-tmKVmN3r45NFHqltaf-FibPVJQuutbFbHXdULwvIvM_HrtYCDnPtrdY17ewrkLh0m8WmOUjw2-jOErjmihVz-kSOAE2FO_P=w426-h240-k-no",
+  "kgmid": "/g/11c575ddzb"
+},
+{
+  "title": "Apoio Mineiro Tirol: Atacado, Varejo, Entrega, Belo Horizonte, MG",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "Rua Antônio Eustáquio Piazza, 2725 - Tirol, Belo Horizonte - MG, 30662-050, Brasil",
+  "neighborhood": "Tirol",
+  "street": "Rua Antônio Eustáquio Piazza, 2725",
+  "city": "Belo Horizonte",
+  "postalCode": "30662-050",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "https://www.apoioentrega.com/",
+  "phone": "+55 31 3359-3282",
+  "phoneUnformatted": "+553133593282",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9849996,
+    "lng": -44.0349807
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.1,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJbYG3F2a-pgARCpAHJPCroq0",
+  "categories": [
+    "Supermercado"
+  ],
+  "fid": "0xa6be6617b7816d:0xada2abf02407900a",
+  "cid": "12511751762673635338",
+  "reviewsCount": 8625,
+  "imagesCount": 649,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.066Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:00 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:00 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:00 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 18:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:00 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:00 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:00 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega sem contato": true
+      },
+      {
+        "Entrega": true
+      },
+      {
+        "Retirada na loja": true
+      },
+      {
+        "Serviços no local": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Apoio%20Mineiro%20Tirol%3A%20Atacado%2C%20Varejo%2C%20Entrega%2C%20Belo%20Horizonte%2C%20MG&query_place_id=ChIJbYG3F2a-pgARCpAHJPCroq0",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 2,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEnksvT3S2KQppSUNmMMdSTzRfjgfP4v7_VM6m9H3wgq4JrOPlodoU9d4G8b7VwqZ1tA_h_RTqDMSM49W3hfXXKocw2jBQF7p4WrvzI8CICo7ZdloqIcG0SxjA39ej0YfMZ6CG3=w408-h305-k-no",
+  "kgmid": "/g/1ydntyrl2"
+},
+{
+  "title": "SUPERMERCADOS BH",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "R. Urucanga, 375 - Urucuia, Belo Horizonte - MG, 30626-720, Brasil",
+  "neighborhood": "Urucuia",
+  "street": "R. Urucanga, 375",
+  "city": "Belo Horizonte",
+  "postalCode": "30626-720",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.supermercadosbh.com.br/",
+  "phone": "+55 31 3336-5099",
+  "phoneUnformatted": "+553133365099",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -20.0040472,
+    "lng": -44.0080933
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.2,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJZSYu_zK8pgARxxklve1Xo_0",
+  "categories": [
+    "Supermercado",
+    "Supermercado de descontos",
+    "Loja de bebidas"
+  ],
+  "fid": "0xa6bc32ff2e2665:0xfda357edbd2519c7",
+  "cid": "18276548391391795655",
+  "reviewsCount": 1787,
+  "imagesCount": 141,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.066Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 20:30"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 20:30"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 20:30"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 20:30"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 20:30"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 20:30"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=SUPERMERCADOS%20BH&query_place_id=ChIJZSYu_zK8pgARxxklve1Xo_0",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 3,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEjSLVE3QUsqAz1WpNdABT5FFD07keKz0yW1dnuat-b8L_rkX6OvyvErX8xszoTQtwntQA12Hs76IDBBUoc9n1CtP9b4_qRWckywkMjJuTeAVeu1AwrwPTOSJerOeNUYnXZthZqIQ=w426-h240-k-no",
+  "kgmid": "/g/11gdgb75s2"
+},
+{
+  "title": "SUPERMERCADOS BH",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado de descontos",
+  "address": "Av. Waldyr Soeiro Emrich, 3426 - Santa Helena, Belo Horizonte - MG, 30644-000, Brasil",
+  "neighborhood": "Santa Helena",
+  "street": "Av. Waldyr Soeiro Emrich, 3426",
+  "city": "Belo Horizonte",
+  "postalCode": "30644000",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.supermercadosbh.com.br/",
+  "phone": "+55 31 98313-7197",
+  "phoneUnformatted": "+5531983137197",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9899846,
+    "lng": -44.0136058
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.2,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJeUWMadq9pgARwSvCsoftTio",
+  "categories": [
+    "Supermercado de descontos",
+    "Loja de bebidas",
+    "Supermercado"
+  ],
+  "fid": "0xa6bdda698c4579:0x2a4eed87b2c22bc1",
+  "cid": "3048635164851841985",
+  "reviewsCount": 5667,
+  "imagesCount": 422,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.066Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=SUPERMERCADOS%20BH&query_place_id=ChIJeUWMadq9pgARwSvCsoftTio",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 4,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGYonl56Znz04Tg3Hl5ss8c6uiPZ8iiJ0GVMIvBCJBRXJcS01D4lLNekuZCnYsupwANU5L_BsRQaaM3spKPYt8MrC4xnQ7eEOF_6Rp4e9Wrc4eDsT5QhvHMWXqglKaG5ME3LUcD8A=w426-h240-k-no",
+  "kgmid": "/g/11bc7g38h6"
+},
+{
+  "title": "Epa Supermercados",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "Av. Menelick de Carvalho, 245 - Araguaia, Belo Horizonte - MG, 30624-000, Brasil",
+  "neighborhood": "Araguaia",
+  "street": "Av. Menelick de Carvalho, 245",
+  "city": "Belo Horizonte",
+  "postalCode": "30624-000",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.epa.com.br/",
+  "phone": "+55 31 3208-2530",
+  "phoneUnformatted": "+553132082530",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9947522,
+    "lng": -44.0037163
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.4,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJtcVh41O9pgARJItiDrWZfWc",
+  "categories": [
+    "Supermercado",
+    "Adega"
+  ],
+  "fid": "0xa6bd53e361c5b5:0x677d99b50e628b24",
+  "cid": "7457285560904878884",
+  "reviewsCount": 3547,
+  "imagesCount": 119,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.066Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 22:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 22:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 22:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 18:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 22:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 22:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 22:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Reciclagem": [
+      {
+        "Lâmpadas": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Epa%20Supermercados&query_place_id=ChIJtcVh41O9pgARJItiDrWZfWc",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 5,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEA7OgwfSjQT--EmSBuB9XBJIKtJrUwH2fL9XEpvl_30NASWX3LnCfW-BnKaloPRBHxfHnunAcTr6i_P3fpuwdNl5OZE3f6Kf9Y2AFOZAfeOk1fZjR3lB-gSDVnoNgNdL1aZvHG=w408-h306-k-no",
+  "kgmid": "/g/11h2lqst16"
+},
+{
+  "title": "Epa Supermercados",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "Av. Expedito de Faria Taváres, 32 - Marilândia Jatobá (Barreiro), Belo Horizonte - MG, 30692-675, Brasil",
+  "neighborhood": "Marilândia Jatobá (Barreiro)",
+  "street": "Av. Expedito de Faria Taváres, 32",
+  "city": "Belo Horizonte",
+  "postalCode": "30692-675",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.epa.com.br/",
+  "phone": "",
+  "phoneUnformatted": "",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9955537,
+    "lng": -44.046168
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.2,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJrS-20PC-pgARPuXDdJX5ezE",
+  "categories": [
+    "Supermercado",
+    "Loja de bebidas"
+  ],
+  "fid": "0xa6bef0d0b62fad:0x317bf99574c3e53e",
+  "cid": "3565717950298318142",
+  "reviewsCount": 2778,
+  "imagesCount": 141,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.067Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Reciclagem": [
+      {
+        "Lâmpadas": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Epa%20Supermercados&query_place_id=ChIJrS-20PC-pgARPuXDdJX5ezE",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 7,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFOw7TeDzMlCcjQNsaBZDrIyeo_DCtmQKP3TLkvZ9XD_S8eemqIgCsXHk4Jo6QvLEkj0Q_RUMbmK51dOqp-dUQPazDTDOaS2-3pJytjPf2tVg-moa3ndx-0aDMGBY6rEwKbeU6YxA=w426-h240-k-no",
+  "kgmid": "/g/11bx8m3_59"
+},
+{
+  "title": "Epa Supermercados",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "R. Caetano Pirri, 110 - Barreiro, Belo Horizonte - MG, 30620-070, Brasil",
+  "neighborhood": "Barreiro",
+  "street": "R. Caetano Pirri, 110",
+  "city": "Belo Horizonte",
+  "postalCode": "30620-070",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.epa.com.br/",
+  "phone": "+55 31 3208-2560",
+  "phoneUnformatted": "+553132082560",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9851247,
+    "lng": -44.0087181
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.1,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ9yckWOS9pgARrQoBh8kFhOI",
+  "categories": [
+    "Supermercado",
+    "Caixa eletrônico",
+    "Loja de bebidas"
+  ],
+  "fid": "0xa6bde4582427f7:0xe28405c987010aad",
+  "cid": "16322177312609077933",
+  "reviewsCount": 2034,
+  "imagesCount": 222,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.067Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Compras na loja": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Reciclagem": [
+      {
+        "Lâmpadas": true
+      },
+      {
+        "Latas de metal": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Epa%20Supermercados&query_place_id=ChIJ9yckWOS9pgARrQoBh8kFhOI",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 8,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHF3HV27a7NS5PlH995ko62XuIMF-vunAf0-D8NHhBEmSZz2o467U0b1PXqd8wFbRI4nKR1UI23sjhqFhFaVLDACkPU1AYXgjz5HeSh-VIpq6YORCgsms3Sh6zu7YhZBNfplW3X=w426-h240-k-no",
+  "kgmid": "/g/1yfj55xd9"
+},
+{
+  "title": "Supermercados BH",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "Av. Olinto Meireles, 2734 - Miramar (Barreiro), Belo Horizonte - MG, 30620-330, Brasil",
+  "neighborhood": "Miramar (Barreiro)",
+  "street": "Av. Olinto Meireles, 2734",
+  "city": "Belo Horizonte",
+  "postalCode": "30620-330",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.supermercadosbh.com.br/",
+  "phone": "+55 31 3321-1429",
+  "phoneUnformatted": "+553133211429",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9947792,
+    "lng": -44.0069126
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.2,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJvwU4O8-9pgARynSD3FPPgqo",
+  "categories": [
+    "Supermercado",
+    "Supermercado de descontos",
+    "Loja de bebidas"
+  ],
+  "fid": "0xa6bdcf3b3805bf:0xaa82cf53dc8374ca",
+  "cid": "12286610692508972234",
+  "reviewsCount": 3622,
+  "imagesCount": 94,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.067Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Supermercados%20BH&query_place_id=ChIJvwU4O8-9pgARynSD3FPPgqo",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 9,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAF3Hp8Jp5D3ZygtOpEzhXxzlEcbT6jWyt1Cm5H5BAQvUJ2Fo1sUs4369Bm_aFcjnAW0hHq6Finsyjgoh-1RHLAEkyTBPoxUl7V-MB1_E18pF4y_ee_T0gVTI04lYMPNDW3QlkHpaw=w426-h240-k-no",
+  "kgmid": "/g/1tg6wy67"
+},
+{
+  "title": "Mineirão Atacado e Varejo",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "Av. Senador Levindo Coelho, 3321 - Petrópolis, Belo Horizonte - MG, 30664-247, Brasil",
+  "neighborhood": "Petrópolis",
+  "street": "Av. Senador Levindo Coelho, 3321",
+  "city": "Belo Horizonte",
+  "postalCode": "30664-247",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "",
+  "phoneUnformatted": "",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -20.0114942,
+    "lng": -44.0329575
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 3.9,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJSX_-FZa-pgARYNjzZ3PyHgI",
+  "categories": [
+    "Supermercado",
+    "Caixa eletrônico"
+  ],
+  "fid": "0xa6be9615fe7f49:0x21ef27367f3d860",
+  "cid": "152826014856370272",
+  "reviewsCount": 1960,
+  "imagesCount": 276,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.067Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 22:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 22:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 22:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 22:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 22:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 22:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Mineir%C3%A3o%20Atacado%20e%20Varejo&query_place_id=ChIJSX_-FZa-pgARYNjzZ3PyHgI",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 10,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEMEWpwsBZ0Q0QLvWO_dIKzgAApUa9VOHOHXNtH6dlHgs_J9JTIA2d1OKNvxZVRKbQUqWFxndNPm-B8dYlx7ORpEU4QIvKqOE292sICopQzfkBXt7PoZJlJzrttHaVwDB9waL-pxA=w426-h240-k-no",
+  "kgmid": "/g/11bc6z84hk"
+},
+{
+  "title": "SUPERMERCADOS BH",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado de descontos",
+  "address": "Av. Manoel Salles Barbosa, 455 - Cardoso, Belo Horizonte - MG, 30626-400, Brasil",
+  "neighborhood": "Cardoso",
+  "street": "Av. Manoel Salles Barbosa, 455",
+  "city": "Belo Horizonte",
+  "postalCode": "30626-400",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.supermercadosbh.com.br/",
+  "phone": "+55 31 3383-7935",
+  "phoneUnformatted": "+553133837935",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -20.0005862,
+    "lng": -44.0083306
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJo--WGM29pgARV6FgxS1Shb8",
+  "categories": [
+    "Supermercado de descontos",
+    "Supermercado"
+  ],
+  "fid": "0xa6bdcd1896efa3:0xbf85522dc560a157",
+  "cid": "13800526989685203287",
+  "reviewsCount": 1799,
+  "imagesCount": 89,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.067Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=SUPERMERCADOS%20BH&query_place_id=ChIJo--WGM29pgARV6FgxS1Shb8",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 11,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAH_my-15Fnf-fVkUkIJ94gA-LbJHg3PvlNwbn7jol2wWfMHQXUvcIgTYkbWIuC6CntnAkWOzv2KfaU1-RalbpMho7bQqeBZ0_YuTrObmpmy5DgDeslGNzNKwC8H_NHiG3kndZYe=w426-h240-k-no",
+  "kgmid": "/g/1q5btz2s3"
+},
+{
+  "title": "Supermercado Tirol",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "Av. Senador Levindo Coelho, 400 - Tirol, Belo Horizonte - MG, 30662-290, Brasil",
+  "neighborhood": "Tirol",
+  "street": "Av. Senador Levindo Coelho, 400",
+  "city": "Belo Horizonte",
+  "postalCode": "30662-290",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "https://www.instagram.com/supermercadotirol/",
+  "phone": "+55 31 3385-1796",
+  "phoneUnformatted": "+553133851796",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9907387,
+    "lng": -44.0350958
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.3,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJWat_cWG-pgARQ3jlOUTMlvA",
+  "categories": [
+    "Supermercado",
+    "Caixa eletrônico"
+  ],
+  "fid": "0xa6be61717fab59:0xf096cc4439e57843",
+  "cid": "17336268409010485315",
+  "reviewsCount": 572,
+  "imagesCount": 53,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.067Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 20:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 20:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 20:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 20:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 20:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega sem contato": true
+      },
+      {
+        "Entrega": true
+      },
+      {
+        "Retirada na loja": true
+      },
+      {
+        "Compras na loja": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Opções no menu": [
+      {
+        "Farmácia": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Supermercado%20Tirol&query_place_id=ChIJWat_cWG-pgARQ3jlOUTMlvA",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 12,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEiPfW1vx_MGvLf6etVsw5RGLfEHxt4ctjZh6S0Sn9yxueNMr8kVGjoWh32vJ8acvdGLkLnv9sT9NFFc0GCjqIqpNrX9h_mVlhjFZqNBKGxRJb5QsbUBe75EtC29aT8Uu_raFuB=w423-h240-k-no",
+  "kgmid": "/g/1tplrkdv"
+},
+{
+  "title": "Epa Supermercados",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "R. Mariza Afonso, 226 - Independência, Belo Horizonte - MG, 30672-670, Brasil",
+  "neighborhood": "Independência",
+  "street": "R. Mariza Afonso, 226",
+  "city": "Belo Horizonte",
+  "postalCode": "30672-670",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.epa.com.br/",
+  "phone": "+55 31 3472-5259",
+  "phoneUnformatted": "+553134725259",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -20.0189704,
+    "lng": -44.0287756
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 3.9,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJBfBCory-pgARgRXXM2naEKM",
+  "categories": [
+    "Supermercado"
+  ],
+  "fid": "0xa6bebca242f005:0xa310da6933d71581",
+  "cid": "11750131573185779073",
+  "reviewsCount": 2092,
+  "imagesCount": 101,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.067Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega sem contato": true
+      },
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Reciclagem": [
+      {
+        "Lâmpadas": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Epa%20Supermercados&query_place_id=ChIJBfBCory-pgARgRXXM2naEKM",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 15,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEIs3kHGapey3b8AumUcsVSBYm-K0AGj5OgKT7ECiFnZ4Uq20JXNq5G3L516tmV-WMHp3p-TXOBHK5LjBd4OA2zMVv2ysRMiIzPBkMccJptWebsb49AJ4HskIpL1Ao7Lo38F4I=w426-h240-k-no",
+  "kgmid": "/g/11bc6z9mdn"
+},
+{
+  "title": "Supermercados BH Buritis",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado de descontos",
+  "address": "Rua Moisés Kalil, 320 - Buritis, Belo Horizonte - MG, 30575-819, Brasil",
+  "neighborhood": "Buritis",
+  "street": "Rua Moisés Kalil, 320",
+  "city": "Belo Horizonte",
+  "postalCode": "30575-819",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.supermercadosbh.com.br/",
+  "phone": "+55 31 3378-7148",
+  "phoneUnformatted": "+553133787148",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9854956,
+    "lng": -43.9764181
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ0f4qkyS9pgARtEbdwuHroWQ",
+  "categories": [
+    "Supermercado de descontos",
+    "Supermercado"
+  ],
+  "fid": "0xa6bd24932afed1:0x64a1ebe1c2dd46b4",
+  "cid": "7251336229912659636",
+  "reviewsCount": 1793,
+  "imagesCount": 205,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.067Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Supermercados%20BH%20Buritis&query_place_id=ChIJ0f4qkyS9pgARtEbdwuHroWQ",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 16,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAH9ZAC-OZY1ReCCTkI-jzsRbgxnA7bZyZj9m6KGiGbRDpmCnGThL9s2KkjMV_Us-PbEHdywVaYYL-SyvzJyCTC6a_ApCdBEYkgC9A1gqm8QfLj59jxK7TRyAij2uuGq1v28al-_=w426-h240-k-no",
+  "kgmid": "/g/11h9ph4kp6"
+},
+{
+  "title": "Supermercados BH",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado de descontos",
+  "address": "Vale d - Av. Senador Levindo Coelho, 1290 - Vale do Jatoba, Jatobá - MG, 30664-006, Brasil",
+  "neighborhood": "Vale do Jatoba",
+  "street": "Vale d - Av. Senador Levindo Coelho, 1290",
+  "city": "Jatobá",
+  "postalCode": "30664-006",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "https://www.supermercadosbh.com.br/nossas-lojas/",
+  "phone": "+55 31 3385-9393",
+  "phoneUnformatted": "+553133859393",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -20.0002356,
+    "lng": -44.036121
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.4,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ_Rujd0-_pgARU1hu7p2TL2Q",
+  "categories": [
+    "Supermercado de descontos",
+    "Supermercado"
+  ],
+  "fid": "0xa6bf4f77a31bfd:0x642f939dee6e5853",
+  "cid": "7219151034217551955",
+  "reviewsCount": 2643,
+  "imagesCount": 202,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.068Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega sem contato": true
+      },
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Supermercados%20BH&query_place_id=ChIJ_Rujd0-_pgARU1hu7p2TL2Q",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 18,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHhUlhjZCCm43CneAtfXaoqdaxR02PV5EqHOcjSixd6cTGSOmn4vgqq-V3_nrmaKE8hzmZhsSydcgGmTtz95juny6wETR9VlCPnL3EMuAHkqdZIAw1o-PkcY1DGu1KEt-c-RGqc=w426-h240-k-no",
+  "kgmid": "/g/11f6kvfycj"
+},
+{
+  "title": "Supermercado Bom Sucesso",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "R. Dr. Cristiano Rezende, 1840 - Bonsucesso, Belo Horizonte - MG, 30622-020, Brasil",
+  "neighborhood": "Bonsucesso",
+  "street": "R. Dr. Cristiano Rezende, 1840",
+  "city": "Belo Horizonte",
+  "postalCode": "30622-020",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3383-8747",
+  "phoneUnformatted": "+553133838747",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9863003,
+    "lng": -43.9884642
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.4,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJURQvPwu9pgARLkSgQv5Sqww",
+  "categories": [
+    "Supermercado"
+  ],
+  "fid": "0xa6bd0b3f2f1451:0xcab52fe42a0442e",
+  "cid": "912914601465627694",
+  "reviewsCount": 415,
+  "imagesCount": 15,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.068Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 20:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega sem contato": true
+      },
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Opções no menu": [
+      {
+        "Farmácia": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Supermercado%20Bom%20Sucesso&query_place_id=ChIJURQvPwu9pgARLkSgQv5Sqww",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 19,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAG5f3VX-9PniDbBfkUhhDidzZ7nfkqbJ4aqBoNGr498qTkKn94qGJC8rKXXlNRTeEK5dIRJgkXAXSMOQil6tWPUqMjyivqTG5c4RuGWaC0C2tJs8nzPieY9-fnT7FFQi7vtJ46M=w426-h240-k-no",
+  "kgmid": "/g/11h02dzz4t"
+},
+{
+  "title": "SUPERMERCADOS BH",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado de descontos",
+  "address": "R. Antônio Teixeira Dias, 1580 - Teixeira Dias, Belo Horizonte - MG, 30642-270, Brasil",
+  "neighborhood": "Teixeira Dias",
+  "street": "R. Antônio Teixeira Dias, 1580",
+  "city": "Belo Horizonte",
+  "postalCode": "30642-270",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.supermercadosbh.com.br/",
+  "phone": "+55 31 3384-4022",
+  "phoneUnformatted": "+553133844022",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.9862548,
+    "lng": -44.0164883
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.1,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJeYRO0Ni9pgARJ1bI7H-e_9k",
+  "categories": [
+    "Supermercado de descontos",
+    "Supermercado"
+  ],
+  "fid": "0xa6bdd8d04e8479:0xd9ff9e7fecc85627",
+  "cid": "15708448297562166823",
+  "reviewsCount": 1826,
+  "imagesCount": 77,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.068Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 20:30"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 20:30"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 20:30"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 20:30"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 20:30"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 20:30"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=SUPERMERCADOS%20BH&query_place_id=ChIJeYRO0Ni9pgARJ1bI7H-e_9k",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-20.046936173178977,-44.029119249208975,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 20,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHyDLYDEM45R4Bm50mRMfj32B8U0OeIvsCkHmKh3l8ZaOOdQEVeDX8P0ZLH15QnHqrdIxrwNwbSQAA0kdRriOsp4FU_rlCJkzGwOo4SKFy38IjqXaNuHaGAwYwRJ0iqQri9kA5K=w408-h544-k-no",
+  "kgmid": "/g/11bztznlhj"
+},
+{
+  "title": "SUPERMERCADOS BH",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "Av. Waldomiro Lobo, 515 - Guarani, Belo Horizonte - MG, 31814-620, Brasil",
+  "neighborhood": "Guarani",
+  "street": "Av. Waldomiro Lobo, 515",
+  "city": "Belo Horizonte",
+  "postalCode": "31814-620",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.supermercadosbh.com.br/",
+  "phone": "+55 31 3437-7325",
+  "phoneUnformatted": "+553134377325",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.8445715,
+    "lng": -43.9236955
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.3,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJz9evHsqapgARiO5hOYOvf2g",
+  "categories": [
+    "Supermercado",
+    "Supermercado de descontos",
+    "Loja de bebidas"
+  ],
+  "fid": "0xa69aca1eafd7cf:0x687faf833961ee88",
+  "cid": "7529930080125054600",
+  "reviewsCount": 5315,
+  "imagesCount": 223,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.115Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      },
+      {
+        "Retirada na loja": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=SUPERMERCADOS%20BH&query_place_id=ChIJz9evHsqapgARiO5hOYOvf2g",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 1,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFCfng0Gdpn91-L2MMsLbMpXj0O84AzdKtzTFgqaYBQxmoLm8gMmEt8qxZ-rgvopQKvDWaSwFS-mj3NfFh_C4fxRERsuIoQ-dopjFWqkMycCL1ZTbcpo8QP5zyAHzupn_4Ljw8NZg=w426-h240-k-no",
+  "kgmid": "/g/1ptw28p_r"
+},
+{
+  "title": "SUPERMERCADOS BH",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado de descontos",
+  "address": "Rua dos Borges, 1019 - Jardim Vitoria, Belo Horizonte - MG, 31975-270, Brasil",
+  "neighborhood": "Jardim Vitoria",
+  "street": "Rua dos Borges, 1019",
+  "city": "Belo Horizonte",
+  "postalCode": "31975-270",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.supermercadosbh.com.br/",
+  "phone": "+55 31 3447-4763",
+  "phoneUnformatted": "+553134474763",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.84424,
+    "lng": -43.8844679
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.3,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJizejqjWbpgARVWXkGFAEDyY",
+  "categories": [
+    "Supermercado de descontos",
+    "Loja de bebidas",
+    "Supermercado"
+  ],
+  "fid": "0xa69b35aaa3378b:0x260f045018e46555",
+  "cid": "2742415440153437525",
+  "reviewsCount": 3929,
+  "imagesCount": 546,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.115Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      },
+      {
+        "Retirada na loja": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=SUPERMERCADOS%20BH&query_place_id=ChIJizejqjWbpgARVWXkGFAEDyY",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 2,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHFl3dCKUf9nVFHiE2RoZaCM0Yh9CG_QmRRwfY9epEB7igwpk89_QQOMQQT7yd6z_LrBAMb8UK4Ow8xVsiq6nuKe7973ORu8zAlcq_Ndm3e_LX8RtydkLMDTC-Nw8j1V3SFzfU-=w408-h272-k-no",
+  "kgmid": "/g/11b88r0r9x"
+},
+{
+  "title": "Epa Supermercados",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "Av. Cristiano Machado, 11833 - Venda Nova, Belo Horizonte - MG, 31744-007, Brasil",
+  "neighborhood": "Venda Nova",
+  "street": "Av. Cristiano Machado, 11833",
+  "city": "Belo Horizonte",
+  "postalCode": "31744-007",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.epa.com.br/",
+  "phone": "+55 31 3472-5285",
+  "phoneUnformatted": "+553134725285",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.8214348,
+    "lng": -43.9465504
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.2,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJZcg4GPePpgAR6PFrtd08RO4",
+  "categories": [
+    "Supermercado"
+  ],
+  "fid": "0xa68ff71838c865:0xee443cddb56bf1e8",
+  "cid": "17168914602372362728",
+  "reviewsCount": 3674,
+  "imagesCount": 70,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.115Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 22:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 22:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 22:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 22:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 22:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 22:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Reciclagem": [
+      {
+        "Lâmpadas": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Epa%20Supermercados&query_place_id=ChIJZcg4GPePpgAR6PFrtd08RO4",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 3,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGYc3HCzghRQdAA7DxcXxPtFmvNcC8EytZXjfMq_sP6zgz5XG3eyroMY0boD81pdHSD3g3zKC279yoeI1Un0YlHTb1SrGQALyqSpV_qnPVl18FAruWiaEVUAWtHKBVj3FMcPwxL=w426-h240-k-no",
+  "kgmid": "/g/11gds507bl"
+},
+{
+  "title": "Supermercados BH",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado de descontos",
+  "address": "R. Padre Argemiro Moreira, 12.000 - Maria Tereza, Belo Horizonte - MG, 31998-250, Brasil",
+  "neighborhood": "Maria Tereza",
+  "street": "R. Padre Argemiro Moreira, 12.000",
+  "city": "Belo Horizonte",
+  "postalCode": "31998-250",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "https://www.supermercadosbh.com.br/",
+  "phone": "+55 31 2116-9311",
+  "phoneUnformatted": "+553121169311",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.8159854,
+    "lng": -43.8848017
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.4,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJpyo1nJuFpgARXYelZFsJT1A",
+  "categories": [
+    "Supermercado de descontos",
+    "Supermercado"
+  ],
+  "fid": "0xa6859b9c352aa7:0x504f095b64a5875d",
+  "cid": "5786854334329620317",
+  "reviewsCount": 565,
+  "imagesCount": 19,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.115Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Supermercados%20BH&query_place_id=ChIJpyo1nJuFpgARXYelZFsJT1A",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 4,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGBA02gaEJN4Ea_IQ7ekaJdeJrE7368SIRPbR6LKRdV06kP2vGYMzG7VlEGkymLjO-N8yJorp11qVGxVE64K94QofoKhjjAmRd0PjzhzyRW61trE2g-SzBNZa2-WSdhWeu14RQJMA=w408-h725-k-no",
+  "kgmid": "/g/11rzt0d3wf"
+},
+{
+  "title": "SUPERMERCADOS BH",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "R. Augusto Ferreira dos Santos, 410 - Serra Verde, Belo Horizonte - MG, 31630-120, Brasil",
+  "neighborhood": "Serra Verde",
+  "street": "R. Augusto Ferreira dos Santos, 410",
+  "city": "Belo Horizonte",
+  "postalCode": "31630-120",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.supermercadosbh.com.br/",
+  "phone": "+55 31 3455-1030",
+  "phoneUnformatted": "+553134551030",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.7999523,
+    "lng": -43.9524012
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.3,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJaWddxoSPpgAR3WkoGqfuSA4",
+  "categories": [
+    "Supermercado",
+    "Supermercado de descontos"
+  ],
+  "fid": "0xa68f84c65d6769:0xe48eea71a2869dd",
+  "cid": "1029334916319963613",
+  "reviewsCount": 3419,
+  "imagesCount": 304,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.115Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=SUPERMERCADOS%20BH&query_place_id=ChIJaWddxoSPpgAR3WkoGqfuSA4",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 5,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFFh8w3lzxdv_3uwwPx6Pzc0zM4uyz7mDWGamAq9x-FEGFpwEFo-JJgrCFL_LJt0G39QF667N4qSFHOcU8TkSMK3iPcDYtZO9lQzdugnOSgrlgwpfir3OCwNC2Py-qyO1klOWFFqg=w408-h306-k-no",
+  "kgmid": "/g/1pv1603rf"
+},
+{
+  "title": "Uberaba Supermercados",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "Av. Dr. Cristiano Guimarães, 135 - Vila Cloris, Belo Horizonte - MG, 31720-300, Brasil",
+  "neighborhood": "Vila Cloris",
+  "street": "Av. Dr. Cristiano Guimarães, 135",
+  "city": "Belo Horizonte",
+  "postalCode": "31720-300",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3454-2675",
+  "phoneUnformatted": "+553134542675",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.822678,
+    "lng": -43.952073
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.1,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJa6DwvvqPpgAR_KaoNjh6_O0",
+  "categories": [
+    "Supermercado"
+  ],
+  "fid": "0xa68ffabef0a06b:0xedfc7a3836a8a6fc",
+  "cid": "17148715862973785852",
+  "reviewsCount": 2232,
+  "imagesCount": 104,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.115Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:00 to 22:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:00 to 22:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:00 to 22:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:00 to 22:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:00 to 22:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:00 to 22:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Opções no menu": [
+      {
+        "Comida": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Uberaba%20Supermercados&query_place_id=ChIJa6DwvvqPpgAR_KaoNjh6_O0",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 7,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFuMswhVTpdh1kpT26uzHy8MCExZDeckBF-P2Tc9mL7uOA_qvkOVerEChvsdiqSIHJ07oNwCC0W4DtjHsRp8dC4lMinUqgDCUbJ073OjdBLfFfomVkW-SFDFhz2qZll1zZzpvYv=w426-h240-k-no",
+  "kgmid": "/g/1tjy2qvl"
+},
+{
+  "title": "Supermercado Opa - Planalto",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "Av. Dr. Cristiano Guimarães, 501 - Vila Cloris, Belo Horizonte - MG, 31744-144, Brasil",
+  "neighborhood": "Vila Cloris",
+  "street": "Av. Dr. Cristiano Guimarães, 501",
+  "city": "Belo Horizonte",
+  "postalCode": "31744-144",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "",
+  "phoneUnformatted": "",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.8256137,
+    "lng": -43.9513682
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.4,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ3zEDF7WPpgARfBUq5A5jydY",
+  "categories": [
+    "Supermercado"
+  ],
+  "fid": "0xa68fb5170331df:0xd6c9630ee42a157c",
+  "cid": "15477010510044075388",
+  "reviewsCount": 1292,
+  "imagesCount": 91,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.115Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      },
+      {
+        "Compras na loja": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Supermercado%20Opa%20-%20Planalto&query_place_id=ChIJ3zEDF7WPpgARfBUq5A5jydY",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 8,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHlMuNDEC5mNGENaIJ-M8m0iKsWcLgW_QDlSduQ4MNBGxA6bFn0dP0nDhBa2qMqcuzvxdJLu-fy002xemV5zXZkyRk41Ies81eACUKTlntUhOS3WCIXZCKCEu8LkTiUmBq7IZCwYA=w408-h306-k-no",
+  "kgmid": "/g/11sgz4s20d"
+},
+{
+  "title": "Uberaba Supermercados",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "R. Padre Pedro Pinto, 440 - Venda Nova, Belo Horizonte - MG, 31610-000, Brasil",
+  "neighborhood": "Venda Nova",
+  "street": "R. Padre Pedro Pinto, 440",
+  "city": "Belo Horizonte",
+  "postalCode": "31610-000",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3451-4692",
+  "phoneUnformatted": "+553134514692",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.8175858,
+    "lng": -43.9540655
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.1,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ647dFe6PpgAR-T6eGnjmJ6k",
+  "categories": [
+    "Supermercado"
+  ],
+  "fid": "0xa68fee15dd8eeb:0xa927e6781a9e3ef9",
+  "cid": "12188964320018579193",
+  "reviewsCount": 3285,
+  "imagesCount": 104,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.115Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:00 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:00 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:00 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:00 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:00 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:00 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:00 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      },
+      {
+        "Retirada na loja": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Opções no menu": [
+      {
+        "Comida": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Uberaba%20Supermercados&query_place_id=ChIJ647dFe6PpgAR-T6eGnjmJ6k",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 9,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHuJ_M-lc2VJTVNxS7rt_3etMD57k62o4Aogu2OrCxVGxzmnarSFZ7EIuykmLb_ufncNODY-ADAF7tsAxMSPQnJa4xjtO_Wd8OPTWeZS4h0JJUTKUAroFMVLyiVu-pkD-U5U__rpA=w408-h306-k-no",
+  "kgmid": "/g/1q5btfk3_"
+},
+{
+  "title": "Supermercado Boa Ideia Novo Aarão Reis",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "Av. Detetive Eduardo Fernandes, 449 - Novo Aarão Reis, Belo Horizonte - MG, 31845-000, Brasil",
+  "neighborhood": "Novo Aarão Reis",
+  "street": "Av. Detetive Eduardo Fernandes, 449",
+  "city": "Belo Horizonte",
+  "postalCode": "31845-000",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "https://www.instagram.com/superboaideia/?igshid=154g92nx7z17b",
+  "phone": "+55 31 98025-4018",
+  "phoneUnformatted": "+5531980254018",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.8409333,
+    "lng": -43.9071657
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJRY3WOiqFpgARZW_a8FIg0Nc",
+  "categories": [
+    "Supermercado"
+  ],
+  "fid": "0xa6852a3ad68d45:0xd7d02052f0da6f65",
+  "cid": "15550965053910576997",
+  "reviewsCount": 612,
+  "imagesCount": 33,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.115Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 20:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 20:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 20:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 20:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 20:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega sem contato": true
+      },
+      {
+        "Entrega": true
+      },
+      {
+        "Compras na loja": true
+      },
+      {
+        "Serviços no local": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Supermercado%20Boa%20Ideia%20Novo%20Aar%C3%A3o%20Reis&query_place_id=ChIJRY3WOiqFpgARZW_a8FIg0Nc",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 11,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFKraBo5ibDrJLw8S7p41wDfbgiPyRb5uzM67k5ODR9rCGZ-Khs6cCGiPk3SV6c_9TeDDoR_7TQ70WSRRfNl5a9O41OoJiJiI-U6wlwwAdwI2Nv1D0prTHsYkaJhy41O0tk_4M=w408-h544-k-no",
+  "kgmid": "/g/11bx2g299r"
+},
+{
+  "title": "Supermercado Opa",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "Av. Saramenha, 1197 - Tupi, Belo Horizonte - MG, 31840-050, Brasil",
+  "neighborhood": "Tupi",
+  "street": "Av. Saramenha, 1197",
+  "city": "Belo Horizonte",
+  "postalCode": "31840-050",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3445-6954",
+  "phoneUnformatted": "+553134456954",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -19.8412686,
+    "lng": -43.9215197
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.3,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJfZiXcxibpgARg4zKpOsfIJE",
+  "categories": [
+    "Supermercado"
+  ],
+  "fid": "0xa69b187397987d:0x91201feba4ca8c83",
+  "cid": "10457393431696804995",
+  "reviewsCount": 2076,
+  "imagesCount": 38,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.115Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega sem contato": true
+      },
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Supermercado%20Opa&query_place_id=ChIJfZiXcxibpgARg4zKpOsfIJE",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 12,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAE20QN4Ix8VoWL4eEBaeQvIIsp9J1iyWdImBQotTmnnyvCeGTKUhHHXQ292V9O6AnwDF_FRsCNhUv70y2IgnW8mweBJpE2ZEYrfQX0i1QGv9o8BStt9Q-16sZr26_7Un-3IMsh8tw=w408-h306-k-no",
+  "kgmid": "/g/11h3ffcvmq"
+},
+{
+  "title": "Supermercado Campeão",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "Rua Sócrates, 790 - Nazare, Belo Horizonte - MG, 31990-010, Brasil",
+  "neighborhood": "Nazare",
+  "street": "Rua Sócrates, 790",
+  "city": "Belo Horizonte",
+  "postalCode": "31990-010",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "https://instagram.com/supermercadocampeao_nazare?utm_medium=copy_link",
+  "phone": "+55 31 3437-3472",
+  "phoneUnformatted": "+553134373472",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.8500679,
+    "lng": -43.8987108
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.3,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJq0W5VyybpgARJ5bBAi2f-6c",
+  "categories": [
+    "Supermercado"
+  ],
+  "fid": "0xa69b2c57b945ab:0xa7fb9f2d02c19627",
+  "cid": "12104443439156925991",
+  "reviewsCount": 363,
+  "imagesCount": 9,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.115Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 20:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega sem contato": true
+      },
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": false
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Supermercado%20Campe%C3%A3o&query_place_id=ChIJq0W5VyybpgARJ5bBAi2f-6c",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 13,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFQ0Ig6sRvPwtUOysx27yetV1_qPxPfuPtHZLiTFzCHH_EKwm4_VRJlSUTWlpu3aQB-UjAF8cnu6priyP3CjrPtX2RXb2Xi4S-XrR-B_SBS-E5ttcXEXr10IMkwlplFjN3iCU7Qtw=w408-h724-k-no",
+  "kgmid": "/g/11h1v9_sgf"
+},
+{
+  "title": "Uberaba Supermercado",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "Av. Gen. Carlos Guedes, 452 - Planalto, Belo Horizonte - MG, 31720-500, Brasil",
+  "neighborhood": "Planalto",
+  "street": "Av. Gen. Carlos Guedes, 452",
+  "city": "Belo Horizonte",
+  "postalCode": "31720-500",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3494-4624",
+  "phoneUnformatted": "+553134944624",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -19.8376338,
+    "lng": -43.9480801
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.1,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ7xDerQaQpgARAlJMvSyDhYU",
+  "categories": [
+    "Supermercado"
+  ],
+  "fid": "0xa69006adde10ef:0x8585832cbd4c5202",
+  "cid": "9621240407124627970",
+  "reviewsCount": 3806,
+  "imagesCount": 217,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.115Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:00 to 22:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:00 to 22:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:00 to 22:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:00 to 21:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:00 to 22:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:00 to 22:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:00 to 22:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      },
+      {
+        "Retirada na loja": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": false
+      }
+    ],
+    "Opções no menu": [
+      {
+        "Comida": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Uberaba%20Supermercado&query_place_id=ChIJ7xDerQaQpgARAlJMvSyDhYU",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 14,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAF2FVkbEKXN0u1fcJq6bnug2LC4DCDrLhJWD1o_xJfx44bh15jlu8OP90Cj_5flGRfu5GGUFHib4aU6DDzya1O-dRTf7UqdQMhKpRpaegcwwl9ONDT-aBR-PgNJhWWyZ0rh2m5ckg=w426-h240-k-no",
+  "kgmid": "/g/1pv0ysg24"
+},
+{
+  "title": "Supermercados Paranaiba Planalto",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "Av. Dr. Cristiano Guimarães, 240 - Planalto, Belo Horizonte - MG, 33720-300, Brasil",
+  "neighborhood": "Planalto",
+  "street": "Av. Dr. Cristiano Guimarães, 240",
+  "city": "Belo Horizonte",
+  "postalCode": "33720-300",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.supermercadosparanaiba.com.br/",
+  "phone": "+55 31 3454-4600",
+  "phoneUnformatted": "+553134544600",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.8233695,
+    "lng": -43.9521756
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.4,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJf2L644aPpgARqcp13vhUrj4",
+  "categories": [
+    "Supermercado",
+    "Padaria",
+    "Açougue gourmet"
+  ],
+  "fid": "0xa68f86e3fa627f:0x3eae54f8de75caa9",
+  "cid": "4516640904160070313",
+  "reviewsCount": 1051,
+  "imagesCount": 90,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.115Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:00 to 22:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:00 to 22:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:00 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 21:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:00 to 22:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:00 to 22:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:00 to 22:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega sem contato": true
+      },
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Supermercados%20Paranaiba%20Planalto&query_place_id=ChIJf2L644aPpgARqcp13vhUrj4",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 16,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEzaerKNmTBuznssor_kEwGqo95byifThk8AW-njkShK6a4xsMg6Jyu6X7rfcHOJhCGzHBXs6JRvM9Sr8qqsGMKnl2kDrIj-Pwc7IYTo_72b_xiO8dPSsR2S9G37W8xUy8tH7hp=w426-h240-k-no",
+  "kgmid": "/g/11k6q1r3z7"
+},
+{
+  "title": "Supermercado HF",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "R. Furquim Werneck, 843 - Tupi, Belo Horizonte - MG, 31840-050, Brasil",
+  "neighborhood": "Tupi",
+  "street": "R. Furquim Werneck, 843",
+  "city": "Belo Horizonte",
+  "postalCode": "31840-050",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3445-4355",
+  "phoneUnformatted": "+553134454355",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -19.8368604,
+    "lng": -43.9207798
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.2,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJk8SicsuapgAR8xD4jhxEVSo",
+  "categories": [
+    "Supermercado"
+  ],
+  "fid": "0xa69acb72a2c493:0x2a55441c8ef810f3",
+  "cid": "3050419212061774067",
+  "reviewsCount": 559,
+  "imagesCount": 18,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.115Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 20:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega sem contato": true
+      },
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": false
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Supermercado%20HF&query_place_id=ChIJk8SicsuapgAR8xD4jhxEVSo",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 19,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFI7EaabigMhLfiFhiBnzAwSo0EwS5c517vWJYNbsn1GOLPkB8AU-YpPF8DFmRRB6cEekXOxsMy21IWJJ5tctrxfwuAXYY_nUnV6RUPWTWDlpPO1dTezrXUu7_3ST4ims_BkLzZ=w408-h544-k-no",
+  "kgmid": "/g/1td4qyrg"
+},
+{
+  "title": "SUPERMERCADOS BH",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado de descontos",
+  "address": "R. Padre Pedro Pinto, 1501 - Venda Nova, Belo Horizonte - MG, 31510-000, Brasil",
+  "neighborhood": "Venda Nova",
+  "street": "R. Padre Pedro Pinto, 1501",
+  "city": "Belo Horizonte",
+  "postalCode": "31510-000",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.supermercadosbh.com.br/",
+  "phone": "+55 31 3451-6886",
+  "phoneUnformatted": "+553134516886",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.812873,
+    "lng": -43.9633952
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.2,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ83Cx78GPpgARhyb0ym3k4Bs",
+  "categories": [
+    "Supermercado de descontos",
+    "Supermercado"
+  ],
+  "fid": "0xa68fc1efb170f3:0x1be0e46dcaf42687",
+  "cid": "2008856594014807687",
+  "reviewsCount": 2524,
+  "imagesCount": 99,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:15.115Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "Fechado"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=SUPERMERCADOS%20BH&query_place_id=ChIJ83Cx78GPpgARhyb0ym3k4Bs",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 20,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGvaqurKIgpk83riihYQ1woVFwa3_wOGzBqai0B7pyvhmeNGJCIDWp5hgE9qfciZJv7wdCk3ozQXMtPHNUFmnr4CVEZxESsGuOcGiLklSzmEAWKHpJlcTvc4nMqLfxremRFjHg=w408-h244-k-no",
+  "kgmid": "/g/1pv60lqr_"
+},
+{
+  "title": "Supermercados BH",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado de descontos",
+  "address": "Rua Central, 1118 - 95 - Jardim Leblon, Belo Horizonte - MG, 31540-500, Brasil",
+  "neighborhood": "Jardim Leblon",
+  "street": "Rua Central, 1118 - 95",
+  "city": "Belo Horizonte",
+  "postalCode": "31540-500",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.supermercadosbh.com.br/",
+  "phone": "+55 31 3496-2210",
+  "phoneUnformatted": "+553134962210",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.829812,
+    "lng": -43.9878188
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.2,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJQxaMJ86RpgARyh2ubFhxj2c",
+  "categories": [
+    "Supermercado de descontos",
+    "Loja de bebidas",
+    "Supermercado"
+  ],
+  "fid": "0xa691ce278c1643:0x678f71586cae1dca",
+  "cid": "7462307732170612170",
+  "reviewsCount": 3477,
+  "reviewsDistribution": {
+    "oneStar": 167,
+    "twoStar": 126,
+    "threeStar": 424,
+    "fourStar": 852,
+    "fiveStar": 1908
+  },
+  "imagesCount": 298,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:16.228Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 14:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Supermercados%20BH&query_place_id=ChIJQxaMJ86RpgARyh2ubFhxj2c",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 32,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAECxmHqYndohWK-aqlqP2wKWpT3sj-Fn06mzcroCi0KCsGhGKLYSwLHG39l4e5Qb3As3sYfcTR75eTAoccb3RtcVgAssqTFlJ8Jf3wmq1IwIAMPY1zhFtdk_qgdEh25jg6-FRzP=w408-h306-k-no",
+  "kgmid": "/g/11cn8s1m2z"
+},
+{
+  "title": "Supermercados BH",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado de descontos",
+  "address": "Av. Dom Pedro I, 402 - Itapoã, Belo Horizonte - MG, 31710-000, Brasil",
+  "neighborhood": "Itapoã",
+  "street": "Av. Dom Pedro I, 402",
+  "city": "Belo Horizonte",
+  "postalCode": "31710-000",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "website": "http://www.supermercadosbh.com.br/",
+  "phone": "+55 31 3497-3234",
+  "phoneUnformatted": "+553134973234",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.841016,
+    "lng": -43.9668706
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.3,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJmcK8uz6QpgARlL6824Q7XNc",
+  "categories": [
+    "Supermercado de descontos",
+    "Supermercado"
+  ],
+  "fid": "0xa6903ebbbcc299:0xd75c3b84dbbcbe94",
+  "cid": "15518343857820188308",
+  "reviewsCount": 6126,
+  "reviewsDistribution": {
+    "oneStar": 196,
+    "twoStar": 138,
+    "threeStar": 643,
+    "fourStar": 1599,
+    "fiveStar": 3550
+  },
+  "imagesCount": 727,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:16.228Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:30 to 19:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:30 to 21:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:30 to 21:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega": true
+      },
+      {
+        "Retirada na loja": true
+      },
+      {
+        "Compras na loja": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Banheiro com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": true
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Reciclagem": [
+      {
+        "Garrafas de vidro": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Pluxee": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Supermercados%20BH&query_place_id=ChIJmcK8uz6QpgARlL6824Q7XNc",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 35,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAF5dVEFtNC7TRP_WNcv8pWqWYK6QmMRXwxzL5-zkkeYKxdcB7PDW0Xn69lBUUPfzLGPpnoiTi9HVXJpj4HuldK43fqc_2O5qWsCHJOZp92B86kf9kj1lrSgg64xuy0hLV5bUh8=w408-h306-k-no",
+  "kgmid": "/g/1ptyt_q7g"
+},
+{
+  "title": "Supermercado Horta | Rede Mania",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "R. São Rômulo, 13 - São Gabriel, Belo Horizonte - MG, 31980-400, Brasil",
+  "neighborhood": "São Gabriel",
+  "street": "R. São Rômulo, 13",
+  "city": "Belo Horizonte",
+  "postalCode": "31980-400",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3435-6606",
+  "phoneUnformatted": "+553134356606",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": -19.8323472,
+    "lng": -43.8912152
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 3.9,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJhajhTsGapgARG3Qo7D1VtYs",
+  "categories": [
+    "Supermercado"
+  ],
+  "fid": "0xa69ac14ee1a885:0x8bb5553dec28741b",
+  "cid": "10067046266500051995",
+  "reviewsCount": 391,
+  "reviewsDistribution": {
+    "oneStar": 39,
+    "twoStar": 24,
+    "threeStar": 67,
+    "fourStar": 71,
+    "fiveStar": 190
+  },
+  "imagesCount": 7,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:16.228Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "07:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "07:00 to 20:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "07:00 to 20:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega sem contato": true
+      },
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": false
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Supermercado%20Horta%20%7C%20Rede%20Mania&query_place_id=ChIJhajhTsGapgARG3Qo7D1VtYs",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 36,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHH9GX5yWcOlt2IL1FcdXzwQUBTxiR574HYl5KKjr3U4zGiO5Zl793TS8mdbTB5ZN3vLhvUGTYE4WQgMHUAbSMbABKXXTOG1DS6d9WbK3RWePgObwpvWpDY2FI18pvl-hc0cdvb=w408-h544-k-no",
+  "kgmid": "/g/1ptzsjk_9"
+},
+{
+  "title": "Supermercado Lanna",
+  "subTitle": null,
+  "description": null,
+  "price": null,
+  "categoryName": "Supermercado",
+  "address": "R. Inglaterra, 225 - Vila Jardim Leblon, Belo Horizonte - MG, 31540-360, Brasil",
+  "neighborhood": "Vila Jardim Leblon",
+  "street": "R. Inglaterra, 225",
+  "city": "Belo Horizonte",
+  "postalCode": "31540-360",
+  "state": "Minas Gerais",
+  "countryCode": "BR",
+  "phone": "+55 31 3452-1333",
+  "phoneUnformatted": "+553134521333",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": -19.827123,
+    "lng": -43.9867237
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.1,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJb-XXfNGRpgAR2jqrypxW2Tg",
+  "categories": [
+    "Supermercado"
+  ],
+  "fid": "0xa691d17cd7e56f:0x38d9569ccaab3ada",
+  "cid": "4096400567485283034",
+  "reviewsCount": 425,
+  "reviewsDistribution": {
+    "oneStar": 23,
+    "twoStar": 14,
+    "threeStar": 69,
+    "fourStar": 96,
+    "fiveStar": 223
+  },
+  "imagesCount": 16,
+  "imageCategories": [],
+  "scrapedAt": "2026-05-14T17:41:16.229Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "quinta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sexta-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "sábado",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "domingo",
+      "hours": "08:00 to 13:00"
+    },
+    {
+      "day": "segunda-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "terça-feira",
+      "hours": "08:00 to 20:00"
+    },
+    {
+      "day": "quarta-feira",
+      "hours": "08:00 to 20:00"
+    }
+  ],
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "Opções de serviço": [
+      {
+        "Entrega sem contato": true
+      },
+      {
+        "Entrega": true
+      }
+    ],
+    "Destaques": [
+      {
+        "Bons produtos": true
+      }
+    ],
+    "Acessibilidade": [
+      {
+        "Entrada com acessibilidade para pessoas em cadeira de rodas": true
+      },
+      {
+        "Estacionamento com acessibilidade para pessoas em cadeira de rodas": true
+      }
+    ],
+    "Comodidades": [
+      {
+        "Banheiro": false
+      }
+    ],
+    "Planejamento": [
+      {
+        "Visita rápida": true
+      }
+    ],
+    "Pagamentos": [
+      {
+        "Cartão de crédito": true
+      },
+      {
+        "Cartão de débito": true
+      },
+      {
+        "Pagamentos por dispositivo móvel via NFC": true
+      },
+      {
+        "Cartões de crédito": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Supermercado%20Lanna&query_place_id=ChIJb-XXfNGRpgAR2jqrypxW2Tg",
+  "searchPageUrl": "https://www.google.com/maps/search/supermercado/@-19.78818942682102,-43.89139225079103,13z?hl=pt-BR",
+  "searchString": "supermercado",
+  "language": "pt-BR",
+  "rank": 40,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-proxy/ALd4DhFhgi90ONw4VSxv1-RnBP7TK9qhXbEv4g8qcq6bDvLyYtBMBcyZKotONCwzmkXieOybtZwTxxMP-4j5Qw_Q8VODibokHuwYbiIXwEqHrSHLov_OnwdfPaf66HMUIZEYridp5d69LGp_tc2n1WmP40kX4_Fq5RqZgEp-iQ5Iu2jFYkqLYIJQ5UW4ctZh-Kc6GEV1XQ=w408-h306-k-no",
+  "kgmid": "/g/1tl8lykj"
+}]

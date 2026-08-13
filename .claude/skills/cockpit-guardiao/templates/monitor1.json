@@ -1,0 +1,292 @@
+{
+  "name": "{{WORKFLOW_NAME}}",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "*/30 8-23 * * *"
+            }
+          ]
+        }
+      },
+      "id": "cron-trigger",
+      "name": "Cron 30min (8h-23h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1408,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://graph.facebook.com/v21.0/{{AD_ACCOUNT}}/ads",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "id,name,status,created_time,campaign{id,name},adset{id,name}"
+            },
+            {
+              "name": "effective_status",
+              "value": "[\"ACTIVE\"]"
+            },
+            {
+              "name": "limit",
+              "value": "500"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fetch-ads",
+      "name": "Buscar Ads Ativos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1184,
+        0
+      ],
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "{{META_CRED_ID}}",
+          "name": "Guardiao - Meta Ads (Fernanda)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.facebook.com/v21.0/{{AD_ACCOUNT}}/insights",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "level",
+              "value": "ad"
+            },
+            {
+              "name": "date_preset",
+              "value": "today"
+            },
+            {
+              "name": "fields",
+              "value": "ad_id,ad_name,campaign_id,campaign_name,spend,impressions,clicks,ctr,frequency,actions"
+            },
+            {
+              "name": "limit",
+              "value": "500"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fetch-insights",
+      "name": "Buscar Insights Hoje",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -960,
+        0
+      ],
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "{{META_CRED_ID}}",
+          "name": "Guardiao - Meta Ads (Fernanda)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Guardiao Fernanda — Analisar e Filtrar Alertas (com anti-spam + contador)\n\nconst adsData = $('Buscar Ads Ativos').first().json.data || [];\nconst insightsData = $('Buscar Insights Hoje').first().json.data || [];\n\nconst LANCAMENTO = '{{LANCAMENTO_FILTRO}}';\nconst CPL_TARGET = 14;\nconst LIMITE_NOVO_GASTO = 40;\nconst LIMITE_MADURO_GASTO = 42;\nconst CPL_RUIM_MADURO = 20;\nconst COOLDOWN_MS = 4 * 60 * 60 * 1000;\n\nconst agora = new Date();\nconst agoraMs = agora.getTime();\n\n// Static data persiste entre execucoes\nconst workflowStaticData = $getWorkflowStaticData('global');\nif (!workflowStaticData.alertasEnviados) {\n  workflowStaticData.alertasEnviados = {};\n}\nconst historico = workflowStaticData.alertasEnviados;\n\n// Limpar entradas muito antigas (> 48h) pra nao inchar\nconst LIMITE_HISTORICO_MS = 48 * 60 * 60 * 1000;\nfor (const adId of Object.keys(historico)) {\n  if (agoraMs - (historico[adId].ultima_vez || 0) > LIMITE_HISTORICO_MS) {\n    delete historico[adId];\n  }\n}\n\nconst alertas = [];\nconst contextoCampanhas = {};\n\nfor (const ad of adsData) {\n  const adName = ad.name || '';\n  const campName = (ad.campaign && ad.campaign.name) || '';\n  if (!adName.includes(LANCAMENTO) && !campName.includes(LANCAMENTO)) continue;\n\n  const insight = insightsData.find(i => i.ad_id === ad.id);\n  if (!insight) continue;\n\n  const spend = parseFloat(insight.spend || 0);\n  const leadsAction = (insight.actions || []).find(a =>\n    a.action_type === 'offsite_complete_registration_add_meta_leads' ||\n    a.action_type === 'complete_registration'\n  );\n  const leads = leadsAction ? parseInt(leadsAction.value) : 0;\n  const cpl = leads > 0 ? spend / leads : null;\n  const freq = parseFloat(insight.frequency || 0);\n  const ctr = parseFloat(insight.ctr || 0);\n\n  const createdTime = new Date(ad.created_time);\n  const horasVida = (agora - createdTime) / (1000 * 60 * 60);\n  const ehNovo = horasVida < 24;\n\n  const campId = (ad.campaign && ad.campaign.id) || insight.campaign_id;\n  if (!contextoCampanhas[campId]) {\n    contextoCampanhas[campId] = {\n      nome: campName || insight.campaign_name,\n      ads: [], total_spend: 0, total_leads: 0\n    };\n  }\n  contextoCampanhas[campId].ads.push({nome: adName, spend, leads, cpl});\n  contextoCampanhas[campId].total_spend += spend;\n  contextoCampanhas[campId].total_leads += leads;\n\n  let motivoAlerta = null;\n\n  if (ehNovo) {\n    if (spend > LIMITE_NOVO_GASTO && leads === 0) {\n      motivoAlerta = `Anuncio novo (${horasVida.toFixed(1)}h) gastou R$${spend.toFixed(2)} com 0 leads`;\n    } else if (spend > LIMITE_NOVO_GASTO && leads === 1 && cpl > CPL_TARGET * 2) {\n      motivoAlerta = `Anuncio novo gastou R$${spend.toFixed(2)} com 1 lead (CPL R$${cpl.toFixed(2)}, 2x target)`;\n    } else if (spend > LIMITE_NOVO_GASTO && cpl !== null && cpl > CPL_RUIM_MADURO) {\n      motivoAlerta = `Anuncio novo com CPL alto: R$${cpl.toFixed(2)} (target R$${CPL_TARGET}), gasto R$${spend.toFixed(2)}`;\n    }\n  } else {\n    if (spend > LIMITE_MADURO_GASTO && leads <= 1) {\n      motivoAlerta = `Anuncio maduro gastou R$${spend.toFixed(2)} com ${leads} lead${leads === 1 ? '' : 's'}`;\n    } else if (spend > LIMITE_MADURO_GASTO && cpl !== null && cpl > CPL_RUIM_MADURO) {\n      motivoAlerta = `Anuncio maduro com CPL alto: R$${cpl.toFixed(2)} (target R$${CPL_TARGET}), gasto R$${spend.toFixed(2)}`;\n    }\n  }\n\n  if (motivoAlerta) {\n    const registro = historico[ad.id];\n\n    // Anti-spam: se alertou nos ultimos 4h, pular\n    if (registro && (agoraMs - registro.ultima_vez) < COOLDOWN_MS) {\n      continue;\n    }\n\n    // Definir numero da notificacao\n    const numeroNotificacao = registro ? (registro.contador || 1) + 1 : 1;\n\n    alertas.push({\n      ad_id: ad.id, ad_name: adName,\n      campaign_id: campId, campaign_name: campName || insight.campaign_name,\n      spend, leads, cpl, freq, ctr,\n      horas_vida: horasVida, eh_novo: ehNovo,\n      motivo: motivoAlerta,\n      numero_notificacao: numeroNotificacao\n    });\n\n    historico[ad.id] = {\n      ultima_vez: agoraMs,\n      contador: numeroNotificacao\n    };\n  }\n}\n\nfor (const alerta of alertas) {\n  const ctx = contextoCampanhas[alerta.campaign_id];\n  const cplCampanha = ctx.total_leads > 0 ? ctx.total_spend / ctx.total_leads : null;\n  const restanteLeads = ctx.total_leads - alerta.leads;\n  const cplCampanhaSemEsse = restanteLeads > 0\n    ? (ctx.total_spend - alerta.spend) / restanteLeads : null;\n  alerta.campanha_contexto = {\n    total_ads: ctx.ads.length,\n    total_spend: ctx.total_spend,\n    total_leads: ctx.total_leads,\n    cpl_campanha: cplCampanha,\n    cpl_campanha_sem_esse_ad: cplCampanhaSemEsse\n  };\n}\n\nif (alertas.length === 0) {\n  return [{json: {nenhum_alerta: true}}];\n}\n\nreturn alertas.map(a => ({json: a}));"
+      },
+      "id": "analyze",
+      "name": "Analisar e Filtrar Alertas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -736,
+        0
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "has-ad-id",
+              "leftValue": "={{ $json.ad_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-alerts",
+      "name": "Tem Alerta?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -528,
+        0
+      ]
+    },
+    {
+      "id": "claude-analyze",
+      "name": "Claude — Redige Alerta",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -300,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "anthropicApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 500, messages: [{ role: 'user', content: 'Voce e o Guardiao WinVision. Analise esse alerta da Fernanda (lancamento {{LANCAMENTO_FILTRO}}) e escreva mensagem pra Telegram. TARGETS: CPL individual R$14 | CPL viavel da campanha R$16,17. FORMATO (use APENAS <b></b> e <i></i>, NAO use markdown/asteriscos): Linha 1: emoji sirene + <b>GUARDIAO</b>. Se o campo numero_notificacao for maior que 1, ADICIONAR na mesma linha <b>— Xª NOTIFICACAO</b> (substituir X pelo numero, ex: 2ª, 3ª). Linha em branco. <b>Anuncio:</b> nome do ad. <b>Campanha:</b> nome da campanha — SEMPRE INCLUIR. Linha com CPL, gasto, leads. Linha em branco. <b>CPL campanha sem esse ad:</b> R$X com conclusao viavel/inviavel comparando com R$16,17. Linha em branco. <b>Veredicto:</b> Se cpl_campanha_sem_esse_ad <= 16,17 -> PAUSAR SOMENTE O ANUNCIO. Se > 16,17 -> PAUSAR ANUNCIO E REVER A CAMPANHA. IMPORTANTE: se numero_notificacao > 1, mencione discretamente que ja foi alertado antes e reforcar urgencia. Tom direto, maximo 12 linhas. Dados: ' + JSON.stringify($json) }] }) }}",
+        "options": {}
+      },
+      "credentials": {
+        "anthropicApi": {
+          "id": "{{ANTHROPIC_CRED_ID}}",
+          "name": "Guardiao - Anthropic"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "{{CHAT_ID}}",
+        "text": "={{ $json.content[0].text }}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "send-telegram",
+      "name": "Enviar no Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -80,
+        -48
+      ],
+      "webhookId": "21f78db1-9fa8-4e1e-8c8f-49f88c50e898",
+      "credentials": {
+        "telegramApi": {
+          "id": "{{TELEGRAM_CRED_ID}}",
+          "name": "Guardiao - Telegram Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Cron 30min (8h-23h)": {
+      "main": [
+        [
+          {
+            "node": "Buscar Ads Ativos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Ads Ativos": {
+      "main": [
+        [
+          {
+            "node": "Buscar Insights Hoje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Insights Hoje": {
+      "main": [
+        [
+          {
+            "node": "Analisar e Filtrar Alertas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analisar e Filtrar Alertas": {
+      "main": [
+        [
+          {
+            "node": "Tem Alerta?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tem Alerta?": {
+      "main": [
+        [
+          {
+            "node": "Claude — Redige Alerta",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Claude — Redige Alerta": {
+      "main": [
+        [
+          {
+            "node": "Enviar no Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "ia-clinicas",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SaaS de IA de atendimento no WhatsApp pra clinicas medicas — L.M Agencia",
+  "scripts": {
+    "dev": "next dev -p 3100",
+    "build": "next build",
+    "start": "next start -p 3100",
+    "seed": "tsx scripts/seed.ts",
+    "chat": "tsx scripts/simular-conversa.ts",
+    "cron": "tsx scripts/cron-reguas.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.65.0",
+    "@anthropic-ai/vertex-sdk": "^0.19.0",
+    "@supabase/supabase-js": "^2.110.1",
+    "better-sqlite3": "^11.8.1",
+    "google-auth-library": "^10.9.0",
+    "next": "^15.5.20",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "stripe": "^22.3.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.0"
+  }
+}

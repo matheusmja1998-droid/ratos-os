@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #C0252B;
+    --red-deep: #8E1B20;
+    --pink: #E05A7A;
+    --cream: #FDF2E9;
+    --cream-card: #FFFFFF;
+    --brown: #5A3530;
+    --brown-soft: #7A5650;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px; height: 1080px;
+    background: var(--cream);
+    font-family: 'Poppins', sans-serif;
+    color: var(--brown);
+    overflow: hidden;
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 85% 8%, rgba(224,90,122,0.14) 0%, transparent 45%),
+      radial-gradient(ellipse at 8% 95%, rgba(192,37,43,0.10) 0%, transparent 45%);
+    pointer-events: none;
+  }
+  .heart { position: absolute; color: var(--red); opacity: 0.85; }
+  .heart svg { width: 100%; height: 100%; fill: currentColor; }
+  .h1a { width: 34px; height: 34px; top: 14px; left: 660px; }
+  .h2a { width: 22px; height: 22px; top: 240px; right: 50px; color: var(--pink); }
+  .h3a { width: 26px; height: 26px; top: 70px; right: 130px; color: var(--pink); }
+  .h4a { width: 20px; height: 20px; bottom: 150px; left: 40px; }
+
+  .wrap {
+    position: relative; z-index: 2;
+    width: 100%; height: 100%;
+    padding: 44px 52px 30px;
+    display: flex; flex-direction: column;
+  }
+
+  /* TOPO: selo + headline */
+  .top { display: flex; gap: 36px; align-items: flex-start; }
+  .badge {
+    width: 188px; height: 188px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid var(--pink);
+    box-shadow: 0 10px 28px rgba(192,37,43,0.16), 0 0 0 8px rgba(224,90,122,0.12);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    flex-shrink: 0;
+    padding: 16px;
+  }
+  .badge .bheart { width: 26px; height: 26px; color: var(--red); margin-bottom: 4px; }
+  .badge .bheart svg { width: 100%; height: 100%; fill: currentColor; }
+  .badge .bname {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 700; font-size: 34px;
+    color: var(--red); line-height: 1;
+  }
+  .badge .brole {
+    font-size: 11.5px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--brown-soft); margin-top: 8px; line-height: 1.45;
+  }
+  .head { flex: 1; text-align: center; padding-top: 2px; }
+  .head .l1 { font-size: 44px; font-weight: 600; color: var(--brown); line-height: 1; }
+  .head .l2 {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 700; font-size: 96px;
+    color: var(--pink); line-height: 0.9; margin: 2px 0 0;
+  }
+  .head .l3 { font-size: 36px; font-weight: 500; color: var(--brown); line-height: 1.15; }
+  .head .l3 .dn {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-weight: 800; font-size: 74px;
+    color: var(--red); line-height: 1.02; margin-top: 2px;
+  }
+  .head .sub {
+    font-size: 22.5px; font-weight: 500;
+    color: var(--brown-soft); line-height: 1.4;
+    max-width: 640px; margin: 14px auto 0;
+  }
+
+  /* MEIO: foto + coluna direita */
+  .mid { display: flex; gap: 26px; margin-top: 26px; flex: 1; min-height: 0; }
+  .photo {
+    width: 400px; flex-shrink: 0;
+    border-radius: 26px;
+    overflow: hidden;
+    box-shadow: 0 18px 44px rgba(90,53,48,0.22);
+    border: 5px solid #fff;
+    position: relative;
+  }
+  .photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 18%; }
+  .photo .ptag {
+    position: absolute; left: 14px; bottom: 14px;
+    background: rgba(255,255,255,0.94);
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-size: 15px; font-weight: 700; color: var(--red);
+    letter-spacing: 0.04em;
+  }
+  .col { flex: 1; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+  .benefits { display: flex; gap: 14px; }
+  .benefit {
+    flex: 1;
+    background: var(--cream-card);
+    border-radius: 18px;
+    padding: 18px 14px 16px;
+    text-align: center;
+    box-shadow: 0 8px 22px rgba(90,53,48,0.10);
+  }
+  .benefit .icon { width: 42px; height: 42px; margin: 0 auto 8px; color: var(--red); }
+  .benefit .icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .benefit .icon.fill svg { fill: currentColor; stroke: none; }
+  .benefit b { display: block; font-size: 18px; font-weight: 700; color: var(--brown); line-height: 1.2; }
+  .benefit span { display: block; font-size: 13.5px; color: var(--brown-soft); line-height: 1.35; margin-top: 4px; }
+
+  .aboutrow { display: flex; gap: 18px; align-items: stretch; flex: 1; min-height: 0; }
+  .about {
+    flex: 1;
+    font-size: 21.5px; line-height: 1.5;
+    color: var(--brown);
+    display: flex; align-items: center;
+  }
+  .about b { color: var(--red); font-weight: 700; }
+  .date-card {
+    width: 230px; flex-shrink: 0;
+    background: linear-gradient(160deg, #5C1118 0%, #8E1B20 55%, #C0252B 130%);
+    border-radius: 24px 60px 24px 24px;
+    color: #fff;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 18px;
+    box-shadow: 0 14px 32px rgba(142,27,32,0.35);
+    position: relative; overflow: hidden;
+  }
+  .date-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 80% 15%, rgba(255,255,255,0.18) 0%, transparent 50%);
+  }
+  .date-card .glass { width: 70px; height: 70px; margin-bottom: 8px; position: relative; }
+  .date-card .glass svg { width: 100%; height: 100%; stroke: #F7C8CF; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .date-card .dc1 { font-family: 'Dancing Script', cursive; font-weight: 700; font-size: 33px; line-height: 1; color: #F7C8CF; position: relative; }
+  .date-card .dc2 { font-size: 14.5px; font-weight: 500; line-height: 1.35; margin-top: 6px; color: rgba(255,255,255,0.9); position: relative; }
+
+  /* FAIXA DE AGENDAMENTO */
+  .bar {
+    margin-top: 20px;
+    background: #fff;
+    border-radius: 22px;
+    box-shadow: 0 12px 30px rgba(90,53,48,0.14);
+    display: flex; align-items: center;
+    padding: 18px 28px;
+    gap: 24px;
+  }
+  .bar .cell { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
+  .bar .divider { width: 1.5px; height: 56px; background: rgba(192,37,43,0.18); flex-shrink: 0; }
+  .bar .bicon {
+    width: 54px; height: 54px; flex-shrink: 0;
+    background: var(--red);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+  }
+  .bar .bicon svg { width: 28px; height: 28px; }
+  .bar .bicon.stroke svg { stroke: #fff; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .bar .bicon.fill svg { fill: #fff; }
+  .bar .btext { font-size: 17.5px; line-height: 1.3; color: var(--brown); font-weight: 500; }
+  .bar .btext b { color: var(--red); font-weight: 700; }
+  .bar .phone { font-size: 15px; color: var(--brown-soft); font-weight: 600; }
+  .bar .phone .num { display: block; font-size: 31px; font-weight: 800; color: var(--red); line-height: 1.1; letter-spacing: 0.01em; }
+
+  .foot {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 19px; font-weight: 600;
+    color: var(--red);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .foot svg { width: 18px; height: 18px; fill: var(--red); }
+</style>
+</head>
+<body>
+  <div class="heart h1a"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z" transform="scale(0.92)"/></svg></div>
+  <div class="heart h2a"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z" transform="scale(0.92)"/></svg></div>
+  <div class="heart h3a"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z" transform="scale(0.92)"/></svg></div>
+  <div class="heart h4a"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z" transform="scale(0.92)"/></svg></div>
+
+  <div class="wrap">
+    <div class="top">
+      <div class="badge">
+        <div class="bheart"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z" transform="scale(0.92)"/></svg></div>
+        <div class="bname">Mariana<br>Caroline</div>
+        <div class="brole">Babá &middot; Técnica<br>em Enfermagem</div>
+      </div>
+      <div class="head">
+        <div class="l1">Babá</div>
+        <div class="l2">qualificada</div>
+        <div class="l3">com <span class="dn">Formação em Enfermagem</span></div>
+        <div class="sub">Febre, engasgo, medicação e primeiros socorros sem improviso. Segurança de verdade pro seu filho.</div>
+      </div>
+    </div>
+
+    <div class="mid">
+      <div class="photo">
+        <img src="mariana.png" alt="Mariana Caroline, babá e técnica em enfermagem">
+        <div class="ptag">Téc. em Enfermagem</div>
+      </div>
+      <div class="col">
+        <div class="benefits">
+          <div class="benefit">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 2l8 3.5v5.2c0 5-3.4 9.4-8 10.8-4.6-1.4-8-5.8-8-10.8V5.5L12 2z"/><polyline points="8.5 12 11 14.5 15.5 9.5"/></svg></div>
+            <b>Segurança</b>
+            <span>para seu maior tesouro.</span>
+          </div>
+          <div class="benefit">
+            <div class="icon fill"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z" transform="scale(0.92)"/></svg></div>
+            <b>Carinho</b>
+            <span>em cada momento.</span>
+          </div>
+          <div class="benefit">
+            <div class="icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6"/><circle cx="17" cy="9" r="2.6"/><path d="M15.8 14.6c2.5.1 4.2 1.5 4.7 4"/></svg></div>
+            <b>Confiança</b>
+            <span>pra aproveitar sem preocupações.</span>
+          </div>
+        </div>
+        <div class="aboutrow">
+          <div class="about">
+            <p>A <b>Mariana</b> é babá qualificada, com <b>formação técnica em enfermagem</b>, cuidadosa e de confiança pra cuidar do que você tem de <b>mais importante</b>. ❤</p>
+          </div>
+          <div class="date-card">
+            <div class="glass"><svg viewBox="0 0 48 48"><path d="M24 6l14 6v9c0 9-6 16.5-14 19-8-2.5-14-10-14-19v-9l14-6z"/><line x1="24" y1="18" x2="24" y2="30"/><line x1="18" y1="24" x2="30" y2="24"/></svg></div>
+            <div class="dc1">Mãos seguras</div>
+            <div class="dc2">formação técnica em enfermagem de verdade.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bar">
+      <div class="cell">
+        <div class="bicon stroke"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><line x1="3" y1="9.5" x2="21" y2="9.5"/><line x1="8" y1="2.5" x2="8" y2="6"/><line x1="16" y1="2.5" x2="16" y2="6"/><path d="M9 15.5l2 2 4-4"/></svg></div>
+        <div class="btext">Agende uma conversa e garanta uma <b>babá de confiança</b>!</div>
+      </div>
+      <div class="divider"></div>
+      <div class="cell">
+        <div class="bicon fill"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></div>
+        <div class="phone">Agende agora:<span class="num">31 98975-6107</span></div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z" transform="scale(0.92)"/></svg>
+      Mariana Caroline: cuidando de quem você mais ama!
+      <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z" transform="scale(0.92)"/></svg>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mariana Caroline · Babá · Técnica em Enfermagem</title>
+<meta name="description" content="Babá com formação técnica em enfermagem. Cuidado infantil em casa, com segurança e carinho. Atendimento em Belo Horizonte e região.">
+<meta property="og:title" content="Mariana Caroline · Babá · Técnica em Enfermagem">
+<meta property="og:description" content="Seu filho em boas mãos, a sua rotina de volta. Babá com formação técnica em enfermagem em BH.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet">
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '975167549020921');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=975167549020921&ev=PageView&noscript=1"
+/></noscript>
+<!-- Fim Meta Pixel -->
+
+<style>
+  :root {
+    --red: #C0252B;
+    --red-deep: #8E1B20;
+    --wine-dark: #5C1118;
+    --pink: #E05A7A;
+    --pink-soft: #F7C8CF;
+    --cream: #FDF2E9;
+    --cream-deep: #F9E7DA;
+    --card: #FFFFFF;
+    --brown: #5A3530;
+    --brown-soft: #7A5650;
+    --whatsapp: #25D366;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    color: var(--brown);
+    background: var(--cream);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+
+  ::selection { background: var(--pink); color: #fff; }
+
+  .script { font-family: 'Dancing Script', cursive; font-weight: 700; }
+  .display { font-family: 'Playfair Display', serif; font-weight: 800; }
+
+  /* ─── CORAÇÕES DECORATIVOS ─── */
+  .heart-deco {
+    position: absolute;
+    color: var(--pink);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .heart-deco svg { width: 100%; height: 100%; fill: currentColor; }
+
+  /* ─── REVEAL ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+  /* ─── WHATSAPP FLUTUANTE ─── */
+  .wa-float {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    z-index: 100;
+    background: var(--whatsapp);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 12px 36px rgba(37,211,102,0.35), 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s;
+    animation: pulse 2.6s ease-in-out infinite;
+  }
+  .wa-float:hover { transform: translateY(-3px) scale(1.02); animation: none; }
+  .wa-float svg { width: 20px; height: 20px; fill: #fff; flex-shrink: 0; }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 12px 36px rgba(37,211,102,0.35), 0 0 0 0 rgba(37,211,102,0.5); }
+    50% { box-shadow: 0 12px 36px rgba(37,211,102,0.35), 0 0 0 12px rgba(37,211,102,0); }
+  }
+
+  /* ─── BOTÃO PRINCIPAL ─── */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--whatsapp);
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 19px 34px;
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 12px 36px rgba(37,211,102,0.32);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 18px 48px rgba(37,211,102,0.42); }
+  .btn-primary svg { width: 22px; height: 22px; fill: #fff; }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 48px 40px 90px;
+    background:
+      radial-gradient(ellipse at 85% 5%, rgba(224,90,122,0.16) 0%, transparent 45%),
+      radial-gradient(ellipse at 5% 90%, rgba(192,37,43,0.10) 0%, transparent 45%),
+      var(--cream);
+  }
+
+  .hero-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-top {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+
+  .badge {
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid var(--pink);
+    box-shadow: 0 10px 28px rgba(192,37,43,0.16), 0 0 0 8px rgba(224,90,122,0.12);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 14px;
+  }
+  .badge .bheart { width: 20px; height: 20px; color: var(--red); margin-bottom: 2px; }
+  .badge .bheart svg { width: 100%; height: 100%; fill: currentColor; }
+  .badge .bname { font-family: 'Dancing Script', cursive; font-weight: 700; font-size: 26px; color: var(--red); line-height: 1; }
+  .badge .brole { font-size: 9.5px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: var(--brown-soft); margin-top: 6px; line-height: 1.45; }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 64px;
+    align-items: center;
+  }
+  @media (max-width: 940px) {
+    .hero { padding: 36px 24px 70px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+  }
+
+  .hero h1 {
+    font-size: clamp(38px, 5vw, 56px);
+    font-weight: 600;
+    line-height: 1.12;
+    color: var(--brown);
+    margin-bottom: 8px;
+  }
+  .hero h1 .hands {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 700;
+    color: var(--pink);
+    font-size: 1.25em;
+  }
+  .hero h1 .big {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    color: var(--red);
+    font-size: 1.18em;
+    line-height: 1.05;
+    margin-top: 4px;
+  }
+
+  .hero-lede {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--brown-soft);
+    max-width: 480px;
+    margin: 22px 0 36px;
+  }
+
+  .hero-actions { display: flex; align-items: center; gap: 26px; flex-wrap: wrap; }
+
+  .hero-availability {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--brown-soft);
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .pulse-dot {
+    width: 9px; height: 9px;
+    background: var(--whatsapp);
+    border-radius: 50%;
+    animation: dotpulse 2s infinite;
+  }
+  @keyframes dotpulse {
+    0% { box-shadow: 0 0 0 0 rgba(37,211,102,0.6); }
+    70% { box-shadow: 0 0 0 10px rgba(37,211,102,0); }
+    100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
+  }
+
+  .hero-portrait {
+    position: relative;
+    max-width: 420px;
+    justify-self: end;
+    width: 100%;
+  }
+  @media (max-width: 940px) { .hero-portrait { justify-self: center; max-width: 340px; } }
+
+  .hero-portrait .frame {
+    border-radius: 26px;
+    overflow: hidden;
+    border: 6px solid #fff;
+    box-shadow: 0 22px 52px rgba(90,53,48,0.22);
+    aspect-ratio: 1023 / 1537;
+  }
+  .hero-portrait img { width: 100%; height: 100%; object-fit: cover; }
+
+  .portrait-chip {
+    position: absolute;
+    left: 18px; bottom: 18px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 999px;
+    padding: 11px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--red);
+    box-shadow: 0 8px 22px rgba(90,53,48,0.18);
+  }
+
+  .portrait-heart {
+    position: absolute;
+    top: -16px; right: -14px;
+    width: 54px; height: 54px;
+    background: var(--red);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 24px rgba(192,37,43,0.4);
+  }
+  .portrait-heart svg { width: 26px; height: 26px; fill: #fff; }
+
+  /* ─── SELOS (igual ao criativo) ─── */
+  .selos {
+    max-width: 1000px;
+    margin: -46px auto 0;
+    position: relative;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    padding: 0 40px;
+  }
+  @media (max-width: 760px) { .selos { grid-template-columns: 1fr; padding: 0 24px; } }
+
+  .selo {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 26px 20px 22px;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(90,53,48,0.12);
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .selo:hover { transform: translateY(-5px); }
+  .selo .icon { width: 46px; height: 46px; margin: 0 auto 10px; color: var(--red); }
+  .selo .icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .selo .icon.fill svg { fill: currentColor; stroke: none; }
+  .selo b { display: block; font-size: 19px; font-weight: 700; color: var(--brown); }
+  .selo span { display: block; font-size: 14.5px; color: var(--brown-soft); margin-top: 4px; line-height: 1.4; }
+
+  /* ─── SEÇÕES ─── */
+  section { position: relative; }
+  .section-inner { max-width: 1060px; margin: 0 auto; padding: 96px 40px; }
+  @media (max-width: 720px) { .section-inner { padding: 70px 24px; } }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--pink);
+    margin-bottom: 18px;
+  }
+  .eyebrow svg { width: 15px; height: 15px; fill: var(--pink); }
+
+  h2.title {
+    font-size: clamp(30px, 4vw, 44px);
+    font-weight: 600;
+    color: var(--brown);
+    line-height: 1.15;
+  }
+  h2.title .dn {
+    font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    color: var(--red);
+  }
+  h2.title .sc {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 700;
+    color: var(--pink);
+    font-size: 1.2em;
+  }
+
+  /* ─── PROMESSA ─── */
+  .promessa { text-align: center; }
+  .promessa .section-inner { padding-top: 80px; }
+  .promessa p.apoio {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--brown-soft);
+    max-width: 560px;
+    margin: 26px auto 0;
+  }
+
+  /* ─── SOBRE ─── */
+  .sobre { background: var(--cream-deep); overflow: hidden; }
+  .sobre-grid {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  @media (max-width: 880px) { .sobre-grid { grid-template-columns: 1fr; gap: 44px; } }
+
+  .sobre-image {
+    border-radius: 26px;
+    overflow: hidden;
+    border: 6px solid #fff;
+    box-shadow: 0 22px 52px rgba(90,53,48,0.2);
+    aspect-ratio: 3 / 4;
+    position: relative;
+  }
+  .sobre-image img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
+
+  .sobre-text p { font-size: 16px; line-height: 1.75; color: var(--brown-soft); margin-top: 18px; }
+  .sobre-text p b { color: var(--red); font-weight: 700; }
+
+  .signature {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 30px;
+    padding-top: 26px;
+    border-top: 1.5px solid rgba(192,37,43,0.15);
+  }
+  .signature-name { font-family: 'Dancing Script', cursive; font-weight: 700; font-size: 34px; color: var(--red); line-height: 1; }
+  .signature-meta { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--brown-soft); font-weight: 600; margin-top: 6px; }
+
+  /* ─── SERVIÇOS ─── */
+  .servicos-header { text-align: center; margin-bottom: 56px; }
+  .servicos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 880px) { .servicos-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .servicos-grid { grid-template-columns: 1fr; } }
+
+  .servico {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 30px 24px;
+    box-shadow: 0 10px 26px rgba(90,53,48,0.09);
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s;
+  }
+  .servico:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgba(90,53,48,0.15); }
+
+  .servico-icon {
+    width: 52px; height: 52px;
+    background: rgba(192,37,43,0.08);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--red);
+    margin-bottom: 18px;
+  }
+  .servico-icon svg { width: 28px; height: 28px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .servico h3 { font-size: 18.5px; font-weight: 700; color: var(--brown); margin-bottom: 8px; }
+  .servico p { font-size: 14.5px; line-height: 1.6; color: var(--brown-soft); }
+
+  /* ─── COMO FUNCIONA ─── */
+  .como { background: var(--cream-deep); }
+  .como-header { text-align: center; margin-bottom: 60px; }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  @media (max-width: 720px) { .steps { grid-template-columns: 1fr; } }
+
+  .step { text-align: center; }
+  .step-num {
+    width: 64px; height: 64px;
+    margin: 0 auto 20px;
+    background: var(--red);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    font-size: 26px;
+    box-shadow: 0 12px 28px rgba(192,37,43,0.3);
+    transition: transform 0.35s;
+  }
+  .step:hover .step-num { transform: scale(1.1); }
+  .step h3 { font-size: 19px; font-weight: 700; color: var(--brown); margin-bottom: 10px; }
+  .step p { font-size: 15px; line-height: 1.6; color: var(--brown-soft); max-width: 280px; margin: 0 auto; }
+
+  /* ─── FAQ ─── */
+  .faq-header { text-align: center; margin-bottom: 48px; }
+  .faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+
+  .faq-item {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 22px 26px;
+    box-shadow: 0 8px 22px rgba(90,53,48,0.08);
+  }
+  .faq-item summary {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--brown);
+    cursor: pointer;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-icon {
+    flex-shrink: 0;
+    width: 30px; height: 30px;
+    background: rgba(192,37,43,0.08);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--red);
+    position: relative;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s;
+  }
+  .faq-icon::before, .faq-icon::after { content: ''; position: absolute; background: currentColor; transition: transform 0.4s; }
+  .faq-icon::before { width: 12px; height: 2px; border-radius: 2px; }
+  .faq-icon::after { width: 2px; height: 12px; border-radius: 2px; }
+  .faq-item[open] .faq-icon { background: var(--red); color: #fff; transform: rotate(180deg); }
+  .faq-item[open] .faq-icon::after { transform: scaleY(0); }
+  .faq-item p { margin-top: 14px; font-size: 15px; line-height: 1.7; color: var(--brown-soft); }
+
+  /* ─── CTA FINAL ─── */
+  .cta-final {
+    background: linear-gradient(160deg, var(--wine-dark) 0%, var(--red-deep) 55%, var(--red) 130%);
+    color: #fff;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-final::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 80% 10%, rgba(255,255,255,0.14) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .cta-final .section-inner { position: relative; z-index: 2; }
+
+  .cta-final .cta-script {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 700;
+    font-size: clamp(34px, 4.5vw, 52px);
+    color: var(--pink-soft);
+    line-height: 1;
+  }
+  .cta-final h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    font-size: clamp(34px, 5vw, 58px);
+    line-height: 1.08;
+    margin: 10px 0 20px;
+  }
+  .cta-final p { font-size: 17px; line-height: 1.65; color: rgba(255,255,255,0.85); max-width: 480px; margin: 0 auto 40px; }
+
+  .cta-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    background: #fff;
+    border-radius: 999px;
+    padding: 14px 30px 14px 16px;
+    margin-top: 28px;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+  }
+  .cta-bar .bicon {
+    width: 52px; height: 52px;
+    background: var(--red);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cta-bar .bicon svg { width: 28px; height: 28px; fill: #fff; }
+  .cta-bar .ptext { text-align: left; font-size: 13px; color: var(--brown-soft); font-weight: 600; }
+  .cta-bar .ptext .num { display: block; font-size: 26px; font-weight: 800; color: var(--red); line-height: 1.1; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--wine-dark);
+    padding: 40px;
+    text-align: center;
+    color: rgba(255,255,255,0.65);
+  }
+  .footer-mark { font-family: 'Dancing Script', cursive; font-weight: 700; font-size: 30px; color: var(--pink-soft); margin-bottom: 8px; }
+  .footer-tag { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.85); display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .footer-tag svg { width: 14px; height: 14px; fill: var(--pink-soft); }
+  .footer-meta { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<!-- WhatsApp flutuante -->
+<a class="wa-float" href="https://wa.me/5531989756107?text=quero%20saber%20mais%20detalhes%20sobre%20o%20seu%20trabalho%20de%20bab%C3%A1" target="_blank" data-wa>
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  Conversar agora
+</a>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="heart-deco" style="width:30px;height:30px;top:60px;left:6%;"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z"/></svg></div>
+  <div class="heart-deco" style="width:20px;height:20px;top:200px;right:8%;color:var(--red);"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z"/></svg></div>
+  <div class="heart-deco" style="width:16px;height:16px;bottom:140px;left:12%;"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z"/></svg></div>
+
+  <div class="hero-inner">
+    <div class="hero-top reveal">
+      <div class="badge">
+        <div class="bheart"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z"/></svg></div>
+        <div class="bname">Mariana<br>Caroline</div>
+        <div class="brole">Babá &middot; Técnica<br>em Enfermagem</div>
+      </div>
+    </div>
+
+    <div class="hero-grid">
+      <div>
+        <h1 class="reveal">
+          Seu filho em <span class="hands">boas mãos,</span>
+          <span class="big">a sua rotina de volta.</span>
+        </h1>
+        <p class="hero-lede reveal" style="transition-delay: 0.1s">
+          Cuidado infantil na sua casa, conduzido por babá com formação técnica em enfermagem. Carinho, rotina e segurança que se sentem na primeira conversa.
+        </p>
+        <div class="hero-actions reveal" style="transition-delay: 0.2s">
+          <a class="btn-primary" href="https://wa.me/5531989756107?text=quero%20saber%20mais%20detalhes%20sobre%20o%20seu%20trabalho%20de%20bab%C3%A1" target="_blank" data-wa>
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Agendar uma conversa
+          </a>
+          <span class="hero-availability">
+            <span class="pulse-dot"></span>
+            Disponível esta semana
+          </span>
+        </div>
+      </div>
+
+      <div class="hero-portrait reveal" style="transition-delay: 0.15s">
+        <div class="frame">
+          <img src="mariana.png" alt="Mariana Caroline, babá e técnica em enfermagem" loading="eager">
+        </div>
+        <div class="portrait-chip">Téc. em Enfermagem</div>
+        <div class="portrait-heart">
+          <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- SELOS -->
+<div class="selos">
+  <div class="selo reveal">
+    <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 2l8 3.5v5.2c0 5-3.4 9.4-8 10.8-4.6-1.4-8-5.8-8-10.8V5.5L12 2z"/><polyline points="8.5 12 11 14.5 15.5 9.5"/></svg></div>
+    <b>Segurança</b>
+    <span>para seu maior tesouro.</span>
+  </div>
+  <div class="selo reveal" style="transition-delay: 0.08s">
+    <div class="icon fill"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z"/></svg></div>
+    <b>Carinho</b>
+    <span>em cada momento.</span>
+  </div>
+  <div class="selo reveal" style="transition-delay: 0.16s">
+    <div class="icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6"/><circle cx="17" cy="9" r="2.6"/><path d="M15.8 14.6c2.5.1 4.2 1.5 4.7 4"/></svg></div>
+    <b>Confiança</b>
+    <span>pra você aproveitar sem preocupações.</span>
+  </div>
+</div>
+
+<!-- PROMESSA -->
+<section class="promessa">
+  <div class="section-inner">
+    <div class="eyebrow reveal" style="justify-content:center; display:flex;">
+      <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z"/></svg>
+      A real
+    </div>
+    <h2 class="title reveal">
+      Você precisa trabalhar, mas deixar seu filho<br>com qualquer pessoa não é opção.<br>
+      <span class="dn">E se acontecer algo e ninguém souber o que fazer?</span>
+    </h2>
+    <p class="apoio reveal">Essa preocupação não precisa ser companhia diária. Existe uma forma de sair pra trabalhar sabendo que seu filho está seguro, alimentado e com alguém que sabe agir em qualquer situação.</p>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section class="sobre">
+  <div class="section-inner">
+    <div class="sobre-grid">
+      <div class="sobre-image reveal">
+        <img src="mariana.png" alt="Mariana Caroline">
+      </div>
+      <div class="sobre-text">
+        <div class="eyebrow reveal">
+          <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z"/></svg>
+          Conheça a Mariana
+        </div>
+        <h2 class="title reveal" style="transition-delay: 0.1s">Cuido como se fosse <span class="sc">da minha família.</span></h2>
+        <p class="reveal" style="transition-delay: 0.15s">
+          Formada em Técnica de Enfermagem, sei o quanto pesa entregar seu filho nas mãos de alguém e ir trabalhar com a cabeça em casa. Confiança não se pede, se constrói. E é por isso que minha formação faz diferença: <b>febre, engasgo, medicação, eu sei o que fazer</b>.
+        </p>
+        <p class="reveal" style="transition-delay: 0.2s">
+          Mas ser babá vai muito além da parte técnica. É criar vínculo, respeitar a rotina que a família construiu, brincar, estimular, contar história na hora certa. Cada criança tem um ritmo, uma manha, um jeito. E é isso que faz o cuidado funcionar de verdade.
+        </p>
+        <div class="signature reveal" style="transition-delay: 0.25s">
+          <div>
+            <div class="signature-name">Mariana Caroline</div>
+            <div class="signature-meta">Babá · Técnica em Enfermagem · BH</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVIÇOS -->
+<section class="servicos">
+  <div class="section-inner">
+    <div class="servicos-header">
+      <div class="eyebrow reveal" style="justify-content:center; display:inline-flex;">
+        <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z"/></svg>
+        O que está incluso
+      </div>
+      <h2 class="title reveal" style="transition-delay: 0.1s">Um cuidado que cobre o que <span class="dn">realmente importa.</span></h2>
+    </div>
+
+    <div class="servicos-grid">
+      <div class="servico reveal">
+        <div class="servico-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <h3>Rotina respeitada</h3>
+        <p>Sono, alimentação, banho e atividades nos horários que a família já construiu. Sem bagunçar o que funciona.</p>
+      </div>
+      <div class="servico reveal" style="transition-delay: 0.06s">
+        <div class="servico-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+        <h3>Brincadeira e estímulo</h3>
+        <p>Presença de verdade, sem tela como babá eletrônica. Brincadeiras, leitura e atividades certas pra cada idade.</p>
+      </div>
+      <div class="servico reveal" style="transition-delay: 0.12s">
+        <div class="servico-icon"><svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 014 4v3a4 4 0 11-8 0V6a4 4 0 014-4zM6 21v-1a6 6 0 016-6h0a6 6 0 016 6v1"/></svg></div>
+        <h3>Banho e higiene</h3>
+        <p>Banho, troca e cuidado pessoal feitos com paciência e atenção, do recém-nascido à criança maior.</p>
+      </div>
+      <div class="servico reveal" style="transition-delay: 0.18s">
+        <div class="servico-icon"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div>
+        <h3>Alimentação no horário</h3>
+        <p>Refeições e lanches preparados e oferecidos na hora certa, com atenção a alergias e restrições.</p>
+      </div>
+      <div class="servico reveal" style="transition-delay: 0.24s">
+        <div class="servico-icon"><svg viewBox="0 0 24 24"><path d="M12 2l8 3.5v5.2c0 5-3.4 9.4-8 10.8-4.6-1.4-8-5.8-8-10.8V5.5L12 2z"/><line x1="12" y1="9" x2="12" y2="15"/><line x1="9" y1="12" x2="15" y2="12"/></svg></div>
+        <h3>Segurança de enfermagem</h3>
+        <p>Formação técnica pra agir em febre, engasgo, queda ou alergia. Primeiros socorros não são improviso aqui.</p>
+      </div>
+      <div class="servico reveal" style="transition-delay: 0.3s">
+        <div class="servico-icon"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></div>
+        <h3>Família sempre informada</h3>
+        <p>Relatos do dia: como comeu, como dormiu, como brincou e qualquer coisa que mereça sua atenção.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="como">
+  <div class="section-inner">
+    <div class="como-header">
+      <div class="eyebrow reveal" style="justify-content:center; display:inline-flex;">
+        <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z"/></svg>
+        Em três passos
+      </div>
+      <h2 class="title reveal" style="transition-delay: 0.1s">Simples começar, <span class="sc">tranquilo continuar.</span></h2>
+    </div>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <h3>Você manda mensagem</h3>
+        <p>Uma conversa no WhatsApp pra entender a rotina, a idade e as necessidades do seu filho.</p>
+      </div>
+      <div class="step reveal" style="transition-delay: 0.1s">
+        <div class="step-num">2</div>
+        <h3>Alinhamos detalhes</h3>
+        <p>Horários, frequência, particularidades. Tudo combinado antes do primeiro dia.</p>
+      </div>
+      <div class="step reveal" style="transition-delay: 0.2s">
+        <div class="step-num">3</div>
+        <h3>O cuidado começa</h3>
+        <p>Você volta a trabalhar com a tranquilidade de quem sabe que tem alguém de confiança com seu filho.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="section-inner">
+    <div class="faq-header">
+      <div class="eyebrow reveal" style="justify-content:center; display:inline-flex;">
+        <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z"/></svg>
+        Dúvidas comuns
+      </div>
+      <h2 class="title reveal" style="transition-delay: 0.1s">Antes de você <span class="dn">perguntar.</span></h2>
+    </div>
+
+    <div class="faq-list">
+      <details class="faq-item reveal">
+        <summary>Qual a diferença de uma babá com formação técnica? <span class="faq-icon"></span></summary>
+        <p>Uma técnica em enfermagem tem treinamento específico pra agir em engasgo, febre alta, queda ou reação alérgica, administrar medicação na dose certa e identificar sinais que pedem atenção médica. Vai muito além de "ficar olhando" a criança.</p>
+      </details>
+      <details class="faq-item reveal" style="transition-delay: 0.05s">
+        <summary>Você atende em qual região? <span class="faq-icon"></span></summary>
+        <p>Atendo em Belo Horizonte e região metropolitana. Manda mensagem com o bairro pra confirmar disponibilidade na sua localidade.</p>
+      </details>
+      <details class="faq-item reveal" style="transition-delay: 0.1s">
+        <summary>Atende qual faixa de idade? <span class="faq-icon"></span></summary>
+        <p>De bebês a crianças maiores. Na primeira conversa a gente alinha a idade, a rotina e as particularidades do seu filho pra eu adaptar o cuidado certinho.</p>
+      </details>
+      <details class="faq-item reveal" style="transition-delay: 0.15s">
+        <summary>É possível começar essa semana? <span class="faq-icon"></span></summary>
+        <p>Sim. Dependendo da disponibilidade da agenda, consigo iniciar ainda essa semana. Quanto antes você mandar mensagem, mais rápido a gente alinha tudo.</p>
+      </details>
+      <details class="faq-item reveal" style="transition-delay: 0.2s">
+        <summary>Como funciona a contratação? <span class="faq-icon"></span></summary>
+        <p>A gente conversa sobre a rotina do seu filho, os dias e horários necessários, e monto um plano personalizado. Diária, período fixo ou mensal: o valor é combinado conforme a demanda. Atendo também noites e fins de semana mediante agenda.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <div class="section-inner">
+    <div class="cta-script reveal">Sua tranquilidade</div>
+    <h2 class="reveal" style="transition-delay: 0.08s">começa com uma conversa.</h2>
+    <p class="reveal" style="transition-delay: 0.15s">Sem compromisso. Sem cobrança. Só um papo pra entender o que você precisa e ver se faz sentido a gente trabalhar junto.</p>
+    <div class="reveal" style="transition-delay: 0.22s">
+      <a class="btn-primary" href="https://wa.me/5531989756107?text=quero%20saber%20mais%20detalhes%20sobre%20o%20seu%20trabalho%20de%20bab%C3%A1" target="_blank" data-wa>
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Chamar Mariana no WhatsApp
+      </a>
+    </div>
+    <div class="reveal" style="transition-delay: 0.3s">
+      <div class="cta-bar">
+        <div class="bicon">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        </div>
+        <div class="ptext">Agende agora:<span class="num">31 98975-6107</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-mark">Mariana Caroline</div>
+  <div class="footer-tag">
+    <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z"/></svg>
+    Cuidando de quem você mais ama!
+    <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.9-9.8-9.2C.6 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.6h4c.9-1.5 2.3-2.6 4.3-2.6 3.4 0 5.1 3.6 3.5 6.8C19.5 16.1 12 21 12 21z"/></svg>
+  </div>
+  <div class="footer-meta">© 2026 · Babá · Técnica em Enfermagem · BH</div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  document.querySelectorAll('[data-wa]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (typeof fbq !== 'undefined') fbq('track', 'Lead');
+    });
+  });
+</script>
+
+</body>
+</html>

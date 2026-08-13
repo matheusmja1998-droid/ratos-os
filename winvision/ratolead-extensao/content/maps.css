@@ -1,0 +1,68 @@
+#ratolead-fab {
+  position: fixed;
+  right: 18px;
+  bottom: 22px;
+  z-index: 2147483647;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+#ratolead-fab button {
+  border: none;
+  cursor: pointer;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 11px 18px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+#ratolead-fab button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+}
+#ratolead-fab button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+#rl-capturar {
+  background: #0e7c66;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+#rl-capturar .rl-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #7dffe0;
+  box-shadow: 0 0 0 0 rgba(125, 255, 224, 0.7);
+  animation: rl-pulse 1.8s infinite;
+}
+@keyframes rl-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(125, 255, 224, 0.6); }
+  70% { box-shadow: 0 0 0 8px rgba(125, 255, 224, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(125, 255, 224, 0); }
+}
+#rl-crm {
+  background: #ffffff;
+  color: #0e7c66;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 9px 16px;
+}
+#rl-status {
+  background: #16181d;
+  color: #e8e6df;
+  font-size: 12px;
+  padding: 8px 13px;
+  border-radius: 8px;
+  max-width: 260px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+#rl-status.ok { background: #0a5f4e; color: #d9fff2; }
+#rl-status.erro { background: #7c281f; color: #ffe4df; }
+#rl-status.loading { background: #16181d; color: #b9bcc4; }

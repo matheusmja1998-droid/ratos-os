@@ -1,0 +1,103 @@
+{
+  "campanhas": [
+    {
+      "name": "[AGV_AGO_26] - [LEADS] - [TESTE_CRIATIVO] - [C06]",
+      "comparacao_semanal": null,
+      "ads": [
+        {
+          "name": "AGV_AGO_26_VD38_GANCHO_D_LONGEVIDADE",
+          "serie_dias": 1,
+          "fadiga": {
+            "insuficiente": true,
+            "dias": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "[AGV_AGO_26] - [LEADS] - [TESTE_CRIATIVO] - [C05]",
+      "comparacao_semanal": null,
+      "ads": [
+        {
+          "name": "AGV_AGO_26_VD36_GANCHO_D_COMPETICAO_TRAB",
+          "serie_dias": 1,
+          "fadiga": {
+            "insuficiente": true,
+            "dias": 1
+          }
+        },
+        {
+          "name": "AGV_AGO_26_VD32_GANCHO_B_PARADOXO",
+          "serie_dias": 1,
+          "fadiga": {
+            "insuficiente": true,
+            "dias": 1
+          }
+        },
+        {
+          "name": "AGV_AGO_26_VD34_GANCHO_D_PADRAO_CONSUMO",
+          "serie_dias": 0,
+          "fadiga": {
+            "insuficiente": true,
+            "dias": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "[AGV_AGO_26]_[FASE01]_[LEADS]_[ADV+]_[FRIO]_[TODOS_PAISES]_[C02]",
+      "comparacao_semanal": null,
+      "ads": [
+        {
+          "name": "JUN_26_CAP_VD_14_CHURRASCO_.mp4",
+          "serie_dias": 4,
+          "fadiga": {
+            "insuficiente": false,
+            "dias": 4,
+            "sinais": [
+              {
+                "tipo": "cpl_subindo",
+                "severidade": "media",
+                "msg": "CPL subiu 3 dias seguidos: 7.93 → 8.16 → 11.97"
+              },
+              {
+                "tipo": "ctr_caindo",
+                "severidade": "media",
+                "msg": "CTR caiu 3 dias seguidos: 5.66% → 4.73% → 4.23%"
+              },
+              {
+                "tipo": "hook_caindo",
+                "severidade": "media",
+                "msg": "Hook Rate caiu 3 dias seguidos — criativo cansando"
+              }
+            ],
+            "tem_fadiga": true
+          }
+        }
+      ]
+    }
+  ],
+  "ads_com_fadiga": [
+    {
+      "campanha": "[AGV_AGO_26]_[FASE01]_[LEADS]_[ADV+]_[FRIO]_[TODOS_PAISES]_[C02]",
+      "ad": "JUN_26_CAP_VD_14_CHURRASCO_.mp4",
+      "sinais": [
+        {
+          "tipo": "cpl_subindo",
+          "severidade": "media",
+          "msg": "CPL subiu 3 dias seguidos: 7.93 → 8.16 → 11.97"
+        },
+        {
+          "tipo": "ctr_caindo",
+          "severidade": "media",
+          "msg": "CTR caiu 3 dias seguidos: 5.66% → 4.73% → 4.23%"
+        },
+        {
+          "tipo": "hook_caindo",
+          "severidade": "media",
+          "msg": "Hook Rate caiu 3 dias seguidos — criativo cansando"
+        }
+      ]
+    }
+  ]
+}

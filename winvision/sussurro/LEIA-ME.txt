@@ -1,0 +1,32 @@
+Sussurro — ditado por voz (local) para macOS
+
+REQUISITOS IMPORTANTES
+• Mac com Apple Silicon (chip M1 ou mais novo). Não roda em Macs Intel.
+• macOS 26 (Tahoe) ou superior. Em versões anteriores o ditado não funciona.
+• Na 1ª transcrição o app baixa o modelo de voz do português (precisa de internet nessa hora).
+
+INSTALAR
+1. Arraste o "Sussurro" para a pasta Applications (ao lado).
+2. LIBERAR O APP (só na 1ª vez). Como é um app de teste (não publicado na App Store), o macOS
+   bloqueia por padrão e pode dizer que está "danificado". O jeito garantido de liberar:
+   • Abra o "Terminal" (aperte ⌘+Espaço, digite Terminal, Enter).
+   • Cole a linha abaixo e tecle Enter:
+
+        xattr -dr com.apple.quarantine /Applications/Sussurro.app
+
+   • Pronto. Abra o Sussurro normalmente pela pasta Applications.
+   (Alternativa: botão direito no Sussurro > Abrir > Abrir. Se aparecer "danificado", use o comando acima.)
+3. Conceda as permissões quando pedido:
+   • Microfone (para transcrever sua voz).
+   • Acessibilidade (para inserir o texto no app em foco) — Ajustes > Privacidade e Segurança > Acessibilidade > ative o Sussurro.
+
+COMO USAR
+• Segure a tecla ⌘ direito e fale; solte para inserir o texto. (Ou aperte ⌃⌥D para ligar/desligar.)
+• A transcrição é 100% local (não envia seu áudio para servidores).
+
+MODOS COM IA (opcional)
+• Os modos que "organizam/poliem" o texto usam o Claude e exigem uma chave própria.
+• Coloque a SUA chave da Anthropic em: Sussurro > Configurações > Chaves de IA.
+• Sem chave, o modo "cru" (transcrição pura) funciona normalmente.
+
+Privacidade: este app não contém nenhuma chave ou dado pessoal de quem o enviou.

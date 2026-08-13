@@ -1,0 +1,2436 @@
+{
+  "120242222104300244": [
+    {
+      "id": "120242222139220244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_11",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_IMG_STORIES_04.png",
+        "id": "120242222104420244"
+      }
+    },
+    {
+      "id": "120242222139210244",
+      "name": "CHECKLIST_HONDA_VENDA_IMG_STORIES_04.png",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_IMG_STORIES_04.png",
+        "id": "120242222104420244"
+      }
+    },
+    {
+      "id": "120242222139230244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_IMG_STORIES_04.png",
+        "id": "120242222104420244"
+      }
+    },
+    {
+      "id": "120242222184070244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_IMG_STORIES_04.png",
+        "id": "120242222104420244"
+      }
+    },
+    {
+      "id": "120242222139200244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_08",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_IMG_STORIES_04.png",
+        "id": "120242222104420244"
+      }
+    },
+    {
+      "id": "120242222139240244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_IMG_STORIES_04.png",
+        "id": "120242222104420244"
+      }
+    }
+  ],
+  "120241161975880244": [
+    {
+      "id": "120241161998970244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00_MECANICO",
+        "id": "120241161975990244"
+      }
+    },
+    {
+      "id": "120241161975930244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00_MECANICO",
+        "id": "120241161975990244"
+      }
+    },
+    {
+      "id": "120241161998960244",
+      "name": "CHECKLIST_HONDA_VENDA_IMG_STORIES_04.png",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_MECANICO",
+        "id": "120241161975990244"
+      }
+    },
+    {
+      "id": "120241161998950244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_08",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_MECANICO",
+        "id": "120241161975990244"
+      }
+    },
+    {
+      "id": "120241161998940244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_MECANICO",
+        "id": "120241161975990244"
+      }
+    },
+    {
+      "id": "120241161998980244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_11",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_MECANICO",
+        "id": "120241161975990244"
+      }
+    }
+  ],
+  "120240911452710244": [
+    {
+      "id": "120240911452980244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ACTIVE",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_04.mp4",
+        "id": "120240911452760244"
+      }
+    },
+    {
+      "id": "120240911452920244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "PAUSED",
+      "effective_status": "WITH_ISSUES",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_02",
+        "id": "120240911452780244"
+      }
+    },
+    {
+      "id": "120240911453080244",
+      "name": "CHECKLIST_HONDA_VENDA_IMG_STORIES_04.png",
+      "status": "PAUSED",
+      "effective_status": "WITH_ISSUES",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_IMG_STORIES_04.png",
+        "id": "120240911453140244"
+      }
+    },
+    {
+      "id": "120240911452900244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_08",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_08",
+        "id": "120240911452750244"
+      }
+    },
+    {
+      "id": "120240911453060244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_01.mp4",
+        "id": "120240911452740244"
+      }
+    },
+    {
+      "id": "120240911452910244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_11",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_11",
+        "id": "120240911452720244"
+      }
+    }
+  ],
+  "120238641070530244": [
+    {
+      "id": "120238641070450244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_12",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_ABERTO",
+        "id": "120238641070440244"
+      }
+    },
+    {
+      "id": "120238641070480244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_ABERTO",
+        "id": "120238641070440244"
+      }
+    },
+    {
+      "id": "120238641070520244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_06",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_ABERTO",
+        "id": "120238641070440244"
+      }
+    },
+    {
+      "id": "120238641070470244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_08",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_ABERTO",
+        "id": "120238641070440244"
+      }
+    },
+    {
+      "id": "120238641070460244",
+      "name": "CHECKLIST_HONDA_VENDA_IMG_STORIES_03.png",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_ABERTO",
+        "id": "120238641070440244"
+      }
+    }
+  ],
+  "120237571102680244": [
+    {
+      "id": "120238323847590244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_12",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_ABERTO",
+        "id": "120237571102750244"
+      }
+    },
+    {
+      "id": "120237571102620244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00_ABERTO",
+        "id": "120237571102750244"
+      }
+    },
+    {
+      "id": "120238062827610244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_11",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00_ABERTO",
+        "id": "120237571102750244"
+      }
+    },
+    {
+      "id": "120237571102610244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_06",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00_ABERTO",
+        "id": "120237571102750244"
+      }
+    },
+    {
+      "id": "120237571102730244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_08",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_ABERTO",
+        "id": "120237571102750244"
+      }
+    },
+    {
+      "id": "120237865133980244",
+      "name": "CHECKLIST_HONDA_VENDA_IMG_STORIES_03.png",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_ABERTO",
+        "id": "120237571102750244"
+      }
+    },
+    {
+      "id": "120237571102690244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00_ABERTO",
+        "id": "120237571102750244"
+      }
+    },
+    {
+      "id": "120237571102720244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00_ABERTO",
+        "id": "120237571102750244"
+      }
+    }
+  ],
+  "120237569768610244": [
+    {
+      "id": "120237569983710244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_08",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "04_MOTOR",
+        "id": "120237569768800244"
+      }
+    },
+    {
+      "id": "120237569983720244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "04_MOTOR",
+        "id": "120237569768800244"
+      }
+    },
+    {
+      "id": "120237569983770244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_06",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "04_MECANICO",
+        "id": "120237569908380244"
+      }
+    },
+    {
+      "id": "120237569983760244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_08",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "04_MECANICO",
+        "id": "120237569908380244"
+      }
+    },
+    {
+      "id": "120237569983780244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "04_MECANICO",
+        "id": "120237569908380244"
+      }
+    },
+    {
+      "id": "120237569983730244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "04_MOTOR",
+        "id": "120237569768800244"
+      }
+    },
+    {
+      "id": "120237569983670244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "04_MANUTENCAO",
+        "id": "120237569768850244"
+      }
+    },
+    {
+      "id": "120237569983740244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "04_MOTOR",
+        "id": "120237569768800244"
+      }
+    },
+    {
+      "id": "120237569983790244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "04_MECANICO",
+        "id": "120237569908380244"
+      }
+    },
+    {
+      "id": "120237569983800244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "04_MECANICO",
+        "id": "120237569908380244"
+      }
+    },
+    {
+      "id": "120237569983650244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MANUTENCAO",
+        "id": "120237569768850244"
+      }
+    },
+    {
+      "id": "120237569983640244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_08",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MANUTENCAO",
+        "id": "120237569768850244"
+      }
+    },
+    {
+      "id": "120237569983680244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MANUTENCAO",
+        "id": "120237569768850244"
+      }
+    },
+    {
+      "id": "120237569983750244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_06",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "04_MOTOR",
+        "id": "120237569768800244"
+      }
+    },
+    {
+      "id": "120237569983660244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_06",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MANUTENCAO",
+        "id": "120237569768850244"
+      }
+    }
+  ],
+  "120237428209770244": [
+    {
+      "id": "120237431406670244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%COMPRADORES",
+        "id": "120237428209510244"
+      }
+    },
+    {
+      "id": "120237431481880244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MANUTENCAO",
+        "id": "120237431462370244"
+      }
+    },
+    {
+      "id": "120237431481720244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MOTOR",
+        "id": "120237431462460244"
+      }
+    },
+    {
+      "id": "120237431481840244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MECANICO",
+        "id": "120237431462440244"
+      }
+    },
+    {
+      "id": "120237431481820244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_AUTOMOVEIS",
+        "id": "120237431462420244"
+      }
+    },
+    {
+      "id": "120237431406420244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%SEGUIDORES",
+        "id": "120237428209500244"
+      }
+    },
+    {
+      "id": "120237431481740244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MOTOR",
+        "id": "120237431462460244"
+      }
+    },
+    {
+      "id": "120237431406390244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%LISTA_GERAL_LEADS",
+        "id": "120237428209540244"
+      }
+    },
+    {
+      "id": "120237431481870244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MECANICO",
+        "id": "120237431462440244"
+      }
+    },
+    {
+      "id": "120237431481890244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MANUTENCAO",
+        "id": "120237431462370244"
+      }
+    },
+    {
+      "id": "120237431406650244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%COMPRADORES",
+        "id": "120237428209510244"
+      }
+    },
+    {
+      "id": "120237431406400244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%SEGUIDORES",
+        "id": "120237428209500244"
+      }
+    },
+    {
+      "id": "120237431406660244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%COMPRADORES",
+        "id": "120237428209510244"
+      }
+    },
+    {
+      "id": "120237431406360244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%LISTA_GERAL_LEADS",
+        "id": "120237428209540244"
+      }
+    },
+    {
+      "id": "120237431481960244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MECHANIC",
+        "id": "120237431462570244"
+      }
+    },
+    {
+      "id": "120237431481910244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MANUTENCAO",
+        "id": "120237431462370244"
+      }
+    },
+    {
+      "id": "120237431481790244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_AUTOMOVEIS",
+        "id": "120237431462420244"
+      }
+    },
+    {
+      "id": "120237431406380244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%LISTA_GERAL_LEADS",
+        "id": "120237428209540244"
+      }
+    },
+    {
+      "id": "120237431406690244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%ENVOLVIMENTO_30D",
+        "id": "120237428209460244"
+      }
+    },
+    {
+      "id": "120237431406370244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_10",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%LISTA_GERAL_LEADS",
+        "id": "120237428209540244"
+      }
+    },
+    {
+      "id": "120237431481900244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_10",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MANUTENCAO",
+        "id": "120237431462370244"
+      }
+    },
+    {
+      "id": "120237431406430244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%SEGUIDORES",
+        "id": "120237428209500244"
+      }
+    },
+    {
+      "id": "120237431481850244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_10",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MECANICO",
+        "id": "120237431462440244"
+      }
+    },
+    {
+      "id": "120237431406720244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%ENVOLVIMENTO_30D",
+        "id": "120237428209460244"
+      }
+    },
+    {
+      "id": "120237431481810244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_AUTOMOVEIS",
+        "id": "120237431462420244"
+      }
+    },
+    {
+      "id": "120237431406620244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%ENVOLVIMENTO_365D",
+        "id": "120237431123150244"
+      }
+    },
+    {
+      "id": "120237431481930244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MECHANIC",
+        "id": "120237431462570244"
+      }
+    },
+    {
+      "id": "120237431481950244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_10",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MECHANIC",
+        "id": "120237431462570244"
+      }
+    },
+    {
+      "id": "120237431481730244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MOTOR",
+        "id": "120237431462460244"
+      }
+    },
+    {
+      "id": "120237431406700244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%ENVOLVIMENTO_30D",
+        "id": "120237428209460244"
+      }
+    },
+    {
+      "id": "120237431481940244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MECHANIC",
+        "id": "120237431462570244"
+      }
+    },
+    {
+      "id": "120237431481800244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_10",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_AUTOMOVEIS",
+        "id": "120237431462420244"
+      }
+    },
+    {
+      "id": "120237431406710244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_10",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%ENVOLVIMENTO_30D",
+        "id": "120237428209460244"
+      }
+    },
+    {
+      "id": "120237431481860244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MECANICO",
+        "id": "120237431462440244"
+      }
+    },
+    {
+      "id": "120237431406410244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_10",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%SEGUIDORES",
+        "id": "120237428209500244"
+      }
+    },
+    {
+      "id": "120237431481710244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_10",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_MOTOR",
+        "id": "120237431462460244"
+      }
+    },
+    {
+      "id": "120237431406630244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_10",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%ENVOLVIMENTO_365D",
+        "id": "120237431123150244"
+      }
+    },
+    {
+      "id": "120237431406680244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_10",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%COMPRADORES",
+        "id": "120237428209510244"
+      }
+    },
+    {
+      "id": "120237431406640244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%ENVOLVIMENTO_365D",
+        "id": "120237431123150244"
+      }
+    },
+    {
+      "id": "120237431406610244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "04_LAL1%ENVOLVIMENTO_365D",
+        "id": "120237431123150244"
+      }
+    }
+  ],
+  "120237298362740244": [
+    {
+      "id": "120237303824960244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_04.mp4",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_04.mp4",
+        "id": "120237303824950244"
+      }
+    },
+    {
+      "id": "120238026210280244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_11",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_11",
+        "id": "120238026210290244"
+      }
+    },
+    {
+      "id": "120237303922820244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_08",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_08",
+        "id": "120237303922830244"
+      }
+    },
+    {
+      "id": "120237696319770244",
+      "name": "CHECKLIST_HONDA_VENDA_IMG_STORIES_03.png",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_IMG_STORIES_03.png",
+        "id": "120237696319780244"
+      }
+    },
+    {
+      "id": "120237298362820244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01.mp4",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_01.mp4",
+        "id": "120237298362720244"
+      }
+    },
+    {
+      "id": "120238026184170244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_14",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_14",
+        "id": "120238026184160244"
+      }
+    },
+    {
+      "id": "120238026197740244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_13",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_13",
+        "id": "120238026197730244"
+      }
+    },
+    {
+      "id": "120238026206990244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_12",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_12",
+        "id": "120238026206980244"
+      }
+    },
+    {
+      "id": "120238026126140244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_15",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_15",
+        "id": "120238026126150244"
+      }
+    },
+    {
+      "id": "120237697401980244",
+      "name": "CHECKLIST_HONDA_VENDA_IMG_FEED_03.png",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_IMG_FEED_03.png",
+        "id": "120237697401990244"
+      }
+    },
+    {
+      "id": "120237697377780244",
+      "name": "CHECKLIST_HONDA_VENDA_IMG_FEED_02.png",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_IMG_FEED_02.png",
+        "id": "120237697377770244"
+      }
+    },
+    {
+      "id": "120237697350490244",
+      "name": "CHECKLIST_HONDA_VENDA_IMG_STORIES_06",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_IMG_STORIES_06",
+        "id": "120237697350500244"
+      }
+    },
+    {
+      "id": "120237697337420244",
+      "name": "CHECKLIST_HONDA_VENDA_IMG_STORIES_05",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_IMG_STORIES_05",
+        "id": "120237697337430244"
+      }
+    },
+    {
+      "id": "120237697368360244",
+      "name": "CHECKLIST_HONDA_VENDA_IMG_FEED_01",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_IMG_FEED_01",
+        "id": "120237697368350244"
+      }
+    },
+    {
+      "id": "120237696194390244",
+      "name": "CHECKLIST_HONDA_VENDA_IMG_STORIES_01",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_IMG_STORIES_01",
+        "id": "120237696194380244"
+      }
+    },
+    {
+      "id": "120237696290570244",
+      "name": "CHECKLIST_HONDA_VENDA_IMG_STORIES_02.png",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_IMG_STORIES_02.png",
+        "id": "120237696290580244"
+      }
+    },
+    {
+      "id": "120237696334230244",
+      "name": "CHECKLIST_HONDA_VENDA_IMG_STORIES_04.png",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_IMG_STORIES_04.png",
+        "id": "120237696334220244"
+      }
+    },
+    {
+      "id": "120237303791550244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_02",
+        "id": "120237303791540244"
+      }
+    },
+    {
+      "id": "120237303879090244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_06",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_06",
+        "id": "120237303879100244"
+      }
+    },
+    {
+      "id": "120237303950150244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_10",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_10",
+        "id": "120237303950030244"
+      }
+    },
+    {
+      "id": "120237303938130244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_09",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_09",
+        "id": "120237303938120244"
+      }
+    },
+    {
+      "id": "120237303838690244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_05.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_05.mp4",
+        "id": "120237303838680244"
+      }
+    },
+    {
+      "id": "120237303813480244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_03.mp4",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_03.mp4",
+        "id": "120237303813470244"
+      }
+    },
+    {
+      "id": "120237303908140244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_07",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_MECANICO_CHECKLIST_HONDA_VENDA_VD_07",
+        "id": "120237303908130244"
+      }
+    }
+  ],
+  "120216179848150244": [
+    {
+      "id": "120216179848080244",
+      "name": "CHECKLIST_HONDA_VD_05_ST",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "[CHECKLIST HONDA] - [VENDAS]  - [FRIO] - [CBO] - [C08] - Campanha de Compras Advantage+ Conjunto de anúncios",
+        "id": "120216179848110244"
+      }
+    },
+    {
+      "id": "120216179848050244",
+      "name": "IE22_OUT_24_CAP_VD_GENIO_CHECKLIST_HONDA_ST",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "[CHECKLIST HONDA] - [VENDAS]  - [FRIO] - [CBO] - [C08] - Campanha de Compras Advantage+ Conjunto de anúncios",
+        "id": "120216179848110244"
+      }
+    },
+    {
+      "id": "120216179848060244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_08_YT",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "[CHECKLIST HONDA] - [VENDAS]  - [FRIO] - [CBO] - [C08] - Campanha de Compras Advantage+ Conjunto de anúncios",
+        "id": "120216179848110244"
+      }
+    },
+    {
+      "id": "120216179848170244",
+      "name": "CHECKLIST_HONDA_VD_07_ST",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "[CHECKLIST HONDA] - [VENDAS]  - [FRIO] - [CBO] - [C08] - Campanha de Compras Advantage+ Conjunto de anúncios",
+        "id": "120216179848110244"
+      }
+    },
+    {
+      "id": "120216179848160244",
+      "name": "CHECKLIST_HONDA_VD_06_ST",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "[CHECKLIST HONDA] - [VENDAS]  - [FRIO] - [CBO] - [C08] - Campanha de Compras Advantage+ Conjunto de anúncios",
+        "id": "120216179848110244"
+      }
+    }
+  ],
+  "120216179781880244": [
+    {
+      "id": "120216179781910244",
+      "name": "CHECK_LIST_YAMAHA_VD_14_ST",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - PQ - Inscritos",
+        "id": "120216179781890244"
+      }
+    },
+    {
+      "id": "120216179781900244",
+      "name": "CHECK_LIST_YAMAHA_VD_13_ST",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - PQ - Inscritos",
+        "id": "120216179781890244"
+      }
+    }
+  ],
+  "120216140316050244": [
+    {
+      "id": "120216148577600244",
+      "name": "CHECK_LIST_YAMAHA_VD_14_ST",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - PQ - Inscritos",
+        "id": "120216140316020244"
+      }
+    },
+    {
+      "id": "120216140316080244",
+      "name": "CHECK_LIST_YAMAHA_VD_13_ST",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - PQ - Inscritos",
+        "id": "120216140316020244"
+      }
+    }
+  ],
+  "120216140091800244": [
+    {
+      "id": "120216140091810244",
+      "name": "CHECKLIST_HONDA_VD_06_ST",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - PQ - Inscritos",
+        "id": "120216140091890244"
+      }
+    },
+    {
+      "id": "120216140091790244",
+      "name": "IE22_OUT_24_CAP_VD_GENIO_CHECKLIST_HONDA_ST",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - PQ - Inscritos",
+        "id": "120216140091890244"
+      }
+    },
+    {
+      "id": "120216140091780244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - PQ - Inscritos",
+        "id": "120216140091890244"
+      }
+    },
+    {
+      "id": "120216140091830244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - PQ - Inscritos",
+        "id": "120216140091890244"
+      }
+    },
+    {
+      "id": "120216140091750244",
+      "name": "RMKT_CK_CARRINHO_VD_02",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - PQ - Inscritos",
+        "id": "120216140091890244"
+      }
+    },
+    {
+      "id": "120216140091840244",
+      "name": "RMKT_CK_CARRINHO_VD_03",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - PQ - Inscritos",
+        "id": "120216140091890244"
+      }
+    },
+    {
+      "id": "120216140091720244",
+      "name": "CHECKLIST_HONDA_VD_05_ST",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - PQ - Inscritos",
+        "id": "120216140091890244"
+      }
+    },
+    {
+      "id": "120216140091820244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - PQ - Inscritos",
+        "id": "120216140091890244"
+      }
+    },
+    {
+      "id": "120216140091770244",
+      "name": "RMKT_CK_CARRINHO_VD_01",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - PQ - Inscritos",
+        "id": "120216140091890244"
+      }
+    },
+    {
+      "id": "120216140091730244",
+      "name": "CHECKLIST_HONDA_VD_07_ST",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - PQ - Inscritos",
+        "id": "120216140091890244"
+      }
+    },
+    {
+      "id": "120216140091670244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_08_YT",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - PQ - Inscritos",
+        "id": "120216140091890244"
+      }
+    }
+  ],
+  "120212361014900244": [
+    {
+      "id": "120212361014910244",
+      "name": "CHECK_LIST_YAMAHA_VD_07",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_BR_25_45_H_AUTO_ABERTO_CHECK_LIST_YAMAHA_VD_07",
+        "id": "120212361015080244"
+      }
+    },
+    {
+      "id": "120212361096850244",
+      "name": "CHECK_LIST_YAMAHA_VD_08",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_BR_25_45_H_AUTO_ABERTO_CHECK_LIST_YAMAHA_VD_08",
+        "id": "120212361096840244"
+      }
+    },
+    {
+      "id": "120212361116230244",
+      "name": "CHECK_LIST_YAMAHA_VD_11",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_BR_25_45_H_AUTO_ABERTO_CHECK_LIST_YAMAHA_VD_11",
+        "id": "120212361116240244"
+      }
+    }
+  ],
+  "120211880488430244": [
+    {
+      "id": "120211880516300244",
+      "name": "CHECK_LIST_YAMAHA_VD_04",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - Manutenção",
+        "id": "120211880488420244"
+      }
+    },
+    {
+      "id": "120211880516330244",
+      "name": "CHECK_LIST_YAMAHA_VD_04",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - Mecanico",
+        "id": "120211880488580244"
+      }
+    },
+    {
+      "id": "120211880516470244",
+      "name": "CHECK_LIST_YAMAHA_VD_04",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - Oficina",
+        "id": "120211880488590244"
+      }
+    },
+    {
+      "id": "120211880516340244",
+      "name": "CHECK_LIST_YAMAHA_VD_03",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - Mecanico",
+        "id": "120211880488580244"
+      }
+    },
+    {
+      "id": "120211880516290244",
+      "name": "CHECK_LIST_YAMAHA_VD_06",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - Manutenção",
+        "id": "120211880488420244"
+      }
+    },
+    {
+      "id": "120211880516450244",
+      "name": "CHECK_LIST_YAMAHA_VD_06",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - Oficina",
+        "id": "120211880488590244"
+      }
+    },
+    {
+      "id": "120211880516310244",
+      "name": "CHECK_LIST_YAMAHA_VD_03",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - Manutenção",
+        "id": "120211880488420244"
+      }
+    },
+    {
+      "id": "120211880516460244",
+      "name": "CHECK_LIST_YAMAHA_VD_03",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - Oficina",
+        "id": "120211880488590244"
+      }
+    },
+    {
+      "id": "120211880516320244",
+      "name": "CHECK_LIST_YAMAHA_VD_06",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - Mecanico",
+        "id": "120211880488580244"
+      }
+    }
+  ],
+  "120211880361890244": [
+    {
+      "id": "120211880478380244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - Oficina",
+        "id": "120211880478430244"
+      }
+    },
+    {
+      "id": "120211880361900244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - Mecanico",
+        "id": "120211880362000244"
+      }
+    },
+    {
+      "id": "120211880483530244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - Manutenção",
+        "id": "120211880483510244"
+      }
+    },
+    {
+      "id": "120211880483540244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - Manutenção",
+        "id": "120211880483510244"
+      }
+    },
+    {
+      "id": "120211880483560244",
+      "name": "RMKT_CK_CARRINHO_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - Manutenção",
+        "id": "120211880483510244"
+      }
+    },
+    {
+      "id": "120211880478440244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - Oficina",
+        "id": "120211880478430244"
+      }
+    },
+    {
+      "id": "120211880478390244",
+      "name": "RMKT_CK_CARRINHO_VD_03",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - Oficina",
+        "id": "120211880478430244"
+      }
+    },
+    {
+      "id": "120211880362020244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - Mecanico",
+        "id": "120211880362000244"
+      }
+    },
+    {
+      "id": "120211880362030244",
+      "name": "RMKT_CK_CARRINHO_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - Mecanico",
+        "id": "120211880362000244"
+      }
+    },
+    {
+      "id": "120211880361940244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - Mecanico",
+        "id": "120211880362000244"
+      }
+    },
+    {
+      "id": "120211880478400244",
+      "name": "RMKT_CK_CARRINHO_VD_01",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - Oficina",
+        "id": "120211880478430244"
+      }
+    },
+    {
+      "id": "120211880483570244",
+      "name": "RMKT_CK_CARRINHO_VD_03",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - Manutenção",
+        "id": "120211880483510244"
+      }
+    },
+    {
+      "id": "120211880362040244",
+      "name": "RMKT_CK_CARRINHO_VD_01",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - Mecanico",
+        "id": "120211880362000244"
+      }
+    },
+    {
+      "id": "120211880483550244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - Manutenção",
+        "id": "120211880483510244"
+      }
+    },
+    {
+      "id": "120211880361920244",
+      "name": "RMKT_CK_CARRINHO_VD_03",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - Mecanico",
+        "id": "120211880362000244"
+      }
+    },
+    {
+      "id": "120211880478420244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - Oficina",
+        "id": "120211880478430244"
+      }
+    },
+    {
+      "id": "120211880478410244",
+      "name": "RMKT_CK_CARRINHO_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - Oficina",
+        "id": "120211880478430244"
+      }
+    },
+    {
+      "id": "120211880483520244",
+      "name": "RMKT_CK_CARRINHO_VD_01",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - Manutenção",
+        "id": "120211880483510244"
+      }
+    }
+  ],
+  "120211292812790244": [
+    {
+      "id": "120211293351040244",
+      "name": "CHECK_LIST_YAMAHA_VD_05",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_BR_25_45_H_AUTO_ABERTO_CHECK_LIST_YAMAHA_VD_05",
+        "id": "120211293351050244"
+      }
+    },
+    {
+      "id": "120211293889460244",
+      "name": "CHECK_LIST_YAMAHA_VD_06",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_BR_25_45_H_AUTO_ABERTO_CHECK_LIST_YAMAHA_VD_06",
+        "id": "120211293889470244"
+      }
+    },
+    {
+      "id": "120211293234190244",
+      "name": "CHECK_LIST_YAMAHA_VD_04",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00_BR_25_45_H_AUTO_ABERTO_CHECK_LIST_YAMAHA_VD_04",
+        "id": "120211293234200244"
+      }
+    },
+    {
+      "id": "120211292812700244",
+      "name": "CHECK_LIST_YAMAHA_VD_03",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00_BR_25_45_H_AUTO_ABERTO_CHECK_LIST_YAMAHA_VD_03",
+        "id": "120211292812850244"
+      }
+    }
+  ],
+  "120211145423960244": [
+    {
+      "id": "120211145424020244",
+      "name": "CHECK_LIST_YAMAHA_VD_02",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "[CHECKLIST YAMAHA ] - [VENDAS]  - [FRIO] - [ABO] - [C12] - Campanha de Compras Advantage+ Conjunto de anúncios",
+        "id": "120211145423970244"
+      }
+    },
+    {
+      "id": "120211146620760244",
+      "name": "CHECK_LIST_YAMAHA_IMG_01_FD",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "[CHECKLIST YAMAHA ] - [VENDAS]  - [FRIO] - [ABO] - [C12] - Campanha de Compras Advantage+ Conjunto de anúncios",
+        "id": "120211145423970244"
+      }
+    },
+    {
+      "id": "120211145424000244",
+      "name": "CHECK_LIST_YAMAHA_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "[CHECKLIST YAMAHA ] - [VENDAS]  - [FRIO] - [ABO] - [C12] - Campanha de Compras Advantage+ Conjunto de anúncios",
+        "id": "120211145423970244"
+      }
+    }
+  ],
+  "120211145129430244": [
+    {
+      "id": "120211146486380244",
+      "name": "CHECK_LIST_YAMAHA_IMG_01_FD",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "01 - [BR][25-45][H][AUTO] - Envolvimento Visitou - 60D",
+        "id": "120211145352390244"
+      }
+    },
+    {
+      "id": "120211146427320244",
+      "name": "CHECK_LIST_YAMAHA_IMG_01_FD",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Envolvimento Visitou - 30D",
+        "id": "120211145129600244"
+      }
+    },
+    {
+      "id": "120211146486400244",
+      "name": "CHECK_LIST_YAMAHA_IMG_01_FD",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "01 - [BR][25-45][H][AUTO] - Envolvimento Todos - 30D",
+        "id": "120211145346780244"
+      }
+    },
+    {
+      "id": "120211146486390244",
+      "name": "CHECK_LIST_YAMAHA_IMG_01_FD",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "02 - [BR][25-45][H][AUTO] - Envolvimento Todos - 60D",
+        "id": "120211145357450244"
+      }
+    },
+    {
+      "id": "120211145346790244",
+      "name": "CHECK_LIST_YAMAHA_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "01 - [BR][25-45][H][AUTO] - Envolvimento Todos - 30D",
+        "id": "120211145346780244"
+      }
+    },
+    {
+      "id": "120211145357440244",
+      "name": "CHECK_LIST_YAMAHA_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "02 - [BR][25-45][H][AUTO] - Envolvimento Todos - 60D",
+        "id": "120211145357450244"
+      }
+    },
+    {
+      "id": "120211145352410244",
+      "name": "CHECK_LIST_YAMAHA_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "01 - [BR][25-45][H][AUTO] - Envolvimento Visitou - 60D",
+        "id": "120211145352390244"
+      }
+    },
+    {
+      "id": "120211145357430244",
+      "name": "CHECK_LIST_YAMAHA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "02 - [BR][25-45][H][AUTO] - Envolvimento Todos - 60D",
+        "id": "120211145357450244"
+      }
+    },
+    {
+      "id": "120211145346800244",
+      "name": "CHECK_LIST_YAMAHA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "01 - [BR][25-45][H][AUTO] - Envolvimento Todos - 30D",
+        "id": "120211145346780244"
+      }
+    },
+    {
+      "id": "120211145236100244",
+      "name": "CHECK_LIST_YAMAHA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Envolvimento Visitou - 30D",
+        "id": "120211145129600244"
+      }
+    },
+    {
+      "id": "120211145129450244",
+      "name": "CHECK_LIST_YAMAHA_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Envolvimento Visitou - 30D",
+        "id": "120211145129600244"
+      }
+    },
+    {
+      "id": "120211145352400244",
+      "name": "CHECK_LIST_YAMAHA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "01 - [BR][25-45][H][AUTO] - Envolvimento Visitou - 60D",
+        "id": "120211145352390244"
+      }
+    }
+  ],
+  "120211144907510244": [
+    {
+      "id": "120211144907540244",
+      "name": "RMKT_CK_CARRINHO_VD_03",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "[CHECKLIST ] - [VENDAS]  - [QUENTE] - [PIXEL NOVO] - [C10] - Campanha de Compras Advantage+   Conjunto de anúncios",
+        "id": "120211144907500244"
+      }
+    },
+    {
+      "id": "120211144907530244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "[CHECKLIST ] - [VENDAS]  - [QUENTE] - [PIXEL NOVO] - [C10] - Campanha de Compras Advantage+   Conjunto de anúncios",
+        "id": "120211144907500244"
+      }
+    },
+    {
+      "id": "120211144907550244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "[CHECKLIST ] - [VENDAS]  - [QUENTE] - [PIXEL NOVO] - [C10] - Campanha de Compras Advantage+   Conjunto de anúncios",
+        "id": "120211144907500244"
+      }
+    },
+    {
+      "id": "120211144907520244",
+      "name": "RMKT_CK_CARRINHO_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "[CHECKLIST ] - [VENDAS]  - [QUENTE] - [PIXEL NOVO] - [C10] - Campanha de Compras Advantage+   Conjunto de anúncios",
+        "id": "120211144907500244"
+      }
+    }
+  ],
+  "120211097358590244": [
+    {
+      "id": "120211097358580244",
+      "name": "Criativo dinâmico",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Aberto",
+        "id": "120211097358620244"
+      }
+    }
+  ],
+  "120211097330070244": [
+    {
+      "id": "120211097330050244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Aberto",
+        "id": "120211097330060244"
+      }
+    },
+    {
+      "id": "120211097330090244",
+      "name": "RMKT_CK_CARRINHO_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Aberto",
+        "id": "120211097330060244"
+      }
+    },
+    {
+      "id": "120211097330080244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Aberto",
+        "id": "120211097330060244"
+      }
+    },
+    {
+      "id": "120211097330100244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Aberto",
+        "id": "120211097330060244"
+      }
+    },
+    {
+      "id": "120211097330110244",
+      "name": "RMKT_CK_CARRINHO_VD_03",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Aberto",
+        "id": "120211097330060244"
+      }
+    }
+  ],
+  "120211097244470244": [
+    {
+      "id": "120211097244500244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Aberto",
+        "id": "120211097244460244"
+      }
+    },
+    {
+      "id": "120211097244440244",
+      "name": "RMKT_CK_CARRINHO_VD_03",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Aberto",
+        "id": "120211097244460244"
+      }
+    },
+    {
+      "id": "120211097244420244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Aberto",
+        "id": "120211097244460244"
+      }
+    },
+    {
+      "id": "120211097244430244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Aberto",
+        "id": "120211097244460244"
+      }
+    },
+    {
+      "id": "120211097244530244",
+      "name": "RMKT_CK_CARRINHO_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Aberto",
+        "id": "120211097244460244"
+      }
+    }
+  ],
+  "120210379362660244": [
+    {
+      "id": "120210379362760244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "[CHECKLIST ] - [VENDAS]  - [QUENTE] - [CBO] - [C09] - Campanha de Compras Advantage+  Conjunto de anúncios",
+        "id": "120210379362600244"
+      }
+    },
+    {
+      "id": "120210379362780244",
+      "name": "RMKT_CK_CARRINHO_VD_01",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "[CHECKLIST ] - [VENDAS]  - [QUENTE] - [CBO] - [C09] - Campanha de Compras Advantage+  Conjunto de anúncios",
+        "id": "120210379362600244"
+      }
+    },
+    {
+      "id": "120210379362670244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "[CHECKLIST ] - [VENDAS]  - [QUENTE] - [CBO] - [C09] - Campanha de Compras Advantage+  Conjunto de anúncios",
+        "id": "120210379362600244"
+      }
+    },
+    {
+      "id": "120210379362740244",
+      "name": "RMKT_CK_CARRINHO_VD_03",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "[CHECKLIST ] - [VENDAS]  - [QUENTE] - [CBO] - [C09] - Campanha de Compras Advantage+  Conjunto de anúncios",
+        "id": "120210379362600244"
+      }
+    }
+  ],
+  "120205165011760244": [
+    {
+      "id": "120205165011780244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_",
+      "status": "ACTIVE",
+      "effective_status": "WITH_ISSUES",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Interesses unitário - Manutenção - APOST_PARÂMETROS_IMG_371_ST",
+        "id": "120205165011740244"
+      }
+    },
+    {
+      "id": "120205165011750244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "WITH_ISSUES",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Interesses unitário - Manutenção - APOST_PARÂMETROS_IMG_3275",
+        "id": "120205165011790244"
+      }
+    },
+    {
+      "id": "120205165011810244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "WITH_ISSUES",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Interesses unitário - Manutenção - APOST_PARÂMETROS_IMG_3258_VD_01",
+        "id": "120205165011770244"
+      }
+    }
+  ],
+  "120204507141130244": [
+    {
+      "id": "120218219534300244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_10_ST",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - SPQ",
+        "id": "120204507141220244"
+      }
+    },
+    {
+      "id": "120218219217100244",
+      "name": "APO_PINAGEM_CENTRAL_HONDA_VENDA_VD_01_ST",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - SPQ",
+        "id": "120204507141220244"
+      }
+    },
+    {
+      "id": "120216140036300244",
+      "name": "CHECKLIST_HONDA_VD_07_ST",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - SPQ",
+        "id": "120204507141220244"
+      }
+    },
+    {
+      "id": "120216140014190244",
+      "name": "CHECKLIST_HONDA_VD_06_ST",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - SPQ",
+        "id": "120204507141220244"
+      }
+    },
+    {
+      "id": "120204539137860244",
+      "name": "RMKT_CK_CARRINHO_VD_03",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - SPQ",
+        "id": "120204507141220244"
+      }
+    },
+    {
+      "id": "120212669465190244",
+      "name": "IE22_OUT_24_CAP_VD_GENIO_CHECKLIST_HONDA_ST",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - SPQ",
+        "id": "120204507141220244"
+      }
+    },
+    {
+      "id": "120204539137840244",
+      "name": "RMKT_CK_CARRINHO_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - SPQ",
+        "id": "120204507141220244"
+      }
+    },
+    {
+      "id": "120205615331110244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - SPQ",
+        "id": "120204507141220244"
+      }
+    },
+    {
+      "id": "120205615331120244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - SPQ",
+        "id": "120204507141220244"
+      }
+    },
+    {
+      "id": "120204539137850244",
+      "name": "RMKT_CK_CARRINHO_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - SPQ",
+        "id": "120204507141220244"
+      }
+    },
+    {
+      "id": "120205615331100244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - SPQ",
+        "id": "120204507141220244"
+      }
+    },
+    {
+      "id": "120216140045100244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_08_YT",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - SPQ",
+        "id": "120204507141220244"
+      }
+    },
+    {
+      "id": "120204539137960244",
+      "name": "RMKT_CK_CARRINHO_VD_01",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - PM",
+        "id": "120204507141150244"
+      }
+    },
+    {
+      "id": "120204539137920244",
+      "name": "RMKT_CK_CARRINHO_VD_01",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - PQ",
+        "id": "120204507141230244"
+      }
+    },
+    {
+      "id": "120216139495200244",
+      "name": "CHECKLIST_HONDA_VD_05_ST",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - SPQ",
+        "id": "120204507141220244"
+      }
+    },
+    {
+      "id": "120205615331050244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_02",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - PQ",
+        "id": "120204507141230244"
+      }
+    },
+    {
+      "id": "120205615331070244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - PQ",
+        "id": "120204507141230244"
+      }
+    },
+    {
+      "id": "120205615331060244",
+      "name": "CHECKLIST_HONDA_VENDA_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - PQ",
+        "id": "120204507141230244"
+      }
+    },
+    {
+      "id": "120204539137910244",
+      "name": "RMKT_CK_CARRINHO_VD_02",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - PQ",
+        "id": "120204507141230244"
+      }
+    },
+    {
+      "id": "120204539137930244",
+      "name": "RMKT_CK_CARRINHO_VD_03",
+      "status": "PAUSED",
+      "effective_status": "PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - PQ",
+        "id": "120204507141230244"
+      }
+    },
+    {
+      "id": "120204539137940244",
+      "name": "RMKT_CK_CARRINHO_VD_03",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - PM",
+        "id": "120204507141150244"
+      }
+    },
+    {
+      "id": "120204539137950244",
+      "name": "RMKT_CK_CARRINHO_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - PM",
+        "id": "120204507141150244"
+      }
+    }
+  ],
+  "120203965408060244": [
+    {
+      "id": "120203965408070244",
+      "name": "RMKT_CK_CARRINHO_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Interesse unitário - Pais",
+        "id": "120203965408000244"
+      }
+    },
+    {
+      "id": "120203965407940244",
+      "name": "RMKT_CK_CARRINHO_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Interesse unitário - Pais",
+        "id": "120203965408000244"
+      }
+    },
+    {
+      "id": "120203965408090244",
+      "name": "RMKT_CK_CARRINHO_VD_03",
+      "status": "ACTIVE",
+      "effective_status": "CAMPAIGN_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Interesse unitário - Pais",
+        "id": "120203965408000244"
+      }
+    },
+    {
+      "id": "120203965407930244",
+      "name": "RMKT_CK_CARRINHO_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Interesse unitário - Veículo motorizado",
+        "id": "120203965408030244"
+      }
+    },
+    {
+      "id": "120203965407950244",
+      "name": "RMKT_CK_CARRINHO_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Lookalike 1% lista de compradores IE",
+        "id": "120203965408050244"
+      }
+    },
+    {
+      "id": "120203965407960244",
+      "name": "RMKT_CK_CARRINHO_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Lookalike 1% seguidores",
+        "id": "120203965408020244"
+      }
+    },
+    {
+      "id": "120203965407910244",
+      "name": "RMKT_CK_CARRINHO_VD_01",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Interesse unitário - Manutenção",
+        "id": "120203965408040244"
+      }
+    },
+    {
+      "id": "120203965407920244",
+      "name": "RMKT_CK_CARRINHO_VD_03",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Interesse unitário - Manutenção",
+        "id": "120203965408040244"
+      }
+    },
+    {
+      "id": "120203965407980244",
+      "name": "RMKT_CK_CARRINHO_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Lookalike 1% seguidores",
+        "id": "120203965408020244"
+      }
+    },
+    {
+      "id": "120203965407900244",
+      "name": "RMKT_CK_CARRINHO_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Interesse unitário - Manutenção",
+        "id": "120203965408040244"
+      }
+    },
+    {
+      "id": "120203965407990244",
+      "name": "RMKT_CK_CARRINHO_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Interesse unitário - Veículo motorizado",
+        "id": "120203965408030244"
+      }
+    },
+    {
+      "id": "120203965408010244",
+      "name": "RMKT_CK_CARRINHO_VD_03",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Lookalike 1% lista de compradores IE",
+        "id": "120203965408050244"
+      }
+    },
+    {
+      "id": "120203965408100244",
+      "name": "RMKT_CK_CARRINHO_VD_02",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Lookalike 1% lista de compradores IE",
+        "id": "120203965408050244"
+      }
+    },
+    {
+      "id": "120203965407970244",
+      "name": "RMKT_CK_CARRINHO_VD_03",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Interesse unitário - Veículo motorizado",
+        "id": "120203965408030244"
+      }
+    },
+    {
+      "id": "120203965408080244",
+      "name": "RMKT_CK_CARRINHO_VD_03",
+      "status": "ACTIVE",
+      "effective_status": "ADSET_PAUSED",
+      "adset": {
+        "name": "00 - [BR][25-45][H][AUTO] - Lookalike 1% seguidores",
+        "id": "120203965408020244"
+      }
+    }
+  ],
+  "120203858534110244": [],
+  "120200233259560244": []
+}

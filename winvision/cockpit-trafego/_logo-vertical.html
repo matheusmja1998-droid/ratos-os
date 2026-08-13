@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 400px; height: 600px; overflow: hidden; }
+  body {
+    background: #0A0A0F;
+    font-family: 'Fraunces', serif;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  body::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(0, 217, 255, 0.20) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  body::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(176, 38, 255, 0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .wrap {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 40px;
+  }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #00D9FF;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 64px;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+  .logo em {
+    font-style: italic;
+    color: #00D9FF;
+    font-weight: 500;
+  }
+  .word {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 38px;
+    color: #00D9FF;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-top: 4px;
+  }
+  .ornament {
+    margin: 32px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .ornament__line {
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #00D9FF, transparent);
+    opacity: 0.6;
+  }
+  .ornament__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #00D9FF;
+  }
+  .price-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #A8A8B8;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .price {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 72px;
+    color: #00D9FF;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .footer {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #6B6B7A;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 14px;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="tag">CABINE DE TRÁFEGO</div>
+    <div class="logo">Co<em>ckp</em>it</div>
+    <div class="word">Tráfego</div>
+
+    <div class="ornament">
+      <span class="ornament__line"></span>
+      <span class="ornament__dot"></span>
+      <span class="ornament__line"></span>
+    </div>
+
+    <div class="price-label">apenas</div>
+    <div class="price">R$67</div>
+    <div class="footer">META · GOOGLE · GA4</div>
+  </div>
+</body>
+</html>

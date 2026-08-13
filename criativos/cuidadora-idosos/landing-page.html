@@ -3,8 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mariana Caroline — Cuidadora de Idosos</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<title>Mariana Caroline · Cuidadora de Idosos · Técnica em Enfermagem</title>
+<meta name="description" content="Cuidado domiciliar para idosos com formação técnica em enfermagem. Atendimento em Belo Horizonte e região.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- Meta Pixel -->
 <script>
@@ -23,823 +27,1331 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=975167549020921&ev=PageView&noscript=1"
 /></noscript>
 <!-- Fim Meta Pixel -->
+
 <style>
   :root {
-    --green: #9B3060;
-    --green-light: #FDF0F4;
-    --green-mid: #C4687A;
-    --beige: #FDF5F7;
-    --white: #ffffff;
-    --text: #1A1A1A;
-    --text-soft: #666;
+    --wine: #6B1A3A;
+    --wine-deep: #4A0F27;
+    --rose: #9B3060;
+    --rose-soft: #C4687A;
+    --blush: #F4A7BC;
+    --cream: #FDF5F7;
+    --cream-warm: #F8EBEF;
+    --ivory: #FBF7F4;
+    --ink: #1A1014;
+    --ink-soft: #6B5560;
+    --gold: #B89968;
     --whatsapp: #25D366;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   html { scroll-behavior: smooth; }
 
   body {
-    font-family: 'Open Sans', sans-serif;
-    color: var(--text);
-    background: var(--white);
+    font-family: 'Manrope', sans-serif;
+    font-weight: 400;
+    color: var(--ink);
+    background: var(--ivory);
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.5;
+  }
+
+  .serif {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  ::selection { background: var(--rose); color: #fff; }
+
+  /* ─── GRAIN OVERLAY ─── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='1'/></svg>");
+    mix-blend-mode: multiply;
   }
 
   /* ─── WHATSAPP FLUTUANTE ─── */
   .wa-float {
     position: fixed;
-    bottom: 28px;
-    right: 28px;
-    z-index: 999;
+    bottom: 24px;
+    right: 24px;
+    z-index: 100;
     background: var(--whatsapp);
     color: #fff;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 10px;
-    padding: 14px 24px;
-    border-radius: 100px;
+    padding: 14px 22px;
+    border-radius: 999px;
     text-decoration: none;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    box-shadow: 0 8px 32px rgba(37,211,102,0.4);
-    transition: transform 0.2s, box-shadow 0.2s;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 12px 36px rgba(37,211,102,0.35), 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s;
+    animation: pulse 2.6s ease-in-out infinite;
   }
 
   .wa-float:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(37,211,102,0.5);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 18px 48px rgba(37,211,102,0.45);
+    animation: none;
   }
 
-  .wa-float svg { width: 22px; height: 22px; fill: #fff; flex-shrink: 0; }
+  .wa-float svg { width: 20px; height: 20px; fill: #fff; flex-shrink: 0; }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 12px 36px rgba(37,211,102,0.35), 0 0 0 0 rgba(37,211,102,0.5); }
+    50% { box-shadow: 0 12px 36px rgba(37,211,102,0.35), 0 0 0 12px rgba(37,211,102,0); }
+  }
+
+  /* ─── REVEAL ON SCROLL ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 1s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+  /* ─── NAV TOP ─── */
+  .nav {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 10;
+    padding: 28px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+  }
+
+  .nav-mark {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-mark span {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--blush);
+    margin: 0 8px 4px;
+    vertical-align: middle;
+  }
+
+  .nav-meta {
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    font-weight: 500;
+    opacity: 0.7;
+  }
+
+  @media (max-width: 720px) {
+    .nav { padding: 20px 24px; }
+    .nav-meta { display: none; }
+  }
 
   /* ─── HERO ─── */
   .hero {
-    background: var(--green);
-    padding: 80px 24px 100px;
-    text-align: center;
+    background: var(--wine);
     position: relative;
     overflow: hidden;
+    padding: 120px 40px 100px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
   }
 
   .hero::before {
     content: '';
     position: absolute;
-    width: 600px;
-    height: 600px;
-    border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.06);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    width: 140%; height: 140%;
+    top: -20%; left: -20%;
+    background:
+      radial-gradient(ellipse at 75% 30%, rgba(196,104,122,0.35) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 80%, rgba(74,15,39,0.6) 0%, transparent 60%);
     pointer-events: none;
   }
 
-  .hero::after {
-    content: '';
-    position: absolute;
-    width: 900px;
-    height: 900px;
-    border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.04);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-  }
-
-  .hero-badge {
-    display: inline-flex;
+  .hero-grid {
+    position: relative;
+    z-index: 2;
+    max-width: 1240px;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 80px;
     align-items: center;
-    gap: 8px;
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: #fff;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 8px 20px;
-    border-radius: 100px;
-    margin-bottom: 32px;
-    position: relative;
-    z-index: 2;
   }
 
-  .hero h1 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    font-size: clamp(36px, 6vw, 68px);
-    line-height: 1.05;
-    color: #fff;
-    margin-bottom: 24px;
-    position: relative;
-    z-index: 2;
+  @media (max-width: 960px) {
+    .hero { padding: 100px 24px 80px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 56px; }
   }
 
-  .hero h1 span { color: #F4A7BC; }
-
-  .hero p {
-    font-size: clamp(16px, 2vw, 20px);
-    color: rgba(255,255,255,0.7);
-    max-width: 560px;
-    margin: 0 auto 48px;
-    line-height: 1.6;
-    position: relative;
-    z-index: 2;
-  }
-
-  .hero-cta {
+  .hero-eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    background: var(--whatsapp);
-    color: #fff;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 17px;
+    color: var(--blush);
+    font-size: 11px;
+    letter-spacing: 0.32em;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 20px 48px;
-    border-radius: 100px;
-    text-decoration: none;
-    box-shadow: 0 8px 32px rgba(37,211,102,0.35);
-    position: relative;
-    z-index: 2;
-    transition: transform 0.2s;
-  }
-
-  .hero-cta:hover { transform: translateY(-2px); }
-  .hero-cta svg { width: 22px; height: 22px; fill: #fff; }
-
-  /* ─── SEÇÃO: PROBLEMA ─── */
-  .section-problema {
-    background: var(--beige);
-    padding: 80px 24px;
-    text-align: center;
-  }
-
-  .section-problema h2 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 800;
-    font-size: clamp(26px, 4vw, 42px);
-    color: var(--green);
-    line-height: 1.2;
-    max-width: 700px;
-    margin: 0 auto 24px;
-  }
-
-  .section-problema p {
-    font-size: 18px;
-    color: var(--text-soft);
-    max-width: 580px;
-    margin: 0 auto;
-    line-height: 1.7;
-  }
-
-  /* ─── SEÇÃO: QUEM É ELA ─── */
-  .section-sobre {
-    background: var(--white);
-    padding: 80px 24px;
-  }
-
-  .sobre-inner {
-    max-width: 900px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 64px;
-    align-items: center;
-  }
-
-  @media (max-width: 768px) {
-    .sobre-inner { grid-template-columns: 1fr; gap: 40px; }
-  }
-
-  .sobre-foto {
-    background: var(--green-light);
-    border-radius: 20px;
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px dashed rgba(155,48,96,0.2);
-    flex-direction: column;
-    gap: 16px;
-    color: var(--green-mid);
-    font-family: 'Montserrat', sans-serif;
-    font-size: 14px;
     font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    text-align: center;
-    padding: 32px;
-  }
-
-  .sobre-foto svg { width: 48px; height: 48px; opacity: 0.4; }
-
-  .sobre-texto .label {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--green-mid);
-    margin-bottom: 12px;
-  }
-
-  .sobre-texto h2 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    font-size: clamp(28px, 3vw, 42px);
-    color: var(--green);
-    line-height: 1.1;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-  }
-
-  .sobre-texto p {
-    font-size: 17px;
-    color: var(--text-soft);
-    line-height: 1.7;
     margin-bottom: 32px;
   }
 
-  .credencial-badge {
+  .hero-eyebrow::before {
+    content: '';
+    width: 40px; height: 1px;
+    background: var(--blush);
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(48px, 7.5vw, 96px);
+    line-height: 0.98;
+    color: #fff;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--blush);
+    position: relative;
+  }
+
+  .hero h1 em::after {
+    content: '';
+    position: absolute;
+    bottom: 0.08em; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--blush), transparent);
+    opacity: 0.4;
+  }
+
+  .hero-lede {
+    font-size: 18px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.78);
+    max-width: 480px;
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    background: var(--green);
+    gap: 14px;
+    background: var(--whatsapp);
     color: #fff;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 12px 24px;
-    border-radius: 100px;
-  }
-
-  .credencial-badge svg { width: 14px; height: 14px; fill: #fff; }
-
-  /* ─── SEÇÃO: SERVIÇOS ─── */
-  .section-servicos {
-    background: var(--green);
-    padding: 80px 24px;
-    text-align: center;
-  }
-
-  .section-servicos .label {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-    margin-bottom: 12px;
-  }
-
-  .section-servicos h2 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    font-size: clamp(28px, 4vw, 44px);
-    color: #fff;
-    margin-bottom: 56px;
-  }
-
-  .servicos-grid {
-    max-width: 900px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
-
-  @media (max-width: 600px) {
-    .servicos-grid { grid-template-columns: 1fr; }
-  }
-
-  .servico-card {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 16px;
-    padding: 28px 24px;
-    text-align: left;
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  .servico-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.12);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .servico-icon svg {
-    width: 22px;
-    height: 22px;
-    stroke: #F4A7BC;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .servico-card h3 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    color: #fff;
-    margin-bottom: 6px;
-  }
-
-  .servico-card p {
-    font-size: 14px;
-    color: rgba(255,255,255,0.6);
-    line-height: 1.5;
-  }
-
-  /* ─── SEÇÃO: COMO FUNCIONA ─── */
-  .section-como {
-    background: var(--beige);
-    padding: 80px 24px;
-    text-align: center;
-  }
-
-  .section-como .label {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--green-mid);
-    margin-bottom: 12px;
-  }
-
-  .section-como h2 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    font-size: clamp(26px, 4vw, 40px);
-    color: var(--green);
-    margin-bottom: 56px;
-  }
-
-  .steps {
-    max-width: 800px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-  }
-
-  @media (max-width: 640px) {
-    .steps { grid-template-columns: 1fr; }
-  }
-
-  .step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .step-number {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: var(--green);
-    color: #fff;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .step h3 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 17px;
-    color: var(--green);
-  }
-
-  .step p {
-    font-size: 15px;
-    color: var(--text-soft);
-    line-height: 1.6;
-    text-align: center;
-  }
-
-  /* ─── SEÇÃO: PREÇO ─── */
-  .section-preco {
-    background: var(--white);
-    padding: 80px 24px;
-    text-align: center;
-  }
-
-  .section-preco .label {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--green-mid);
-    margin-bottom: 12px;
-  }
-
-  .section-preco h2 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    font-size: clamp(26px, 4vw, 40px);
-    color: var(--green);
-    margin-bottom: 48px;
-  }
-
-  .preco-cards {
-    max-width: 700px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-  }
-
-  @media (max-width: 580px) {
-    .preco-cards { grid-template-columns: 1fr; }
-  }
-
-  .preco-card {
-    border: 2px solid var(--green-light);
-    border-radius: 20px;
-    padding: 36px 28px;
-    text-align: center;
-    transition: border-color 0.2s;
-  }
-
-  .preco-card:hover { border-color: var(--green); }
-
-  .preco-card .tipo {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--green-mid);
-    margin-bottom: 12px;
-  }
-
-  .preco-card .valor {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    font-size: 48px;
-    color: var(--green);
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-
-  .preco-card .valor span {
-    font-size: 20px;
     font-weight: 600;
-    color: var(--text-soft);
-  }
-
-  .preco-card .detalhe {
-    font-size: 14px;
-    color: var(--text-soft);
-    margin-bottom: 24px;
-  }
-
-  .preco-card a {
-    display: inline-block;
-    background: var(--green);
-    color: #fff;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 12px 28px;
-    border-radius: 100px;
-    text-decoration: none;
-    transition: opacity 0.2s;
-  }
-
-  .preco-card a:hover { opacity: 0.85; }
-
-  /* ─── SEÇÃO: FAQ ─── */
-  .section-faq {
-    background: var(--green-light);
-    padding: 80px 24px;
-  }
-
-  .section-faq .label {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--green-mid);
-    margin-bottom: 12px;
-    text-align: center;
-  }
-
-  .section-faq h2 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    font-size: clamp(26px, 4vw, 38px);
-    color: var(--green);
-    text-align: center;
-    margin-bottom: 48px;
-  }
-
-  .faq-list {
-    max-width: 700px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .faq-item {
-    background: #fff;
-    border-radius: 14px;
-    padding: 24px 28px;
-    border: 1px solid rgba(155,48,96,0.08);
-  }
-
-  .faq-item h3 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    color: var(--green);
-    margin-bottom: 10px;
-  }
-
-  .faq-item p {
     font-size: 15px;
-    color: var(--text-soft);
-    line-height: 1.6;
-  }
-
-  /* ─── CTA FINAL ─── */
-  .section-cta {
-    background: var(--green);
-    padding: 100px 24px;
-    text-align: center;
+    letter-spacing: 0.02em;
+    padding: 20px 36px;
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 12px 40px rgba(37,211,102,0.3);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     position: relative;
     overflow: hidden;
   }
 
-  .section-cta::before {
+  .btn-primary::before {
     content: '';
     position: absolute;
-    width: 600px;
-    height: 600px;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.25), transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+  }
+
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 56px rgba(37,211,102,0.4); }
+  .btn-primary:hover::before { transform: translateX(100%); }
+  .btn-primary svg { width: 20px; height: 20px; fill: #fff; }
+
+  .hero-availability {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .pulse-dot {
+    width: 8px; height: 8px;
+    background: #5BE584;
     border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.06);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 0 rgba(91,229,132,0.7);
+    animation: dotpulse 2s infinite;
   }
 
-  .section-cta h2 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    font-size: clamp(30px, 5vw, 54px);
-    color: #fff;
-    line-height: 1.1;
-    margin-bottom: 20px;
+  @keyframes dotpulse {
+    0% { box-shadow: 0 0 0 0 rgba(91,229,132,0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(91,229,132,0); }
+    100% { box-shadow: 0 0 0 0 rgba(91,229,132,0); }
+  }
+
+  /* HERO IMAGE */
+  .hero-portrait {
     position: relative;
-    z-index: 2;
+    aspect-ratio: 4/5;
+    width: 100%;
+    max-width: 460px;
+    justify-self: end;
   }
 
-  .section-cta h2 span { color: #F4A7BC; }
+  @media (max-width: 960px) {
+    .hero-portrait { justify-self: center; max-width: 360px; }
+  }
 
-  .section-cta p {
+  .hero-portrait::before {
+    content: '';
+    position: absolute;
+    inset: -24px -24px 24px 24px;
+    border: 1px solid rgba(244,167,188,0.35);
+    border-radius: 4px;
+    pointer-events: none;
+  }
+
+  .hero-portrait::after {
+    content: '';
+    position: absolute;
+    inset: 24px -24px -24px 24px;
+    background: rgba(244,167,188,0.08);
+    border-radius: 4px;
+    z-index: -1;
+  }
+
+  .hero-portrait img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    border-radius: 4px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.35), 0 12px 24px rgba(0,0,0,0.2);
+    filter: contrast(1.02) saturate(1.05);
+  }
+
+  .portrait-badge {
+    position: absolute;
+    bottom: -28px; left: -28px;
+    background: var(--ivory);
+    color: var(--wine);
+    padding: 16px 22px;
+    border-radius: 4px;
+    box-shadow: 0 20px 48px rgba(0,0,0,0.18);
+    z-index: 3;
+    max-width: 220px;
+  }
+
+  .portrait-badge .label {
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--rose-soft);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .portrait-badge .value {
+    font-family: 'Cormorant Garamond', serif;
     font-size: 18px;
-    color: rgba(255,255,255,0.65);
-    margin-bottom: 48px;
-    position: relative;
-    z-index: 2;
+    font-weight: 600;
+    color: var(--wine);
+    line-height: 1.2;
   }
 
-  .cta-final {
+  @media (max-width: 720px) {
+    .portrait-badge { left: -12px; bottom: -20px; padding: 12px 16px; }
+    .portrait-badge .value { font-size: 15px; }
+  }
+
+  /* ─── SECTION GENERIC ─── */
+  section { position: relative; }
+
+  .section-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 120px 40px;
+  }
+
+  @media (max-width: 720px) {
+    .section-inner { padding: 80px 24px; }
+  }
+
+  .eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    background: var(--whatsapp);
-    color: #fff;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 18px;
+    font-size: 11px;
+    letter-spacing: 0.32em;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 22px 56px;
-    border-radius: 100px;
-    text-decoration: none;
-    box-shadow: 0 8px 32px rgba(37,211,102,0.35);
-    position: relative;
-    z-index: 2;
-    transition: transform 0.2s;
+    font-weight: 600;
+    color: var(--rose);
+    margin-bottom: 24px;
   }
 
-  .cta-final:hover { transform: translateY(-2px); }
-  .cta-final svg { width: 24px; height: 24px; fill: #fff; }
+  .eyebrow::before {
+    content: '';
+    width: 32px; height: 1px;
+    background: var(--rose);
+  }
+
+  /* ─── PROMESSA / PROBLEMA ─── */
+  .promessa {
+    background: var(--ivory);
+    text-align: center;
+  }
+
+  .promessa-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(28px, 4.4vw, 52px);
+    line-height: 1.18;
+    color: var(--wine);
+    max-width: 880px;
+    margin: 0 auto 36px;
+    letter-spacing: -0.015em;
+  }
+
+  .promessa-quote em {
+    font-style: italic;
+    color: var(--rose);
+  }
+
+  .promessa p {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 0 auto 40px;
+    color: var(--rose-soft);
+  }
+
+  .ornament-line {
+    width: 60px; height: 1px;
+    background: currentColor;
+    opacity: 0.4;
+  }
+
+  .ornament svg { width: 18px; height: 18px; opacity: 0.7; }
+
+  /* ─── SOBRE ─── */
+  .sobre {
+    background: linear-gradient(180deg, var(--ivory) 0%, var(--cream) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sobre::before {
+    content: 'Mariana';
+    position: absolute;
+    top: 60px; left: -40px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(140px, 22vw, 280px);
+    color: var(--rose);
+    opacity: 0.05;
+    pointer-events: none;
+    letter-spacing: -0.04em;
+  }
+
+  .sobre-grid {
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: 80px;
+    align-items: center;
+    position: relative;
+  }
+
+  @media (max-width: 880px) {
+    .sobre-grid { grid-template-columns: 1fr; gap: 48px; }
+  }
+
+  .sobre-image {
+    position: relative;
+    aspect-ratio: 3/4;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 30px 70px rgba(107,26,58,0.22), 0 8px 24px rgba(107,26,58,0.1);
+  }
+
+  .sobre-image img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+    transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .sobre-image:hover img { transform: scale(1.04); }
+
+  .sobre-image-tag {
+    position: absolute;
+    top: 24px; left: 24px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--wine);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sobre-image-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--rose);
+  }
+
+  .sobre-text h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(36px, 4.5vw, 56px);
+    line-height: 1.04;
+    color: var(--wine);
+    margin-bottom: 28px;
+    letter-spacing: -0.015em;
+  }
+
+  .sobre-text h2 em {
+    font-style: italic;
+    color: var(--rose);
+  }
+
+  .sobre-text p {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+  }
+
+  .sobre-text p:first-of-type::first-letter {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 64px;
+    color: var(--rose);
+    float: left;
+    line-height: 0.8;
+    padding: 10px 12px 0 0;
+  }
+
+  .signature {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 36px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(155,48,96,0.15);
+  }
+
+  .signature-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 26px;
+    color: var(--wine);
+  }
+
+  .signature-meta {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--rose-soft);
+    font-weight: 600;
+  }
+
+  /* ─── SERVIÇOS ─── */
+  .servicos {
+    background: var(--wine-deep);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .servicos::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 80% 20%, rgba(196,104,122,0.18) 0%, transparent 50%),
+      radial-gradient(circle at 10% 90%, rgba(155,48,96,0.2) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .servicos-header {
+    text-align: center;
+    margin-bottom: 80px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .servicos-header .eyebrow { color: var(--blush); }
+  .servicos-header .eyebrow::before { background: var(--blush); }
+
+  .servicos-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(32px, 4.5vw, 56px);
+    line-height: 1.08;
+    color: #fff;
+    max-width: 700px;
+    margin: 0 auto;
+    letter-spacing: -0.015em;
+  }
+
+  .servicos-header h2 em { font-style: italic; color: var(--blush); }
+
+  .servicos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(244,167,188,0.15);
+    border: 1px solid rgba(244,167,188,0.15);
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (max-width: 880px) { .servicos-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .servicos-grid { grid-template-columns: 1fr; } }
+
+  .servico {
+    background: var(--wine-deep);
+    padding: 44px 32px;
+    transition: background 0.4s, transform 0.4s;
+    position: relative;
+  }
+
+  .servico:hover {
+    background: rgba(155,48,96,0.3);
+  }
+
+  .servico-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--blush);
+    margin-bottom: 16px;
+    opacity: 0.8;
+  }
+
+  .servico-icon {
+    width: 44px; height: 44px;
+    margin-bottom: 24px;
+    color: var(--blush);
+  }
+
+  .servico-icon svg {
+    width: 100%; height: 100%;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .servico h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 24px;
+    color: #fff;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+
+  .servico p {
+    font-size: 14px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.65);
+    font-weight: 300;
+  }
+
+  /* ─── DEPOIMENTOS ─── */
+  .depoimentos {
+    background: var(--cream);
+  }
+
+  .depoimentos-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .depoimentos-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(32px, 4.5vw, 52px);
+    line-height: 1.1;
+    color: var(--wine);
+    letter-spacing: -0.015em;
+  }
+
+  .depoimentos-header h2 em { font-style: italic; color: var(--rose); }
+
+  .depoimentos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  @media (max-width: 880px) { .depoimentos-grid { grid-template-columns: 1fr; } }
+
+  .depoimento {
+    background: #fff;
+    padding: 40px 32px;
+    border-radius: 4px;
+    box-shadow: 0 4px 24px rgba(107,26,58,0.06);
+    border: 1px solid rgba(155,48,96,0.08);
+    position: relative;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s;
+  }
+
+  .depoimento:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 56px rgba(107,26,58,0.14);
+  }
+
+  .depoimento::before {
+    content: '"';
+    position: absolute;
+    top: 12px; left: 24px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 80px;
+    color: var(--rose);
+    opacity: 0.18;
+    line-height: 1;
+  }
+
+  .stars {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 18px;
+    color: var(--gold);
+    position: relative;
+  }
+
+  .stars svg { width: 14px; height: 14px; fill: currentColor; }
+
+  .depoimento blockquote {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 19px;
+    line-height: 1.45;
+    color: var(--ink);
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .depoimento cite {
+    display: block;
+    font-style: normal;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--wine);
+    letter-spacing: 0.04em;
+  }
+
+  .depoimento .relation {
+    display: block;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  /* ─── COMO FUNCIONA ─── */
+  .como {
+    background: var(--ivory);
+  }
+
+  .como-header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+
+  .como-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(32px, 4.5vw, 52px);
+    line-height: 1.1;
+    color: var(--wine);
+    letter-spacing: -0.015em;
+  }
+
+  .como-header h2 em { font-style: italic; color: var(--rose); }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 48px;
+    position: relative;
+  }
+
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 32px;
+    left: 16%; right: 16%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--rose-soft), transparent);
+    opacity: 0.3;
+  }
+
+  @media (max-width: 720px) {
+    .steps { grid-template-columns: 1fr; gap: 40px; }
+    .steps::before { display: none; }
+  }
+
+  .step {
+    text-align: center;
+    position: relative;
+  }
+
+  .step-num {
+    width: 64px; height: 64px;
+    margin: 0 auto 24px;
+    background: var(--ivory);
+    border: 1px solid var(--rose);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 28px;
+    color: var(--rose);
+    position: relative;
+    z-index: 2;
+    transition: all 0.4s;
+  }
+
+  .step:hover .step-num {
+    background: var(--rose);
+    color: #fff;
+    transform: scale(1.08);
+  }
+
+  .step h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--wine);
+    margin-bottom: 12px;
+    letter-spacing: -0.005em;
+  }
+
+  .step p {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  /* ─── FAQ ─── */
+  .faq {
+    background: var(--cream-warm);
+  }
+
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  @media (max-width: 880px) {
+    .faq-grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+
+  .faq-head h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(34px, 4vw, 52px);
+    line-height: 1.05;
+    color: var(--wine);
+    margin-bottom: 20px;
+    letter-spacing: -0.015em;
+  }
+
+  .faq-head h2 em { font-style: italic; color: var(--rose); }
+
+  .faq-head p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .faq-item {
+    border-top: 1px solid rgba(155,48,96,0.15);
+    padding: 28px 0;
+    cursor: pointer;
+    transition: padding 0.3s;
+  }
+
+  .faq-item:last-child { border-bottom: 1px solid rgba(155,48,96,0.15); }
+
+  .faq-item summary {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--wine);
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary:hover { color: var(--rose); }
+
+  .faq-icon {
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    border: 1px solid var(--rose);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--rose);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s;
+    position: relative;
+  }
+
+  .faq-icon::before, .faq-icon::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+    transition: transform 0.4s;
+  }
+
+  .faq-icon::before { width: 12px; height: 1px; }
+  .faq-icon::after { width: 1px; height: 12px; }
+
+  .faq-item[open] .faq-icon {
+    background: var(--rose);
+    color: #fff;
+    transform: rotate(180deg);
+  }
+
+  .faq-item[open] .faq-icon::after { transform: scaleY(0); }
+
+  .faq-item p {
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    max-width: 560px;
+  }
+
+  /* ─── CTA FINAL ─── */
+  .cta-final {
+    background: var(--wine);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .cta-final::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(244,167,188,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(74,15,39,0.5) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .cta-final::after {
+    content: '';
+    position: absolute;
+    width: 700px; height: 700px;
+    border: 1px solid rgba(244,167,188,0.12);
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .cta-final .section-inner {
+    position: relative;
+    z-index: 2;
+  }
+
+  .cta-final .ornament { color: var(--blush); }
+
+  .cta-final h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(40px, 6vw, 78px);
+    line-height: 1.02;
+    color: #fff;
+    margin-bottom: 28px;
+    letter-spacing: -0.02em;
+  }
+
+  .cta-final h2 em {
+    font-style: italic;
+    color: var(--blush);
+  }
+
+  .cta-final p {
+    font-size: 17px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.7);
+    max-width: 480px;
+    margin: 0 auto 48px;
+    font-weight: 300;
+  }
 
   /* ─── FOOTER ─── */
   footer {
-    background: #6B1A3A;
-    padding: 28px 24px;
+    background: var(--wine-deep);
+    padding: 48px 40px;
     text-align: center;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 13px;
-    color: rgba(255,255,255,0.35);
+    color: rgba(255,255,255,0.5);
   }
+
+  .footer-mark {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 12px;
+  }
+
+  .footer-meta {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .footer-line {
+    width: 40px; height: 1px;
+    background: rgba(244,167,188,0.3);
+    margin: 20px auto;
+  }
+
 </style>
 </head>
 <body>
 
 <!-- WhatsApp flutuante -->
-<a class="wa-float" href="https://wa.me/5531989756107?text=quero%20saber%20mais%20detalhes%20sobre%20o%20seu%20trabalho%20de%20cuidadora" target="_blank">
-  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-  Agende uma conversa
+<a class="wa-float" href="https://wa.me/5531989756107?text=quero%20saber%20mais%20detalhes%20sobre%20o%20seu%20trabalho%20de%20cuidadora" target="_blank" data-wa>
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  Conversar agora
 </a>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-badge">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-    Técnica em Enfermagem
-  </div>
-  <h1>Seu familiar está em<br><span>boas mãos.</span></h1>
-  <p>Cuidado domiciliar completo para idosos com formação técnica em enfermagem. Responsabilidade e carinho em cada detalhe.</p>
-  <a class="hero-cta" href="https://wa.me/5531989756107?text=quero%20saber%20mais%20detalhes%20sobre%20o%20seu%20trabalho%20de%20cuidadora" target="_blank">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-    Agende uma conversa
-  </a>
-</section>
+<header class="hero">
+  <nav class="nav">
+    <div class="nav-mark">Mariana<span></span>Caroline</div>
+    <div class="nav-meta">Belo Horizonte · BH</div>
+  </nav>
 
-<!-- PROBLEMA -->
-<section class="section-problema">
-  <h2>Você trabalha o dia todo e fica com aquela preocupação no fundo da cabeça.</h2>
-  <p>E se meu pai cair? E se minha mãe não tomar o remédio certo? Essa preocupação constante não precisa fazer parte da sua rotina.</p>
+  <div class="hero-grid">
+    <div>
+      <div class="hero-eyebrow reveal">Técnica em Enfermagem</div>
+      <h1 class="serif reveal" style="transition-delay: 0.1s">
+        Seu familiar<br>
+        em <em>boas mãos</em>,<br>
+        a sua paz<br>
+        de volta.
+      </h1>
+      <p class="hero-lede reveal" style="transition-delay: 0.2s">
+        Cuidado domiciliar para idosos conduzido por profissional com formação técnica em enfermagem. Atenção, presença e responsabilidade que se sentem na primeira conversa.
+      </p>
+      <div class="hero-actions reveal" style="transition-delay: 0.3s">
+        <a class="btn-primary" href="https://wa.me/5531989756107?text=quero%20saber%20mais%20detalhes%20sobre%20o%20seu%20trabalho%20de%20cuidadora" target="_blank" data-wa>
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          Agendar uma conversa
+        </a>
+        <span class="hero-availability">
+          <span class="pulse-dot"></span>
+          Disponível esta semana
+        </span>
+      </div>
+    </div>
+
+    <div class="hero-portrait reveal" style="transition-delay: 0.15s">
+      <img src="mariana.png" alt="Mariana Caroline, técnica em enfermagem" loading="eager">
+      <div class="portrait-badge">
+        <div class="label">Formação</div>
+        <div class="value serif">Técnica em<br>Enfermagem</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- PROMESSA -->
+<section class="promessa">
+  <div class="section-inner">
+    <div class="ornament reveal">
+      <span class="ornament-line"></span>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L13.5 8.5 20 10L13.5 11.5 12 18 10.5 11.5 4 10 10.5 8.5z"/></svg>
+      <span class="ornament-line"></span>
+    </div>
+    <h2 class="promessa-quote reveal">
+      Você passa o dia trabalhando, mas a cabeça nunca desliga.<br>
+      <em>E se algo acontecer enquanto ninguém está em casa?</em>
+    </h2>
+    <p class="reveal">Essa preocupação não precisa ser companhia diária. Existe uma forma de sair pra trabalhar sabendo que quem você ama está sendo cuidado de verdade.</p>
+  </div>
 </section>
 
 <!-- SOBRE -->
-<section class="section-sobre">
-  <div class="sobre-inner">
-    <div class="sobre-foto">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      Foto em breve
-    </div>
-    <div class="sobre-texto">
-      <p class="label">Quem vai cuidar</p>
-      <h2>Mariana Caroline</h2>
-      <p>Formada em Técnica de Enfermagem, escolhi essa profissão porque sei na prática o quanto é difícil deixar um familiar em casa e precisar ir trabalhar. Cuido de cada pessoa como se fosse da minha própria família.</p>
-      <div class="credencial-badge">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-        Técnica em Enfermagem — Formação Oficial
+<section class="sobre">
+  <div class="section-inner">
+    <div class="sobre-grid">
+      <div class="sobre-image reveal">
+        <img src="mariana.png" alt="Mariana Caroline em ambiente de cuidado">
+        <span class="sobre-image-tag">Quem cuida</span>
+      </div>
+
+      <div class="sobre-text">
+        <div class="eyebrow reveal">Conheça a Mariana</div>
+        <h2 class="reveal" style="transition-delay: 0.1s">Cuido como se fosse <em>da minha família.</em></h2>
+        <p class="reveal" style="transition-delay: 0.15s">
+          Formada em Técnica de Enfermagem, escolhi essa profissão porque sei na pele o quanto pesa deixar um familiar em casa e precisar ir trabalhar. Já vivi essa dúvida, esse aperto no peito.
+        </p>
+        <p class="reveal" style="transition-delay: 0.2s">
+          Por isso, quando cuido de alguém, não estou só cumprindo função técnica. Estou criando vínculo, observando detalhes, conversando, ouvindo histórias. Cada idoso tem um ritmo, uma memória, uma manha. E é isso que faz o cuidado funcionar de verdade.
+        </p>
+        <div class="signature reveal" style="transition-delay: 0.25s">
+          <div>
+            <div class="signature-name">Mariana Caroline</div>
+            <div class="signature-meta">Técnica em Enfermagem · BH</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- SERVIÇOS -->
-<section class="section-servicos">
-  <p class="label">O que está incluso</p>
-  <h2>Cuidado completo do início ao fim</h2>
-  <div class="servicos-grid">
-    <div class="servico-card">
-      <div class="servico-icon">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-      </div>
-      <div>
+<section class="servicos">
+  <div class="section-inner">
+    <div class="servicos-header">
+      <div class="eyebrow reveal">O que está incluso</div>
+      <h2 class="reveal" style="transition-delay: 0.1s">Um cuidado que cobre o que <em>realmente importa.</em></h2>
+    </div>
+
+    <div class="servicos-grid">
+      <div class="servico reveal">
+        <div class="servico-num">01</div>
+        <div class="servico-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        </div>
         <h3>Medicação no horário</h3>
-        <p>Administração correta e no horário certo, sem falhas.</p>
+        <p>Administração correta, no horário certo, sem esquecimentos. Acompanhamento de prescrições e controle de doses.</p>
       </div>
-    </div>
-    <div class="servico-card">
-      <div class="servico-icon">
-        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+
+      <div class="servico reveal" style="transition-delay: 0.08s">
+        <div class="servico-num">02</div>
+        <div class="servico-icon">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+        <h3>Companhia e escuta</h3>
+        <p>Presença atenta, conversa, leitura, jogos de memória. Ninguém envelhece bem sozinho.</p>
       </div>
-      <div>
-        <h3>Companhia e cuidado emocional</h3>
-        <p>Presença, atenção e conversa. Ninguém fica sozinho.</p>
-      </div>
-    </div>
-    <div class="servico-card">
-      <div class="servico-icon">
-        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      </div>
-      <div>
+
+      <div class="servico reveal" style="transition-delay: 0.16s">
+        <div class="servico-num">03</div>
+        <div class="servico-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 014 4v3a4 4 0 11-8 0V6a4 4 0 014-4zM6 21v-1a6 6 0 016-6h0a6 6 0 016 6v1"/></svg>
+        </div>
         <h3>Higiene e banho</h3>
-        <p>Cuidado com higiene pessoal feito com respeito e dignidade.</p>
+        <p>Cuidado pessoal feito com respeito, paciência e preservação total da dignidade do idoso.</p>
       </div>
-    </div>
-    <div class="servico-card">
-      <div class="servico-icon">
-        <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+
+      <div class="servico reveal" style="transition-delay: 0.24s">
+        <div class="servico-num">04</div>
+        <div class="servico-icon">
+          <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        </div>
+        <h3>Alimentação assistida</h3>
+        <p>Auxílio nas refeições, atenção a restrições e acompanhamento de hidratação ao longo do dia.</p>
       </div>
-      <div>
-        <h3>Refeições</h3>
-        <p>Auxílio na alimentação no horário certo.</p>
+
+      <div class="servico reveal" style="transition-delay: 0.32s">
+        <div class="servico-num">05</div>
+        <div class="servico-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>Plantões dia e noite</h3>
+        <p>Disponibilidade flexível para diaristas, períodos prolongados ou cuidado noturno conforme a necessidade.</p>
       </div>
-    </div>
-    <div class="servico-card">
-      <div class="servico-icon">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      </div>
-      <div>
-        <h3>Cuidados diurnos e noturnos</h3>
-        <p>Disponível para plantões de dia ou de noite conforme a necessidade.</p>
-      </div>
-    </div>
-    <div class="servico-card">
-      <div class="servico-icon">
-        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.16 6.16l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
-      </div>
-      <div>
-        <h3>Comunicação com a família</h3>
-        <p>Atualizações regulares sobre o estado do seu familiar.</p>
+
+      <div class="servico reveal" style="transition-delay: 0.4s">
+        <div class="servico-num">06</div>
+        <div class="servico-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        </div>
+        <h3>Família sempre informada</h3>
+        <p>Relatos diários sobre humor, alimentação, medicação e qualquer mudança que mereça atenção.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- COMO FUNCIONA -->
-<section class="section-como">
-  <p class="label">É simples assim</p>
-  <h2>Como começar</h2>
-  <div class="steps">
-    <div class="step">
-      <div class="step-number">1</div>
-      <h3>Entre em contato</h3>
-      <p>Manda uma mensagem no WhatsApp e conversamos sobre a situação do seu familiar.</p>
+<section class="como">
+  <div class="section-inner">
+    <div class="como-header">
+      <div class="eyebrow reveal">Em três passos</div>
+      <h2 class="reveal" style="transition-delay: 0.1s">Simples começar, <em>tranquilo continuar.</em></h2>
     </div>
-    <div class="step">
-      <div class="step-number">2</div>
-      <h3>Combinamos os detalhes</h3>
-      <p>Alinhamos horários, rotina e tudo que o idoso precisa para o cuidado ser perfeito.</p>
-    </div>
-    <div class="step">
-      <div class="step-number">3</div>
-      <h3>Começa o cuidado</h3>
-      <p>Você vai trabalhar com tranquilidade sabendo que seu familiar está em boas mãos.</p>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">I</div>
+        <h3>Você manda mensagem</h3>
+        <p>Uma conversa no WhatsApp pra entender a rotina e necessidades do seu familiar.</p>
+      </div>
+      <div class="step reveal" style="transition-delay: 0.1s">
+        <div class="step-num">II</div>
+        <h3>Alinhamos detalhes</h3>
+        <p>Horários, frequência, particularidades. Tudo combinado antes do primeiro dia.</p>
+      </div>
+      <div class="step reveal" style="transition-delay: 0.2s">
+        <div class="step-num">III</div>
+        <h3>O cuidado começa</h3>
+        <p>Você volta a trabalhar e a viver com a tranquilidade de quem sabe que tem alguém de confiança em casa.</p>
+      </div>
     </div>
   </div>
 </section>
 
-
 <!-- FAQ -->
-<section class="section-faq">
-  <p class="label">Dúvidas frequentes</p>
-  <h2>Perguntas comuns</h2>
-  <div class="faq-list">
-    <div class="faq-item">
-      <h3>Qual a diferença de uma cuidadora com formação técnica?</h3>
-      <p>Uma técnica em enfermagem tem treinamento específico para administrar medicamentos corretamente, identificar sinais de emergência e prestar primeiros socorros. Vai muito além do cuidado básico.</p>
-    </div>
-    <div class="faq-item">
-      <h3>Você atende em qual região?</h3>
-      <p>Atendo na região de Belo Horizonte e entorno. Entre em contato para confirmar sua localidade.</p>
-    </div>
-    <div class="faq-item">
-      <h3>Como funciona o cuidado mensal?</h3>
-      <p>A gente conversa sobre a rotina do seu familiar, os dias e horários necessários e monta um plano personalizado. O valor mensal é combinado conforme a demanda.</p>
-    </div>
-    <div class="faq-item">
-      <h3>É possível começar rápido?</h3>
-      <p>Sim. Dependendo da disponibilidade, consigo começar ainda nessa semana. Manda mensagem e a gente vê juntos.</p>
+<section class="faq">
+  <div class="section-inner">
+    <div class="faq-grid">
+      <div class="faq-head">
+        <div class="eyebrow reveal">Dúvidas comuns</div>
+        <h2 class="reveal" style="transition-delay: 0.1s">Antes de você <em>perguntar.</em></h2>
+        <p class="reveal" style="transition-delay: 0.15s">Se ficou alguma dúvida que não está aqui, é só mandar mensagem. Respondo direto, sem rodeio.</p>
+      </div>
+
+      <div class="faq-list">
+        <details class="faq-item reveal">
+          <summary>Qual a diferença de uma cuidadora com formação técnica? <span class="faq-icon"></span></summary>
+          <p>Uma técnica em enfermagem tem treinamento específico pra administrar medicamentos corretamente, identificar sinais de emergência, prestar primeiros socorros e dialogar com a equipe médica. Vai muito além do cuidado básico de companhia.</p>
+        </details>
+        <details class="faq-item reveal" style="transition-delay: 0.05s">
+          <summary>Você atende em qual região? <span class="faq-icon"></span></summary>
+          <p>Atendo em Belo Horizonte e região metropolitana. Manda mensagem com o bairro pra confirmar disponibilidade na sua localidade.</p>
+        </details>
+        <details class="faq-item reveal" style="transition-delay: 0.1s">
+          <summary>Como funciona o cuidado mensal? <span class="faq-icon"></span></summary>
+          <p>A gente conversa sobre a rotina do seu familiar, os dias e horários necessários, e monto um plano personalizado. O valor mensal é combinado conforme a demanda específica.</p>
+        </details>
+        <details class="faq-item reveal" style="transition-delay: 0.15s">
+          <summary>É possível começar essa semana? <span class="faq-icon"></span></summary>
+          <p>Sim. Dependendo da disponibilidade da agenda, consigo iniciar ainda essa semana. Quanto antes você mandar mensagem, mais rápido a gente alinha tudo.</p>
+        </details>
+        <details class="faq-item reveal" style="transition-delay: 0.2s">
+          <summary>Atende plantão noturno? <span class="faq-icon"></span></summary>
+          <p>Atendo. Plantões diurnos, noturnos ou períodos integrais. A combinação depende da necessidade do idoso e da família.</p>
+        </details>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- CTA FINAL -->
-<section class="section-cta">
-  <h2>Pronto para ter<br><span>tranquilidade de verdade?</span></h2>
-  <p>Uma conversa no WhatsApp resolve. Sem compromisso.</p>
-  <a class="cta-final" href="https://wa.me/5531989756107?text=quero%20saber%20mais%20detalhes%20sobre%20o%20seu%20trabalho%20de%20cuidadora" target="_blank">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-    Agende uma conversa
-  </a>
+<section class="cta-final">
+  <div class="section-inner">
+    <div class="ornament reveal">
+      <span class="ornament-line"></span>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L13.5 8.5 20 10L13.5 11.5 12 18 10.5 11.5 4 10 10.5 8.5z"/></svg>
+      <span class="ornament-line"></span>
+    </div>
+    <h2 class="reveal">Sua tranquilidade<br><em>começa com uma conversa.</em></h2>
+    <p class="reveal" style="transition-delay: 0.1s">Sem compromisso. Sem cobrança. Só um papo pra entender o que você precisa e ver se faz sentido a gente trabalhar junto.</p>
+    <div class="reveal" style="transition-delay: 0.2s">
+      <a class="btn-primary" href="https://wa.me/5531989756107?text=quero%20saber%20mais%20detalhes%20sobre%20o%20seu%20trabalho%20de%20cuidadora" target="_blank" data-wa>
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Chamar Mariana no WhatsApp
+      </a>
+    </div>
+  </div>
 </section>
 
 <footer>
-  © 2026 Mariana Caroline — Cuidadora de Idosos · Técnica em Enfermagem
+  <div class="footer-mark">Mariana Caroline</div>
+  <div class="footer-line"></div>
+  <div class="footer-meta">© 2026 · Cuidadora de Idosos · Técnica em Enfermagem · BH</div>
 </footer>
 
 <script>
-  document.querySelectorAll('a[href*="wa.me"]').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      fbq('track', 'Lead');
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Meta Pixel Lead event
+  document.querySelectorAll('[data-wa]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (typeof fbq !== 'undefined') fbq('track', 'Lead');
     });
   });
 </script>

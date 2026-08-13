@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Cockpit Tráfego — Cover 300x250</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1a1a1f;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    gap: 32px;
+    flex-wrap: wrap;
+    font-family: -apple-system, sans-serif;
+  }
+  .label {
+    width: 100%;
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  .cover {
+    width: 300px;
+    height: 250px;
+    background: #0A0A0F;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Fraunces', serif;
+    color: #fff;
+    padding: 22px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(0, 217, 255, 0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -60px;
+    left: -60px;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(176, 38, 255, 0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .top {
+    position: relative;
+    z-index: 2;
+  }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    color: #00D9FF;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .title {
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .title em {
+    font-style: italic;
+    color: #00D9FF;
+    font-weight: 500;
+  }
+  .bottom {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #A8A8B8;
+    line-height: 1.4;
+    max-width: 170px;
+    font-style: normal;
+  }
+  .price-block {
+    text-align: right;
+  }
+  .price-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5px;
+    color: #A8A8B8;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 2px;
+  }
+  .price {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 38px;
+    color: #00D9FF;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  /* Versão 2: minimalista total */
+  .cover.v2::before, .cover.v2::after { display: none; }
+  .cover.v2 .title { font-size: 28px; }
+  .cover.v2 .terminal-mock {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, transparent 0%, transparent 60%, rgba(10,10,15,0.95) 100%);
+  }
+
+  /* Versão 3: terminal mockup */
+  .cover.v3 {
+    padding: 0;
+    justify-content: stretch;
+  }
+  .cover.v3::before, .cover.v3::after { display: none; }
+  .term {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .term__bar {
+    background: rgba(0,0,0,0.5);
+    padding: 8px 12px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .term__dot { width: 8px; height: 8px; border-radius: 50%; }
+  .term__dot.r { background: #FF5F57; }
+  .term__dot.y { background: #FEBC2E; }
+  .term__dot.g { background: #28C840; }
+  .term__title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: #6B6B7A;
+    margin-left: 10px;
+  }
+  .term__body {
+    flex: 1;
+    padding: 14px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    line-height: 1.55;
+    color: #E8E8F0;
+    position: relative;
+  }
+  .term__body .prompt { color: #00D9FF; }
+  .term__body .ok { color: #00D9FF; }
+  .term__brand {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: #00D9FF;
+  }
+</style>
+</head>
+<body>
+
+<div class="label">VERSÃO A — Tipográfica</div>
+<div class="cover">
+  <div class="top">
+    <div class="tag">COCKPIT TRÁFEGO</div>
+    <h1 class="title">Opere Meta, Google e GA4 <em>conversando.</em></h1>
+  </div>
+  <div class="bottom">
+    <div class="sub">5 skills · Claude Code · pagamento único</div>
+    <div class="price-block">
+      <div class="price-label">apenas</div>
+      <div class="price">R$67</div>
+    </div>
+  </div>
+</div>
+
+<div class="label">VERSÃO B — Foco no preço</div>
+<div class="cover v2">
+  <div class="top">
+    <div class="tag">COCKPIT TRÁFEGO</div>
+    <h1 class="title">5 skills pro <em>Claude Code.</em><br/>Setup em 12 min.</h1>
+  </div>
+  <div class="bottom">
+    <div class="sub">Meta · Google · GA4<br/>Pagamento único</div>
+    <div class="price-block">
+      <div class="price-label">R$</div>
+      <div class="price" style="font-size: 56px;">67</div>
+    </div>
+  </div>
+</div>
+
+<div class="label">VERSÃO C — Terminal mockup</div>
+<div class="cover v3">
+  <div class="term">
+    <div class="term__bar">
+      <span class="term__dot r"></span>
+      <span class="term__dot y"></span>
+      <span class="term__dot g"></span>
+      <span class="term__title">cockpit · ~/clientes</span>
+    </div>
+    <div class="term__body">
+<span class="prompt">&gt;</span> faz diagnóstico do Caio
+
+<span class="ok">✓</span> Meta Ads
+<span class="ok">✓</span> Google Ads
+<span class="ok">✓</span> GA4
+
+Relatório pronto em 28s.
+
+      <div class="term__brand">Cockpit Tráfego — R$67</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

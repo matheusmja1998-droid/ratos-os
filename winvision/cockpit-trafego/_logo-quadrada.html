@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 600px; height: 600px; overflow: hidden; }
+  body {
+    background: #0A0A0F;
+    font-family: 'Fraunces', serif;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  body::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(0, 217, 255, 0.18) 0%, rgba(176, 38, 255, 0.10) 40%, transparent 70%);
+    pointer-events: none;
+  }
+  .wrap {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 40px;
+  }
+  .mark {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #00D9FF;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .mark::before, .mark::after {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #00D9FF);
+  }
+  .mark::after {
+    background: linear-gradient(90deg, #00D9FF, transparent);
+  }
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 120px;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .logo em {
+    font-style: italic;
+    color: #00D9FF;
+    font-weight: 500;
+  }
+  .subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: #A8A8B8;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-top: 30px;
+  }
+  .ornament {
+    margin-top: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .ornament__line {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #00D9FF, transparent);
+    opacity: 0.6;
+  }
+  .ornament__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #00D9FF;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="mark">CABINE DE TRÁFEGO</div>
+    <div class="logo">Co<em>ckp</em>it</div>
+    <div class="ornament">
+      <span class="ornament__line"></span>
+      <span class="ornament__dot"></span>
+      <span class="ornament__line"></span>
+    </div>
+    <div class="subtitle">META · GOOGLE · GA4</div>
+  </div>
+</body>
+</html>

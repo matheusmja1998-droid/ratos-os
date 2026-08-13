@@ -1,0 +1,16 @@
+# Google Ads Ratos — Cadastro de Contas
+# O Claude le este arquivo para resolver nomes de clientes para customer IDs.
+#
+# Formato:
+# clientes:
+#   - nome: "Nome do Cliente"
+#     customer_id: "1234567890"  # sem hifens
+#     notas: "Opcional — qualquer observacao"
+
+clientes:
+  - nome: "Dr. Fábio Freire"
+    customer_id: "5223015558"
+    notas: "Clínica IOT — ortopedia, Varginha (cliente L.M Agência)"
+  - nome: "Escola Avicultores"
+    customer_id: "8216314513"
+    notas: "Escola de avicultores — cliente novo, ainda não tem dossiê/pasta"

@@ -1,0 +1,308 @@
+"""
+Regras automaticas de CAPTACAO DE LEAD do Caio (auto-executa, avisa no Telegram).
+Identifica campanha de captacao por "[LEADS]" no nome (IE30 usa OUTCOME_SALES
+otimizando COMPLETE_REGISTRATION). Exclui CHECKLIST (venda) e PRESENCIAL.
+Lead = COMPLETE_REGISTRATION do Gerenciador (lead nao infla). CPL = gasto/leads.
+
+Tipos (pelo nome): TESTE_DE_CRIATIVO (ABO) | ESCALA / PUBLICO_QUENTE (CBO).
+METAS: ideal R$3,00 | teto R$3,80.
+
+== TESTE DE CRIATIVO (avalia por dia; SO julga depois de gastar R$15,20 no DIA) ==
+  - veterano (>=2 dias e CPL bom ONTEM) com dia ruim hoje -> alerta; reavalia amanha; 2 dias seguidos ruim -> pausa
+  - sem tracao: gastou >=R$15,20 hoje com 0-1 lead -> pausa
+  - caro (>=2 leads, CPL>3,80): 1o dia -> espera +24h; 2o dia (age>=1) e ja gastou R$15,20 -> pausa
+  - se nao gastou R$15,20 no dia ainda -> NAO julga, espera acumular
+  - toda pausa no teste = anuncio E conjunto
+
+== CBO (escala + publico quente; verifica a cada 6h) ==
+  - criativo RUIM irrelevante que estourou hoje -> pausa o criativo + reduz 10%
+  - campanha acima do teto -> reduz orcamento na SEQUENCIA (1a vez 10%, 2a vez 30%, dps 10%)
+    + atencao; se continuar acima nas proximas janelas, reduz de novo (segue a sequencia);
+    se normalizar -> sai da atencao
+  - Meia-noite (job orcamento): CPL <3,00 -> +30% | 3,00-3,80 -> mantem | >3,80 -> reduz (mesma sequencia)
+
+SEQUENCIA DE REDUCAO (Matheus 19/06): 1a reducao do dia = 10% (inicio/gasto baixo),
+2a = 30% (ja gastou mais e segue caro), 3a em diante = 10%. (Caso B = sempre 10% e conta.)
+Convencao de centavos: novo valor + 2 primeiros digitos do antigo nos centavos.
+
+Uso: python3 regras_captacao_caio.py --job poda|orcamento [--dry]
+"""
+import os, sys, json, re, requests
+from datetime import datetime
+import checklist_caio as cc
+
+DRY = "--dry" in sys.argv
+JOB = sys.argv[sys.argv.index("--job") + 1] if "--job" in sys.argv else "poda"
+
+IDEAL = 3.00
+TETO = 3.80
+GATE = 15.20          # gasto minimo no DIA pra avaliar/cortar criativo no teste
+NEW_AGE = 2           # < 2 dias de vida = "novo"
+JUNK_SHARE = 0.05     # < 5% do gasto vitalicio da campanha = irrelevante no volume
+SPIKE_SPEND = 10.0    # gasto hoje pra considerar que "estourou"
+
+API = cc.API
+ACCT = cc.ACCT
+TOKEN = cc._token()
+TZ = cc.TZ
+D = cc._datas()
+HOJE = D["hoje"]["iso"]
+ONTEM = D["ontem"]["iso"]
+HOJE_BR = D["hoje"]["br"]
+ESTADO = os.getenv("REGRAS_CAPTACAO_ESTADO", "/root/agente/dados/caio/regras_captacao_estado.json")
+
+
+def _leads(actions):
+    d = {a["action_type"]: float(a["value"]) for a in (actions or [])}
+    return int(d.get("offsite_complete_registration_add_meta_leads")
+               or d.get("complete_registration") or d.get("lead") or 0)
+
+
+def conv_budget(novo_reais, antigo_reais):
+    cents = int(str(int(antigo_reais))[:2])
+    return int(round(novo_reais)) * 100 + cents
+
+
+def clabel(name):
+    nu = (name or "").upper()
+    tipo = ("TESTE" if "TESTE_DE_CRIATIVO" in nu else "ESCALA" if "ESCALA" in nu
+            else "PUB.QUENTE" if "PUBLICO_QUENTE" in nu else "?")
+    m = re.search(r"\[(C\d+)\]", name or "")
+    return f"{tipo} {m.group(1)}" if m else tipo
+
+
+def lead_campaigns():
+    r = requests.get(f"{API}/{ACCT}/campaigns", params={
+        "fields": "name,effective_status,daily_budget",
+        "filtering": json.dumps([{"field": "effective_status", "operator": "IN", "value": ["ACTIVE"]}]),
+        "limit": 200, "access_token": TOKEN}, timeout=30)
+    out = []
+    for c in r.json().get("data", []):
+        nu = (c.get("name") or "").upper()
+        if "IE30" not in nu or "[LEADS]" not in nu or "CHECKLIST" in nu or "PRESENCIAL" in nu:
+            continue
+        db = c.get("daily_budget")
+        tipo = ("teste" if "TESTE_DE_CRIATIVO" in nu
+                else "cbo" if ("ESCALA" in nu or "PUBLICO_QUENTE" in nu) else "outro")
+        out.append({"id": c["id"], "name": c["name"], "tag": clabel(c["name"]),
+                    "cbo": db is not None, "budget": float(db) / 100 if db else None, "tipo": tipo})
+    return out
+
+
+def ads_full(cid):
+    r = requests.get(f"{API}/{cid}/ads", params={
+        "fields": "id,name,effective_status,adset_id,created_time", "limit": 200, "access_token": TOKEN}, timeout=30)
+    out = {}
+    for a in r.json().get("data", []):
+        if a.get("effective_status") not in ("ACTIVE", "PENDING_REVIEW", "IN_PROCESS"):
+            continue
+        try:
+            age = (datetime.now(TZ).date() - datetime.fromisoformat(a["created_time"]).date()).days
+        except Exception:
+            age = 99
+        out[a["id"]] = {"name": a["name"], "adset": a.get("adset_id"), "age": age}
+    return out
+
+
+def ad_insights(cid, when):
+    params = {"level": "ad", "fields": "ad_id,spend,actions", "limit": 300, "access_token": TOKEN}
+    if when == "maximum":
+        params["date_preset"] = "maximum"
+    else:
+        params["time_range"] = json.dumps({"since": when, "until": when})
+    r = requests.get(f"{API}/{cid}/insights", params=params, timeout=60)
+    out = {}
+    for x in r.json().get("data", []):
+        sp = float(x.get("spend", 0)); ld = _leads(x.get("actions"))
+        out[x["ad_id"]] = {"spend": sp, "leads": ld, "cpl": sp / ld if ld else None}
+    return out
+
+
+def camp_today(cid):
+    r = requests.get(f"{API}/{cid}/insights", params={
+        "level": "campaign", "fields": "spend,actions",
+        "time_range": json.dumps({"since": HOJE, "until": HOJE}), "access_token": TOKEN}, timeout=60)
+    d = r.json().get("data", [])
+    if not d:
+        return 0.0, 0, None
+    sp = float(d[0].get("spend", 0)); ld = _leads(d[0].get("actions"))
+    return sp, ld, (sp / ld if ld else None)
+
+
+def set_budget(cid, cents):
+    if DRY:
+        return True
+    return requests.post(f"{API}/{cid}", data={"daily_budget": cents, "access_token": TOKEN}, timeout=30).json().get("success")
+
+
+def pause(oid):
+    if DRY:
+        return True
+    return requests.post(f"{API}/{oid}", data={"status": "PAUSED", "access_token": TOKEN}, timeout=30).json().get("success")
+
+
+def load_state():
+    st = {}
+    if os.path.exists(ESTADO):
+        try:
+            st = json.load(open(ESTADO))
+        except Exception:
+            st = {}
+    if st.get("dia") != HOJE:        # vira o dia -> zera contador de reducoes
+        st["dia"] = HOJE
+        st["reducoes"] = {}
+    st.setdefault("reducoes", {})
+    st.setdefault("alerta_teste", {})
+    st.setdefault("atencao_cbo", {})
+    return st
+
+
+def save_state(st):
+    if DRY:
+        return
+    os.makedirs(os.path.dirname(ESTADO), exist_ok=True)
+    json.dump(st, open(ESTADO, "w"), ensure_ascii=False)
+
+
+def pct_reducao(cid, st):
+    # sequencia: 1a reducao 10% -> 2a 30% -> 3a em diante 10%
+    n = st["reducoes"].get(cid, 0)
+    return 10 if n == 0 else 30 if n == 1 else 10
+
+
+def reduzir(c, st, motivo, pct=None):
+    old = c["budget"]
+    p = pct if pct is not None else pct_reducao(c["id"], st)
+    novo = round(old * (1 - p / 100))
+    cents = conv_budget(novo, old)
+    ok = set_budget(c["id"], cents)
+    st["reducoes"][c["id"]] = st["reducoes"].get(c["id"], 0) + 1
+    return f"⬇️ -{p}% <b>{c['tag']}</b>: R${old:.0f}→R${novo:.0f} ({motivo}){' [DRY]' if DRY else ''}{'' if ok else ' [FALHOU]'}"
+
+
+# ---------------- JOB PODA (teste diario + CBO 6h) ----------------
+def job_poda(st):
+    avisos = []
+    for c in lead_campaigns():
+        ads = ads_full(c["id"])
+        if not ads:
+            continue
+        T = ad_insights(c["id"], HOJE)
+        n_ativos = len(ads)
+
+        if c["tipo"] == "teste":
+            Y = ad_insights(c["id"], ONTEM)
+            for aid, a in ads.items():
+                t = T.get(aid, {"spend": 0, "leads": 0, "cpl": None})
+                y = Y.get(aid, {"spend": 0, "leads": 0, "cpl": None})
+                nome = a["name"]
+                veterano = a["age"] >= NEW_AGE and y["cpl"] is not None and y["cpl"] <= TETO
+                gasto_ok = t["spend"] >= GATE
+                # C) veterano bom (foi bem ONTEM) com dia ruim hoje
+                if veterano:
+                    if gasto_ok and t["cpl"] is not None and t["cpl"] > TETO:
+                        if st["alerta_teste"].get(aid) and st["alerta_teste"][aid] != HOJE:
+                            if n_ativos <= 1:
+                                avisos.append(f"⚠️ <b>{nome}</b> ({c['tag']}) 2º dia ruim mas é o último. NÃO pausei.")
+                            else:
+                                pause(aid); pause(a["adset"]); n_ativos -= 1
+                                avisos.append(f"🚫 TESTE: pausei veterano <b>{nome}</b> — 2 dias ruins seguidos (CPL hoje R${t['cpl']:.2f}){' [DRY]' if DRY else ''}")
+                            st["alerta_teste"].pop(aid, None)
+                        elif not st["alerta_teste"].get(aid):
+                            st["alerta_teste"][aid] = HOJE
+                            avisos.append(f"🔔 ALERTA <b>{nome}</b> ({c['tag']}) — veterano com dia ruim (CPL R${t['cpl']:.2f}, R${t['spend']:.0f} hoje). Reavalio amanhã.")
+                    elif st["alerta_teste"].get(aid) and t["cpl"] is not None and t["cpl"] <= TETO:
+                        st["alerta_teste"].pop(aid, None)
+                        avisos.append(f"✅ <b>{nome}</b> normalizou (CPL R${t['cpl']:.2f}), tirei o alerta.")
+                    continue
+                # nao-veterano: SO julga depois de gastar R$15,20 no dia
+                if not gasto_ok:
+                    continue
+                # A) sem tracao
+                if t["leads"] <= 1:
+                    if n_ativos <= 1:
+                        avisos.append(f"⚠️ <b>{nome}</b> ({c['tag']}) R${t['spend']:.0f}/{t['leads']}lead hoje mas é o último. NÃO pausei.")
+                        continue
+                    pause(aid); pause(a["adset"]); n_ativos -= 1
+                    avisos.append(f"🚫 TESTE: pausei <b>{nome}</b> — R${t['spend']:.0f} hoje com {t['leads']} lead{' [DRY]' if DRY else ''}")
+                    continue
+                # B) caro (>=2 leads, CPL>teto): 2o dia corta, 1o dia espera
+                if t["cpl"] is not None and t["cpl"] > TETO:
+                    if a["age"] >= 1:
+                        if n_ativos <= 1:
+                            avisos.append(f"⚠️ <b>{nome}</b> ({c['tag']}) caro 2º dia mas é o último. NÃO pausei.")
+                        else:
+                            pause(aid); pause(a["adset"]); n_ativos -= 1
+                            avisos.append(f"🚫 TESTE: pausei <b>{nome}</b> — 2º dia caro (CPL R${t['cpl']:.2f}, R${t['spend']:.0f} hoje){' [DRY]' if DRY else ''}")
+                    else:
+                        avisos.append(f"⏳ <b>{nome}</b> ({c['tag']}) caro no 1º dia (CPL R${t['cpl']:.2f}) — espero +24h.")
+
+        elif c["tipo"] == "cbo":
+            L = ad_insights(c["id"], "maximum")
+            life_spend = sum(v["spend"] for v in L.values()) or 1
+            sp_c, ld_c, cpl_c = camp_today(c["id"])
+            pct_spent = (sp_c / c["budget"] * 100) if c["budget"] else 0
+            cortou_junk = False
+            # B) criativo ruim irrelevante que estourou hoje
+            for aid, a in ads.items():
+                t = T.get(aid, {"spend": 0, "leads": 0, "cpl": None})
+                l = L.get(aid, {"spend": 0, "leads": 0, "cpl": None})
+                irrelevante = (l["leads"] <= 1) or (l["spend"] / life_spend < JUNK_SHARE)
+                estourou = t["spend"] >= SPIKE_SPEND and (t["leads"] == 0 or (t["cpl"] and t["cpl"] > TETO))
+                bom_vet = a["age"] >= NEW_AGE and l["cpl"] and l["cpl"] <= TETO
+                if irrelevante and estourou and not bom_vet and n_ativos > 1:
+                    pause(aid); n_ativos -= 1
+                    avisos.append(f"🚫 CBO: pausei criativo ruim <b>{a['name']}</b> ({c['tag']}) — estourou hoje (R${t['spend']:.0f}/{t['leads']}lead)")
+                    avisos.append(reduzir(c, st, "sinalizar troca de verba", pct=10))
+                    cortou_junk = True
+            # A) campanha acima do teto -> reduz na sequencia
+            if cpl_c is not None and cpl_c > TETO and not cortou_junk:
+                ja = st["atencao_cbo"].get(c["id"]) is not None
+                st["atencao_cbo"][c["id"]] = cpl_c
+                extra = "" if ja else " + 🔔 atenção"
+                avisos.append(reduzir(c, st, f"CPL R${cpl_c:.2f} > teto ({pct_spent:.0f}% do orçamento gasto)") + extra)
+            elif cpl_c is not None and cpl_c <= TETO and st["atencao_cbo"].get(c["id"]) is not None:
+                st["atencao_cbo"].pop(c["id"], None)
+                avisos.append(f"✅ <b>{c['tag']}</b> normalizou (CPL R${cpl_c:.2f}), saiu da atenção.")
+
+    save_state(st)
+    enviar("poda/CBO 6h", avisos)
+
+
+# ---------------- JOB ORCAMENTO (meia-noite) ----------------
+def job_orcamento(st):
+    avisos = []
+    for c in [c for c in lead_campaigns() if c["tipo"] == "cbo" and c["cbo"]]:
+        sp, ld, cpl = camp_today(c["id"])
+        if sp <= 0:
+            continue
+        if ld and cpl < IDEAL:
+            old = c["budget"]; novo = round(old * 1.30)
+            ok = set_budget(c["id"], conv_budget(novo, old))
+            avisos.append(f"⬆️ +30% <b>{c['tag']}</b>: R${old:.0f}→R${novo:.0f} (CPL R${cpl:.2f} < R$3){' [DRY]' if DRY else ''}{'' if ok else ' [FALHOU]'}")
+        elif (cpl is not None and cpl > TETO) or (not ld):
+            motivo = f"CPL R${cpl:.2f} > teto" if ld else f"sem lead, R${sp:.0f} gasto"
+            avisos.append(reduzir(c, st, motivo))
+    save_state(st)
+    enviar("orçamento meia-noite", avisos)
+
+
+def enviar(rotulo, avisos):
+    if not avisos:
+        print(f"[{rotulo}] Nenhuma ação.")
+        return
+    cab = f"🤖 <b>Regras captação Caio — {rotulo}</b>" + (" [DRY-RUN]" if DRY else "") + f"\n<i>{HOJE_BR}</i>\n\n"
+    msg = cab + "\n\n".join(avisos)
+    if DRY:
+        print(msg)
+    else:
+        cc._enviar_telegram(msg)
+        print(msg)
+
+
+if __name__ == "__main__":
+    st = load_state()
+    if JOB == "orcamento":
+        job_orcamento(st)
+    else:
+        job_poda(st)
