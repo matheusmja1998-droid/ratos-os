@@ -1028,6 +1028,18 @@ app.post("/api/pipeline/:id/etapas", auth, exige("editar_pipeline"), (req, res) 
   if (!nome) return res.status(400).json({ erro: "nome da etapa obrigatório" });
   res.json({ ok: true, id: addEtapa(Number(req.params.id), nome, ordem) });
 });
+// reordenar as etapas (arrastar pelos ⠿ no personalizador de funil)
+app.post("/api/pipeline/:id/etapas/ordem", auth, exige("editar_pipeline"), (req, res) => {
+  const pid = Number(req.params.id);
+  const ordem = Array.isArray(req.body?.ordem) ? req.body.ordem.map(Number) : null;
+  if (!ordem?.length) return res.status(400).json({ erro: "falta a ordem das etapas" });
+  const daPipe = new Set(etapasDaPipeline(pid).map((e) => e.id));
+  if (ordem.some((id) => !daPipe.has(id))) return res.status(400).json({ erro: "etapa que não é desse funil" });
+  const tx = db.transaction(() => ordem.forEach((id, i) => atualizarEtapa(id, { ordem: i })));
+  tx();
+  res.json({ ok: true, etapas: etapasDaPipeline(pid) });
+});
+
 app.patch("/api/etapa/:id", auth, exige("editar_pipeline"), (req, res) => {
   atualizarEtapa(Number(req.params.id), req.body || {});
   res.json({ ok: true });

@@ -1047,8 +1047,12 @@ function pfRender() {
       Essas são as fases do seu fluxo de trabalho. Clica no nome pra editar, digita embaixo pra criar uma nova.
     </div>
     ${p.etapas.map((e, i) => `
-      <div class="pf-bar" style="background:${pfCorEtapa(e, i)}">
-        <span class="pf-grip">⠿</span>
+      <div class="pf-bar" id="pf-bar-${e.id}" style="background:${pfCorEtapa(e, i)}"
+        ondragstart="pfDragStart(event, ${e.id})" ondragover="pfDragOver(event, ${e.id})"
+        ondrop="pfDrop(event, ${e.id})" ondragend="pfDragEnd(event)">
+        <span class="pf-grip" title="segura e arrasta pra reordenar" style="cursor:grab"
+          onmousedown="this.parentElement.draggable=true"
+          onmouseup="this.parentElement.draggable=false">⠿</span>
         <input value="${(e.nome || "").replace(/"/g, "&quot;")}" onchange="pfRenomearEtapa(${e.id}, this.value)" title="clica pra editar o nome">
         ${e.e_entrada ? '<span class="pf-badge">entrada</span>' : ""}
         ${e.e_ganho ? '<span class="pf-badge" style="background:rgba(11,107,70,.18); color:#0b6b46">ganhou</span>' : ""}
@@ -1066,7 +1070,7 @@ function pfRender() {
 
   const passo2 = `
     <div style="font-size:12.5px; color:var(--muted); margin-bottom:12px">
-      Quando você registrar uma ligação, o lead anda sozinho pro card que você escolher aqui.
+      Quando você registrar uma ligação num lead deste funil, ele anda sozinho pro card que você escolher aqui.
     </div>
     ${PF_CLIQUES.map(([v, rot]) => `
       <div class="pf-clique">
@@ -1086,20 +1090,50 @@ function pfRender() {
       <div id="pf-erro" style="display:none; margin-bottom:10px; padding:8px 11px; background:#fdecec; border:1px solid #e88; border-radius:8px; font-size:12.5px; color:#b3261e"></div>
       ${pfPassoAtual === 1 ? passo1 : passo2}
       <div style="display:flex; align-items:center; margin-top:16px">
-        ${ehLigacao ? `<div class="pf-passos">
+        <div class="pf-passos">
           <span class="${pfPassoAtual === 1 ? "on" : ""}">1 · Fases</span><span>—</span>
           <span class="${pfPassoAtual === 2 ? "on" : ""}">2 · Cliques da ligação</span>
-        </div>` : ""}
-        <span onclick="pfArquivar()" style="margin-left:${ehLigacao ? "14px" : "0"}; font-size:11.5px; color:var(--muted); cursor:pointer; text-decoration:underline">arquivar funil</span>
+        </div>
+        <span onclick="pfArquivar()" style="margin-left:14px; font-size:11.5px; color:var(--muted); cursor:pointer; text-decoration:underline">arquivar funil</span>
         <div style="margin-left:auto; display:flex; gap:8px">
           ${pfPassoAtual === 2 ? `<button class="btn mini sec" onclick="pfPasso(1)">← voltar</button>` : ""}
-          ${ehLigacao && pfPassoAtual === 1
+          ${pfPassoAtual === 1
             ? `<button class="btn" onclick="pfPasso(2)">avançar →</button>`
             : `<button class="btn" onclick="pfConcluir()">concluir ✓</button>`}
         </div>
       </div>
     </div>`, 540);
   if (p.tipo === "disparo") pfCarregarWhats(p);
+}
+
+// ---- arrastar fase pelos ⠿ pra reordenar o funil ----
+let pfArrastando = null;
+function pfDragStart(ev, id) {
+  pfArrastando = id;
+  ev.dataTransfer.effectAllowed = "move";
+  $("#pf-bar-" + id)?.style.setProperty("opacity", ".45");
+}
+function pfDragOver(ev, alvoId) {
+  ev.preventDefault();
+  if (pfArrastando === null || pfArrastando === alvoId) return;
+  const arr = $("#pf-bar-" + pfArrastando), alvo = $("#pf-bar-" + alvoId);
+  if (!arr || !alvo) return;
+  // insere antes ou depois conforme a direção do movimento
+  const depois = alvo.compareDocumentPosition(arr) & Node.DOCUMENT_POSITION_PRECEDING;
+  alvo.parentNode.insertBefore(arr, depois ? alvo.nextSibling : alvo);
+}
+function pfDrop(ev) { ev.preventDefault(); }
+async function pfDragEnd(ev) {
+  const id = pfArrastando; pfArrastando = null;
+  const el = $("#pf-bar-" + id);
+  if (el) { el.style.opacity = ""; el.draggable = false; }
+  // ordem final = ordem das barras na tela
+  const ordem = [...document.querySelectorAll(".pf-bar")].map((b) => Number(b.id.replace("pf-bar-", "")));
+  const r = await api(`/api/pipeline/${pipelineAtual}/etapas/ordem`, { method: "POST", body: JSON.stringify({ ordem }) });
+  if (r?.erro) pfErro(r.erro);
+  pipelines = await api("/api/pipelines");
+  pfRender();
+  carregarKanban(); // o Kanban segue a mesma ordem
 }
 
 function pfErro(msg) {
@@ -1499,14 +1533,14 @@ function renderPainelNotas(d) {
 
     <!-- REGISTRO DE LIGACAO (alimenta o dashboard de prospecção).
          O botao do ULTIMO resultado registrado fica verde (marcado). -->
-    ${pipeAtual?.tipo === "ligacao" ? `<div style="margin-top:12px; padding:10px 11px; background:#eef6ff; border:1px solid #b6d4f5; border-radius:8px">
+    ${`<div style="margin-top:12px; padding:10px 11px; background:#eef6ff; border:1px solid #b6d4f5; border-radius:8px">
       <b style="font-size:12.5px; color:#1e5aa8">📞 Registrar ligação</b>
       <div style="font-size:11.5px; color:var(--muted); margin:3px 0 7px">O card se move sozinho conforme o resultado.</div>
       <div style="display:flex; gap:4px; flex-wrap:wrap">
         ${[["nao_atendeu", "não atendeu"], ["conectou", "atendeu"], ["decisor", "falei c/ decisor"], ["reuniao", "marquei reunião"], ["recusou", "recusou"]]
           .map(([v, r]) => `<button class="btn mini ${d.ultima_ligacao === v ? "" : "sec"}" style="font-size:11px" onclick="registrarLigacao(${l.id}, '${v}')">${d.ultima_ligacao === v ? "✓ " : ""}${r}</button>`).join("")}
       </div>
-    </div>` : ""}
+    </div>`}
 
     <!-- 12. CAMPO NOTA / TAREFA -->
     <div style="margin-top:14px; border-top:2px solid var(--border); padding-top:10px">
