@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import {
   db, getLead, atualizarLead, salvarMensagem, historicoLead, marcarReuniao,
   reunioesAtivas, getConfig, registrarEvento, bloquear, agoraSP, agendarFollowupLead,
+  audioDoLead,
 } from "./db.js";
 import { enviarTexto, enviarMidia, mostrarDigitando } from "./uazapi.js";
 import { alertar } from "./telegram.js";
@@ -97,7 +98,7 @@ Data/hora em São Paulo: ${data} ${hora} (${DIAS_PT[diaSemana]})
 - Nicho: ${lead.nicho || "clínica"}
 - Contato: ${lead.nome_contato || "ainda não sabemos o nome"}
 - É o responsável? ${lead.eh_responsavel ? "SIM (confirmado)" : "ainda não confirmado"}
-- Áudio oficial já enviado? ${lead.audio_enviado ? "SIM (não envie de novo)" : (getConfig("audio_oficial", "") ? "não (disponível pra enviar)" : "INDISPONÍVEL: áudio não configurado — NUNCA mencione áudio, conduza tudo por texto")}
+- Áudio oficial já enviado? ${lead.audio_enviado ? "SIM (não envie de novo)" : (audioDoLead(lead) ? "não (disponível pra enviar)" : "INDISPONÍVEL: áudio não configurado — NUNCA mencione áudio, conduza tudo por texto")}
 - Dor mapeada: ${lead.dor || "nenhuma ainda"}
 - Status: ${lead.status}
 - LINK_APRESENTACAO: ${getConfig("link_apresentacao", "") || "(não configurado — NUNCA mencione link de apresentação)"}
@@ -173,7 +174,9 @@ async function executarAcoes(lead, acoes, instanceToken) {
     }
 
     if (acao.tipo === "audio") {
-      const caminho = getConfig("audio_oficial", "");
+      // ÁUDIO DA PESSOA CERTA: usa o áudio do dono do lead (ou da pipeline dele).
+      // Assim o lead do Valentino ouve a voz do Valentino, e o meu ouve a minha.
+      const caminho = audioDoLead(lead);
       if (!caminho || !existsSync(caminho)) {
         registrarEvento(lead.id, "erro", "audio oficial nao configurado");
         continue; // o prompt ja mandou texto junto; sem audio configurado segue so no texto

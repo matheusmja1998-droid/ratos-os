@@ -718,30 +718,61 @@ app.get("/api/modelo-importacao", auth, (req, res) => {
 });
 
 // ---------- audio oficial ----------
+// ÁUDIO POR PESSOA: cada sócio/funcionário sobe o áudio na voz DELE. O áudio
+// usado numa conversa é o do dono da pipeline daquele lead (cai no global se
+// a pessoa não tiver o dela). Todo mundo da empresa VÊ todos os áudios.
+const chaveAudio = (uid) => (uid ? `audio_oficial_u${uid}` : "audio_oficial");
+const chaveAudioInfo = (uid) => (uid ? `audio_oficial_info_u${uid}` : "audio_oficial_info");
+
 app.post("/api/audio", auth, upload.single("audio"), (req, res) => {
   if (!req.file) return res.status(400).json({ erro: "arquivo nao veio" });
+  // de quem é esse áudio: o indicado no form, senão o próprio usuário logado
+  const uid = req.body?.usuario_id ? Number(req.body.usuario_id) : (req.usuario?.id || null);
   const ext = (extname(req.file.originalname || "") || ".ogg").toLowerCase();
-  const destino = join(DADOS_DIR, `audio-oficial${ext}`);
+  const destino = join(DADOS_DIR, `audio-oficial${uid ? "-u" + uid : ""}${ext}`);
   renameSync(req.file.path, destino);
-  setConfig("audio_oficial", destino);
-  setConfig("audio_oficial_info", JSON.stringify({ nome: req.file.originalname, kb: Math.round(req.file.size / 1024), em: agoraSP().iso }));
-  res.json({ ok: true, caminho: destino });
+  setConfig(chaveAudio(uid), destino);
+  setConfig(chaveAudioInfo(uid), JSON.stringify({
+    nome: req.file.originalname, kb: Math.round(req.file.size / 1024), em: agoraSP().iso,
+    dono: uid ? (getUsuario(uid)?.nome || null) : null,
+  }));
+  res.json({ ok: true, caminho: destino, usuario_id: uid });
+});
+
+// remove o áudio de uma pessoa (volta a usar o padrão da empresa)
+app.delete("/api/audio", auth, (req, res) => {
+  const uid = req.query.usuario_id ? Number(req.query.usuario_id) : (req.usuario?.id || null);
+  if (!uid) return res.status(400).json({ erro: "diz de quem é o áudio" });
+  setConfig(chaveAudio(uid), "");
+  setConfig(chaveAudioInfo(uid), "");
+  res.json({ ok: true });
 });
 
 // toca o audio oficial no painel (auth por query, tag <audio> nao manda header)
 app.get("/api/audio-arquivo", async (req, res) => {
   if (String(req.query.t || "") !== PAINEL_SENHA) return res.status(401).end();
-  const caminho = getConfig("audio_oficial", "");
+  const uid = req.query.usuario_id ? Number(req.query.usuario_id) : null;
+  const caminho = getConfig(chaveAudio(uid), "") || (uid ? getConfig("audio_oficial", "") : "");
   const { existsSync } = await import("node:fs");
   if (!caminho || !existsSync(caminho)) return res.status(404).end();
   res.sendFile(caminho);
 });
 
+// TODOS da empresa veem TODOS os áudios (o da empresa + o de cada pessoa)
 app.get("/api/audio-info", auth, (req, res) => {
-  const caminho = getConfig("audio_oficial", "");
-  let info = null;
-  try { info = JSON.parse(getConfig("audio_oficial_info", "null")); } catch {}
-  res.json({ configurado: Boolean(caminho), info });
+  const leInfo = (uid) => { try { return JSON.parse(getConfig(chaveAudioInfo(uid), "null")); } catch { return null; } };
+  const geral = getConfig("audio_oficial", "");
+  const porPessoa = listarUsuarios().filter((u) => u.ativo).map((u) => ({
+    usuario_id: u.id, nome: u.nome,
+    configurado: Boolean(getConfig(chaveAudio(u.id), "")),
+    info: leInfo(u.id),
+  }));
+  res.json({
+    configurado: Boolean(geral), info: leInfo(null),   // compatibilidade com o painel antigo
+    geral: { configurado: Boolean(geral), info: leInfo(null) },
+    porPessoa,
+    eu: req.usuario?.id || null,
+  });
 });
 
 // ---------- config ----------
@@ -790,6 +821,9 @@ app.patch("/api/instancias", auth, (req, res) => {
   const campos = {};
   if (req.body.nome !== undefined) campos.nome = String(req.body.nome).slice(0, 40);
   if (req.body.cota_dia !== undefined) campos.cota_dia = Math.max(0, Number(req.body.cota_dia) || 0);
+  // de quem é o número (null = da empresa)
+  if (req.body.usuario_id !== undefined) campos.usuario_id = req.body.usuario_id ? Number(req.body.usuario_id) : null;
+  if (req.body.pipeline_id !== undefined) campos.pipeline_id = req.body.pipeline_id ? Number(req.body.pipeline_id) : null;
   atualizarInstancia(inst.id, campos);
   res.json({ ok: true });
 });

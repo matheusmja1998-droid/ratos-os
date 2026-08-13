@@ -407,6 +407,19 @@ export const addNota = (leadId, texto) =>
   db.prepare("INSERT INTO notas (lead_id, texto) VALUES (?, ?)").run(leadId, texto).lastInsertRowid;
 export const removerNota = (id) => db.prepare("DELETE FROM notas WHERE id = ?").run(id);
 
+// ÁUDIO DA PESSOA CERTA: quem "fala" com esse lead é o dono dele (ou o dono da
+// pipeline). Sem áudio próprio, cai no áudio geral da empresa.
+export function donoDoLead(lead) {
+  if (!lead) return null;
+  if (lead.usuario_id) return lead.usuario_id;
+  if (lead.pipeline_id) return getPipeline(lead.pipeline_id)?.usuario_id || null;
+  return null;
+}
+export function audioDoLead(lead) {
+  const uid = donoDoLead(lead);
+  return (uid ? getConfig(`audio_oficial_u${uid}`, "") : "") || getConfig("audio_oficial", "");
+}
+
 // ---------- usuarios ----------
 export const listarUsuarios = () =>
   db.prepare("SELECT id, nome, email, papel, ativo, ultimo_acesso, gcal_email FROM usuarios ORDER BY id").all();
@@ -644,10 +657,22 @@ export const instanciasConectadas = () =>
 // SPLIT MANUAL: conectada disponivel = cota_dia 0 (sem limite) OU ainda nao bateu a cota.
 // Entre as disponiveis, prioriza quem esta MAIS LONGE de bater a cota (proporcao),
 // pra respeitar o split (ex: 50/15/20 esvazia proporcional, nao 1-a-1).
-export const proximaInstanciaDisparo = () => {
-  const insts = db.prepare("SELECT * FROM instancias WHERE status = 'conectado'").all()
+// Escolhe o WhatsApp do disparo. Com `pipelineId`, respeita a dona: usa o número
+// amarrado naquela pipeline, ou os números da pessoa dona dela. Sem nada amarrado,
+// cai no rodízio geral (comportamento de sempre).
+export const proximaInstanciaDisparo = (pipelineId = null) => {
+  let insts = db.prepare("SELECT * FROM instancias WHERE status = 'conectado'").all()
     .filter((i) => !i.cota_dia || i.disparos_hoje < i.cota_dia);
   if (!insts.length) return null;
+  if (pipelineId) {
+    const pipe = getPipeline(pipelineId);
+    const amarrado = insts.filter((i) => i.pipeline_id === pipelineId);
+    if (amarrado.length) insts = amarrado;
+    else if (pipe?.usuario_id) {
+      const doDono = insts.filter((i) => i.usuario_id === pipe.usuario_id);
+      if (doDono.length) insts = doDono;
+    }
+  }
   // "folga" = quanto ainda pode disparar; sem cota conta como folga infinita porem
   // desempata por menos disparos, mantendo o giro entre os numeros
   insts.sort((a, b) => {

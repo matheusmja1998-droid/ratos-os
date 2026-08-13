@@ -35,7 +35,8 @@ async function tickDisparo() {
   if (!camp) return;
   // SPLIT/ROTACAO: escolhe a instancia respeitando a cota diaria de cada numero.
   // Se todas bateram a cota, para de disparar hoje (o split foi cumprido).
-  const instAtiva = proximaInstanciaDisparo();
+  // WhatsApp do dono da pipeline da campanha (cada sócio dispara pelo chip dele)
+  const instAtiva = proximaInstanciaDisparo(camp.pipeline_id || null);
   if (!instAtiva) return;
   const instanceToken = instAtiva.uazapi_token;
   if (!dentroDaJanela(camp)) return;

@@ -536,11 +536,18 @@ LEAD: ..."></textarea>
           <div style="margin-top:8px"><button class="btn sec" onclick="salvarChave()">Validar e salvar</button> <span id="chave-msg" style="font-size:13px; color:var(--muted)"></span></div>
         </div>
         <hr style="border:none; border-top:1px solid var(--border); margin:16px 0">
-        <h3 id="lbl-audio">Áudio da minha empresa</h3>
-        <p style="font-size:13px; color:var(--muted); margin:6px 0">Enviado quando o lead confirma que é o responsável. OGG/MP3/M4A.</p>
-        <div id="audio-player" style="margin:8px 0"></div>
-        <input type="file" id="audio-file" accept="audio/*">
-        <div style="margin-top:8px"><button class="btn sec" onclick="subirAudio()">Subir/trocar áudio</button> <span id="audio-status" style="font-size:13px; color:var(--muted)"></span></div>
+        <h3 id="lbl-audio">Áudios da equipe</h3>
+        <p style="font-size:13px; color:var(--muted); margin:6px 0">
+          Cada pessoa sobe o áudio na voz dela. O lead ouve o áudio de <b>quem é dono do funil dele</b>.
+          Quem não tiver o seu usa o áudio geral da empresa.
+        </p>
+        <div id="audios-lista" style="margin:10px 0">carregando…</div>
+        <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-top:10px; padding-top:10px; border-top:1px dashed var(--border)">
+          <select id="audio-dono" style="font-size:13px"></select>
+          <input type="file" id="audio-file" accept="audio/*" style="flex:1; min-width:170px">
+          <button class="btn sec" onclick="subirAudio()">subir áudio</button>
+        </div>
+        <div id="audio-status" style="font-size:13px; color:var(--muted); margin-top:6px"></div>
       </div>
       <div class="card">
         <h3 style="margin-bottom:6px">Agenda Google (Meet automático)</h3>
@@ -2068,16 +2075,27 @@ async function salvarConfig() {
   await api("/api/config", { method: "POST", body: JSON.stringify(body) });
   $("#cfg-ok").textContent = "salvo ✓"; setTimeout(() => $("#cfg-ok").textContent = "", 2000);
 }
+// ÁUDIOS: todos da empresa veem todos (o geral + o de cada pessoa)
 async function carregarAudio() {
   const a = await api("/api/audio-info");
-  if (a.configurado) {
-    const det = a.info ? ` · ${a.info.nome} (${a.info.kb}KB, ${String(a.info.em).replace("T", " ")})` : "";
-    $("#audio-status").innerHTML = `✅ <b>áudio configurado</b>${det}`;
-    $("#audio-player").innerHTML = `<audio controls style="width:100%" src="${API}/api/audio-arquivo?t=${SENHA}&v=${Date.now()}"></audio>
-      <div style="font-size:12px; color:var(--muted)">👆 esse é o áudio que a IA manda pro lead</div>`;
-  } else {
-    $("#audio-status").textContent = "⚠️ sem áudio ainda — a IA conduz só por texto";
-    $("#audio-player").innerHTML = "";
+  const linha = (rot, cfg, info, uid) => `
+    <div style="display:flex; gap:8px; align-items:center; padding:7px 0; border-bottom:1px solid var(--border); flex-wrap:wrap">
+      <b style="min-width:118px; font-size:13px">${rot}</b>
+      ${cfg ? `
+        <audio controls preload="none" style="height:32px; flex:1; min-width:190px" src="${API}/api/audio-arquivo?t=${SENHA}${uid ? "&usuario_id=" + uid : ""}&v=${Date.now()}"></audio>
+        <span style="font-size:11.5px; color:var(--muted)">${info ? `${info.kb}KB · ${String(info.em).replace("T", " ").slice(0, 16)}` : ""}</span>
+        ${uid ? `<span onclick="excluirAudio(${uid})" style="cursor:pointer; color:var(--muted)" title="remover (volta a usar o geral)">✕</span>` : ""}`
+      : `<span style="font-size:12.5px; color:var(--muted)">sem áudio ${uid ? "— usa o geral da empresa" : ""}</span>`}
+    </div>`;
+  $("#audios-lista").innerHTML =
+    linha("🏢 Geral", a.geral?.configurado, a.geral?.info, null) +
+    (a.porPessoa || []).map((p) => linha(`🎙 ${p.nome}`, p.configurado, p.info, p.usuario_id)).join("");
+  // seletor de quem é o áudio que vai subir
+  const sel = $("#audio-dono");
+  if (sel) {
+    const atual = sel.value || String(a.eu || "");
+    sel.innerHTML = (a.porPessoa || []).map((p) => `<option value="${p.usuario_id}" ${String(p.usuario_id) === atual ? "selected" : ""}>áudio de ${p.nome}</option>`).join("")
+      + `<option value="">áudio geral da empresa</option>`;
   }
 }
 async function subirAudio() {
@@ -2085,24 +2103,42 @@ async function subirAudio() {
   if (!f) return $("#audio-status").textContent = "escolhe o arquivo primeiro";
   $("#audio-status").textContent = "subindo…";
   const fd = new FormData(); fd.append("audio", f);
+  const dono = $("#audio-dono")?.value;
+  if (dono) fd.append("usuario_id", dono);
   const r = await api("/api/audio", { method: "POST", body: fd });
   if (!r.ok) return $("#audio-status").textContent = "❌ erro: " + r.erro;
-  carregarAudio();
-  carregarWhats();
+  $("#audio-status").textContent = "✅ áudio salvo";
+  $("#audio-file").value = "";
+  carregarAudio(); carregarWhats();
 }
+async function excluirAudio(uid) {
+  if (!confirm("Remover esse áudio? A pessoa volta a usar o áudio geral da empresa.")) return;
+  await api("/api/audio?usuario_id=" + uid, { method: "DELETE" });
+  carregarAudio();
+}
+// WHATSAPPS: todos da empresa veem todos os números, cada um marcado de quem é
 async function carregarWhats() {
   const d = await api("/api/instancias");
   const insts = d.instancias || [];
+  const us = await api("/api/usuarios").catch(() => []);
+  const equipe = Array.isArray(us) ? us.filter((u) => u.ativo) : [];
   $("#lista-whats").innerHTML = insts.map((i) => `
     <div style="padding:8px 0; border-bottom:1px solid var(--border); font-size:13.5px">
       <div style="display:flex; align-items:center; gap:8px">
         <span style="width:9px; height:9px; border-radius:999px; background:${i.status === "conectado" ? "var(--verde)" : "var(--vermelho)"}"></span>
         <span style="flex:1"><b>${i.nome}</b> <span style="color:var(--muted); font-size:12px">${i.numero || "não conectado"} · ${i.status}</span></span>
+        ${i.dono ? `<span class="tag" style="background:#eef2ff; color:#3949ab">👤 ${i.dono}</span>` : ""}
         <button class="btn mini sec" onclick="pegarQR(${i.id})">${i.status === "conectado" ? "reconectar" : "conectar (QR)"}</button>
         <button class="btn mini perigo" onclick="removerWhats(${i.id})">✕</button>
       </div>
-      <div style="display:flex; align-items:center; gap:6px; margin-top:6px; padding-left:17px; font-size:12.5px; color:var(--muted)">
-        enviar até <input type="number" min="0" value="${i.cota_dia || 0}" onchange="setCota(${i.id}, this.value)" style="width:64px; padding:4px 8px; text-align:center"> msgs/dia por esse número
+      <div style="display:flex; align-items:center; gap:6px; margin-top:6px; padding-left:17px; font-size:12.5px; color:var(--muted); flex-wrap:wrap">
+        <span>de quem é:</span>
+        <select onchange="setDonoWhats(${i.id}, this.value)" style="font-size:12px; padding:3px 6px">
+          <option value="">— da empresa —</option>
+          ${equipe.map((u) => `<option value="${u.id}" ${i.usuario_id === u.id ? "selected" : ""}>${u.nome}</option>`).join("")}
+        </select>
+        <span style="margin-left:10px">enviar até</span>
+        <input type="number" min="0" value="${i.cota_dia || 0}" onchange="setCota(${i.id}, this.value)" style="width:64px; padding:4px 8px; text-align:center"> msgs/dia
         <span style="margin-left:auto">${i.disparos_hoje || 0}${i.cota_dia ? "/" + i.cota_dia : ""} hoje</span>
       </div>
     </div>`).join("") || '<div style="font-size:13px; color:var(--muted)">nenhum WhatsApp ainda</div>';
@@ -2111,6 +2147,11 @@ async function carregarWhats() {
 }
 async function setCota(id, valor) {
   await api("/api/instancias", { method: "PATCH", body: JSON.stringify({ id, cota_dia: Number(valor) || 0 }) });
+  carregarWhats();
+}
+// de quem é esse WhatsApp (o lead do dono conversa por esse número e ouve o áudio dele)
+async function setDonoWhats(id, usuarioId) {
+  await api("/api/instancias", { method: "PATCH", body: JSON.stringify({ id, usuario_id: usuarioId ? Number(usuarioId) : null }) });
   carregarWhats();
 }
 async function addWhats() {
