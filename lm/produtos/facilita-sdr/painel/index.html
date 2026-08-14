@@ -45,7 +45,9 @@
   html[data-tema="dark"] .tag { background:#2a3833; color:#bfd6c9; }
   html[data-tema="dark"] .divisor::before { background:var(--border); }
   * { box-sizing:border-box; margin:0; }
-  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text); }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text);
+    font-size:clamp(13.5px, 0.45vw + 9px, 15.5px); }
+  input, select, textarea, button { font-size:inherit; font-family:inherit; }
   header { background:var(--surface); border-bottom:1px solid var(--border); padding:12px 20px; display:flex; align-items:center; gap:16px; position:sticky; top:0; z-index:10; }
   header h1 { font-size:18px; color:var(--verde-esc); }
   header h1 span { color:var(--verde); }
@@ -81,14 +83,14 @@
   main { padding:20px; margin:0 auto; flex:1; min-width:0; max-width:1300px; overflow-y:auto; height:100vh; }
   @media (max-width:760px){ #sidebar{width:56px;flex-basis:56px} #sidebar .sb-top h1,#sidebar .lbl,#sidebar .sb-status{display:none} #sidebar nav button{justify-content:center;padding:10px 0} }
   .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px; }
-  .grid-metricas { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:20px; }
-  .metrica .num { font-size:26px; font-weight:700; color:var(--verde-esc); }
-  .metrica .rot { font-size:12px; color:var(--muted); }
+  .grid-metricas { display:grid; grid-template-columns:repeat(auto-fit,minmax(172px,1fr)); gap:12px; margin-bottom:18px; }
+  .metrica .num { font-size:clamp(26px, 2vw, 34px); font-weight:800; color:var(--verde-esc); letter-spacing:-.5px; }
+  .metrica .rot { font-size:13px; color:var(--muted); margin-top:2px; }
   /* kanban */
   .kanban { display:flex; gap:12px; overflow-x:auto; padding-bottom:14px; scroll-snap-type:x proximity; }
   .kanban::-webkit-scrollbar { height:10px; }
   .kanban::-webkit-scrollbar-thumb { background:var(--border); border-radius:5px; }
-  .coluna { min-width:250px; width:250px; flex:0 0 auto; scroll-snap-align:start; background:var(--coluna-bg, #eef1ef); border-radius:12px; padding:10px; max-height:calc(100vh - 240px); display:flex; flex-direction:column; }
+  .coluna { min-width:clamp(236px, 19vw, 300px); width:clamp(236px, 19vw, 300px); flex:0 0 auto; scroll-snap-align:start; background:var(--coluna-bg, #eef1ef); border-radius:12px; padding:10px; max-height:calc(100vh - 240px); display:flex; flex-direction:column; }
   .coluna.drop { background:var(--verde-soft); outline:2px dashed var(--verde); }
   .coluna h3 { font-size:12px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
   .coluna h3 b { color:var(--verde-esc); }
@@ -107,6 +109,22 @@
   #btn-atrasadas.on { background:#d93025; color:#fff; border-color:#d93025; }
   /* aviso quando um filtro não devolve nada (senão a tela fica vazia sem explicação) */
   .kanban-vazio { padding:26px 20px; text-align:center; color:var(--muted); font-size:13.5px; }
+
+  /* CONFIGURAÇÕES estilo Kommo: nav vertical + conteúdo */
+  .cfg-wrap { display:grid; grid-template-columns:236px 1fr; gap:18px; align-items:start; }
+  .cfg-menu { background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; position:sticky; top:0; }
+  .cfg-titulo { padding:16px 18px 12px; font-size:13.5px; font-weight:800; letter-spacing:1.4px; border-bottom:1px solid var(--border); }
+  .cfg-menu .sub-cfg { display:block; width:100%; text-align:left; border:none; background:none; cursor:pointer;
+    padding:14px 18px; font-size:15px; color:var(--text); border-bottom:1px solid var(--border); }
+  .cfg-menu .sub-cfg:last-child { border-bottom:none; }
+  .cfg-menu .sub-cfg:hover { background:var(--verde-soft); }
+  .cfg-menu .sub-cfg.on { color:var(--verde-esc); font-weight:700; box-shadow:inset 3px 0 0 var(--verde); background:var(--verde-soft); }
+  .cfg-conteudo { min-width:0; }
+  /* dashboards e agenda mais legíveis em qualquer tela */
+  #dash-corpo { font-size:14px; }
+  #dash-corpo .card h3 { font-size:16.5px; margin-bottom:10px; }
+  #agenda-grade { font-size:13.5px; }
+  @media (max-width:940px){ .cfg-wrap{grid-template-columns:1fr} .cfg-menu{position:static} }
 
   /* ---- personalizador de funil (estilo Kommo, na identidade verde da casa) ---- */
   @keyframes pf-in { from { opacity:0; transform:translateY(14px) scale(.97); } to { opacity:1; transform:none; } }
@@ -169,7 +187,14 @@
   .conversas-wrap.com-notas .painel-notas { display:grid; }
   .pn-topo { padding:12px 14px 10px; border-bottom:2px solid var(--border); }
   .pn-nome { font-size:19px; font-weight:800; line-height:1.2; letter-spacing:-.2px; }
-  .pn-corpo { overflow-y:auto; min-height:0; }
+  .pn-corpo { overflow-y:auto; min-height:0; background:#f4f5f4; }
+  .pn-corpo .nota-linha { background:#f4f5f4; color:#26302a; }
+  .pn-corpo .nota-linha input, .pn-corpo .nota-linha select { color:#1e2823; font-weight:500; }
+  .pn-corpo .nota-linha > span:first-child { color:#5c6a62; }
+  html[data-tema="dark"] .pn-corpo { background:#161d1a; }
+  html[data-tema="dark"] .pn-corpo .nota-linha { background:#161d1a; color:#dfe9e3; }
+  html[data-tema="dark"] .pn-corpo .nota-linha input, html[data-tema="dark"] .pn-corpo .nota-linha select { color:#e9f2ec; }
+  html[data-tema="dark"] .pn-corpo .nota-linha > span:first-child { color:#93a69c; }
   .pn-rodape { border-top:2px solid var(--border); background:var(--surface); }
   .nota-linha { display:grid; grid-template-columns:104px 1fr; gap:2px 10px; font-size:12.5px;
     padding:7px 14px; border-bottom:1px solid var(--border); align-items:center; }
@@ -226,6 +251,8 @@
   .duas-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
   #login { max-width:360px; margin:80px auto; }
   .aviso { background:#fef3c7; border-radius:8px; padding:10px 12px; font-size:13px; color:#92400e; margin:10px 0; }
+  @media (max-width:1380px){ .conversas-wrap.com-notas{grid-template-columns:218px 1fr 6px min(var(--notas-w, 340px), 360px)} }
+  @media (max-width:1180px){ .conversas-wrap.com-notas{grid-template-columns:1fr 6px min(var(--notas-w, 330px), 340px)} .conversas-wrap.com-notas .lista-conv{display:none} .duas-col{grid-template-columns:1fr} }
   @media (max-width:800px){ .conversas-wrap{grid-template-columns:1fr; height:auto} .duas-col{grid-template-columns:1fr} }
 </style>
 </head>
@@ -533,20 +560,20 @@ LEAD: ..."></textarea>
     </div>
   </div>
 
-  <!-- CONFIGURAÇÕES: uma aba só, com sub-abas (Config · Usuários · Contexto · Tema) -->
+  <!-- CONFIGURAÇÕES estilo Kommo: menu vertical à esquerda, conteúdo à direita -->
   <div id="aba-configuracoes" style="display:none">
-    <div style="display:flex; gap:6px; margin-bottom:14px; flex-wrap:wrap; align-items:center">
-      <button class="btn mini sub-cfg on" data-sub="config" onclick="subCfg('config')">Configurações</button>
-      <button class="btn mini sub-cfg sec" data-sub="equipe" onclick="subCfg('equipe')">Usuários</button>
-      <button class="btn mini sub-cfg sec" data-sub="cerebro" onclick="subCfg('cerebro')">Contexto da IA</button>
-      <button class="btn mini sub-cfg sec" id="sub-assinatura" style="display:none" onclick="subCfg('assinatura')">Assinatura</button>
-      <button class="btn mini sub-cfg sec" id="sub-admin" style="display:none" onclick="subCfg('admin')">Admin</button>
-      <div style="margin-left:auto; display:flex; gap:7px; align-items:center; font-size:13px; color:var(--muted)">
-        Tema
-        <button class="btn mini sec" onclick="toggleTema()" id="btn-tema-cfg">escuro</button>
-      </div>
+    <div class="cfg-wrap">
+      <aside class="cfg-menu">
+        <div class="cfg-titulo">CONFIGURAÇÕES</div>
+        <button class="sub-cfg on" data-sub="config" onclick="subCfg('config')">Configurações gerais</button>
+        <button class="sub-cfg" data-sub="equipe" onclick="subCfg('equipe')">Usuários</button>
+        <button class="sub-cfg" data-sub="cerebro" onclick="subCfg('cerebro')">Cérebro e Assistente</button>
+        <button class="sub-cfg" id="sub-assinatura" style="display:none" onclick="subCfg('assinatura')">Assinatura</button>
+        <button class="sub-cfg" id="sub-admin" style="display:none" onclick="subCfg('admin')">Admin</button>
+        <button class="sub-cfg" onclick="toggleTema()">Tema <span id="cfg-tema-estado" style="color:var(--muted); font-weight:400">(claro)</span></button>
+      </aside>
+      <div id="cfg-conteudo" class="cfg-conteudo"></div>
     </div>
-    <div id="cfg-conteudo"></div>
   </div>
 
   <div id="aba-testar" style="display:none">
@@ -726,7 +753,6 @@ function aba(nome) {
 let subCfgAtual = "config";
 function subCfg(qual) {
   subCfgAtual = qual;
-  document.querySelectorAll(".sub-cfg").forEach((b) => b.classList.toggle("sec", b.dataset.sub !== qual && b.id !== "sub-" + qual));
   document.querySelectorAll(".sub-cfg").forEach((b) => b.classList.toggle("on", b.dataset.sub === qual || b.id === "sub-" + qual));
   const alvo = $("#cfg-conteudo");
   SUBS_CFG.forEach((a) => {
@@ -1671,6 +1697,7 @@ function aplicarTema(t) {
   const esc = t === "dark";
   if ($("#tema-ico")) $("#tema-ico").textContent = esc ? "" : "";
   if ($("#tema-lbl")) $("#tema-lbl").textContent = esc ? "Tema claro" : "Tema escuro";
+  if ($("#cfg-tema-estado")) $("#cfg-tema-estado").textContent = esc ? "(escuro)" : "(claro)";
 }
 function toggleTema() {
   aplicarTema(document.documentElement.getAttribute("data-tema") === "dark" ? "light" : "dark");
@@ -1760,7 +1787,7 @@ function renderPainelNotas(d) {
         <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.nome_clinica + " " + (l.cidade || ""))}" target="_blank" style="color:var(--verde); font-weight:600; text-decoration:none">ver no Google</a>
         ${pipeAtual ? `<span style="margin-left:auto">${pipeAtual.nome}</span>` : ""}
       </div>
-      <div id="resumo-ia" style="margin-top:9px; padding:9px 11px; background:var(--verde-soft); font-size:12.5px; line-height:1.45; white-space:pre-wrap; max-height:170px; overflow-y:auto">${d.resumo || '<span style="color:var(--muted)">gerando resumo…</span>'}</div>
+      <div id="resumo-ia" style="margin-top:9px; padding:10px 12px; background:#eef1ef; color:#232d27; font-size:13px; font-weight:450; line-height:1.5; white-space:pre-wrap; max-height:170px; overflow-y:auto">${d.resumo || '<span style="color:var(--muted)">gerando resumo…</span>'}</div>
     </div>
 
     <!-- CORPO: os dados do lead -->
@@ -2252,11 +2279,12 @@ const isoDia = (dt) => dt.toISOString().slice(0, 10);
 async function carregarAgenda() {
   const closer = $("#agenda-closer")?.value || "";
   const d = await api(`/api/agenda?dias=28${closer ? "&closer=" + closer : ""}`);
+  // seletor SEMPRE visível: escolhe a agenda de qualquer pessoa (Matheus, Valentino...)
   const sel = $("#agenda-closer");
-  if (sel && !sel.dataset.pronto && d.closers?.length) {
-    sel.innerHTML = d.closers.map((c) => `<option value="${c}" ${c === d.closer ? "selected" : ""}>agenda do ${c}</option>`).join("");
-    sel.dataset.pronto = "1";
-    sel.style.display = d.closers.length > 1 ? "" : "none";
+  if (sel && d.pessoas?.length) {
+    const atual = sel.value || d.closer;
+    sel.innerHTML = d.pessoas.map((p) => `<option value="${p.nome}" ${p.nome === atual ? "selected" : ""}>agenda do ${p.nome}${p.conectada ? "" : " (não conectada)"}</option>`).join("");
+    sel.style.display = "";
   }
   $("#agenda-status").innerHTML = d.conectada
     ? `agenda do <b>${d.closer}</b> conectada`
@@ -2314,7 +2342,7 @@ function renderGradeSemana() {
   $("#agenda-semana-rotulo").textContent = `${rot(dias[0])} – ${rot(dias[6])}`;
   const nomes = ["seg", "ter", "qua", "qui", "sex", "sáb", "dom"];
 
-  el.innerHTML = `<div style="display:grid; grid-template-columns:repeat(7, 1fr); min-height:430px">
+  el.innerHTML = `<div style="display:grid; grid-template-columns:repeat(7, 1fr); min-height:520px">
     ${dias.map((dt, i) => {
       const dia = isoDia(dt);
       const ehHoje = dia === hoje;
@@ -2323,14 +2351,14 @@ function renderGradeSemana() {
         .sort((a, b) => (a.inicio || "").localeCompare(b.inicio || ""));
       return `<div style="border-right:1px solid var(--border); ${i === 6 ? "border-right:none;" : ""} display:flex; flex-direction:column; min-width:0">
         <div style="padding:8px 6px; text-align:center; border-bottom:1px solid var(--border); background:${ehHoje ? "var(--verde-soft)" : "#fafbfa"}">
-          <div style="font-size:10.5px; color:var(--muted); text-transform:uppercase">${nomes[i]}</div>
-          <div style="font-size:15px; font-weight:${ehHoje ? "800" : "600"}; color:${ehHoje ? "var(--verde-esc)" : "var(--text)"}">${dt.getDate()}</div>
+          <div style="font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.5px">${nomes[i]}</div>
+          <div style="font-size:19px; font-weight:${ehHoje ? "800" : "600"}; color:${ehHoje ? "var(--verde-esc)" : "var(--text)"}">${dt.getDate()}</div>
         </div>
         <div style="flex:1; padding:4px; display:flex; flex-direction:column; gap:3px; overflow-y:auto; background:${ehHoje ? "#f7fcf9" : "transparent"}">
           ${evs.map((e, ie) => `<div onclick="verEvento('${dia}', ${ie})"
-            style="cursor:pointer; padding:4px 6px; background:${e.diaInteiro ? "#f0f0f0" : "var(--verde-soft)"}; border-left:3px solid ${e.lead ? "#1e5aa8" : e.diaInteiro ? "#bbb" : "var(--verde)"}; border-radius:4px; font-size:11px; line-height:1.3; overflow:hidden"
+            style="cursor:pointer; padding:4px 6px; background:${e.diaInteiro ? "#f0f0f0" : "var(--verde-soft)"}; border-left:3px solid ${e.lead ? "#1e5aa8" : e.diaInteiro ? "#bbb" : "var(--verde)"}; border-radius:4px; font-size:12.5px; line-height:1.35; overflow:hidden"
             title="${(e.titulo || "").replace(/"/g, "&quot;")} — clica pra ver os detalhes">
-            <b>${e.diaInteiro ? "dia todo" : (e.inicio || "").slice(11, 16)}</b> ${e.titulo.length > 34 ? e.titulo.slice(0, 34) + "…" : e.titulo}
+            <b>${e.diaInteiro ? "dia todo" : (e.inicio || "").slice(11, 16)}</b> ${e.titulo.length > 30 ? e.titulo.slice(0, 30) + "…" : e.titulo}
           </div>`).join("") || ""}
         </div>
       </div>`;
@@ -2519,7 +2547,7 @@ function barraBench(b, sufixo = "%") {
   const pctBarra = Math.min(100, Math.round((b.atual / (alvo || 1)) * 100));
   const cor = b.ok ? "var(--verde)" : (b.atual > 0 ? "#e8a13a" : "#d93025");
   return `<div style="margin-bottom:11px">
-    <div style="display:flex; font-size:12.5px; margin-bottom:3px">
+    <div style="display:flex; font-size:14px; margin-bottom:4px; align-items:baseline">
       <span style="flex:1">${b.ok ? "" : b.atual > 0 ? "" : ""} ${b.rotulo}</span>
       <b style="color:${cor}">${b.atual}${sufixo}</b>
       <span style="color:var(--muted); margin-left:6px">meta ${b.meta}${sufixo}${b.ideal ? `–${b.ideal}${sufixo}` : ""}</span>
@@ -2631,8 +2659,48 @@ async function dashProspeccao() {
           <b style="color:var(--verde-esc)">${p.reunioes} reun.</b>
         </div>`).join("") || '<div style="color:var(--muted); font-size:12.5px">ninguém ligou ainda</div>'}
 
-        <div style="margin-top:14px; padding:10px 12px; background:#eef6ff; border-radius:8px; font-size:12.5px">
+        <div style="margin-top:14px; padding:10px 12px; background:#eef6ff; border-radius:8px; font-size:13px">
           <b>${d.aLigar}</b> ${d.aLigar === 1 ? "lead esperando" : "leads esperando"} ligação nas pipelines de prospecção.
+        </div>
+      </div>
+    </div>
+
+    <!-- GUIA DO MÉTODO: rotina, horários de ouro e follow-up (Benchmarks de Mercado) -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; margin-top:14px">
+      <div class="card">
+        <h3 style="margin-bottom:10px">Rotina de quem bate meta</h3>
+        ${[
+          ["Prospecção ativa por dia", `${d.guia.rotina.horas_prospeccao_dia.min}h no mínimo (ideal ${d.guia.rotina.horas_prospeccao_dia.ideal}h)`],
+          ["Ritmo de discagem", `${d.guia.ligacao.ligacoes_hora.min} ligações/hora`],
+          ["Decisores mapeados", `${d.guia.ligacao.decisores_hora.min} por hora`],
+          ["Entre uma ligação e outra", `no máximo ${Math.round(d.guia.rotina.max_seg_entre_ligacoes / 60)} min`],
+          ["Blocos de trabalho", `${d.guia.rotina.pomodoro_min} min focado + ${d.guia.rotina.pomodoro_descanso_min} de pausa · meta: ${d.guia.rotina.reuniao_por_pomodoro} reunião por bloco`],
+          ["Quando pausar um lead", `${d.guia.rotina.toques_antes_de_pausar} tentativas sem resposta`],
+        ].map(([r, v]) => `<div style="display:flex; gap:10px; padding:7px 0; border-bottom:1px solid var(--border); font-size:13.5px">
+          <span style="flex:1; color:var(--muted)">${r}</span><b style="text-align:right">${v}</b></div>`).join("")}
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:10px">Horários de ouro</h3>
+        ${d.guia.horarios.map((h) => `<div style="display:flex; gap:10px; padding:7px 0; border-bottom:1px solid var(--border); font-size:13.5px; align-items:center">
+          <b style="min-width:96px">${h.faixa}</b>
+          <span class="tag">${h.perfil}</span>
+          <span style="color:var(--muted); flex:1">${h.nota}</span>
+        </div>`).join("")}
+        <div style="margin-top:10px; padding:9px 11px; background:#fdeaea; border-radius:8px; font-size:12.5px; color:#8f2b23">
+          <b>Evitar:</b> ${d.guia.evitar.join(" · ")}
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:10px">Follow-up (onde a reunião nasce)</h3>
+        ${[
+          ["Follow-up → decisor", `${d.guia.followup.follow_decisor_pct.min}–${d.guia.followup.follow_decisor_pct.ideal}%`],
+          ["Decisor → reunião", `${d.guia.followup.decisor_reuniao_pct.min}%`],
+          ["Follow-ups por dia", `${d.guia.followup.follows_dia.min} no mínimo (ideal ${d.guia.followup.follows_dia.ideal}+)`],
+        ].map(([r, v]) => `<div style="display:flex; gap:10px; padding:7px 0; border-bottom:1px solid var(--border); font-size:13.5px">
+          <span style="flex:1; color:var(--muted)">${r}</span><b>${v}</b></div>`).join("")}
+        <div style="margin-top:10px; padding:9px 11px; background:var(--verde-soft); border-radius:8px; font-size:12.5px; line-height:1.5">
+          Follow por <b>ligação</b> converte ~66% decisor→reunião; por <b>mensagem</b>, ~20%.
+          Quando puder escolher, <b>liga</b>.
         </div>
       </div>
     </div>`;
@@ -2700,6 +2768,33 @@ async function dashDisparo() {
       <h3 style="margin-bottom:8px">Por que perdemos</h3>
       ${d.motivosPerda.map((m) => `<div style="display:flex; justify-content:space-between; font-size:13px; padding:4px 0; border-bottom:1px solid var(--border)"><span>${m.m}</span><b>${m.c}</b></div>`).join("")}
     </div>` : ""}`;
+  // guia do canal (Benchmarks de Mercado)
+  $("#dash-corpo").insertAdjacentHTML("beforeend", `
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; margin-top:14px">
+      <div class="card">
+        <h3>Metas do canal Disparo</h3>
+        ${[["Disparos por dia", `${d.guia.disparo.disparos_dia.min} no mínimo (ideal ${d.guia.disparo.disparos_dia.ideal}+)`],
+           ["Disparo → decisor", `${d.guia.disparo.disparo_decisor_pct.min}–${d.guia.disparo.disparo_decisor_pct.ideal}%`],
+           ["Decisor → reunião", `${d.guia.disparo.decisor_reuniao_pct.min}–${d.guia.disparo.decisor_reuniao_pct.ideal}%`],
+           ["Resposta com copy boa", `${d.guia.disparo.resposta_decisor_pct.min}–${d.guia.disparo.resposta_decisor_pct.ideal}%`]]
+          .map(([r, v]) => `<div style="display:flex; gap:10px; padding:7px 0; border-bottom:1px solid var(--border); font-size:13.5px">
+            <span style="flex:1; color:var(--muted)">${r}</span><b>${v}</b></div>`).join("")}
+        <div style="margin-top:10px; padding:9px 11px; background:var(--verde-soft); border-radius:8px; font-size:12.5px; line-height:1.5">
+          Mercado gasta <b>${d.guia.disparo.mercado_disparos_por_reuniao} disparos</b> pra fechar 1 reunião. Bater as metas acima é jogar muito acima da média.
+        </div>
+      </div>
+      <div class="card">
+        <h3>Follow-up do disparo</h3>
+        ${[["Follow-up → decisor", `${d.guia.followup.follow_decisor_pct.min}–${d.guia.followup.follow_decisor_pct.ideal}%`],
+           ["Decisor → reunião", `${d.guia.followup.decisor_reuniao_pct.min}%`],
+           ["Follow-ups por dia", `${d.guia.followup.follows_dia.min}–${d.guia.followup.follows_dia.ideal}`]]
+          .map(([r, v]) => `<div style="display:flex; gap:10px; padding:7px 0; border-bottom:1px solid var(--border); font-size:13.5px">
+            <span style="flex:1; color:var(--muted)">${r}</span><b>${v}</b></div>`).join("")}
+        <div style="margin-top:10px; padding:9px 11px; background:#eef6ff; border-radius:8px; font-size:12.5px; line-height:1.5">
+          Lead que engajou e sumiu recebe <b>1 reengajamento automático</b>. Quem nunca respondeu não recebe follow frio (decisão da casa).
+        </div>
+      </div>
+    </div>`);
 }
 
 // ---- entrevista (assistente que monta o cerebro) ----

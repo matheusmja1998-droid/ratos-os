@@ -494,6 +494,7 @@ app.get("/api/agenda", auth, async (req, res) => {
   }
   res.json({
     closer, conectada, eventos,
+    pessoas: ["matheus", "valentino"].map((c) => ({ nome: c, conectada: gcalConfigurado(c) })),
     reunioes: db.prepare(`SELECT r.*, l.nome_clinica, l.telefone FROM reunioes r JOIN leads l ON l.id = r.lead_id
       WHERE r.status IN ('marcada','remarcada') AND r.inicio >= date('now','-1 day') ORDER BY r.inicio LIMIT 50`).all(),
     tarefas: tarefasReuniao,
@@ -1423,6 +1424,7 @@ app.get("/api/dashboard", auth, (req, res) => {
     dias, disparos, respostas, reunioes, optouts, followups, decisores,
     taxaResposta, taxaDecisor, taxaReuniao, taxaReuniaoDisparo,
     porStatus, bench, serie, porWhats, motivosPerda,
+    guia: { disparo: BENCH.disparo, followup: BENCH.followup },
     leadsComTarefa: db.prepare("SELECT COUNT(*) c FROM leads WHERE followup_em IS NOT NULL AND ia_pausada = 0").get().c,
   });
 });
@@ -1531,6 +1533,8 @@ app.get("/api/dashboard/prospeccao", auth, (req, res) => {
       volume: { atual: porDia, meta: B.ligacoes_dia.min, ideal: B.ligacoes_dia.ideal, rotulo: B.ligacoes_dia.rotulo, ok: porDia >= B.ligacoes_dia.min },
     },
     mercado: { ligacoes_por_reuniao: B.mercado_ligacoes_por_reuniao },
+    // guia do método (rotina, horários de ouro, follow-up) — alimenta os cards do dashboard
+    guia: { rotina: BENCH.rotina, horarios: BENCH.horarios_ouro, evitar: BENCH.evitar, followup: BENCH.followup, ligacao: BENCH.ligacao },
     diagnostico, serie, porPessoa,
     usuario_id: uid,
     // fila de trabalho: quem está pra ligar hoje
