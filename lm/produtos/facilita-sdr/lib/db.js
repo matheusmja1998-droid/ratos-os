@@ -157,6 +157,7 @@ for (const sql of [
   "ALTER TABLE mensagens ADD COLUMN thread_id INTEGER",
   "ALTER TABLE campanhas ADD COLUMN pipeline_id INTEGER",
   "ALTER TABLE campanhas ADD COLUMN tipo TEXT DEFAULT 'disparo'",
+  "ALTER TABLE leads ADD COLUMN instancia_id INTEGER",
   "ALTER TABLE instancias ADD COLUMN pipeline_id INTEGER",
   "ALTER TABLE instancias ADD COLUMN usuario_id INTEGER",
   // mapa clique-da-ligacao -> etapa (JSON {"nao_atendeu": etapaId, ...}); configuravel por pipeline
@@ -213,6 +214,13 @@ export function criarPipeline({ nome, tipo = "disparo", instancia_id = null, usu
   base.forEach((e, i) => ins.run(id, e.nome, e.chave || null, i, e.entrada || 0, e.ganho || 0, e.perdido || 0));
   return id;
 }
+
+// MIGRACAO: lead com conversa em andamento fica COLADO no chip original (o
+// primeiro da casa) — sem isso, com 2+ chips a conversa trocava de numero.
+try {
+  db.exec(`UPDATE leads SET instancia_id = (SELECT MIN(id) FROM instancias)
+    WHERE instancia_id IS NULL AND EXISTS (SELECT 1 FROM mensagens WHERE mensagens.lead_id = leads.id)`);
+} catch { /* nunca trava o boot */ }
 
 // PERMISSOES por papel (padrao de mercado). O servidor checa `pode(user, acao)`.
 export const PERMISSOES = {
@@ -586,11 +594,17 @@ export function abrirThread(leadId, telefone, rotulo = null, instanciaId = null)
 // o do dono da pipeline > o primeiro conectado. Mantem a conversa sempre
 // no MESMO numero (responder por outro chip abriria conversa nova no lead).
 export function instanciaDoLead(lead, threadInstanciaId = null) {
-  const insts = db.prepare("SELECT * FROM instancias WHERE status = 'conectado'").all();
+  // ordem DETERMINISTICA (id) — nunca a de rotacao, senao a conversa troca de chip
+  const insts = db.prepare("SELECT * FROM instancias WHERE status = 'conectado' ORDER BY id").all();
   if (!insts.length) return null;
   if (threadInstanciaId) {
     const t = insts.find((i) => i.id === threadInstanciaId);
     if (t) return t;
+  }
+  // o chip GRAVADO do lead e a fonte da verdade: a conversa vive naquele numero
+  if (lead?.instancia_id) {
+    const fixo = insts.find((i) => i.id === lead.instancia_id);
+    if (fixo) return fixo;
   }
   if (lead?.pipeline_id) {
     const amarrada = insts.find((i) => i.pipeline_id === lead.pipeline_id);
@@ -603,6 +617,10 @@ export function instanciaDoLead(lead, threadInstanciaId = null) {
   }
   return insts[0];
 }
+// cola o lead no chip (1a vez): dali em diante a conversa NUNCA muda de numero
+export const fixarChipDoLead = (leadId, instanciaId) =>
+  db.prepare("UPDATE leads SET instancia_id = ? WHERE id = ? AND (instancia_id IS NULL OR instancia_id <> ?)")
+    .run(instanciaId, leadId, instanciaId);
 
 // ---------- tarefas manuais do lead (minhas, nao da IA) ----------
 export const tarefasDoLead = (leadId) =>

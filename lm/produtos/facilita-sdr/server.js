@@ -23,7 +23,7 @@ import {
   etapasDaPipeline, addEtapa, atualizarEtapa, removerEtapa, etapaDeEntrada,
   moverLead, kanbanDaPipeline,
   telefonesDoLead, addTelefone, removerTelefone, normalizarTelefone, variantesTelefone,
-  threadsDoLead, getThread, threadPorTelefone, abrirThread, instanciaDoLead,
+  threadsDoLead, getThread, threadPorTelefone, abrirThread, instanciaDoLead, fixarChipDoLead,
 } from "./lib/db.js";
 import {
   parseWebhook, enviarTexto, enviarMidia, mostrarDigitando, criarInstancia,
@@ -194,10 +194,13 @@ app.post("/webhook", async (req, res) => {
       return;
     }
 
-    // MULTI-WHATSAPP: responde pelo MESMO numero que recebeu (token no payload)
+    // MULTI-WHATSAPP: responde pelo MESMO numero que recebeu (token no payload).
+    // Sem token no payload, usa o CHIP GRAVADO do lead — nunca "o primeiro da
+    // lista" (isso fazia a conversa trocar de numero com 2+ chips = risco de ban).
     const tokenPayload = req.body?.token || req.body?.instance || null;
-    const instRecebeu = getInstanciaPorToken(tokenPayload) || instanciasConectadas()[0] || null;
+    const instRecebeu = getInstanciaPorToken(tokenPayload) || instanciaDoLead(lead) || null;
     const tokenResposta = instRecebeu?.uazapi_token || getConfig("instancia_token", "");
+    if (instRecebeu) fixarChipDoLead(lead.id, instRecebeu.id); // cola a conversa neste chip
 
     // eco da propria IA (mensagem que NOS enviamos volta como fromMe) -> ignora
     if (m.fromMe && m.enviadaPelaApi) return;
@@ -441,6 +444,7 @@ app.post("/api/lead/:id/mensagem", auth, async (req, res) => {
   if (!inst && !simulado) return res.status(502).json({ erro: "nenhum WhatsApp conectado" });
   const trava = chipBloqueado(inst, req.usuario);
   if (trava) return res.status(403).json({ erro: trava });
+  if (inst && !thread) fixarChipDoLead(lead.id, inst.id);
   const r = simulado ? { ok: true } : await enviarTexto(inst.uazapi_token, alvo, texto);
   if (!r.ok) return res.status(502).json({ erro: r.erro });
   const msgId = salvarMensagem(lead.id, "assistant", texto);
@@ -463,7 +467,7 @@ app.post("/api/lead/:id/ia", auth, async (req, res) => {
     const ultima = db.prepare("SELECT role FROM mensagens WHERE lead_id = ? ORDER BY id DESC LIMIT 1").get(lead.id);
     // se a ultima foi do lead (esperando resposta) OU foi do humano fechando um gap, a IA continua.
     // se nao ha nada a dizer, o proprio agente devolve acoes vazias e nada e enviado.
-    const tokRetomar = instanciasConectadas()[0]?.uazapi_token || "SIMULADO";
+    const tokRetomar = instanciaDoLead(lead)?.uazapi_token || "SIMULADO";
     responderLead(lead.id, tokRetomar).catch((e) => console.error("[retomar IA] erro:", e.message));
   }
 });
@@ -1008,7 +1012,7 @@ function aberturaDaCampanha(lead) {
 
 // ---------- teste REAL: cadastra um telefone teu como lead e dispara a abertura ----------
 app.post("/api/testar-real", auth, async (req, res) => {
-  const instCon = instanciasConectadas()[0];
+  const instCon = db.prepare("SELECT * FROM instancias WHERE status = 'conectado' ORDER BY id").get();
   if (!instCon) return res.status(409).json({ erro: "nenhum WhatsApp conectado (Config → QR)" });
   const token = instCon.uazapi_token;
   let tel = String(req.body?.telefone || "").replace(/\D/g, "");
@@ -1024,6 +1028,7 @@ app.post("/api/testar-real", auth, async (req, res) => {
   const id = existente?.id || upsertLead({ nome_clinica: nome, telefone: tel, cidade: "Teste", nicho: "teste", origem_lista: "teste-real" });
   const abertura = aberturaDaCampanha(getLead(id));
   const r = await enviarTexto(token, tel, abertura);
+  if (r.ok) fixarChipDoLead(id, instCon.id); // teste tambem cola no chip
   if (!r.ok) return res.status(502).json({ erro: `envio falhou: ${r.erro}` });
   salvarMensagem(id, "assistant", abertura);
   atualizarLead(id, { status: "disparado", ia_pausada: 0, eh_teste: 1 }); // teste nunca suja a pipe
@@ -1332,7 +1337,9 @@ app.post("/api/leads", auth, exige("editar_lead"), (req, res) => {
     .run(pid || null, etapa?.id || null, campos.tag_importacao, campos.usuario_id,
       campos.valor_venda, campos.nome_contato, campos.google_negocio, id);
   addTelefone(id, telefone, "empresa", "Empresa");
-  abrirThread(id, telefone, "Empresa", instanciasConectadas()[0]?.id || null); // conversa principal
+  const instLM = instanciaDoLead(getLead(id));
+  if (instLM) fixarChipDoLead(id, instLM.id);
+  abrirThread(id, telefone, "Empresa", instLM?.id || null); // conversa principal
   if (b.telefone_decisor) {
     const dec = normalizarTelefone(b.telefone_decisor, telefone);
     addTelefone(id, dec, "decisor", b.nome_decisor || "Decisor");
@@ -1368,8 +1375,8 @@ app.post("/api/lead/:id/threads", auth, exige("conversar"), (req, res) => {
   if (!telefone) return res.status(400).json({ erro: "telefone obrigatório" });
   const lead = getLead(req.params.id);
   if (!lead) return res.status(404).json({ erro: "lead não existe" });
-  // a thread sai do MESMO WhatsApp da campanha (decisão do Matheus)
-  const inst = instanciasConectadas()[0] || null;
+  // a thread sai do MESMO chip do lead (o numero que a empresa dele ja conhece)
+  const inst = instanciaDoLead(lead) || null;
   const tel = normalizarTelefone(telefone, lead.telefone);
   const th = abrirThread(lead.id, tel, rotulo || "Decisor", inst?.id || null);
   addTelefone(lead.id, tel, "decisor", rotulo || "Decisor"); // fica vinculado no card

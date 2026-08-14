@@ -7,13 +7,27 @@ import {
   marcarFollowup, salvarMensagem, registrarEvento, reunioesAtivas, getLead,
   metricas, atualizarLead, followupsVencidos, limparFollowup, removerDaFila,
   listarInstancias, instanciasConectadas, proximaInstanciaDisparo, addDisparoInstancia, zerarDisparosInstancias, atualizarInstancia,
-  leadsPraReengajar, marcarReengajado, reengajamentosHoje,
+  leadsPraReengajar, marcarReengajado, reengajamentosHoje, instanciaDoLead, fixarChipDoLead,
 } from "./lib/db.js";
 import { responderLead } from "./lib/agente.js";
 import { enviarTexto, statusInstanciaLive, checarWhatsapp } from "./lib/uazapi.js";
 import { alertar } from "./lib/telegram.js";
 
 const rand = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
+
+// TOKEN DO LEAD: toda mensagem de continuação sai pelo chip GRAVADO do lead.
+// Se o chip dele caiu, NÃO envia por outro (trocar de número = queimar os dois).
+function tokenDoLead(lead) {
+  const inst = lead?.instancia_id
+    ? instanciasConectadas().find((i) => i.id === lead.instancia_id)
+    : null;
+  if (inst) return inst.uazapi_token;
+  if (lead?.instancia_id) {
+    registrarEvento(lead.id, "erro", "chip do lead desconectado — envio segurado pra nao trocar de numero");
+    return null;
+  }
+  return instanciaDoLead(lead)?.uazapi_token || null; // lead antigo sem chip gravado
+}
 
 function dentroDaJanela(camp) {
   const { hora, diaSemana } = agoraSP();
@@ -61,7 +75,8 @@ async function tickDisparo() {
       : (tipo === "followup1"
         ? `Oi! Consegui falar com o responsável da ${followLead.nome_clinica}?`
         : `Última tentativa por aqui: se fizer sentido conversar sobre a agenda da ${followLead.nome_clinica}, é só responder essa mensagem. Senão, não incomodo mais!`);
-    const r = await enviarTexto(instanceToken, followLead.telefone, texto);
+    const tokF = tokenDoLead(followLead) || instanceToken;
+    const r = await enviarTexto(tokF, followLead.telefone, texto);
     if (r.ok) {
       salvarMensagem(followLead.id, "assistant", texto);
       marcarFollowup(camp.id, followLead.id, tipo === "followup1" ? "followup1_em" : "followup2_em");
@@ -98,6 +113,7 @@ async function tickDisparo() {
   const texto = preencher(tpl.texto, lead);
   const r = await enviarTexto(instanceToken, alvo, texto);
   if (r.ok) {
+    fixarChipDoLead(lead.id, instAtiva.id); // a conversa NASCE e MORRE neste chip
     salvarMensagem(lead.id, "assistant", texto);
     marcarDisparado(camp.id, lead.id, tpl.id);
     registrarEvento(lead.id, "disparo", `campanha ${camp.nome}`);
@@ -109,14 +125,15 @@ async function tickDisparo() {
 }
 
 // ---------- lembretes de reuniao ----------
-async function tickLembretes(instanceToken) {
-  if (!instanceToken) return;
+async function tickLembretes() {
   const { data, iso } = agoraSP();
   const amanha = new Date(new Date(`${data}T12:00:00`).getTime() + 86400_000).toISOString().slice(0, 10);
 
   for (const r of reunioesAtivas()) {
     const lead = getLead(r.lead_id);
     if (!lead || String(lead.telefone).startsWith("0000")) continue;
+    const instanceToken = tokenDoLead(lead);
+    if (!instanceToken) continue;
 
     // D-1: reuniao amanha, lembrete apos as 17h de hoje
     if (!r.lembrete_d1 && r.inicio.startsWith(amanha) && iso.slice(11) >= "17:00") {
@@ -146,8 +163,7 @@ async function tickLembretes(instanceToken) {
 }
 
 // ---------- follow-ups agendados pela IA (intermediario, "me chama depois") ----------
-async function tickFollowupsIA(instanceToken) {
-  if (!instanceToken) return;
+async function tickFollowupsIA() {
   const { hora } = agoraSP();
   if (hora < "08:30" || hora > "18:30") return; // nunca cobrar fora de horario comercial
   // MESMO delay + MESMO teto do disparo: follow-up conta no volume diario da campanha
@@ -160,9 +176,11 @@ async function tickFollowupsIA(instanceToken) {
     // se o lead ja respondeu depois do agendamento, a conversa seguiu — nao cobra
     const ultima = db.prepare("SELECT role FROM mensagens WHERE lead_id = ? ORDER BY id DESC LIMIT 1").get(lead.id);
     if (ultima?.role === "user") continue;
+    const tok = tokenDoLead(lead);
+    if (!tok) continue;
     const msg = lead.followup_msg ||
       "Oi! Conseguiu encaminhar pro responsável? Qualquer coisa eu explico direto pra ele, é rapidinho.";
-    const r = await enviarTexto(instanceToken, lead.telefone, msg);
+    const r = await enviarTexto(tok, lead.telefone, msg);
     if (r.ok) {
       salvarMensagem(lead.id, "assistant", msg);
       registrarEvento(lead.id, "followup", "follow-up agendado pela IA enviado");
@@ -174,8 +192,7 @@ async function tickFollowupsIA(instanceToken) {
 
 // ---------- REENGAJAMENTO: lead quente que esfriou no meio da conversa ----------
 // A IA cobra sozinha 1x quem respondeu e sumiu (ultima msg foi nossa ha 20h+).
-async function tickReengajar(instanceToken) {
-  if (!instanceToken) return;
+async function tickReengajar() {
   const { hora } = agoraSP();
   if (hora < "09:00" || hora > "18:00") return; // reengaja só em horário comercial
   // RESPEITA O MESMO DELAY DO DISPARO (gate de cadencia compartilhado): nunca sai
@@ -192,9 +209,11 @@ async function tickReengajar(instanceToken) {
   const horas = Number(getConfig("reengajar_horas", "20"));
   for (const lead of leadsPraReengajar(horas)) {
     if (String(lead.telefone).startsWith("0000")) continue;
+    const tok = tokenDoLead(lead);
+    if (!tok) continue; // chip do lead fora: nao reengaja por outro numero
     marcarReengajado(lead.id); // marca ANTES (nunca insiste, mesmo se falhar)
     salvarMensagem(lead.id, "sistema", "[o lead parou de responder; retome com naturalidade uma mensagem curta pra reengajar, sem soar cobrança]");
-    await responderLead(lead.id, instanceToken);
+    await responderLead(lead.id, tok);
     registrarEvento(lead.id, "reengajamento", `${horas}h sem resposta`);
     if (camp) setConfig("proximo_disparo_em", Date.now() + rand(camp.cadencia_min_seg, camp.cadencia_max_seg) * 1000);
     return; // 1 por tick + gate de cadencia
@@ -261,13 +280,12 @@ export function iniciarWorker() {
   const tick = async () => {
     tickResetRotacao();
     const conectadas = instanciasConectadas();
-    const token = conectadas[0]?.uazapi_token || "";
     const conectado = conectadas.length > 0;
     try {
       if (conectado) await tickDisparo();
-      if (conectado) await tickLembretes(token);
-      if (conectado) await tickFollowupsIA(token);
-      if (conectado) await tickReengajar(token);
+      if (conectado) await tickLembretes();
+      if (conectado) await tickFollowupsIA();
+      if (conectado) await tickReengajar();
       await tickRelatorio();
       tickReunioesVencidas();
     } catch (e) {
