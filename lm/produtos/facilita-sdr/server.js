@@ -561,10 +561,12 @@ app.post("/api/campanhas", auth, (req, res) => {
   const b = req.body || {};
   if (!b.nome) return res.status(400).json({ erro: "nome obrigatorio" });
   const pct = b.pct_reengajar !== undefined ? Math.max(0, Math.min(100, Number(b.pct_reengajar))) : 30;
-  const r = db.prepare(`INSERT INTO campanhas (nome, teto_dia, cadencia_min_seg, cadencia_max_seg, janela_inicio, janela_fim, dias_semana, pct_reengajar)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`).run(
+  // funil de DISPARO da campanha (define por qual chip ela sai)
+  const pipeCamp = b.pipeline_id ? Number(b.pipeline_id) : (listarPipelines().find((p) => p.tipo === "disparo")?.id || null);
+  const r = db.prepare(`INSERT INTO campanhas (nome, teto_dia, cadencia_min_seg, cadencia_max_seg, janela_inicio, janela_fim, dias_semana, pct_reengajar, pipeline_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`).run(
     b.nome, b.teto_dia || 25, b.cadencia_min_seg || 180, b.cadencia_max_seg || 420,
-    b.janela_inicio || "08:30", b.janela_fim || "18:00", b.dias_semana || "1,2,3,4,5", pct);
+    b.janela_inicio || "08:30", b.janela_fim || "18:00", b.dias_semana || "1,2,3,4,5", pct, pipeCamp);
   const id = r.lastInsertRowid;
   for (const t of b.aberturas || []) db.prepare("INSERT INTO templates (campanha_id, tipo, texto) VALUES (?, 'abertura', ?)").run(id, t);
   res.json({ ok: true, id });
@@ -573,10 +575,15 @@ app.post("/api/campanhas", auth, (req, res) => {
 app.patch("/api/campanha/:id", auth, (req, res) => {
   const b = req.body || {};
   if (b.status) {
-    if (b.status === "ativa") db.prepare("UPDATE campanhas SET status = 'pausada' WHERE status = 'ativa'").run(); // 1 ativa por vez
+    if (b.status === "ativa") {
+      // 1 ativa POR FUNIL (Matheus e Valentino rodam campanhas em paralelo)
+      const minha = db.prepare("SELECT pipeline_id FROM campanhas WHERE id = ?").get(req.params.id);
+      db.prepare("UPDATE campanhas SET status = 'pausada' WHERE status = 'ativa' AND COALESCE(pipeline_id,0) = COALESCE(?,0)")
+        .run(minha?.pipeline_id ?? null);
+    }
     db.prepare("UPDATE campanhas SET status = ? WHERE id = ?").run(b.status, req.params.id);
   }
-  for (const k of ["teto_dia", "cadencia_min_seg", "cadencia_max_seg", "janela_inicio", "janela_fim", "dias_semana", "pct_reengajar"])
+  for (const k of ["teto_dia", "cadencia_min_seg", "cadencia_max_seg", "janela_inicio", "janela_fim", "dias_semana", "pct_reengajar", "pipeline_id"])
     if (b[k] !== undefined) db.prepare(`UPDATE campanhas SET ${k} = ? WHERE id = ?`).run(b[k], req.params.id);
   res.json({ ok: true });
 });

@@ -729,6 +729,28 @@ export const zerarDisparosInstancias = () =>
   db.prepare("UPDATE instancias SET disparos_hoje = 0").run();
 
 // ---------- campanhas / disparo ----------
+// MULTI-CAMPANHA: uma campanha ativa POR FUNIL (Matheus e Valentino disparam em
+// paralelo, cada um pelo chip do seu funil). O gate de cadencia segue GLOBAL:
+// nunca sai mais de 1 mensagem a cada 3-7min somando tudo (protege os chips).
+export const campanhasAtivas = () =>
+  db.prepare("SELECT * FROM campanhas WHERE status = 'ativa' ORDER BY id").all();
+export const campanhaDaPipeline = (pipelineId) =>
+  pipelineId
+    ? db.prepare("SELECT * FROM campanhas WHERE pipeline_id = ? AND status = 'ativa' ORDER BY id LIMIT 1").get(pipelineId)
+    : null;
+// teto por campanha: conta so as mensagens dos leads DAQUELE funil
+export const disparosHojeDaCampanha = (camp) => {
+  if (!camp?.pipeline_id) return disparosHoje();
+  return db.prepare(`SELECT COUNT(*) c FROM eventos e JOIN leads l ON l.id = e.lead_id
+    WHERE e.tipo IN ('disparo','reengajamento','followup') AND date(e.criado_em) = date('now')
+      AND l.pipeline_id = ?`).get(camp.pipeline_id).c;
+};
+export const reengajamentosHojeDaCampanha = (camp) => {
+  if (!camp?.pipeline_id) return reengajamentosHoje();
+  return db.prepare(`SELECT COUNT(*) c FROM eventos e JOIN leads l ON l.id = e.lead_id
+    WHERE e.tipo = 'reengajamento' AND date(e.criado_em) = date('now')
+      AND l.pipeline_id = ?`).get(camp.pipeline_id).c;
+};
 export const campanhaAtiva = () =>
   db.prepare("SELECT * FROM campanhas WHERE status = 'ativa' ORDER BY id LIMIT 1").get();
 export const templatesDaCampanha = (campanhaId, tipo = "abertura") =>

@@ -2,7 +2,8 @@
 // Responsabilidades: disparo com cadencia, follow-ups, lembretes de reuniao,
 // watchdog da instancia e relatorio diario no Telegram.
 import {
-  db, agoraSP, getConfig, setConfig, campanhaAtiva, templatesDaCampanha,
+  db, agoraSP, getConfig, setConfig, campanhaAtiva, campanhasAtivas, campanhaDaPipeline,
+  disparosHojeDaCampanha, reengajamentosHojeDaCampanha, templatesDaCampanha,
   disparosHoje, proximoLeadPraDisparo, marcarDisparado, leadsPraFollowup,
   marcarFollowup, salvarMensagem, registrarEvento, reunioesAtivas, getLead,
   metricas, atualizarLead, followupsVencidos, limparFollowup, removerDaFila,
@@ -45,83 +46,82 @@ function preencher(template, lead) {
 // ---------- disparo ----------
 async function tickDisparo() {
   if (getConfig("conta_pausada", "") === "1") return; // inadimplente: disparos pausados
-  const camp = campanhaAtiva();
-  if (!camp) return;
-  // SPLIT/ROTACAO: escolhe a instancia respeitando a cota diaria de cada numero.
-  // Se todas bateram a cota, para de disparar hoje (o split foi cumprido).
-  // WhatsApp do dono da pipeline da campanha (cada sócio dispara pelo chip dele)
-  const instAtiva = proximaInstanciaDisparo(camp.pipeline_id || null);
-  if (!instAtiva) return;
-  const instanceToken = instAtiva.uazapi_token;
-  if (!dentroDaJanela(camp)) return;
-  if (disparosHoje() >= camp.teto_dia) return;
+  // gate de cadencia GLOBAL (1 envio por vez somando todas as campanhas)
+  if (Date.now() < Number(getConfig("proximo_disparo_em", "0"))) return;
 
-  // gate de cadencia (compartilhado entre abertura e follow-up: 1 envio por vez)
-  const proximoEm = Number(getConfig("proximo_disparo_em", "0"));
-  if (Date.now() < proximoEm) return;
+  // MULTI-CAMPANHA: cada funil dispara pelo SEU chip. A campanha mais ATRASADA
+  // em relacao ao teto vai primeiro (nenhuma monopoliza o gate global).
+  const fila = campanhasAtivas()
+    .map((c) => ({ c, uso: disparosHojeDaCampanha(c) / Math.max(1, c.teto_dia) }))
+    .sort((a, b) => a.uso - b.uso)
+    .map((x) => x.c);
+  for (const camp of fila) {
+    if (!dentroDaJanela(camp)) continue;
+    const instAtiva = proximaInstanciaDisparo(camp.pipeline_id || null);
+    if (!instAtiva) continue;
+    const instanceToken = instAtiva.uazapi_token;
+    if (disparosHojeDaCampanha(camp) >= camp.teto_dia) continue;
 
-  // 1) FOLLOW-UP FRIO (cobrar quem NUNCA respondeu o disparo): DESLIGADO por padrão
-  //    (decisão do Matheus: não compensa bater de novo em quem não engajou).
-  //    Religa com config "followup_frio" = "1" se um dia quiser.
-  const followFrioLigado = getConfig("followup_frio", "") === "1";
-  const f1 = followFrioLigado ? leadsPraFollowup(camp.id, "followup1_em", 44, 120)[0] : null;
-  const f2 = followFrioLigado && !f1 ? leadsPraFollowup(camp.id, "followup2_em", 115, 240)[0] : null;
-  const followLead = f1 || f2;
-  if (followLead) {
-    const tipo = f1 ? "followup1" : "followup2";
-    const tpls = templatesDaCampanha(camp.id, tipo);
-    const texto = tpls.length
-      ? preencher(tpls[rand(0, tpls.length - 1)].texto, followLead)
-      : (tipo === "followup1"
-        ? `Oi! Consegui falar com o responsável da ${followLead.nome_clinica}?`
-        : `Última tentativa por aqui: se fizer sentido conversar sobre a agenda da ${followLead.nome_clinica}, é só responder essa mensagem. Senão, não incomodo mais!`);
-    const tokF = tokenDoLead(followLead) || instanceToken;
-    const r = await enviarTexto(tokF, followLead.telefone, texto);
+    // 1) FOLLOW-UP FRIO (desligado por padrao; religa com followup_frio=1)
+    const followFrioLigado = getConfig("followup_frio", "") === "1";
+    const f1 = followFrioLigado ? leadsPraFollowup(camp.id, "followup1_em", 44, 120)[0] : null;
+    const f2 = followFrioLigado && !f1 ? leadsPraFollowup(camp.id, "followup2_em", 115, 240)[0] : null;
+    const followLead = f1 || f2;
+    if (followLead) {
+      const tipo = f1 ? "followup1" : "followup2";
+      const tpls = templatesDaCampanha(camp.id, tipo);
+      const texto = tpls.length
+        ? preencher(tpls[rand(0, tpls.length - 1)].texto, followLead)
+        : (tipo === "followup1"
+          ? `Oi! Consegui falar com o responsável da ${followLead.nome_clinica}?`
+          : `Última tentativa por aqui: se fizer sentido conversar sobre a agenda da ${followLead.nome_clinica}, é só responder essa mensagem. Senão, não incomodo mais!`);
+      const tokF = tokenDoLead(followLead) || instanceToken;
+      const r = await enviarTexto(tokF, followLead.telefone, texto);
+      if (r.ok) {
+        salvarMensagem(followLead.id, "assistant", texto);
+        marcarFollowup(camp.id, followLead.id, tipo === "followup1" ? "followup1_em" : "followup2_em");
+        registrarEvento(followLead.id, "followup", tipo);
+        addDisparoInstancia(instAtiva.id);
+      } else {
+        registrarEvento(followLead.id, "erro", `followup falhou: ${r.erro}`);
+      }
+      setConfig("proximo_disparo_em", Date.now() + rand(camp.cadencia_min_seg, camp.cadencia_max_seg) * 1000);
+      return;
+    }
+
+    // 2) abertura pra lead novo desta campanha
+    const lead = proximoLeadPraDisparo(camp.id);
+    if (!lead) continue;
+    const tpls = templatesDaCampanha(camp.id, "abertura");
+    if (!tpls.length) continue; // campanha sem template = nao dispara
+
+    // checa WhatsApp antes de gastar disparo (numero morto = pula sem queimar teto)
+    const chk = await checarWhatsapp(instanceToken, lead.telefone);
+    if (chk.temWhatsapp === false) {
+      removerDaFila(camp.id, lead.id);
+      atualizarLead(lead.id, { status: "sem_whatsapp" });
+      registrarEvento(lead.id, "sem_whatsapp", lead.telefone);
+      return; // proximo tick segue a fila (barato, sem gate)
+    }
+    if (chk.numeroCorrigido && chk.numeroCorrigido !== lead.telefone)
+      db.prepare("UPDATE leads SET telefone = ? WHERE id = ?").run(chk.numeroCorrigido, lead.id);
+    const alvo = chk.numeroCorrigido || lead.telefone;
+
+    const tpl = tpls[rand(0, tpls.length - 1)];
+    const texto = preencher(tpl.texto, lead);
+    const r = await enviarTexto(instanceToken, alvo, texto);
     if (r.ok) {
-      salvarMensagem(followLead.id, "assistant", texto);
-      marcarFollowup(camp.id, followLead.id, tipo === "followup1" ? "followup1_em" : "followup2_em");
-      registrarEvento(followLead.id, "followup", tipo);
+      fixarChipDoLead(lead.id, instAtiva.id); // a conversa NASCE e MORRE neste chip
+      salvarMensagem(lead.id, "assistant", texto);
+      marcarDisparado(camp.id, lead.id, tpl.id);
+      registrarEvento(lead.id, "disparo", `campanha ${camp.nome}`);
       addDisparoInstancia(instAtiva.id);
     } else {
-      registrarEvento(followLead.id, "erro", `followup falhou: ${r.erro}`);
+      registrarEvento(lead.id, "erro", `disparo falhou: ${r.erro}`);
     }
     setConfig("proximo_disparo_em", Date.now() + rand(camp.cadencia_min_seg, camp.cadencia_max_seg) * 1000);
-    return;
+    return; // 1 envio por tick no total
   }
-
-  // 2) abertura pra lead novo
-  const lead = proximoLeadPraDisparo(camp.id);
-  if (!lead) return;
-  const tpls = templatesDaCampanha(camp.id, "abertura");
-  if (!tpls.length) return; // campanha sem template = nao dispara
-
-  // CHECA WhatsApp antes de gastar disparo (fixo/numero morto = pula, nao queima chip).
-  // temWhatsapp null = uazapi incerta (rede) -> segue o disparo (nao trava a maquina).
-  const chk = await checarWhatsapp(instanceToken, lead.telefone);
-  if (chk.temWhatsapp === false) {
-    removerDaFila(camp.id, lead.id); // tira da fila SEM contar disparo nem gastar teto
-    atualizarLead(lead.id, { status: "sem_whatsapp" });
-    registrarEvento(lead.id, "sem_whatsapp", lead.telefone);
-    return; // sem gate de cadencia: pular numero morto e barato, pode ir pro proximo ja
-  }
-  // numero corrigido pela uazapi (com/sem 9o digito) vira a verdade
-  if (chk.numeroCorrigido && chk.numeroCorrigido !== lead.telefone)
-    db.prepare("UPDATE leads SET telefone = ? WHERE id = ?").run(chk.numeroCorrigido, lead.id);
-  const alvo = chk.numeroCorrigido || lead.telefone;
-
-  const tpl = tpls[rand(0, tpls.length - 1)];
-  const texto = preencher(tpl.texto, lead);
-  const r = await enviarTexto(instanceToken, alvo, texto);
-  if (r.ok) {
-    fixarChipDoLead(lead.id, instAtiva.id); // a conversa NASCE e MORRE neste chip
-    salvarMensagem(lead.id, "assistant", texto);
-    marcarDisparado(camp.id, lead.id, tpl.id);
-    registrarEvento(lead.id, "disparo", `campanha ${camp.nome}`);
-    addDisparoInstancia(instAtiva.id);
-  } else {
-    registrarEvento(lead.id, "erro", `disparo falhou: ${r.erro}`);
-  }
-  setConfig("proximo_disparo_em", Date.now() + rand(camp.cadencia_min_seg, camp.cadencia_max_seg) * 1000);
 }
 
 // ---------- lembretes de reuniao ----------
@@ -166,16 +166,16 @@ async function tickLembretes() {
 async function tickFollowupsIA() {
   const { hora } = agoraSP();
   if (hora < "08:30" || hora > "18:30") return; // nunca cobrar fora de horario comercial
-  // MESMO delay + MESMO teto do disparo: follow-up conta no volume diario da campanha
-  const camp = campanhaAtiva();
-  if (camp && Date.now() < Number(getConfig("proximo_disparo_em", "0"))) return;
-  if (camp && disparosHoje() >= camp.teto_dia) return; // teto total do dia batido
+  // MESMO delay global; teto avaliado pela campanha DO FUNIL do lead
+  if (Date.now() < Number(getConfig("proximo_disparo_em", "0"))) return;
   for (const lead of followupsVencidos()) {
     limparFollowup(lead.id);
     if (String(lead.telefone).startsWith("0000")) continue;
     // se o lead ja respondeu depois do agendamento, a conversa seguiu — nao cobra
     const ultima = db.prepare("SELECT role FROM mensagens WHERE lead_id = ? ORDER BY id DESC LIMIT 1").get(lead.id);
     if (ultima?.role === "user") continue;
+    const camp = campanhaDaPipeline(lead.pipeline_id) || campanhasAtivas()[0] || null;
+    if (camp && disparosHojeDaCampanha(camp) >= camp.teto_dia) continue; // teto do funil batido
     const tok = tokenDoLead(lead);
     if (!tok) continue;
     const msg = lead.followup_msg ||
@@ -197,18 +197,17 @@ async function tickReengajar() {
   if (hora < "09:00" || hora > "18:00") return; // reengaja só em horário comercial
   // RESPEITA O MESMO DELAY DO DISPARO (gate de cadencia compartilhado): nunca sai
   // reengajamento em rajada, mesmo ritmo humano das aberturas (3-7 min).
-  const camp = campanhaAtiva();
-  if (camp && Date.now() < Number(getConfig("proximo_disparo_em", "0"))) return;
-  if (camp && disparosHoje() >= camp.teto_dia) return; // teto total do dia batido
-  // COTA de reengajamento = pct do teto. Reengajamento so sai ate bater essa cota;
-  // o resto do teto e pros contatos novos (e a sobra desta cota tambem vira novos).
-  if (camp) {
-    const cotaReeng = Math.round((camp.teto_dia * (camp.pct_reengajar ?? 30)) / 100);
-    if (reengajamentosHoje() >= cotaReeng) return; // cota de reengajamento cumprida
-  }
+  if (Date.now() < Number(getConfig("proximo_disparo_em", "0"))) return; // gate global
   const horas = Number(getConfig("reengajar_horas", "20"));
   for (const lead of leadsPraReengajar(horas)) {
     if (String(lead.telefone).startsWith("0000")) continue;
+    // teto e cota avaliados pela campanha DO FUNIL do lead
+    const camp = campanhaDaPipeline(lead.pipeline_id) || campanhasAtivas()[0] || null;
+    if (camp) {
+      if (disparosHojeDaCampanha(camp) >= camp.teto_dia) continue;
+      const cotaReeng = Math.round((camp.teto_dia * (camp.pct_reengajar ?? 30)) / 100);
+      if (reengajamentosHojeDaCampanha(camp) >= cotaReeng) continue;
+    }
     const tok = tokenDoLead(lead);
     if (!tok) continue; // chip do lead fora: nao reengaja por outro numero
     marcarReengajado(lead.id); // marca ANTES (nunca insiste, mesmo se falhar)

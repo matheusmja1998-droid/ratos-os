@@ -436,6 +436,8 @@
     <div class="duas-col">
       <div class="card">
         <h3 style="margin-bottom:10px" id="c-titulo">Nova campanha</h3>
+        <label>Funil de disparo (define por quais chips ela sai)</label>
+        <select id="c-pipeline" style="width:100%; margin-bottom:6px"></select>
         <label>Nome</label><input id="c-nome" style="width:100%" placeholder="Clínicas BH agosto">
         <label>Aberturas (1 por linha, sorteadas; usa {nome_clinica} e {cidade}; escreve como TU falaria)</label>
         <textarea id="c-aberturas" rows="4" style="width:100%">Oi, tudo bem? Aqui é o Matheus. Consigo falar com o responsável da {nome_clinica}?
@@ -2193,11 +2195,12 @@ async function salvarCampanha() {
     await api("/api/campanha/" + campEditando + "/templates", { method: "PATCH", body: JSON.stringify({
       aberturas: linhas("#c-aberturas"),
     }) });
-    await api("/api/campanha/" + campEditando, { method: "PATCH", body: JSON.stringify(cfg) });
+    await api("/api/campanha/" + campEditando, { method: "PATCH", body: JSON.stringify({ ...cfg, pipeline_id: Number($("#c-pipeline")?.value) || null }) });
     cancelarEdicao();
   } else {
     const r = await api("/api/campanhas", { method: "POST", body: JSON.stringify({
-      nome: $("#c-nome").value, ...cfg, aberturas: linhas("#c-aberturas"),
+      nome: $("#c-nome").value, pipeline_id: Number($("#c-pipeline")?.value) || null,
+      ...cfg, aberturas: linhas("#c-aberturas"),
     }) });
     if (r.ok) $("#c-nome").value = "";
   }
@@ -2221,6 +2224,10 @@ async function prepararImportacao() {
       `<option value="${p.id}" ${p.id === pipelineAtual ? "selected" : ""}>${p.tipo === "ligacao" ? "Ligação" : "Disparo"} — ${p.nome}${p.whatsapp_nome ? " (" + p.whatsapp_nome + ")" : ""}</option>`).join("");
     mudouPipelineImport();
   }
+  const selC = $("#c-pipeline");
+  if (selC) selC.innerHTML = (window.__pipesDisparo || pipelines.filter((p) => p.tipo === "disparo"))
+    .map((p) => `<option value="${p.id}">${p.nome}${p.whatsapp_nome ? " (" + p.whatsapp_nome + ")" : ""}</option>`).join("")
+    || '<option value="">crie um funil de disparo primeiro</option>';
   const m = await api("/api/modelo-importacao").catch(() => null);
   const link = $("#link-drive-modelo");
   if (link && m?.drive_url) { link.href = m.drive_url; link.style.display = ""; }
