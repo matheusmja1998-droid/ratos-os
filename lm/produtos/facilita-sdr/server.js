@@ -1271,12 +1271,24 @@ app.get("/api/kanban/:pipelineId", auth, (req, res) => {
   const pid = Number(req.params.pipelineId);
   const p = getPipeline(pid);
   if (!p) return res.status(404).json({ erro: "pipeline não existe" });
+  // filtro de PERIODO (movimentacao): hoje | ontem | 7d | datas livres
+  let desde = null, ate = null;
+  const hojeSP = agoraSP().data;
+  const diasAtras = (n) => {
+    const d = new Date(hojeSP + "T12:00:00"); d.setDate(d.getDate() - n);
+    return d.toISOString().slice(0, 10);
+  };
+  if (req.query.periodo === "hoje") { desde = hojeSP; ate = hojeSP; }
+  else if (req.query.periodo === "ontem") { desde = diasAtras(1); ate = diasAtras(1); }
+  else if (req.query.periodo === "7d") { desde = diasAtras(6); ate = hojeSP; }
+  else if (req.query.desde && req.query.ate) { desde = String(req.query.desde).slice(0, 10); ate = String(req.query.ate).slice(0, 10); }
   const filtros = {
     nicho: req.query.nicho || null,
     tag: req.query.tag || null,
     usuario_id: req.query.usuario_id ? Number(req.query.usuario_id) : null,
     busca: req.query.busca || null,
     atrasadas: req.query.atrasadas === "1",
+    desde, ate,
   };
   const colunas = kanbanDaPipeline(pid, filtros);
   // METRICAS DO FUNIL (nao do sistema inteiro): eventos filtrados pelos leads

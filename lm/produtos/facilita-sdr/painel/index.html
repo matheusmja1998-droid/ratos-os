@@ -361,6 +361,18 @@
         <button class="btn mini sec filtro-ia" data-filtro="humano" onclick="setFiltroIA('humano')">com humano</button>
       </div>
       <button class="btn mini sec" id="btn-atrasadas" onclick="toggleAtrasadas()">tarefas atrasadas</button>
+      <select id="filtro-data" onchange="mudouPeriodo()" style="font-size:13px" title="leads com movimentação no período">
+        <option value="">Todo período</option>
+        <option value="hoje">Movimentados hoje</option>
+        <option value="ontem">Movimentados ontem</option>
+        <option value="7d">Últimos 7 dias</option>
+        <option value="custom">Escolher datas…</option>
+      </select>
+      <span id="filtro-data-custom" style="display:none; gap:4px; align-items:center">
+        <input type="date" id="filtro-de" onchange="carregarKanban()" style="font-size:12px; padding:4px 6px">
+        <span style="color:var(--muted); font-size:12px">até</span>
+        <input type="date" id="filtro-ate" onchange="carregarKanban()" style="font-size:12px; padding:4px 6px">
+      </span>
       <select id="filtro-nicho" onchange="renderKanban()" style="font-size:13px"><option value="">Todos os nichos</option></select>
       <select id="filtro-tag" onchange="renderKanban()" style="font-size:13px"><option value="">Todas as tags</option></select>
       <span id="busca-pipe-contador" style="font-size:13px; color:var(--muted)"></span>
@@ -908,6 +920,8 @@ function toggleAtrasadas() {
 }
 function limparFiltros() {
   soAtrasadas = false; filtroIA = "todos";
+  if ($("#filtro-data")) $("#filtro-data").value = "";
+  if ($("#filtro-data-custom")) $("#filtro-data-custom").style.display = "none";
   $("#btn-atrasadas")?.classList.remove("on");
   document.querySelectorAll(".filtro-ia").forEach((b) => b.classList.toggle("on", b.dataset.filtro === "todos"));
   if ($("#busca-pipe")) $("#busca-pipe").value = "";
@@ -915,10 +929,21 @@ function limparFiltros() {
   if ($("#filtro-tag")) $("#filtro-tag").value = "";
   carregarKanban();
 }
+function mudouPeriodo() {
+  const v = $("#filtro-data")?.value;
+  $("#filtro-data-custom").style.display = v === "custom" ? "inline-flex" : "none";
+  if (v !== "custom") carregarKanban();
+}
 async function carregarKanban() {
   if (!pipelineAtual) return;
   const qs = new URLSearchParams();
   if (soAtrasadas) qs.set("atrasadas", "1");
+  // movimentacao no periodo (hoje/ontem/7d ou datas livres)
+  const per = $("#filtro-data")?.value;
+  if (per === "custom") {
+    const de = $("#filtro-de")?.value, ate = $("#filtro-ate")?.value;
+    if (de && ate) { qs.set("desde", de); qs.set("ate", ate); }
+  } else if (per) qs.set("periodo", per);
   const nicho = $("#filtro-nicho")?.value; if (nicho) qs.set("nicho", nicho);
   const tag = $("#filtro-tag")?.value; if (tag) qs.set("tag", tag);
   kanbanDados = await api(`/api/kanban/${pipelineAtual}?${qs}`);
@@ -965,7 +990,7 @@ function renderKanban() {
       doStatus.slice(0, 60).map((l) => cardLead(l)).join("") + "</div></div>";
   }).join("");
   // filtro que não achou nada: explica em vez de deixar a tela vazia
-  if (!totalVis && (soAtrasadas || busca || $("#filtro-nicho")?.value || $("#filtro-tag")?.value || filtroIA !== "todos")) {
+  if (!totalVis && (soAtrasadas || busca || $("#filtro-data")?.value || $("#filtro-nicho")?.value || $("#filtro-tag")?.value || filtroIA !== "todos")) {
     const proximas = (kanbanDados.colunas.flatMap((c) => c.leads).filter((l) => l.tarefa?.quando).length);
     $("#kanban").innerHTML = `<div class="kanban-vazio">
       ${soAtrasadas

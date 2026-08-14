@@ -513,6 +513,14 @@ export function kanbanDaPipeline(pipelineId, filtros = {}) {
   if (filtros.tag) { sql += " AND tag_importacao = ?"; vals.push(filtros.tag); }
   if (filtros.usuario_id) { sql += " AND usuario_id = ?"; vals.push(filtros.usuario_id); }
   if (filtros.busca) { sql += " AND (nome_clinica LIKE ? OR telefone LIKE ?)"; vals.push(`%${filtros.busca}%`, `%${filtros.busca}%`); }
+  // MOVIMENTACAO NO PERIODO: leads que tiveram evento (disparo, ligacao, moveu,
+  // nota, reuniao...) OU mensagem entre as datas. criado_em e UTC -> converte pra SP.
+  if (filtros.desde && filtros.ate) {
+    sql += ` AND id IN (
+      SELECT lead_id FROM eventos WHERE date(criado_em, '-3 hours') BETWEEN ? AND ?
+      UNION SELECT lead_id FROM mensagens WHERE date(criado_em, '-3 hours') BETWEEN ? AND ?)`;
+    vals.push(filtros.desde, filtros.ate, filtros.desde, filtros.ate);
+  }
   sql += " ORDER BY atualizado_em DESC LIMIT 2000";
   let leads = db.prepare(sql).all(...vals);
 
