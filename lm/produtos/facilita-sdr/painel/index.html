@@ -31,6 +31,9 @@
     background:var(--surface); color:var(--text); border-color:var(--border); }
   html[data-tema="dark"] .pf-bar { filter:brightness(.62) saturate(1.25); }
   html[data-tema="dark"] .pf-bar input { color:#f2f7f4; }
+  html[data-tema="dark"] .btn { background:#1d7a44; color:#fff; }
+  html[data-tema="dark"] .btn.sec { background:var(--surface); color:var(--text); }
+  html[data-tema="dark"] .btn.perigo { background:#a33; }
   html[data-tema="dark"] .pf-clique, html[data-tema="dark"] .kanban-vazio { background:var(--surface); }
   html[data-tema="dark"] { --coluna-bg:#151d19; }
   /* blocos com cor fixa dentro dos cards/painel: fundo escuro + texto legivel
@@ -46,7 +49,7 @@
   html[data-tema="dark"] .divisor::before { background:var(--border); }
   * { box-sizing:border-box; margin:0; }
   body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text);
-    font-size:clamp(13.5px, 0.45vw + 9px, 15.5px); }
+    font-size:clamp(12.5px, 0.35vw + 8.2px, 15px); }
   input, select, textarea, button { font-size:inherit; font-family:inherit; }
   header { background:var(--surface); border-bottom:1px solid var(--border); padding:12px 20px; display:flex; align-items:center; gap:16px; position:sticky; top:0; z-index:10; }
   header h1 { font-size:18px; color:var(--verde-esc); }
@@ -54,10 +57,10 @@
   nav { display:flex; gap:4px; flex-wrap:wrap; }
   nav button { border:none; background:none; padding:8px 14px; border-radius:8px; cursor:pointer; font-size:14px; color:var(--muted); }
   nav button.on { background:var(--verde-soft); color:var(--verde-esc); font-weight:600; }
-  #status-chip { margin-left:auto; font-size:12px; padding:4px 10px; border-radius:999px; background:var(--verde-soft); color:var(--verde-esc); }
+  #status-chip { margin-left:auto; font-size:12px; padding:4px 10px; border-radius:4px; background:var(--verde-soft); color:var(--verde-esc); }
   #status-chip.off { background:#fde8e8; color:var(--vermelho); }
   /* layout com sidebar vertical recolhível */
-  .layout { display:flex; min-height:100vh; }
+  .layout { display:flex; min-height:100vh; width:100%; }
   #sidebar { width:210px; flex:0 0 210px; background:var(--surface); border-right:1px solid var(--border); display:flex; flex-direction:column; position:sticky; top:0; height:100vh; transition:width .18s, flex-basis .18s; }
   #sidebar nav { flex:1; overflow-y:auto; }
   .sb-sair { display:flex; align-items:center; gap:10px; width:100%; border:none; background:none;
@@ -79,18 +82,18 @@
   #sidebar.recolhido .sb-top h1, #sidebar.recolhido .lbl, #sidebar.recolhido .sb-status { display:none; }
   #sidebar.recolhido #sb-toggle { margin:0 auto; }
   #sidebar.recolhido nav button { justify-content:center; padding:10px 0; }
-  #app { display:flex; min-height:100vh; }
-  main { padding:20px; margin:0 auto; flex:1; min-width:0; max-width:1300px; overflow-y:auto; height:100vh; }
+  main { padding:20px 26px; flex:1; min-width:0; overflow-y:auto; height:100vh; }
+  @media (min-width:1900px){ main { padding:24px 40px; } }
   @media (max-width:760px){ #sidebar{width:56px;flex-basis:56px} #sidebar .sb-top h1,#sidebar .lbl,#sidebar .sb-status{display:none} #sidebar nav button{justify-content:center;padding:10px 0} }
   .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px; }
-  .grid-metricas { display:grid; grid-template-columns:repeat(auto-fit,minmax(172px,1fr)); gap:12px; margin-bottom:18px; }
-  .metrica .num { font-size:clamp(26px, 2vw, 34px); font-weight:800; color:var(--verde-esc); letter-spacing:-.5px; }
+  .grid-metricas { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:clamp(8px,0.8vw,14px); margin-bottom:16px; }
+  .metrica .num { font-size:clamp(22px, 1.6vw, 32px); font-weight:800; color:var(--verde-esc); letter-spacing:-.5px; }
   .metrica .rot { font-size:13px; color:var(--muted); margin-top:2px; }
   /* kanban */
   .kanban { display:flex; gap:12px; overflow-x:auto; padding-bottom:14px; scroll-snap-type:x proximity; }
   .kanban::-webkit-scrollbar { height:10px; }
   .kanban::-webkit-scrollbar-thumb { background:var(--border); border-radius:5px; }
-  .coluna { min-width:clamp(236px, 19vw, 300px); width:clamp(236px, 19vw, 300px); flex:0 0 auto; scroll-snap-align:start; background:var(--coluna-bg, #eef1ef); border-radius:12px; padding:10px; max-height:calc(100vh - 240px); display:flex; flex-direction:column; }
+  .coluna { min-width:clamp(240px, 13vw, 340px); width:clamp(240px, 13vw, 340px); flex:1 0 auto; max-width:380px; scroll-snap-align:start; background:var(--coluna-bg, #eef1ef); border-radius:12px; padding:10px; max-height:calc(100vh - 240px); display:flex; flex-direction:column; }
   .coluna.drop { background:var(--verde-soft); outline:2px dashed var(--verde); }
   .coluna h3 { font-size:12px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
   .coluna h3 b { color:var(--verde-esc); }
@@ -120,10 +123,12 @@
   .cfg-menu .sub-cfg:hover { background:var(--verde-soft); }
   .cfg-menu .sub-cfg.on { color:var(--verde-esc); font-weight:700; box-shadow:inset 3px 0 0 var(--verde); background:var(--verde-soft); }
   .cfg-conteudo { min-width:0; }
+  .ctx-grid { grid-template-columns:repeat(2, minmax(0,1fr)) !important; }
+  @media (max-width:1000px){ .ctx-grid { grid-template-columns:1fr !important; } }
   /* dashboards e agenda mais legíveis em qualquer tela */
-  #dash-corpo { font-size:14px; }
-  #dash-corpo .card h3 { font-size:16.5px; margin-bottom:10px; }
-  #agenda-grade { font-size:13.5px; }
+  #dash-corpo { font-size:clamp(12.5px, 0.3vw + 9px, 14.5px); }
+  #dash-corpo .card h3 { font-size:clamp(14px, 0.4vw + 9px, 17px); margin-bottom:10px; }
+  #agenda-grade { font-size:clamp(11.5px, 0.3vw + 8px, 13.5px); }
   @media (max-width:940px){ .cfg-wrap{grid-template-columns:1fr} .cfg-menu{position:static} }
 
   /* ---- personalizador de funil (estilo Kommo, na identidade verde da casa) ---- */
@@ -140,7 +145,7 @@
   .pf-bar:hover .pf-x { opacity:1; }
   .pf-bar .pf-x:hover { color:#d93025; }
   .pf-badge { font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.4px;
-    padding:2px 7px; border-radius:99px; background:rgba(0,0,0,.10); color:rgba(0,0,0,.55); white-space:nowrap; }
+    padding:2px 7px; border-radius:4px; background:rgba(0,0,0,.10); color:rgba(0,0,0,.55); white-space:nowrap; }
   .pf-add { display:flex; align-items:center; gap:8px; padding:11px 14px; border-radius:9px; margin-bottom:7px;
     border:2px dashed var(--border); color:var(--muted); }
   .pf-add input { flex:1; border:none; background:transparent; font-size:13.5px; outline:none; }
@@ -162,7 +167,7 @@
   .lead-card:hover .excluir { opacity:.6; }
   .lead-card .excluir:hover { opacity:1; color:var(--vermelho); }
   .dica-scroll { font-size:12px; color:var(--muted); margin-bottom:8px; }
-  .tag { display:inline-block; font-size:11px; padding:1px 8px; border-radius:999px; background:var(--verde-soft); color:var(--verde-esc); margin-top:4px; }
+  .tag { display:inline-block; font-size:11px; padding:1px 8px; border-radius:4px; background:var(--verde-soft); color:var(--verde-esc); margin-top:4px; }
   .tag.quente { background:#fef3c7; color:var(--amarelo); }
   /* conversa */
   /* Conversas ocupa a tela TODA sem scroll na pagina: scroll so DENTRO de cada
@@ -196,14 +201,16 @@
   html[data-tema="dark"] .pn-corpo .nota-linha input, html[data-tema="dark"] .pn-corpo .nota-linha select { color:#e9f2ec; }
   html[data-tema="dark"] .pn-corpo .nota-linha > span:first-child { color:#93a69c; }
   .pn-rodape { border-top:2px solid var(--border); background:var(--surface); }
-  .nota-linha { display:grid; grid-template-columns:104px 1fr; gap:2px 10px; font-size:12.5px;
-    padding:7px 14px; border-bottom:1px solid var(--border); align-items:center; }
-  .nota-linha > span:first-child { color:var(--muted); font-size:11.5px; text-transform:uppercase;
-    letter-spacing:.3px; font-weight:600; }
-  .nota-linha input, .nota-linha select { border-radius:0; border:1px solid transparent; background:transparent;
-    padding:3px 5px; font-size:13px; width:100%; }
-  .nota-linha input:hover, .nota-linha select:hover { border-color:var(--border); }
-  .nota-linha input:focus, .nota-linha select:focus { border-color:var(--verde); background:var(--surface); outline:none; }
+  .nota-linha { display:grid; grid-template-columns:108px 1fr; gap:2px 12px; font-size:13px;
+    padding:9px 14px; border-bottom:1px solid var(--border); align-items:center; }
+  .nota-linha > span:first-child { color:var(--muted); font-size:11px; text-transform:uppercase;
+    letter-spacing:.4px; font-weight:600; }
+  /* o VALOR é o protagonista: peso forte e cara de campo editável */
+  .nota-linha > span:last-child { font-weight:600; color:var(--text); }
+  .nota-linha input, .nota-linha select { border-radius:4px; border:1px solid var(--border); background:var(--surface);
+    padding:6px 9px; font-size:13.5px; font-weight:600; color:var(--text); width:100%; }
+  .nota-linha input::placeholder { font-weight:400; color:var(--muted); }
+  .nota-linha input:focus, .nota-linha select:focus { border-color:var(--verde); outline:none; }
   .pn-secao { padding:7px 14px 4px; font-size:10.5px; font-weight:700; letter-spacing:.6px;
     text-transform:uppercase; color:var(--muted); background:var(--bg); border-bottom:1px solid var(--border); }
   /* menu que abre ao clicar num telefone/link */
@@ -220,6 +227,11 @@
     border-top:1px solid var(--border); }
   .pn-tarefa.venceu { background:#fdeaea; color:#a3241c; }
   html[data-tema="dark"] .pn-tarefa.venceu { background:#3a1f1f; color:#ffb4ab; }
+  html[data-tema="dark"] #resumo-ia { background:#1c2620 !important; color:#cfe0d6 !important; }
+  html[data-tema="dark"] #dash-corpo [style*="background:#eef6ff"],
+  html[data-tema="dark"] #dash-corpo [style*="background:#fdeaea"],
+  html[data-tema="dark"] #dash-corpo [style*="background:#fff8e1"] { background:#232b27 !important; color:#d6e2db !important; }
+  html[data-tema="dark"] .pn-secao { background:#121815; color:#8ba295; }
   .conv-item.pendente .conv-nome { font-weight:800; }
   .conv-item.pendente { background:#fffdf5; }
   .conv-item { padding:10px 12px; border-radius:10px; cursor:pointer; border:1px solid transparent; }
@@ -239,11 +251,12 @@
   /* forms */
   input, select, textarea { border:1px solid var(--border); border-radius:8px; padding:9px 12px; font-size:14px; font-family:inherit; background:var(--surface); color:var(--text); }
   label { font-size:12px; color:var(--muted); display:block; margin:10px 0 4px; }
-  .btn { background:var(--verde); color:#fff; border:none; border-radius:9px; padding:9px 16px; font-size:14px; font-weight:600; cursor:pointer; }
-  .btn:hover { background:var(--verde-esc); }
-  .btn.sec { background:var(--surface); color:var(--text); border:1px solid var(--border); }
+  .btn { background:var(--verde-esc); color:#fff; border:none; border-radius:5px; padding:9px 16px; font-size:14px; font-weight:600; cursor:pointer; }
+  .btn:hover { filter:brightness(1.12); }
+  .btn.sec { background:var(--surface); color:var(--text); border:1px solid var(--border); font-weight:500; }
+  .btn.sec:hover { filter:none; border-color:var(--muted); background:var(--bg); }
   .btn.perigo { background:var(--vermelho); }
-  .btn.mini { padding:5px 10px; font-size:12px; }
+  .btn.mini { padding:5px 11px; font-size:12.5px; border-radius:4px; }
   .filtro-ia.on { background:var(--verde); color:#fff; border-color:var(--verde); }
   table { width:100%; border-collapse:collapse; font-size:14px; }
   th { text-align:left; font-size:12px; color:var(--muted); padding:8px; border-bottom:1px solid var(--border); }
@@ -344,7 +357,7 @@
       <select id="filtro-tag" onchange="renderKanban()" style="font-size:13px"><option value="">Todas as tags</option></select>
       <span id="busca-pipe-contador" style="font-size:13px; color:var(--muted)"></span>
     </div>
-    <div class="dica-scroll">arrasta pro lado pra ver todas as etapas · segura e arrasta um card pra mudar de etapa · card vermelho = tarefa atrasada</div>
+    <div class="dica-scroll">segura e arrasta um card pra mudar de etapa · card vermelho = tarefa atrasada</div>
     <div class="kanban" id="kanban"></div>
   </div>
 
@@ -501,63 +514,49 @@ Oi! Aqui é o Matheus. Preciso falar com quem cuida da {nome_clinica}, é você?
   </div>
 
   <div id="aba-cerebro" style="display:none">
-    <div class="card" style="margin-bottom:12px">
-      <h3 style="margin-bottom:6px">Contexto da sua IA</h3>
-      <p style="font-size:13px; color:var(--muted); line-height:1.55; margin:0">
-        Aqui é onde a IA aprende sobre o seu negócio. Tudo que estiver nesta página entra na cabeça dela com
-        <b>prioridade máxima</b>: quando o texto daqui conflitar com o comportamento padrão, <b>o seu texto vence</b>.
-        Você tem dois caminhos e pode usar os dois:
-      </p>
-      <ul style="font-size:13px; color:var(--muted); line-height:1.6; margin:8px 0 0 18px; padding:0">
-        <li><b>Escrevendo você mesmo</b> (à direita) — quem você é, o que vende, preço, casos reais, objeções e como responder cada uma.</li>
-        <li><b>Conversando com o assistente</b> (à esquerda) — ele te faz perguntas e escreve o contexto sozinho. O que ele escrever aparece nos campos à direita pra você revisar.</li>
-      </ul>
-      <p style="font-size:13px; color:var(--muted); margin:8px 0 0">
-        Salvou, já vale na próxima mensagem — dá pra conferir na aba <b>Testar</b>. O fluxo continua o mesmo:
-        pedir o responsável → confirmar → mandar áudio → agendar.
-      </p>
-    </div>
-    <div class="duas-col">
-      <div class="card chat" style="height:calc(100vh - 330px); min-height:380px">
-        <h3 style="margin-bottom:8px">Falar com o assistente</h3>
-        <div class="chat-msgs" id="ent-msgs"></div>
-        <div id="ent-badge" style="padding:0 12px; font-size:12px; color:var(--verde-esc)"></div>
-        <div class="chat-envio">
-          <textarea id="ent-texto" rows="2" placeholder="responde aqui…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();entEnviar()}"></textarea>
-          <button class="btn" onclick="entEnviar()">Enviar</button>
-        </div>
-      </div>
-      <div style="display:flex; flex-direction:column; gap:12px; max-height:calc(100vh - 330px); overflow-y:auto">
+    <p style="font-size:13px; color:var(--muted); line-height:1.5; margin:0 0 12px">
+      Tudo que estiver nesta página entra na cabeça da IA com <b>prioridade máxima</b> — quando conflitar com o
+      comportamento padrão, <b>o seu texto vence</b>. Preencha os campos você mesmo ou responda o assistente na
+      barra aqui embaixo, que ele escreve por você. Salvou, já vale na próxima mensagem (confere na aba <b>Testar</b>).
+    </p>
 
+    <!-- assistente COMPACTO: uma barra, como a linha de mensagem das conversas -->
+    <div class="card" style="padding:10px 14px; margin-bottom:14px">
+      <div id="ent-msgs" style="max-height:96px; overflow-y:auto; font-size:13px; line-height:1.45; margin-bottom:8px; color:var(--text)"></div>
+      <div id="ent-badge" style="font-size:12px; color:var(--verde-esc)"></div>
+      <div style="display:flex; gap:8px">
+        <input id="ent-texto" placeholder="fala com o assistente: ele preenche o contexto por você…" style="flex:1; padding:9px 12px"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();entEnviar()}">
+        <button class="btn" onclick="entEnviar()">Enviar</button>
+      </div>
+    </div>
+
+    <!-- os 4 campos em grade 2x2, tudo na mesma tela -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr)); gap:14px; max-width:1500px" class="ctx-grid">
       <div class="card">
         <h3>Diretrizes gerais</h3>
-        <p style="font-size:12px; color:var(--muted); margin:4px 0">Como falar, o que nunca dizer, tom, tamanho das mensagens.</p>
-        <textarea id="tr-treino_geral" rows="8" style="width:100%" placeholder="Ex: Se apresenta como Rê, da equipe do Matheus. Nunca usar a palavra 'robô'. Mensagens de no máximo 2 linhas. Se falarem de concorrente X, dizer que..."></textarea>
+        <p style="font-size:12.5px; color:var(--muted); margin:4px 0 8px">Como falar, o que nunca dizer, tom, tamanho das mensagens.</p>
+        <textarea id="tr-treino_geral" rows="9" style="width:100%" placeholder="Ex: Se apresenta como Rê, da equipe do Matheus. Nunca usar a palavra 'robô'. Mensagens de no máximo 2 linhas."></textarea>
       </div>
       <div class="card">
         <h3>Pitch, produto e preço</h3>
-        <p style="font-size:12px; color:var(--muted); margin:4px 0">O que dizer sobre a empresa, os argumentos, casos, o que responder sobre valor.</p>
-        <textarea id="tr-treino_pitch" rows="8" style="width:100%" placeholder="Ex: O argumento principal é X. Falar do caso da clínica de pneumo assim: ... Sobre preço, dizer: ..."></textarea>
+        <p style="font-size:12.5px; color:var(--muted); margin:4px 0 8px">O que dizer sobre a empresa, os argumentos, casos, o que responder sobre valor.</p>
+        <textarea id="tr-treino_pitch" rows="9" style="width:100%" placeholder="Ex: O argumento principal é X. Sobre preço, dizer: ..."></textarea>
       </div>
       <div class="card">
         <h3>Objeções e respostas</h3>
-        <p style="font-size:12px; color:var(--muted); margin:4px 0">Uma por linha: objeção → como responder.</p>
-        <textarea id="tr-treino_objecoes" rows="8" style="width:100%" placeholder="Ex:
-'já tenho secretária' → A IA não substitui, tira o telefone da frente dela...
-'não tenho tempo' → Justamente, a call é de 20min e...
+        <p style="font-size:12.5px; color:var(--muted); margin:4px 0 8px">Uma por linha: objeção → como responder.</p>
+        <textarea id="tr-treino_objecoes" rows="9" style="width:100%" placeholder="'já tenho secretária' → A IA não substitui, tira o telefone da frente dela...
 'manda por escrito' → Posso mandar sim, mas em 20min ao vivo tu vê funcionando..."></textarea>
       </div>
       <div class="card">
         <h3>Exemplo de conversa perfeita</h3>
-        <p style="font-size:12px; color:var(--muted); margin:4px 0">Cola aqui uma conversa modelo (LEAD: ... / VOCÊ: ...). A IA imita o estilo.</p>
-        <textarea id="tr-treino_exemplo" rows="8" style="width:100%" placeholder="LEAD: oi quem é?
-VOCÊ: Opa! Aqui é da equipe do Matheus...
-LEAD: ..."></textarea>
+        <p style="font-size:12.5px; color:var(--muted); margin:4px 0 8px">Cola uma conversa modelo (LEAD: ... / VOCÊ: ...). A IA imita o estilo.</p>
+        <textarea id="tr-treino_exemplo" rows="9" style="width:100%" placeholder="LEAD: oi quem é?
+VOCÊ: Opa! Aqui é o Matheus..."></textarea>
       </div>
     </div>
     <div style="margin-top:14px"><button class="btn" onclick="salvarTreino()">Salvar treinamento</button> <span id="tr-ok" style="color:var(--verde); font-size:13px"></span></div>
-        </div>
-    </div>
   </div>
 
   <!-- CONFIGURAÇÕES estilo Kommo: menu vertical à esquerda, conteúdo à direita -->
@@ -2458,7 +2457,7 @@ async function carregarWhats() {
         <span style="flex:1">
           <b style="font-size:14px">${i.nome}</b>
           <div style="font-size:12px; color:var(--muted); display:flex; align-items:center; gap:5px">
-            <span style="width:7px; height:7px; border-radius:99px; background:${i.status === "conectado" ? "var(--verde)" : "var(--vermelho)"}"></span>
+            <span style="width:7px; height:7px; border-radius:4px; background:${i.status === "conectado" ? "var(--verde)" : "var(--vermelho)"}"></span>
             ${i.numero ? fmtTel(i.numero) : "não conectado"} · ${i.status}
           </div>
         </span>
@@ -2759,7 +2758,7 @@ async function dashDisparo() {
     ${d.porWhats.length > 1 ? `<div class="card" style="margin-bottom:18px">
       <h3 style="margin-bottom:10px">Split por WhatsApp (hoje)</h3>
       ${d.porWhats.map((w) => `<div style="display:flex; align-items:center; gap:8px; margin-bottom:6px; font-size:13px">
-        <span style="width:8px;height:8px;border-radius:999px;background:${w.status==="conectado"?"var(--verde)":"var(--vermelho)"}"></span>
+        <span style="width:8px;height:8px;border-radius:4px;background:${w.status==="conectado"?"var(--verde)":"var(--vermelho)"}"></span>
         <span style="flex:1">${w.nome}</span>
         <span style="color:var(--muted)">${w.disparos_hoje}${w.cota_dia?"/"+w.cota_dia:""} msgs</span>
       </div>`).join("")}</div>` : ""}
@@ -2832,7 +2831,7 @@ async function renderChecklist() {
     <div class="card" style="margin-bottom:14px">
       <b style="font-size:14px">Primeiros passos (${passos.length - falta.length}/${passos.length})</b>
       ${passos.map((p, i) => `<div style="display:flex; align-items:center; gap:8px; padding:6px 0; font-size:13.5px; ${i ? "border-top:1px solid var(--border)" : ""}">
-        <span style="width:20px; height:20px; border-radius:999px; display:grid; place-items:center; font-size:12px; background:${p.ok ? "var(--verde)" : "#eef1ef"}; color:${p.ok ? "#fff" : "var(--muted)"}">${p.ok ? "✓" : i + 1}</span>
+        <span style="width:20px; height:20px; border-radius:4px; display:grid; place-items:center; font-size:12px; background:${p.ok ? "var(--verde)" : "#eef1ef"}; color:${p.ok ? "#fff" : "var(--muted)"}">${p.ok ? "✓" : i + 1}</span>
         <span style="${p.ok ? "color:var(--muted); text-decoration:line-through" : ""}">${p.txt}</span>
         ${p.ok ? "" : `<a href="#" onclick="aba('${p.aba}'); return false" style="margin-left:auto; color:var(--verde); font-size:12.5px">resolver →</a>`}
       </div>`).join("")}
