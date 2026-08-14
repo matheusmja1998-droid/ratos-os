@@ -23,7 +23,7 @@ import {
   etapasDaPipeline, addEtapa, atualizarEtapa, removerEtapa, etapaDeEntrada,
   moverLead, kanbanDaPipeline,
   telefonesDoLead, addTelefone, removerTelefone, normalizarTelefone, variantesTelefone,
-  threadsDoLead, getThread, threadPorTelefone, abrirThread,
+  threadsDoLead, getThread, threadPorTelefone, abrirThread, instanciaDoLead,
 } from "./lib/db.js";
 import {
   parseWebhook, enviarTexto, enviarMidia, mostrarDigitando, criarInstancia,
@@ -64,6 +64,16 @@ import { createHash, randomBytes } from "node:crypto";
 const BENCH = JSON.parse(readFileSync(join(__dirname, "db", "benchmarks.json"), "utf8"));
 const sha = (s) => createHash("sha256").update(String(s)).digest("hex");
 const tentativas = new Map(); // ip -> { n, ate }
+
+// TRAVA DE CHIP: conversa que corre pelo WhatsApp de UMA pessoa so pode ser
+// respondida por ela (Matheus nao manda pelo chip do Valentino e vice-versa).
+// Chip "da empresa" (sem dono) e liberado pra todos.
+function chipBloqueado(inst, usuario) {
+  if (!inst?.usuario_id || !usuario?.id) return null;
+  if (inst.usuario_id === usuario.id) return null;
+  const dono = getUsuario(inst.usuario_id)?.nome || "outra pessoa";
+  return `essa conversa corre pelo WhatsApp de ${dono} — só ${dono} pode responder por aqui`;
+}
 
 // SESSOES por usuario: cada login ganha um token proprio, que aponta pro usuario.
 // O PAINEL_SENHA continua valendo como token de admin (compatibilidade: nao quebra
@@ -426,8 +436,12 @@ app.post("/api/lead/:id/mensagem", auth, async (req, res) => {
   }
   const alvo = thread?.telefone || lead.telefone;
   const simulado = String(alvo).startsWith("0000");
-  const tokEnvio = instanciasConectadas()[0]?.uazapi_token || "";
-  const r = simulado ? { ok: true } : await enviarTexto(tokEnvio, alvo, texto);
+  // sai pelo chip DESTE lead (continuidade da conversa) e respeita o dono
+  const inst = instanciaDoLead(lead, thread?.instancia_id || null);
+  if (!inst && !simulado) return res.status(502).json({ erro: "nenhum WhatsApp conectado" });
+  const trava = chipBloqueado(inst, req.usuario);
+  if (trava) return res.status(403).json({ erro: trava });
+  const r = simulado ? { ok: true } : await enviarTexto(inst.uazapi_token, alvo, texto);
   if (!r.ok) return res.status(502).json({ erro: r.erro });
   const msgId = salvarMensagem(lead.id, "assistant", texto);
   if (thread) db.prepare("UPDATE mensagens SET thread_id = ? WHERE id = ?").run(thread.id, msgId?.lastInsertRowid ?? msgId);
@@ -1134,13 +1148,15 @@ app.post("/api/lead/:id/audio", auth, exige("conversar"), upload.single("audio")
       if (!thread || thread.lead_id !== lead.id) return res.status(400).json({ erro: "thread não é desse lead" });
     }
     const alvo = thread?.telefone || lead.telefone;
+    const instA = instanciaDoLead(lead, thread?.instancia_id || null);
+    const travaA = chipBloqueado(instA, req.usuario);
+    if (travaA) { const { unlinkSync: u2 } = await import("node:fs"); u2(req.file.path); return res.status(403).json({ erro: travaA }); }
     const b64 = readFileSync(req.file.path).toString("base64");
     const ext = (extname(req.file.originalname || "") || ".ogg").toLowerCase().replace(".", "");
     const mime = ext === "mp3" ? "audio/mpeg" : ext === "m4a" ? "audio/mp4" : ext === "webm" ? "audio/webm" : "audio/ogg";
     const { unlinkSync } = await import("node:fs");
     const simulado = String(alvo).startsWith("0000");
-    const tok = instanciasConectadas()[0]?.uazapi_token || "";
-    const r = simulado ? { ok: true } : await enviarMidia(tok, alvo, { tipo: "audio", arquivo: `data:${mime};base64,${b64}` });
+    const r = simulado ? { ok: true } : await enviarMidia(instA?.uazapi_token || "", alvo, { tipo: "audio", arquivo: `data:${mime};base64,${b64}` });
     unlinkSync(req.file.path);
     if (!r.ok) return res.status(502).json({ erro: r.erro });
     const ins = salvarMensagem(lead.id, "assistant", "[áudio enviado]", "audio");

@@ -582,6 +582,28 @@ export function abrirThread(leadId, telefone, rotulo = null, instanciaId = null)
   return getThread(id);
 }
 
+// QUAL CHIP atende esse lead: o da thread > o amarrado a pipeline dele >
+// o do dono da pipeline > o primeiro conectado. Mantem a conversa sempre
+// no MESMO numero (responder por outro chip abriria conversa nova no lead).
+export function instanciaDoLead(lead, threadInstanciaId = null) {
+  const insts = db.prepare("SELECT * FROM instancias WHERE status = 'conectado'").all();
+  if (!insts.length) return null;
+  if (threadInstanciaId) {
+    const t = insts.find((i) => i.id === threadInstanciaId);
+    if (t) return t;
+  }
+  if (lead?.pipeline_id) {
+    const amarrada = insts.find((i) => i.pipeline_id === lead.pipeline_id);
+    if (amarrada) return amarrada;
+    const dono = getPipeline(lead.pipeline_id)?.usuario_id;
+    if (dono) {
+      const doDono = insts.find((i) => i.usuario_id === dono);
+      if (doDono) return doDono;
+    }
+  }
+  return insts[0];
+}
+
 // ---------- tarefas manuais do lead (minhas, nao da IA) ----------
 export const tarefasDoLead = (leadId) =>
   db.prepare(`SELECT t.*, u.nome usuario_nome FROM tarefas t LEFT JOIN usuarios u ON u.id = t.usuario_id
