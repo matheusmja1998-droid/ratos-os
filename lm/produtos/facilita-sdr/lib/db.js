@@ -193,6 +193,7 @@ export const ETAPAS_DISPARO = [
   { chave: "reuniao", nome: "Reunião marcada" },
   { chave: "ganho", nome: "Ganhou", ganho: 1 },
   { chave: "perdido", nome: "Perdido", perdido: 1 },
+  { chave: "sem_whatsapp", nome: "Sem WhatsApp", perdido: 1 }, // numero sem zap (nao e recusa)
 ];
 // pipeline de LIGACAO segue o mapeamento de conexao (atendente -> decisor -> reuniao)
 export const ETAPAS_LIGACAO = [
@@ -379,6 +380,8 @@ export function atualizarLead(id, campos) {
   if (!sets.length) return;
   vals.push(id);
   db.prepare(`UPDATE leads SET ${sets.join(", ")}, atualizado_em = datetime('now') WHERE id = ?`).run(...vals);
+  // o card acompanha o status: perdido vai pra Perdido, sem_whatsapp pra Sem WhatsApp...
+  if (campos.status !== undefined) sincronizarEtapa(id, campos.status);
 }
 
 // ---------- mensagens ----------
@@ -475,6 +478,19 @@ export const removerEtapa = (id) => db.prepare("DELETE FROM etapas WHERE id = ?"
 export const etapaDeEntrada = (pipelineId) =>
   db.prepare("SELECT * FROM etapas WHERE pipeline_id = ? AND e_entrada = 1 ORDER BY ordem LIMIT 1").get(pipelineId)
   || db.prepare("SELECT * FROM etapas WHERE pipeline_id = ? ORDER BY ordem LIMIT 1").get(pipelineId);
+
+// STATUS -> COLUNA: acha a etapa da pipeline do lead que corresponde ao status
+// e move o card. Sem etapa equivalente: optout/descartado caem em Perdido;
+// sem_whatsapp cai em Sem WhatsApp (ou Perdido se a coluna nao existir no funil).
+export function sincronizarEtapa(leadId, status) {
+  const l = db.prepare("SELECT pipeline_id FROM leads WHERE id = ?").get(leadId);
+  if (!l?.pipeline_id) return;
+  const chave = { reuniao_marcada: "reuniao", fechado: "ganho", optout: "perdido", descartado: "perdido" }[status] || status;
+  let etapa = db.prepare("SELECT id FROM etapas WHERE pipeline_id = ? AND chave = ?").get(l.pipeline_id, chave);
+  if (!etapa && chave === "sem_whatsapp")
+    etapa = db.prepare("SELECT id FROM etapas WHERE pipeline_id = ? AND e_perdido = 1 ORDER BY ordem LIMIT 1").get(l.pipeline_id);
+  if (etapa) db.prepare("UPDATE leads SET etapa_id = ? WHERE id = ?").run(etapa.id, leadId);
+}
 
 // MOVER card: entre etapas e ENTRE pipelines. Mover pra etapa de entrada de uma
 // pipeline de DISPARO recoloca o lead na fila de envio (status volta pra 'novo'),
