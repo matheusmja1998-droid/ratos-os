@@ -5,7 +5,7 @@
 import express from "express";
 import multer from "multer";
 import { execFile } from "node:child_process";
-import { mkdirSync, renameSync, readFileSync } from "node:fs";
+import { mkdirSync, renameSync, readFileSync, copyFileSync, existsSync as fsExiste } from "node:fs";
 import { dirname, join, extname } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -696,6 +696,26 @@ app.post("/api/importar", auth, upload.single("csv"), async (req, res) => {
   }
 });
 
+// EXPORTAR leads em CSV (do funil pedido, ou todos). Auth por query (download direto).
+app.get("/api/exportar.csv", (req, res) => {
+  if (String(req.query.t || "") !== PAINEL_SENHA) return res.status(401).end();
+  const pid = req.query.pipeline_id ? Number(req.query.pipeline_id) : null;
+  const leads = db.prepare(`SELECT l.*, e.nome etapa_nome, p.nome pipeline_nome,
+      (SELECT nome FROM usuarios u WHERE u.id = l.usuario_id) responsavel
+    FROM leads l LEFT JOIN etapas e ON e.id = l.etapa_id LEFT JOIN pipelines p ON p.id = l.pipeline_id
+    WHERE l.eh_teste = 0 ${pid ? "AND l.pipeline_id = " + pid : ""} ORDER BY l.id`).all();
+  const cab = ["nome", "telefone", "cidade", "nicho", "funil", "etapa", "status", "responsavel", "valor",
+    "tag", "atendente", "decisor", "telefone_decisor", "site", "google_meu_negocio", "dor", "criado_em"];
+  const esc = (v) => { const t = String(v ?? ""); return /[",\n;]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; };
+  const linhas = leads.map((l) => [l.nome_clinica, l.telefone, l.cidade, l.nicho, l.pipeline_nome, l.etapa_nome,
+    l.status, l.responsavel, l.valor_venda || 0, l.tag_importacao || l.origem_lista, l.nome_atendente || l.nome_contato,
+    l.nome_decisor, l.telefone_decisor, l.site, l.google_negocio, l.dor, l.criado_em].map(esc).join(","));
+  const csv = "\ufeff" + [cab.join(","), ...linhas].join("\n");
+  res.setHeader("Content-Type", "text/csv; charset=utf-8");
+  res.setHeader("Content-Disposition", `attachment; filename="prospecta-leads${pid ? "-funil" + pid : ""}.csv"`);
+  res.send(csv);
+});
+
 // ---------- planilha MODELO de importacao ----------
 // Baixa um CSV pronto com os cabecalhos certos e 2 linhas de exemplo. O link
 // do Drive (opcional) fica na config `planilha_modelo_url` — quem preferir
@@ -752,6 +772,26 @@ app.post("/api/audio", auth, upload.single("audio"), (req, res) => {
     dono: uid ? (getUsuario(uid)?.nome || null) : null,
   }));
   res.json({ ok: true, caminho: destino, usuario_id: uid });
+});
+
+// TRAZER UM ÁUDIO PRA MIM: copia o áudio geral (ou de outra pessoa) pro meu slot.
+// Caso real: o áudio "geral" era a voz do Matheus — ele recupera com 1 clique.
+app.post("/api/audio/atribuir", auth, (req, res) => {
+  const de = req.body?.de ? Number(req.body.de) : null;   // null = áudio geral da empresa
+  const para = req.body?.para ? Number(req.body.para) : (req.usuario?.id || null);
+  if (!para) return res.status(400).json({ erro: "não sei pra quem copiar" });
+  const origem = getConfig(chaveAudio(de), "");
+  if (!origem || !fsExiste(origem)) return res.status(404).json({ erro: "o áudio de origem não existe mais" });
+  const ext = (extname(origem) || ".ogg").toLowerCase();
+  const destino = join(DADOS_DIR, `audio-oficial-u${para}${ext}`);
+  copyFileSync(origem, destino);
+  setConfig(chaveAudio(para), destino);
+  let info = null; try { info = JSON.parse(getConfig(chaveAudioInfo(de), "null")); } catch {}
+  setConfig(chaveAudioInfo(para), JSON.stringify({
+    ...(info || {}), em: agoraSP().iso, dono: getUsuario(para)?.nome || null,
+    nome: (info?.nome || "áudio") + " (copiado)",
+  }));
+  res.json({ ok: true });
 });
 
 // remove o áudio de uma pessoa (volta a usar o padrão da empresa)
@@ -840,6 +880,11 @@ app.patch("/api/instancias", auth, (req, res) => {
   if (req.body.usuario_id !== undefined) campos.usuario_id = req.body.usuario_id ? Number(req.body.usuario_id) : null;
   if (req.body.pipeline_id !== undefined) campos.pipeline_id = req.body.pipeline_id ? Number(req.body.pipeline_id) : null;
   atualizarInstancia(inst.id, campos);
+  // espelha o vínculo na pipeline (o personalizador e o worker leem dos dois lados)
+  if (campos.pipeline_id !== undefined) {
+    db.prepare("UPDATE pipelines SET instancia_id = NULL WHERE instancia_id = ?").run(inst.id);
+    if (campos.pipeline_id) db.prepare("UPDATE pipelines SET instancia_id = ? WHERE id = ?").run(inst.id, campos.pipeline_id);
+  }
   res.json({ ok: true });
 });
 
