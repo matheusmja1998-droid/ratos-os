@@ -305,7 +305,9 @@ app.get("/api/leads", auth, (req, res) => {
   if (status) { cond.push("status = ?"); vals.push(status); }
   if (busca) { cond.push("(nome_clinica LIKE ? OR telefone LIKE ? OR cidade LIKE ?)"); vals.push(`%${busca}%`, `%${busca}%`, `%${busca}%`); }
   if (cond.length) sql += " WHERE " + cond.join(" AND ");
-  sql += " ORDER BY atualizado_em DESC LIMIT 500";
+  // ordena por movimentação recente; limite alto o bastante pra não cortar
+  // conversa antiga da lista (o Kanban tem paginação própria por etapa)
+  sql += " ORDER BY atualizado_em DESC LIMIT " + (Number(req.query.limite) || 5000);
   const leads = db.prepare(sql).all(...vals);
   // anexa a ULTIMA mensagem de cada lead (pra preview no card do pipeline)
   const ultima = db.prepare("SELECT role, texto, criado_em FROM mensagens WHERE lead_id = ? ORDER BY id DESC LIMIT 1");
@@ -322,7 +324,7 @@ app.get("/api/leads", auth, (req, res) => {
     // porque a resposta chegou numa thread paralela (decisor), que é sempre humana.
     // Se a IA está tocando a conversa, fica normal (não é problema meu).
     l.precisa_resposta = !!(u?.role === "user" && l.ia_pausada) || contThreadNaoLida.get(l.id).c > 0;
-    l.ultima_msg = u?.texto || null;
+    l.ultima_msg = u?.texto ? String(u.texto).slice(0, 120) : null; // preview curto (a lista so mostra 90)
     l.qtd_notas = contNotas.get(l.id).c;
     // TAREFA (só pra lead que ENGAJOU; follow-up frio de quem nunca respondeu está desligado):
     // 0) MINHA tarefa manual (ligar pro decisor etc) — vence as automáticas no card
