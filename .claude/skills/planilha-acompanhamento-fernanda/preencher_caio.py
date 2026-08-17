@@ -39,20 +39,19 @@ BASE = Path(__file__).resolve().parent
 ENV_PATH = Path(os.environ.get("AGENTE_ENV", "/root/agente/.env"))
 SA_PATH = os.environ.get("SA_JSON", "/root/agente/sa_caio_spend.json")
 
-# Planilha de acompanhamento (aba VISAO GERAL) - lancamento ANE_AGO_26 (15/07 -> 06/08)
-SHEET_ID = "1Ch4Yzj5rcT-bvG5JMjzG_CxhatNmtjhMFOjkwiEzGiw"
+# Planilha de acompanhamento (aba VISAO GERAL) - lancamento ANE_SET_26 (captacao 14/08 -> 31/08)
+SHEET_ID = "1AL_SrlSsCoUfbW-TrJEAZLxDN6ZBl-9rGQuJ23ZPxkM"
 ABA = "VISÃO GERAL"
 
 # Meta (Caio)
 META_API = "https://graph.facebook.com/v21.0"
 AD_ACCOUNT = "act_191737889662177"
-# Captacao do ANE_AGO_26: campanhas [ANE_AGO_26]_..._[LEADS]_...
-# CUIDADO: usar "ANE_AGO_26" e nao "AGO_26" -> "AGO_26" tambem casa com o
-# [IE30_AGO_26] (remarketing do lancamento anterior) e contaminaria o investimento.
-TAG = "ANE_AGO_26"
+# Captacao do ANE_SET_26: campanhas [ANE_SET_26]_[LEADS]_...
+# Usar a tag COMPLETA (ANE_SET_26), nunca abreviacao que possa casar com lancamento antigo.
+TAG = "ANE_SET_26"
 
-# Leads: UMA planilha mae, DUAS abas ("Planilha mae do DASHBOARD - ANE_AGO_26")
-LEADS_SHEET_ID = "12bytjv27efT83vLZV0xuQKiod2HBngU95BGjoEzQdPc"
+# Leads: UMA planilha mae, DUAS abas ("Planilha mae do DASHBOARD - ANE_SET_26")
+LEADS_SHEET_ID = "1bwK9YuPLm1dm03ql8FvyIgKds23UVVa8L2WIsis6epU"
 TRF_TAB = "Leads_TRF"
 ORG_TAB = "Leads_ORG"
 LEADS_DATE_COL = "C"  # coluna "data" (dd/mm/aaaa ou ISO)
