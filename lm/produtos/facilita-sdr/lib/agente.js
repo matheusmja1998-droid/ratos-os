@@ -9,7 +9,8 @@ import { fileURLToPath } from "node:url";
 import {
   db, getLead, atualizarLead, salvarMensagem, historicoLead, marcarReuniao,
   reunioesAtivas, getConfig, registrarEvento, bloquear, agoraSP, agendarFollowupLead,
-  audioDoLead,
+  audioDoLead, normalizarTelefone, addTelefone, abrirThread, getThread, getPipeline,
+  getUsuario, addTarefa,
 } from "./db.js";
 import { enviarTexto, enviarMidia, mostrarDigitando } from "./uazapi.js";
 import { alertar } from "./telegram.js";
@@ -74,7 +75,7 @@ function blocoTreinamento() {
 }
 
 // ---------- montagem do prompt ----------
-function montarPrompt(lead) {
+function montarPrompt(lead, thread = null) {
   const hist = historicoLead(lead.id);
   const conversa = hist.map((m) => {
     const quem = m.role === "user" ? "LEAD" : m.role === "assistant" ? "VOCÊ" : "SISTEMA";
@@ -106,7 +107,13 @@ Data/hora em São Paulo: ${data} ${hora} (${DIAS_PT[diaSemana]})
 ## HORARIOS_DISPONIVEIS
 ${horarios}
 
-## CONVERSA ATÉ AGORA
+${thread ? `## CANAL ATUAL: CONVERSA DIRETA COM O DECISOR
+Você AGORA está falando com ${lead.nome_decisor || thread.rotulo || "o decisor"} no número dele (${thread.telefone}) — NÃO é mais a atendente.
+- Você já se apresentou e disse quem passou o contato. NÃO se reapresente.
+- Objetivo: 1 pergunta de dor no máximo e já conduzir pra reunião (2 opções de horário).
+- Se ele pedir LIGAÇÃO ("me liga", "pode ligar"), responda UMA linha confirmando ("Te ligo em instantes!") E use a ação pedir_ligacao junto.
+- As mensagens marcadas VOCÊ incluem a conversa anterior com a atendente — é contexto, a mesma voz sua.
+` : ""}## CONVERSA ATÉ AGORA
 ${conversa}
 
 Responda com o JSON de ações.`;
@@ -158,16 +165,23 @@ function parseAcoes(saida) {
 }
 
 // ---------- execucao das acoes ----------
-async function executarAcoes(lead, acoes, instanceToken) {
+async function executarAcoes(lead, acoes, instanceToken, thread = null) {
+  // com THREAD (conversa direta com o decisor), tudo sai pro numero DELA
+  const alvoTel = thread?.telefone || lead.telefone;
+  const salvarMsg = (role, texto, tipo) => {
+    const r = salvarMensagem(lead.id, role, texto, tipo);
+    if (thread) db.prepare("UPDATE mensagens SET thread_id = ? WHERE id = ?").run(thread.id, r.lastInsertRowid);
+    return r;
+  };
   // telefone 0000... = lead de SIMULACAO (teste E2E sem WhatsApp real): nada sai pra rede
-  const simulado = String(lead.telefone).startsWith("0000");
+  const simulado = String(alvoTel).startsWith("0000");
   // se e o 2o bot_detectado, o lead vira perdido e NAO mandamos texto (nao adianta falar com bot)
   const segundoBot = acoes.some((a) => a.tipo === "bot_detectado") && (getLead(lead.id).pedidos_humano || 0) >= 1;
   for (const acao of acoes) {
     if (segundoBot && acao.tipo === "texto") continue; // 2o bot: nao responde a maquina
     if (acao.tipo === "texto" && acao.texto) {
-      const r = simulado ? { ok: true } : await enviarTexto(instanceToken, lead.telefone, acao.texto);
-      if (r.ok) salvarMensagem(lead.id, "assistant", acao.texto);
+      const r = simulado ? { ok: true } : await enviarTexto(instanceToken, alvoTel, acao.texto);
+      if (r.ok) salvarMsg("assistant", acao.texto);
       else { registrarEvento(lead.id, "erro", `envio falhou: ${r.erro}`); await alertar(`⚠️ SDR: falha ao enviar msg pra ${lead.nome_clinica}: ${r.erro}`); }
       if (lead.status === "respondeu") atualizarLead(lead.id, { status: "em_conversa" });
       await new Promise((r2) => setTimeout(r2, 2500 + Math.random() * 2500)); // pausa entre bolhas
@@ -184,7 +198,7 @@ async function executarAcoes(lead, acoes, instanceToken) {
       const b64 = readFileSync(caminho).toString("base64");
       const ext = caminho.split(".").pop().toLowerCase();
       const mime = ext === "mp3" ? "audio/mpeg" : ext === "m4a" ? "audio/mp4" : "audio/ogg";
-      const r = simulado ? { ok: true } : await enviarMidia(instanceToken, lead.telefone, { tipo: "audio", arquivo: `data:${mime};base64,${b64}` });
+      const r = simulado ? { ok: true } : await enviarMidia(instanceToken, alvoTel, { tipo: "audio", arquivo: `data:${mime};base64,${b64}` });
       if (r.ok) {
         atualizarLead(lead.id, { audio_enviado: 1 });
         const atual = getLead(lead.id);
@@ -199,6 +213,17 @@ async function executarAcoes(lead, acoes, instanceToken) {
       }
     }
 
+    if (acao.tipo === "pedir_ligacao") {
+      // o decisor pediu LIGACAO: avisa no Telegram e cria tarefa pro dono do funil
+      const dono = getPipeline(lead.pipeline_id)?.usuario_id || lead.usuario_id || null;
+      const quem = dono ? (getUsuario(dono)?.nome || "") : "";
+      const tel = thread?.telefone || lead.telefone_decisor || lead.telefone;
+      addTarefa(lead.id, `ligar pro ${lead.nome_decisor || lead.nome_contato || "decisor"} (pediu ligação)`,
+        agoraSP().data, { hora: null, tipo: "ligacao", usuario_id: dono });
+      await alertar(`📞 PEDIU LIGAÇÃO!\n${lead.nome_clinica}\n${lead.nome_decisor || lead.nome_contato || "decisor"}: ${tel}\nTarefa criada${quem ? " pro " + quem : ""} — liga assim que puder.`);
+      registrarEvento(lead.id, "pediu_ligacao", tel);
+    }
+
     if (acao.tipo === "atualizar_lead" && acao.campos) {
       const { etapa, ...campos } = acao.campos;
       if (campos.telefone_decisor) campos.telefone_decisor = String(campos.telefone_decisor).replace(/\D/g, "");
@@ -207,7 +232,10 @@ async function executarAcoes(lead, acoes, instanceToken) {
       // pegou o NUMERO do decisor -> sinaliza (Telegram + fica no card pra abordar)
       if (campos.telefone_decisor) {
         registrarEvento(lead.id, "decisor_contato", campos.telefone_decisor);
-        await alertar(`📞 CONTATO DO DECISOR!\n${lead.nome_clinica} (${lead.cidade || "?"})\nResponsável: ${campos.nome_contato || "?"}\nWhatsApp: ${campos.telefone_decisor}\n(abre no painel e chama)`);
+        await alertar(`📞 CONTATO DO DECISOR!\n${lead.nome_clinica} (${lead.cidade || "?"})\nResponsável: ${campos.nome_contato || "?"}\nWhatsApp: ${campos.telefone_decisor}\n➡️ a IA já vai chamar ele na segunda conversa do card`);
+        // ABORDAGEM AUTOMATICA: abre a thread e a propria IA chama o decisor
+        abordarDecisor(lead.id, campos.telefone_decisor, campos.nome_contato || null, instanceToken)
+          .catch((e) => registrarEvento(lead.id, "erro", "abordagem do decisor falhou: " + e.message));
       }
       // pipeline automatica. "Contato c/ decisor" quando:
       //  - a pessoa CONFIRMOU ser a responsavel (eh_responsavel=1), OU
@@ -367,14 +395,54 @@ export async function resumoDaConversa(leadId) {
 // ---------- entrada principal ----------
 // Chamado pelo webhook DEPOIS do debounce. Monta prompt, chama o Claude do plano,
 // executa as acoes. Uma tentativa de reprocesso se um horario foi tomado no meio.
-export async function responderLead(leadId, instanceToken) {
+// A IA CHAMA O DECISOR sozinha: abre a segunda conversa do card e manda a
+// abertura no estilo da casa (saudacao + quem e + quem passou o contato).
+// A persona e o DONO DO FUNIL do lead (Matheus nos dele, Valentino nos dele).
+export async function abordarDecisor(leadId, telefoneCru, nomeDecisor, instanceToken) {
+  const lead = getLead(leadId);
+  if (!lead) return;
+  const tel = normalizarTelefone(telefoneCru, lead.telefone);
+  if (!tel || tel === lead.telefone) return;
+  // ja existe conversa com esse numero? nao chama de novo
+  const jaTem = db.prepare("SELECT id FROM threads WHERE lead_id = ? AND telefone = ?").get(leadId, tel);
+  if (jaTem) return;
+
+  const dono = getPipeline(lead.pipeline_id)?.usuario_id || lead.usuario_id || null;
+  const persona = (dono ? getUsuario(dono)?.nome : null) || "Matheus";
+  const decisor = (nomeDecisor || lead.nome_decisor || "").split(" ")[0] || null;
+  const atendente = lead.nome_atendente || (lead.nome_contato !== nomeDecisor ? lead.nome_contato : null);
+
+  addTelefone(leadId, tel, "decisor", nomeDecisor || "Decisor");
+  const th = abrirThread(leadId, tel, decisor ? `${decisor} (decisor)` : "Decisor", lead.instancia_id || null);
+  atualizarLead(leadId, { nome_decisor: nomeDecisor || lead.nome_decisor || null });
+
+  const h = agoraSP().hora;
+  const sauda = h < "12:00" ? "Bom dia" : h < "18:00" ? "Boa tarde" : "Boa noite";
+  const msgs = [
+    `${sauda}${decisor ? " " + decisor : ""}, tudo certo contigo?`,
+    `Me chamo ${persona}, sou um dos diretores da Facilita AI. ${atendente ? `A ${atendente} da ${lead.nome_clinica} me passou teu contato` : `Me passaram teu contato na ${lead.nome_clinica}`}, disseram que é contigo que eu falo. Consigo te explicar o motivo em 1 minuto?`,
+  ];
+  const simulado = String(tel).startsWith("0000");
+  for (const m of msgs) {
+    const r = simulado ? { ok: true } : await enviarTexto(instanceToken, tel, m);
+    if (!r.ok) { registrarEvento(leadId, "erro", `abordagem decisor falhou: ${r.erro}`); return; }
+    const ins = salvarMensagem(leadId, "assistant", m);
+    db.prepare("UPDATE mensagens SET thread_id = ? WHERE id = ?").run(th.id, ins.lastInsertRowid);
+    await new Promise((r2) => setTimeout(r2, 2500 + Math.random() * 2000));
+  }
+  registrarEvento(leadId, "decisor_abordado", tel);
+  await alertar(`🤖➡️📞 IA chamou o decisor da ${lead.nome_clinica} (${tel}) como ${persona}. A conversa segue na aba do card.`);
+}
+
+export async function responderLead(leadId, instanceToken, opts = {}) {
   const lead = getLead(leadId);
   if (!lead || lead.ia_pausada) return;
+  const thread = opts.threadId ? getThread(opts.threadId) : null;
 
   for (let tentativa = 0; tentativa < 2; tentativa++) {
     let saida;
     try {
-      saida = await chamarClaude(montarPrompt(getLead(leadId)));
+      saida = await chamarClaude(montarPrompt(getLead(leadId), thread));
     } catch (e) {
       registrarEvento(leadId, "erro", `claude falhou: ${e.message}`);
       await alertar(`🔴 SDR: Claude da VPS falhou (${e.message}). Verifica se a conta está logada (claude /login).`);
@@ -387,7 +455,7 @@ export async function responderLead(leadId, instanceToken) {
       await alertar(`⚠️ SDR: resposta da IA sem JSON pra ${lead.nome_clinica} (lead ${leadId}). Ver logs.`);
       return;
     }
-    const { reprocessar } = await executarAcoes(getLead(leadId), acoes, instanceToken);
+    const { reprocessar } = await executarAcoes(getLead(leadId), acoes, instanceToken, thread);
     if (!reprocessar) return;
   }
 }

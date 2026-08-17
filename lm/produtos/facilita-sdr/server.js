@@ -180,16 +180,48 @@ app.post("/webhook", async (req, res) => {
     }
 
     if (threadParalela) {
-      // conversa do decisor e SEMPRE conduzida por humano: registra no card,
-      // acende o "precisa responder", e a IA NAO entra (o contexto dela e o da
-      // conversa com a empresa — responder aqui seria falar besteira).
+      // conversa direta com o DECISOR: entra no card e a IA DA SEGUIMENTO
+      // (mesma persona, mesmo chip). Humano assume igual a conversa principal.
       if (m.fromMe && m.enviadaPelaApi) return; // eco do proprio envio
       const textoTh = m.texto || (m.tipo === "audio" ? "[áudio]" : "[mídia]");
       const rIns = salvarMensagem(lead.id, m.fromMe ? "assistant" : "user", textoTh, m.tipo);
       db.prepare("UPDATE mensagens SET thread_id = ? WHERE id = ?").run(threadParalela.id, rIns.lastInsertRowid);
-      if (!m.fromMe) {
-        db.prepare("UPDATE threads SET nao_lida = 1 WHERE id = ?").run(threadParalela.id);
-        registrarEvento(lead.id, "resposta", `na conversa "${threadParalela.rotulo || threadParalela.telefone}"`);
+      if (m.fromMe) {
+        // dono respondeu pelo celular: humano assumiu ESTA thread
+        if (!threadParalela.ia_pausada) db.prepare("UPDATE threads SET ia_pausada = 1 WHERE id = ?").run(threadParalela.id);
+        return;
+      }
+      db.prepare("UPDATE threads SET nao_lida = 1 WHERE id = ?").run(threadParalela.id);
+      registrarEvento(lead.id, "resposta", `decisor respondeu (${threadParalela.rotulo || threadParalela.telefone})`);
+      // IA segue a conversa com o decisor (salvo se pausada nesta thread ou no lead)
+      if (!threadParalela.ia_pausada && !lead.ia_pausada) {
+        const tokPayloadTh = req.body?.token || req.body?.instance || null;
+        const tokTh = getInstanciaPorToken(tokPayloadTh)?.uazapi_token
+          || instanciaDoLead(lead, threadParalela.instancia_id)?.uazapi_token || null;
+        if (tokTh) {
+          // mesmo debounce humanizado da conversa principal (chave propria da thread)
+          const chave = `th${threadParalela.id}`;
+          const msgIdRef = rIns.lastInsertRowid;
+          const alvoMs = (DELAY_MIN + Math.random() * (DELAY_MAX - DELAY_MIN)) * 1000;
+          const antigo = debounces.get(chave);
+          if (antigo) clearTimeout(antigo.timer);
+          const digitando = setInterval(() => mostrarDigitando(tokTh, m.telefone), 7000);
+          mostrarDigitando(tokTh, m.telefone);
+          const timer = setTimeout(async () => {
+            clearInterval(digitando);
+            debounces.delete(chave);
+            const maisNova = db.prepare("SELECT id FROM mensagens WHERE thread_id = ? AND role = 'user' ORDER BY id DESC LIMIT 1").get(threadParalela.id);
+            if (maisNova?.id !== msgIdRef) return; // chegou msg mais nova na thread
+            if (processando.has(chave)) return;
+            processando.add(chave);
+            try {
+              await responderLead(lead.id, tokTh, { threadId: threadParalela.id });
+            } finally {
+              processando.delete(chave);
+            }
+          }, alvoMs);
+          debounces.set(chave, { msgId: msgIdRef, timer });
+        }
       }
       return;
     }
