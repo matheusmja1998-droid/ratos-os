@@ -98,6 +98,8 @@ Data/hora em São Paulo: ${data} ${hora} (${DIAS_PT[diaSemana]})
 - Clínica: ${lead.nome_clinica}${lead.cidade ? ` (${lead.cidade})` : ""}
 - Nicho: ${lead.nicho || "clínica"}
 - Contato: ${lead.nome_contato || "ainda não sabemos o nome"}
+- Atendente (quem responde): ${lead.nome_atendente || "NÃO REGISTRADO — pergunte o nome de quem te atende e registre em nome_atendente"}
+- Decisor (responsável): ${lead.nome_decisor || "NÃO REGISTRADO — descubra o nome do responsável e registre em nome_decisor ANTES de pedir o contato"}
 - É o responsável? ${lead.eh_responsavel ? "SIM (confirmado)" : "ainda não confirmado"}
 - Áudio oficial já enviado? ${lead.audio_enviado ? "SIM (não envie de novo)" : (audioDoLead(lead) ? "não (disponível pra enviar)" : "INDISPONÍVEL: áudio não configurado — NUNCA mencione áudio, conduza tudo por texto")}
 - Dor mapeada: ${lead.dor || "nenhuma ainda"}
@@ -228,13 +230,14 @@ async function executarAcoes(lead, acoes, instanceToken, thread = null) {
       const { etapa, ...campos } = acao.campos;
       if (campos.telefone_decisor) campos.telefone_decisor = String(campos.telefone_decisor).replace(/\D/g, "");
       atualizarLead(lead.id, campos);
-      if (campos.eh_responsavel) registrarEvento(lead.id, "responsavel", campos.nome_contato || "");
+      if (campos.eh_responsavel) registrarEvento(lead.id, "responsavel", campos.nome_decisor || campos.nome_contato || "");
       // pegou o NUMERO do decisor -> sinaliza (Telegram + fica no card pra abordar)
       if (campos.telefone_decisor) {
+        const nomeDec = campos.nome_decisor || campos.nome_contato || null;
         registrarEvento(lead.id, "decisor_contato", campos.telefone_decisor);
-        await alertar(`📞 CONTATO DO DECISOR!\n${lead.nome_clinica} (${lead.cidade || "?"})\nResponsável: ${campos.nome_contato || "?"}\nWhatsApp: ${campos.telefone_decisor}\n➡️ a IA já vai chamar ele na segunda conversa do card`);
+        await alertar(`📞 CONTATO DO DECISOR!\n${lead.nome_clinica} (${lead.cidade || "?"})\nResponsável: ${nomeDec || "?"}\nWhatsApp: ${campos.telefone_decisor}\n➡️ a IA já vai chamar ele na segunda conversa do card`);
         // ABORDAGEM AUTOMATICA: abre a thread e a propria IA chama o decisor
-        abordarDecisor(lead.id, campos.telefone_decisor, campos.nome_contato || null, instanceToken)
+        abordarDecisor(lead.id, campos.telefone_decisor, nomeDec, instanceToken)
           .catch((e) => registrarEvento(lead.id, "erro", "abordagem do decisor falhou: " + e.message));
       }
       // pipeline automatica. "Contato c/ decisor" quando:
@@ -409,12 +412,16 @@ export async function abordarDecisor(leadId, telefoneCru, nomeDecisor, instanceT
 
   const dono = getPipeline(lead.pipeline_id)?.usuario_id || lead.usuario_id || null;
   const persona = (dono ? getUsuario(dono)?.nome : null) || "Matheus";
-  const decisor = (nomeDecisor || lead.nome_decisor || "").split(" ")[0] || null;
-  const atendente = lead.nome_atendente || (lead.nome_contato !== nomeDecisor ? lead.nome_contato : null);
+  const nomeDecCompleto = nomeDecisor || lead.nome_decisor || null;
+  const decisor = (nomeDecCompleto || "").split(" ")[0] || null;
+  // atendente = quem passou o contato; nunca usar o proprio nome do decisor aqui
+  const atendenteCompleto = lead.nome_atendente ||
+    (lead.nome_contato && lead.nome_contato !== nomeDecCompleto ? lead.nome_contato : null);
+  const atendente = (atendenteCompleto || "").split(" ")[0] || null;
 
-  addTelefone(leadId, tel, "decisor", nomeDecisor || "Decisor");
+  addTelefone(leadId, tel, "decisor", nomeDecCompleto || "Decisor");
   const th = abrirThread(leadId, tel, decisor ? `${decisor} (decisor)` : "Decisor", lead.instancia_id || null);
-  atualizarLead(leadId, { nome_decisor: nomeDecisor || lead.nome_decisor || null });
+  atualizarLead(leadId, { nome_decisor: nomeDecCompleto });
 
   const h = agoraSP().hora;
   const sauda = h < "12:00" ? "Bom dia" : h < "18:00" ? "Boa tarde" : "Boa noite";
