@@ -230,8 +230,8 @@
   .num-clicavel:hover { color:var(--verde); border-color:var(--verde); }
   .ic { vertical-align:-2px; flex-shrink:0; }
   /* tarefas fixas no rodape do painel */
-  .pn-tarefa { display:flex; gap:8px; align-items:flex-start; padding:8px 14px; font-size:12.5px;
-    border-top:1px solid var(--border); }
+  .pn-tarefa { display:flex; gap:9px; align-items:flex-start; padding:11px 14px; font-size:14px;
+    line-height:1.45; border-top:1px solid var(--border); }
   .pn-tarefa.venceu { background:#fdeaea; color:#a3241c; }
   html[data-tema="dark"] .pn-tarefa.venceu { background:#3a1f1f; color:#ffb4ab; }
   html[data-tema="dark"] #resumo-ia { background:#1c2620 !important; color:#cfe0d6 !important; }
@@ -1871,10 +1871,11 @@ function renderPainelNotas(d) {
       </div>
 
       ${(d.notas || []).length ? `<div class="pn-secao">Notas</div>
-        ${d.notas.map((n) => `<div style="padding:7px 14px; border-bottom:1px solid var(--border); font-size:12.5px; display:flex; gap:7px">
-          <span style="color:var(--muted); white-space:nowrap; font-size:11px">${dataHoraSP(n.criado_em)}</span>
-          <span style="flex:1">${n.texto}${n.usuario_nome ? `<span style="color:var(--muted)"> — ${n.usuario_nome}</span>` : ""}</span>
-          <span onclick="excluirNota(${n.id}, ${l.id})" style="cursor:pointer; color:var(--muted)">✕</span>
+        ${d.notas.map((n) => `<div style="padding:10px 14px; border-bottom:1px solid var(--border); display:flex; gap:9px; align-items:flex-start">
+          <span style="flex:1; font-size:14px; line-height:1.5">${n.texto}
+            <div style="color:var(--muted); font-size:11.5px; margin-top:3px">${dataHoraSP(n.criado_em)}${n.usuario_nome ? " · " + n.usuario_nome : ""}</div>
+          </span>
+          <span onclick="excluirNota(${n.id}, ${l.id})" style="cursor:pointer; color:var(--muted); font-size:15px">✕</span>
         </div>`).join("")}` : ""}
     </div>
 
@@ -1893,30 +1894,30 @@ function renderPainelNotas(d) {
       }).join("")}
       <div style="padding:9px 14px; border-top:1px solid var(--border)">
         <div style="display:flex; gap:5px; margin-bottom:6px">
-          <button id="btn-modo-nota" class="btn mini ${modoNota === "nota" ? "" : "sec"}" style="flex:1" onclick="setModoNota('nota')">Nota</button>
-          <button id="btn-modo-tarefa" class="btn mini ${modoNota === "tarefa" ? "" : "sec"}" style="flex:1" onclick="setModoNota('tarefa')">Tarefa</button>
+          <button id="btn-modo-nota" class="btn ${modoNota === "nota" ? "" : "sec"}" style="flex:1; padding:8px" onclick="setModoNota('nota')">Nota</button>
+          <button id="btn-modo-tarefa" class="btn ${modoNota === "tarefa" ? "" : "sec"}" style="flex:1; padding:8px" onclick="setModoNota('tarefa')">Tarefa</button>
         </div>
         <div id="form-nota" style="${modoNota === "nota" ? "" : "display:none"}">
-          <input id="nota-input" placeholder="ex: liguei, não atendeu" style="width:100%; font-size:12.5px; padding:6px 9px" onkeydown="if(event.key==='Enter')addNota(${l.id})">
+          <textarea id="nota-input" rows="2" placeholder="ex: liguei, não atendeu — retornar terça 14h" style="width:100%; font-size:14px; padding:9px 11px; line-height:1.45; resize:vertical" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();addNota(${l.id})}"></textarea>
         </div>
         <div id="form-tarefa" style="${modoNota === "tarefa" ? "" : "display:none"}">
-          <input id="tarefa-input" placeholder="ex: ligar pro Marcelo" style="width:100%; font-size:12.5px; padding:6px 9px" onkeydown="if(event.key==='Enter')addTarefa(${l.id})">
+          <input id="tarefa-input" placeholder="ex: ligar pro Marcelo" style="width:100%; font-size:14px; padding:9px 11px" onkeydown="if(event.key==='Enter')addTarefa(${l.id})">
           <div style="display:flex; gap:4px; margin-top:5px">
-            <input id="tarefa-quando" type="date" style="flex:1; min-width:0; font-size:11.5px; padding:4px 6px">
-            <input id="tarefa-hora" type="time" style="width:88px; font-size:11.5px; padding:4px 6px">
+            <input id="tarefa-quando" type="date" style="flex:1; min-width:0; font-size:13px; padding:7px 8px">
+            <input id="tarefa-hora" type="time" style="width:104px; font-size:13px; padding:7px 8px">
           </div>
           <div style="display:flex; gap:4px; margin-top:5px">
-            <select id="tarefa-tipo" style="flex:1; font-size:11.5px; padding:4px 6px">
+            <select id="tarefa-tipo" style="flex:1; font-size:13px; padding:7px 8px">
               <option value="followup">Follow-up</option>
               <option value="ligacao">Ligação</option>
               <option value="reuniao">Reunião (vai pra agenda)</option>
             </select>
-            <select id="tarefa-usuario" style="flex:1; font-size:11.5px; padding:4px 6px">
+            <select id="tarefa-usuario" style="flex:1; font-size:13px; padding:7px 8px">
               ${(d.usuarios || []).map((u) => `<option value="${u.id}">${u.nome}</option>`).join("")}
             </select>
           </div>
         </div>
-        <button class="btn mini" style="width:100%; margin-top:6px" onclick="${modoNota === "nota" ? `addNota(${l.id})` : `addTarefa(${l.id})`}">salvar</button>
+        <button class="btn" style="width:100%; margin-top:8px" onclick="salvarNotaOuTarefa(${l.id})">salvar</button>
       </div>
     </div>`;
   pintarIcones(el);
@@ -2055,9 +2056,18 @@ async function abrirThread(leadId, threadId) {
   abrirConversa(leadId);
 }
 
+// o botao "salvar" decide na hora: nota ou tarefa, conforme o seletor
+async function salvarNotaOuTarefa(id) {
+  return modoNota === "tarefa" ? addTarefa(id) : addNota(id);
+}
 async function addNota(id) {
-  const t = $("#nota-input").value.trim(); if (!t) return;
-  await api("/api/lead/" + id + "/notas", { method: "POST", body: JSON.stringify({ texto: t }) });
+  const campo = $("#nota-input");
+  const t = campo?.value.trim();
+  if (!t) return toast("escreve a nota primeiro");
+  const r = await api("/api/lead/" + id + "/notas", { method: "POST", body: JSON.stringify({ texto: t }) });
+  if (r?.erro) return alert("erro ao salvar: " + r.erro);
+  if (campo) campo.value = "";       // limpa só depois de salvar de verdade
+  toast("nota salva");
   abrirConversa(id); atualizar();
 }
 async function excluirNota(notaId, leadId) {
