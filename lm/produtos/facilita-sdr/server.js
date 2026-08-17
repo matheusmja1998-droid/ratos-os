@@ -15,7 +15,7 @@ import {
   reunioesAtivas, reuniaoAtivaDoLead, cancelarReuniao, campanhaAtiva, disparosHoje,
   listarInstancias, getInstancia, getInstanciaPorToken, criarInstanciaDB,
   atualizarInstancia, removerInstancia, instanciasConectadas,
-  tarefasDoLead, addTarefa, marcarTarefa, removerTarefa, setTarefaGcal, tarefasAtrasadas,
+  tarefasDoLead, addTarefa, marcarTarefa, atualizarTarefa, removerTarefa, setTarefaGcal, tarefasAtrasadas,
   // CRM v2
   PERMISSOES, pode, listarUsuarios, getUsuario, getUsuarioPorEmail, criarUsuario,
   atualizarUsuario, marcarAcesso,
@@ -1480,7 +1480,19 @@ app.post("/api/lead/:id/tarefas", auth, exige("criar_tarefa"), async (req, res) 
   res.json({ ok: true, id, agenda });
 });
 app.patch("/api/tarefa/:id", auth, (req, res) => {
-  marcarTarefa(Number(req.params.id), req.body?.feita ? 1 : 0);
+  const b = req.body || {};
+  const campos = {};
+  if ("feita" in b) campos.feita = b.feita ? 1 : 0;
+  if ("texto" in b) {
+    const t = String(b.texto || "").trim();
+    if (!t) return res.status(400).json({ erro: "tarefa vazia" });
+    campos.texto = t;
+  }
+  if ("quando" in b) campos.quando = String(b.quando || "").trim() || null;
+  if ("hora" in b) campos.hora = String(b.hora || "").trim() || null;
+  if ("tipo" in b && ["followup", "reuniao", "ligacao"].includes(b.tipo)) campos.tipo = b.tipo;
+  if ("usuario_id" in b) campos.usuario_id = b.usuario_id ? Number(b.usuario_id) : null;
+  atualizarTarefa(Number(req.params.id), campos);
   res.json({ ok: true });
 });
 app.delete("/api/tarefa/:id", auth, (req, res) => {

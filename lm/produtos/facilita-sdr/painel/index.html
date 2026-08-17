@@ -234,6 +234,19 @@
     line-height:1.45; border-top:1px solid var(--border); }
   .pn-tarefa.venceu { background:#fdeaea; color:#a3241c; }
   html[data-tema="dark"] .pn-tarefa.venceu { background:#3a1f1f; color:#ffb4ab; }
+  /* tarefas e notas em DESTAQUE no topo do card do lead (clicar na tarefa edita) */
+  .pn-tarefa-dest { display:flex; gap:9px; align-items:flex-start; padding:12px 14px; font-size:14px;
+    line-height:1.45; background:#fff5db; border-left:4px solid #d99a00; border-bottom:1px solid var(--border);
+    cursor:pointer; }
+  .pn-tarefa-dest:hover { filter:brightness(.97); }
+  .pn-tarefa-dest.venceu { background:#fdeaea; border-left-color:#c62828; color:#a3241c; }
+  .pn-tarefa-dest .tag-atrasada { display:inline-block; background:#c62828; color:#fff; font-size:10.5px;
+    font-weight:800; padding:1px 7px; border-radius:3px; margin-right:6px; letter-spacing:.4px; }
+  html[data-tema="dark"] .pn-tarefa-dest { background:#332b18; border-left-color:#d99a00; }
+  html[data-tema="dark"] .pn-tarefa-dest.venceu { background:#3a1f1f; border-left-color:#e05a50; color:#ffb4ab; }
+  .pn-nota { display:flex; gap:9px; align-items:flex-start; padding:11px 14px; font-size:14px;
+    line-height:1.5; background:#fbf8ec; border-bottom:1px solid var(--border); }
+  html[data-tema="dark"] .pn-nota { background:#26251c; }
   html[data-tema="dark"] #resumo-ia { background:#1c2620 !important; color:#cfe0d6 !important; }
   html[data-tema="dark"] #dash-corpo [style*="background:#eef6ff"],
   html[data-tema="dark"] #dash-corpo [style*="background:#fdeaea"],
@@ -1612,16 +1625,21 @@ async function abrirConversa(id, auto) {
   // se for auto-refresh e o usuario esta digitando NESSA conversa (mensagem, nota
   // OU tarefa), NAO redesenha — senao o campo perde texto e foco. Volta no proximo tick.
   if (auto) {
-    const cx = $("#chat-texto"), nt = $("#nota-input"), tf = $("#tarefa-input");
+    const cx = $("#chat-texto"), nt = $("#nota-input");
     const digitando = (el) => el && (document.activeElement === el || el.value.trim());
-    if (convAberta === id && (digitando(cx) || digitando(nt) || digitando(tf))) return;
+    if (convAberta === id && (digitando(cx) || digitando(nt))) return;
   }
+  // rascunho só sobrevive se for o MESMO lead — senão nota/tarefa digitada num
+  // lead ia parar no outro (era assim que tarefa "aparecia" em lead errado)
+  const mesmoLead = convAberta === id;
   convAberta = id;
-  const rascunho = $("#chat-texto")?.value || ""; // preserva o que estava digitado
-  const rascunhoNota = $("#nota-input")?.value || ""; // idem pra nota
-  const rascunhoTarefa = $("#tarefa-input")?.value || ""; // idem pra tarefa
+  const rascunho = mesmoLead ? ($("#chat-texto")?.value || "") : "";
+  const rascunhoNota = mesmoLead ? ($("#nota-input")?.value || "") : "";
   // thread: se o usuario escolheu uma conversa paralela (decisor), busca só ela
   const d = await api("/api/lead/" + id + (threadAberta ? "?thread=" + threadAberta : ""));
+  // clicou em OUTRO lead enquanto essa resposta viajava: descarta (senão a resposta
+  // atrasada sobrescreve o painel e os botoes de salvar apontam pro lead errado)
+  if (convAberta !== id) return;
   const l = d.lead;
   // se a thread escolhida não é desse lead, volta pra conversa principal
   if (threadAberta && !(d.threads || []).some((t) => t.id === threadAberta)) threadAberta = null;
@@ -1657,7 +1675,6 @@ async function abrirConversa(id, auto) {
   pintarIcones($("#chat"));
   if (rascunho) $("#chat-texto").value = rascunho; // devolve o texto que estava sendo digitado
   if (rascunhoNota && $("#nota-input")) $("#nota-input").value = rascunhoNota; // idem pra nota
-  if (rascunhoTarefa && $("#tarefa-input")) $("#tarefa-input").value = rascunhoTarefa; // idem pra tarefa
   const box = $("#chat-msgs"); box.scrollTop = box.scrollHeight;
   renderListaConv();
   // resumo IA sob demanda (cacheado no servidor; atualiza o bloco quando chegar)
@@ -1827,6 +1844,25 @@ function renderPainelNotas(d) {
 
     <!-- CORPO: os dados do lead -->
     <div class="pn-corpo">
+      ${abertas.length ? `<div class="pn-secao" style="display:flex; align-items:center"><span style="flex:1">Tarefas</span><span style="font-weight:400; text-transform:none; letter-spacing:0; font-size:11px">clica pra editar</span></div>
+        ${abertas.map((t) => {
+          const venceu = tarefaAtrasada(t);
+          return `<div class="pn-tarefa-dest ${venceu ? "venceu" : ""}" onclick="abrirModalTarefa(${l.id}, ${t.id})">
+            <input type="checkbox" onclick="event.stopPropagation()" onchange="marcarTarefa(${t.id}, this.checked, ${l.id})" style="cursor:pointer; margin-top:2px" title="marcar como feita">
+            <span style="flex:1">
+              ${venceu ? '<span class="tag-atrasada">ATRASADA</span>' : ""}<b>${t.tipo === "reuniao" ? "Reunião" : t.tipo === "ligacao" ? "Ligar" : "Tarefa"}:</b> ${t.texto}
+              ${t.quando ? `<div style="font-size:12px; font-weight:700; margin-top:2px">${venceu ? atrasoTxt(t.quando) : t.quando === hojeISO() ? "hoje" : t.quando.split("-").reverse().slice(0, 2).join("/")}${t.hora ? " às " + t.hora : ""}${t.usuario_nome ? " · " + t.usuario_nome : ""}</div>` : ""}
+            </span>
+            <span onclick="event.stopPropagation(); excluirTarefa(${t.id}, ${l.id})" style="cursor:pointer; color:var(--muted)">✕</span>
+          </div>`;
+        }).join("")}` : ""}
+      ${(d.notas || []).length ? `<div class="pn-secao">Notas</div>
+        ${d.notas.map((n) => `<div class="pn-nota">
+          <span style="flex:1">${n.texto}
+            <div style="color:var(--muted); font-size:11.5px; margin-top:3px">${dataHoraSP(n.criado_em)}${n.usuario_nome ? " · " + n.usuario_nome : ""}</div>
+          </span>
+          <span onclick="excluirNota(${n.id}, ${l.id})" style="cursor:pointer; color:var(--muted); font-size:15px">✕</span>
+        </div>`).join("")}` : ""}
       <div class="pn-secao">Situação</div>
       ${linha("Etapa", `<select onchange="moverParaPipeline(${l.id}, this.value)">
         ${pipes.map((p) => `<optgroup label="${p.nome}">
@@ -1870,57 +1906,91 @@ function renderPainelNotas(d) {
           .map(([v, r]) => `<button class="btn mini ${d.ultima_ligacao === v ? "" : "sec"}" style="font-size:11px" onclick="registrarLigacao(${l.id}, '${v}')">${r}</button>`).join("")}
       </div>
 
-      ${(d.notas || []).length ? `<div class="pn-secao">Notas</div>
-        ${d.notas.map((n) => `<div style="padding:10px 14px; border-bottom:1px solid var(--border); display:flex; gap:9px; align-items:flex-start">
-          <span style="flex:1; font-size:14px; line-height:1.5">${n.texto}
-            <div style="color:var(--muted); font-size:11.5px; margin-top:3px">${dataHoraSP(n.criado_em)}${n.usuario_nome ? " · " + n.usuario_nome : ""}</div>
-          </span>
-          <span onclick="excluirNota(${n.id}, ${l.id})" style="cursor:pointer; color:var(--muted); font-size:15px">✕</span>
-        </div>`).join("")}` : ""}
     </div>
 
-    <!-- RODAPE FIXO: tarefas em aberto + campo de nota/tarefa -->
+    <!-- RODAPE FIXO: nota rapida + botao de tarefa (tarefa abre o card completo) -->
     <div class="pn-rodape">
-      ${abertas.map((t) => {
-        const venceu = tarefaAtrasada(t);
-        return `<div class="pn-tarefa ${venceu ? "venceu" : ""}">
-          <input type="checkbox" onchange="marcarTarefa(${t.id}, this.checked, ${l.id})" style="cursor:pointer; margin-top:2px">
-          <span style="flex:1">
-            <b>${t.tipo === "reuniao" ? "Reunião" : t.tipo === "ligacao" ? "Ligar" : "Tarefa"}:</b> ${t.texto}
-            ${t.quando ? `<div style="font-size:11px; opacity:.85">${venceu ? atrasoTxt(t.quando) : t.quando === hojeISO() ? "hoje" : t.quando.split("-").reverse().slice(0, 2).join("/")}${t.hora ? " às " + t.hora : ""}${t.usuario_nome ? " · " + t.usuario_nome : ""}</div>` : ""}
-          </span>
-          <span onclick="excluirTarefa(${t.id}, ${l.id})" style="cursor:pointer; color:var(--muted)">✕</span>
-        </div>`;
-      }).join("")}
       <div style="padding:9px 14px; border-top:1px solid var(--border)">
-        <div style="display:flex; gap:5px; margin-bottom:6px">
-          <button id="btn-modo-nota" class="btn ${modoNota === "nota" ? "" : "sec"}" style="flex:1; padding:8px" onclick="setModoNota('nota')">Nota</button>
-          <button id="btn-modo-tarefa" class="btn ${modoNota === "tarefa" ? "" : "sec"}" style="flex:1; padding:8px" onclick="setModoNota('tarefa')">Tarefa</button>
+        <textarea id="nota-input" rows="2" placeholder="escrever nota... (Enter salva)" style="width:100%; font-size:14px; padding:9px 11px; line-height:1.45; resize:vertical" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();addNota(${l.id})}"></textarea>
+        <div style="display:flex; gap:6px; margin-top:7px">
+          <button class="btn" style="flex:1; padding:9px" onclick="addNota(${l.id})">salvar nota</button>
+          <button class="btn sec" style="flex:1; padding:9px" onclick="abrirModalTarefa(${l.id})">+ tarefa</button>
         </div>
-        <div id="form-nota" style="${modoNota === "nota" ? "" : "display:none"}">
-          <textarea id="nota-input" rows="2" placeholder="ex: liguei, não atendeu — retornar terça 14h" style="width:100%; font-size:14px; padding:9px 11px; line-height:1.45; resize:vertical" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();addNota(${l.id})}"></textarea>
-        </div>
-        <div id="form-tarefa" style="${modoNota === "tarefa" ? "" : "display:none"}">
-          <input id="tarefa-input" placeholder="ex: ligar pro Marcelo" style="width:100%; font-size:14px; padding:9px 11px" onkeydown="if(event.key==='Enter')addTarefa(${l.id})">
-          <div style="display:flex; gap:4px; margin-top:5px">
-            <input id="tarefa-quando" type="date" style="flex:1; min-width:0; font-size:13px; padding:7px 8px">
-            <input id="tarefa-hora" type="time" style="width:104px; font-size:13px; padding:7px 8px">
-          </div>
-          <div style="display:flex; gap:4px; margin-top:5px">
-            <select id="tarefa-tipo" style="flex:1; font-size:13px; padding:7px 8px">
-              <option value="followup">Follow-up</option>
-              <option value="ligacao">Ligação</option>
-              <option value="reuniao">Reunião (vai pra agenda)</option>
-            </select>
-            <select id="tarefa-usuario" style="flex:1; font-size:13px; padding:7px 8px">
-              ${(d.usuarios || []).map((u) => `<option value="${u.id}">${u.nome}</option>`).join("")}
-            </select>
-          </div>
-        </div>
-        <button class="btn" style="width:100%; margin-top:8px" onclick="salvarNotaOuTarefa(${l.id})">salvar</button>
       </div>
     </div>`;
+  painelTarefas = d.tarefas || [];
+  painelUsuarios = d.usuarios || [];
   pintarIcones(el);
+}
+
+// ---- MODAL DE TAREFA (criar e editar) — estilo Kommo: atalhos de prazo na lateral ----
+let painelTarefas = [], painelUsuarios = [];
+function dataMaisDias(n) {
+  const dt = new Date();
+  dt.setDate(dt.getDate() + n);
+  return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}-${String(dt.getDate()).padStart(2, "0")}`;
+}
+function abrirModalTarefa(leadId, tarefaId = null) {
+  const t = tarefaId ? painelTarefas.find((x) => x.id === tarefaId) : null;
+  const atalhos = [
+    ["Hoje", 0], ["Amanhã", 1], ["Em 2 dias", 2],
+    ["Esta semana", [5, 4, 3, 2, 1, 0, 6][new Date().getDay()]], // ate sexta
+    ["Em 7 dias", 7], ["Em 30 dias", 30],
+  ];
+  modal(t ? "Editar tarefa" : "Nova tarefa", `
+    <div style="display:flex; gap:14px">
+      <div style="display:flex; flex-direction:column; gap:4px; min-width:118px">
+        ${atalhos.map(([r, n]) => `<button class="btn sec mini" style="text-align:left; padding:7px 10px" onclick="$('#mt-quando').value='${dataMaisDias(n)}'">${r}</button>`).join("")}
+      </div>
+      <div style="flex:1; display:flex; flex-direction:column; gap:7px">
+        <input id="mt-texto" placeholder="o que precisa fazer? ex: ligar pro Marcelo" value="${(t?.texto || "").replace(/"/g, "&quot;")}" style="width:100%; font-size:14px; padding:9px 11px">
+        <div style="display:flex; gap:5px">
+          <input id="mt-quando" type="date" value="${t?.quando || ""}" style="flex:1; min-width:0; font-size:13px; padding:8px">
+          <input id="mt-hora" type="time" value="${t?.hora || ""}" style="width:106px; font-size:13px; padding:8px">
+        </div>
+        <select id="mt-tipo" style="font-size:13px; padding:8px">
+          <option value="followup" ${(t?.tipo || "followup") === "followup" ? "selected" : ""}>Follow-up</option>
+          <option value="ligacao" ${t?.tipo === "ligacao" ? "selected" : ""}>Ligação</option>
+          <option value="reuniao" ${t?.tipo === "reuniao" ? "selected" : ""}>Reunião (vai pra agenda)</option>
+        </select>
+        <select id="mt-usuario" style="font-size:13px; padding:8px">
+          ${painelUsuarios.map((u) => `<option value="${u.id}" ${t?.usuario_id === u.id ? "selected" : ""}>${u.nome}</option>`).join("")}
+        </select>
+        <div style="display:flex; gap:6px; margin-top:3px">
+          <button class="btn" style="flex:1; padding:10px" onclick="salvarModalTarefa(${leadId}, ${tarefaId ?? "null"})">${t ? "salvar alterações" : "criar tarefa"}</button>
+          ${t ? `<button class="btn sec" style="padding:10px 13px; color:#c62828" onclick="excluirTarefa(${tarefaId}, ${leadId}); fecharModal()">excluir</button>` : ""}
+        </div>
+      </div>
+    </div>`, 470);
+  $("#mt-texto").focus();
+}
+async function salvarModalTarefa(leadId, tarefaId) {
+  const body = {
+    texto: $("#mt-texto").value.trim(),
+    quando: $("#mt-quando").value || null,
+    hora: $("#mt-hora").value || null,
+    tipo: $("#mt-tipo").value || "followup",
+    usuario_id: Number($("#mt-usuario").value) || null,
+  };
+  if (!body.texto) return toast("escreve a tarefa primeiro");
+  if (body.tipo === "reuniao" && (!body.quando || !body.hora))
+    return alert("pra virar reunião na agenda, preenche o dia E a hora");
+  if (body.tipo === "reuniao" && !tarefaId) {
+    const c = await api(`/api/agenda/conflito?inicio=${body.quando}T${body.hora}`).catch(() => null);
+    if (c?.conflito) {
+      const lista = c.reunioes.map((r) => `• ${(r.inicio || "").slice(11, 16)} — ${r.nome_clinica}`).join("\n");
+      if (!confirm(`Atenção: já tem reunião perto desse horário.\n\n${lista}\n\nMarcar assim mesmo?`)) return;
+    }
+  }
+  const r = tarefaId
+    ? await api("/api/tarefa/" + tarefaId, { method: "PATCH", body: JSON.stringify(body) })
+    : await api("/api/lead/" + leadId + "/tarefas", { method: "POST", body: JSON.stringify(body) });
+  if (r?.erro) return alert("erro ao salvar: " + r.erro);
+  if (r?.agenda?.erro) alert(r.agenda.erro);
+  else if (r?.agenda?.id) alert("Reunião criada e já subiu pra agenda");
+  fecharModal();
+  toast(tarefaId ? "tarefa atualizada" : "tarefa criada");
+  abrirConversa(leadId); atualizar(); carregarKanban();
 }
 
 // ---- menus de contexto (clicar no número/link abre as opções) ----
@@ -2003,17 +2073,6 @@ function atrasoTxt(quando) {
 const hojeISO = () => new Date().toLocaleDateString("sv-SE", { timeZone: "America/Sao_Paulo" });
 const tarefaAtrasada = (t) => !!(t.quando && !t.feita && t.quando < hojeISO());
 
-// alterna o campo digitavel entre NOTA e TAREFA (mesmo espaco, um seletor)
-let modoNota = "nota";
-function setModoNota(m) {
-  modoNota = m;
-  $("#form-nota").style.display = m === "nota" ? "" : "none";
-  $("#form-tarefa").style.display = m === "tarefa" ? "" : "none";
-  $("#btn-modo-nota")?.classList.toggle("sec", m !== "nota");
-  $("#btn-modo-tarefa")?.classList.toggle("sec", m !== "tarefa");
-  (m === "nota" ? $("#nota-input") : $("#tarefa-input"))?.focus();
-}
-
 // registra o resultado da ligação: vira evento (dashboard) e move o card
 async function registrarLigacao(id, resultado) {
   const obs = ["reuniao", "recusou"].includes(resultado)
@@ -2056,10 +2115,6 @@ async function abrirThread(leadId, threadId) {
   abrirConversa(leadId);
 }
 
-// o botao "salvar" decide na hora: nota ou tarefa, conforme o seletor
-async function salvarNotaOuTarefa(id) {
-  return modoNota === "tarefa" ? addTarefa(id) : addNota(id);
-}
 async function addNota(id) {
   const campo = $("#nota-input");
   const t = campo?.value.trim();
@@ -2073,31 +2128,6 @@ async function addNota(id) {
 async function excluirNota(notaId, leadId) {
   await api("/api/nota/" + notaId, { method: "DELETE" });
   abrirConversa(leadId); atualizar();
-}
-// tarefas MINHAS (manuais) — nao disparam nada, so lembram no card
-async function addTarefa(id) {
-  const t = $("#tarefa-input").value.trim(); if (!t) return;
-  const body = {
-    texto: t,
-    quando: $("#tarefa-quando")?.value || null,
-    hora: $("#tarefa-hora")?.value || null,
-    tipo: $("#tarefa-tipo")?.value || "followup",
-    usuario_id: Number($("#tarefa-usuario")?.value) || null,
-  };
-  if (body.tipo === "reuniao" && (!body.quando || !body.hora))
-    return alert("pra virar reunião na agenda, preenche o dia E a hora");
-  // AVISA (não bloqueia) se já tem reunião perto desse horário
-  if (body.tipo === "reuniao") {
-    const c = await api(`/api/agenda/conflito?inicio=${body.quando}T${body.hora}`).catch(() => null);
-    if (c?.conflito) {
-      const lista = c.reunioes.map((r) => `• ${(r.inicio || "").slice(11, 16)} — ${r.nome_clinica}`).join("\n");
-      if (!confirm(`Atenção: já tem reunião perto desse horário.\n\n${lista}\n\nMarcar assim mesmo?`)) return;
-    }
-  }
-  const r = await api("/api/lead/" + id + "/tarefas", { method: "POST", body: JSON.stringify(body) });
-  if (r?.agenda?.erro) alert(r.agenda.erro);
-  else if (r?.agenda?.id) alert("Reunião criada e já subiu pra agenda");
-  abrirConversa(id); atualizar(); carregarKanban();
 }
 async function marcarTarefa(tarefaId, feita, leadId) {
   await api("/api/tarefa/" + tarefaId, { method: "PATCH", body: JSON.stringify({ feita: feita ? 1 : 0 }) });

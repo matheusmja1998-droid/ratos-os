@@ -661,6 +661,14 @@ export const tarefasAtrasadas = () =>
     WHERE t.feita = 0 AND t.quando IS NOT NULL AND t.quando < ? ORDER BY t.quando`).all(agoraSP().data);
 export const marcarTarefa = (id, feita) =>
   db.prepare("UPDATE tarefas SET feita = ? WHERE id = ?").run(feita ? 1 : 0, id);
+// editar tarefa existente (texto/data/hora/tipo/responsavel) — pro modal de edicao do painel
+export function atualizarTarefa(id, campos) {
+  const permitidos = ["texto", "quando", "hora", "tipo", "usuario_id", "feita"];
+  const sets = [], vals = [];
+  for (const c of permitidos) if (c in campos) { sets.push(`${c} = ?`); vals.push(campos[c] ?? null); }
+  if (!sets.length) return;
+  db.prepare(`UPDATE tarefas SET ${sets.join(", ")} WHERE id = ?`).run(...vals, id);
+}
 export const removerTarefa = (id) => db.prepare("DELETE FROM tarefas WHERE id = ?").run(id);
 
 // REENGAJAMENTO: leads que ENGAJARAM (respondeu/em conversa/decisor/negociando) e
