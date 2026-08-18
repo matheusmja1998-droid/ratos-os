@@ -30,6 +30,7 @@ import {
   conectarInstancia, statusInstanciaLive, statusConectado, configurarWebhook, checarWhatsapp,
 } from "./lib/uazapi.js";
 import { responderLead, horariosDisponiveis } from "./lib/agente.js";
+import { transcreverAudioMensagem } from "./lib/transcrever.js";
 import { alertar } from "./lib/telegram.js";
 import { iniciarWorker } from "./worker.js";
 
@@ -177,6 +178,19 @@ app.post("/webhook", async (req, res) => {
         if (lead && variantesTelefone(lead.telefone).includes(threadParalela.telefone)) threadParalela = null;
       }
       if (!lead) return; // chip proprio: conversa que nao e lead NAO EXISTE pra gente
+    }
+
+    // AUDIO DO LEAD: baixa e transcreve no whisper local pra IA entender e responder.
+    // Falhou (servico fora, download quebrou)? m.texto fica vazio e vale o fallback
+    // de sempre ("pede com jeito pra pessoa escrever").
+    if (m.tipo === "audio" && !m.fromMe && !m.texto) {
+      const tokMidia = getInstanciaPorToken(req.body?.token || req.body?.instance || null)?.uazapi_token
+        || instanciaDoLead(lead)?.uazapi_token || null;
+      const transcricao = await transcreverAudioMensagem(tokMidia, m).catch(() => null);
+      if (transcricao) {
+        m.texto = `🎤 ${transcricao}`;
+        registrarEvento(lead.id, "audio_transcrito", transcricao.slice(0, 100));
+      }
     }
 
     if (threadParalela) {

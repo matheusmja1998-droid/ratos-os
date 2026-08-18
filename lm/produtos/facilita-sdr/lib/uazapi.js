@@ -233,6 +233,45 @@ export function parseWebhook(body) {
     else tipo = "outro";
   }
 
+  // URL da midia (o webhook e configurado com addUrlTypesMedia, entao audio/imagem
+  // chegam com link pronto). So aceita http — .enc do WhatsApp nao da pra abrir.
+  const midiaUrl = [msg.content, msg.fileURL, msg.fileUrl, msg.mediaUrl, msg.file, msg.url]
+    .find((v) => typeof v === "string" && /^https?:\/\//.test(v) && !v.includes(".enc")) || null;
+
   if (!telefone) return null;
-  return { telefone, texto, tipo, fromMe, enviadaPelaApi, ehGrupo, messageId };
+  return { telefone, texto, tipo, fromMe, enviadaPelaApi, ehGrupo, messageId, midiaUrl };
+}
+
+// baixa o arquivo de uma mensagem de midia: tenta a URL do webhook, senao pede
+// pra uazapi via /message/download (aceita resposta em arquivo, URL ou base64)
+export async function baixarMidia(instanceToken, { midiaUrl, messageId } = {}) {
+  try {
+    if (midiaUrl) {
+      const r = await fetch(midiaUrl, { signal: AbortSignal.timeout(30_000) });
+      if (r.ok) return Buffer.from(await r.arrayBuffer());
+    }
+    if (!uazapiConfigurada() || !messageId || !instanceToken) return null;
+    const r = await fetch(`${UAZAPI_URL}/message/download`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", token: instanceToken },
+      body: JSON.stringify({ id: messageId }),
+      signal: AbortSignal.timeout(30_000),
+    });
+    if (!r.ok) return null;
+    const ct = r.headers.get("content-type") || "";
+    if (!ct.includes("json")) return Buffer.from(await r.arrayBuffer()); // veio o arquivo direto
+    const j = await r.json().catch(() => null);
+    if (!j) return null;
+    const url = [j.fileURL, j.fileUrl, j.url, j.file, j.link]
+      .find((v) => typeof v === "string" && /^https?:\/\//.test(v));
+    if (url) {
+      const r2 = await fetch(url, { signal: AbortSignal.timeout(30_000) });
+      if (r2.ok) return Buffer.from(await r2.arrayBuffer());
+    }
+    const b64 = j.base64 || j.data || (typeof j.content === "string" && !/^https?:\/\//.test(j.content) ? j.content : null);
+    if (b64) return Buffer.from(String(b64).replace(/^data:.*?;base64,/, ""), "base64");
+    return null;
+  } catch {
+    return null;
+  }
 }
