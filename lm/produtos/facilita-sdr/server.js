@@ -475,6 +475,24 @@ app.delete("/api/lead/:id", auth, (req, res) => {
   res.json({ ok: true });
 });
 
+// exclusao em massa por SELECAO (checkboxes do Kanban): apaga os leads e tudo
+// que pendura neles — mensagens, threads, telefones, notas, tarefas, eventos
+app.post("/api/leads/excluir", auth, (req, res) => {
+  const ids = (Array.isArray(req.body?.ids) ? req.body.ids : []).map(Number).filter(Boolean);
+  if (!ids.length) return res.status(400).json({ erro: "nenhum lead selecionado" });
+  if (ids.length > 500) return res.status(400).json({ erro: "máximo 500 por vez" });
+  const tx = db.transaction(() => {
+    for (const id of ids) {
+      for (const t of ["mensagens", "reunioes", "eventos", "campanha_leads", "threads", "telefones", "notas", "tarefas"])
+        db.prepare(`DELETE FROM ${t} WHERE lead_id = ?`).run(id);
+      db.prepare("DELETE FROM leads WHERE id = ?").run(id);
+    }
+  });
+  tx();
+  console.log(`[leads] exclusao em massa: ${ids.length} leads (${req.usuario?.nome || "?"})`);
+  res.json({ ok: true, excluidos: ids.length });
+});
+
 // exclusao em massa (todos de um status, ex: limpar "Sem WhatsApp")
 app.post("/api/leads/excluir-status", auth, (req, res) => {
   const { status } = req.body || {};

@@ -257,6 +257,19 @@
   .pn-nota { display:flex; gap:9px; align-items:flex-start; padding:11px 14px; font-size:14px;
     line-height:1.5; background:#fbf8ec; border-bottom:1px solid var(--border); }
   html[data-tema="dark"] .pn-nota { background:#26251c; }
+  /* modo selecao do Kanban (apagar varios de uma vez) */
+  .lead-card.selecionado { outline:2px solid #c62828; outline-offset:-2px; background:#fdf2f2; }
+  html[data-tema="dark"] .lead-card.selecionado { background:#31201f; }
+  .sel-caixa { position:absolute; top:8px; left:8px; width:18px; height:18px; border:2px solid #c62828;
+    border-radius:4px; background:#fff; color:#c62828; font-size:13px; font-weight:800; line-height:14px;
+    text-align:center; z-index:2; }
+  .lead-card { position:relative; }
+  .lead-card.modo-sel .nome { padding-left:24px; }
+  #barra-selecao { position:fixed; left:50%; transform:translateX(-50%); bottom:18px; z-index:1200;
+    background:var(--card, #fff); border:1px solid var(--border); border-radius:12px; padding:10px 14px;
+    display:flex; gap:8px; align-items:center; box-shadow:0 8px 28px rgba(0,0,0,.22); font-size:13px; }
+  #barra-selecao .btn[disabled] { opacity:.5; }
+  html[data-tema="dark"] #barra-selecao { background:#232e28; }
   /* "IA digitando": 3 pontinhos pulando no fim do chat (so o painel ve) */
   .dots { display:inline-flex; gap:4px; padding:2px 2px; }
   .dots i { width:7px; height:7px; border-radius:50%; background:var(--muted); animation:dotp 1.2s infinite; }
@@ -390,6 +403,7 @@
         <button class="btn mini sec filtro-ia" data-filtro="humano" onclick="setFiltroIA('humano')">com humano</button>
       </div>
       <button class="btn mini sec" id="btn-atrasadas" onclick="toggleAtrasadas()">tarefas atrasadas</button>
+      <button class="btn mini sec" id="btn-selecao" onclick="toggleSelecao()">selecionar</button>
       <select id="filtro-data" onchange="mudouPeriodo()" style="font-size:13px" title="leads com movimentação no período">
         <option value="">Todo período</option>
         <option value="hoje">Movimentados hoje</option>
@@ -1007,8 +1021,10 @@ function renderKanban() {
   };
 
   let totalVis = 0, valorVis = 0;
+  idsVisiveisKanban = [];
   const html = kanbanDados.colunas.map((col) => {
     const doStatus = col.leads.filter((l) => casaBusca(l) && casaIA(l));
+    idsVisiveisKanban.push(...doStatus.map((l) => l.id));
     const valor = doStatus.reduce((s, l) => s + (Number(l.valor_venda) || 0), 0);
     totalVis += doStatus.length; valorVis += valor;
     const limpar = doStatus.length ? `<span class="limpar" title="excluir todos dessa etapa" onclick="event.stopPropagation(); limparColuna('${col.chave || ""}','${col.nome}',${doStatus.length})"></span>` : "";
@@ -1039,15 +1055,65 @@ function renderKanban() {
   if ($("#pipe-valor")) $("#pipe-valor").textContent = money(valorVis);
 }
 
+// ---- MODO SELECAO: marcar varios cards e apagar de uma vez ----
+let modoSelecao = false;
+let selecionados = new Set();
+let idsVisiveisKanban = [];
+function toggleSelecao() {
+  modoSelecao = !modoSelecao;
+  if (!modoSelecao) selecionados.clear();
+  $("#btn-selecao")?.classList.toggle("on", modoSelecao);
+  renderKanban(); renderBarraSelecao();
+}
+function alternarSelecao(id) {
+  if (selecionados.has(id)) selecionados.delete(id); else selecionados.add(id);
+  renderKanban(); renderBarraSelecao();
+}
+function selecionarVisiveis() {
+  // so os que estao NA TELA (depois de busca e filtros) — o render coleta os ids
+  for (const id of idsVisiveisKanban) selecionados.add(id);
+  renderKanban(); renderBarraSelecao();
+}
+function renderBarraSelecao() {
+  let bar = $("#barra-selecao");
+  if (!modoSelecao) { bar?.remove(); return; }
+  if (!bar) {
+    bar = document.createElement("div");
+    bar.id = "barra-selecao";
+    document.body.appendChild(bar);
+  }
+  const n = selecionados.size;
+  bar.innerHTML = `
+    <b>${n} selecionado${n === 1 ? "" : "s"}</b>
+    <button class="btn mini sec" onclick="selecionarVisiveis()">selecionar todos os visíveis</button>
+    <button class="btn mini" style="background:#c62828; border-color:#c62828" ${n ? "" : "disabled"} onclick="apagarSelecionados()">apagar ${n || ""}</button>
+    <button class="btn mini sec" onclick="toggleSelecao()">cancelar</button>`;
+}
+async function apagarSelecionados() {
+  const n = selecionados.size;
+  if (!n) return;
+  if (!confirm(`Apagar ${n} lead${n === 1 ? "" : "s"} de vez?\n\nApaga conversa, notas, tarefas e telefones junto. NÃO dá pra desfazer.`)) return;
+  const r = await api("/api/leads/excluir", { method: "POST", body: JSON.stringify({ ids: [...selecionados] }) });
+  if (r?.erro) return alert(r.erro);
+  toast(`${r.excluidos} lead(s) apagado(s)`);
+  selecionados.clear();
+  modoSelecao = false;
+  $("#btn-selecao")?.classList.remove("on");
+  renderBarraSelecao();
+  await carregarKanban(); atualizar();
+}
+
 // card do lead: vermelho quando tem tarefa atrasada
 function cardLead(l) {
   const atrasada = l.tarefa_atrasada;
   const tel = l.telefone_decisor || l.telefone;
+  const sel = modoSelecao && selecionados.has(l.id);
   return `
-    <div class="lead-card${atrasada ? " atrasado" : ""}" draggable="true"
+    <div class="lead-card${atrasada ? " atrasado" : ""}${sel ? " selecionado" : ""}${modoSelecao ? " modo-sel" : ""}" draggable="${modoSelecao ? "false" : "true"}"
         ondragstart="arrastarCard(event, ${l.id})"
         ondragend="this.classList.remove('arrastando')"
-        onclick="abrirConversa(${l.id}); aba('conversas')">
+        onclick="${modoSelecao ? `alternarSelecao(${l.id})` : `abrirConversa(${l.id}); aba('conversas')`}">
+      ${modoSelecao ? `<span class="sel-caixa">${sel ? "✓" : ""}</span>` : ""}
       <span class="excluir" title="excluir lead" onclick="event.stopPropagation(); excluirLead(${l.id}, '${(l.nome_clinica || "").replace(/'/g, "")}')">✕</span>
       <div class="nome">${l.nome_clinica}</div>
       <div class="sub">${l.telefone}${l.cidade && l.cidade !== "Teste" ? " · " + l.cidade : ""}${l.nome_contato ? " · " + l.nome_contato : ""} <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.nome_clinica + " " + (l.cidade || ""))}" target="_blank" onclick="event.stopPropagation()" title="ver no Google Maps" style="color:var(--verde); text-decoration:none"></a></div>
