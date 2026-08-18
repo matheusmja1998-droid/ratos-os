@@ -633,9 +633,12 @@ export function abrirThread(leadId, telefone, rotulo = null, instanciaId = null,
   const tel = String(telefone).replace(/\D/g, "");
   // dedup por telefone + CHIP: o mesmo numero da empresa pode ter duas conversas
   // (uma no chip do Matheus, outra no do Valentino) — cada uma e uma thread
+  // estrita = so reusa thread do MESMO chip (fluxo "conversar pelo meu numero":
+  // sem isso, o fallback de instancia NULL devolvia a conversa PADRAO antiga e o
+  // clique caia na thread errada em vez de abrir a do chip da pessoa)
   const existe = instanciaId
     ? db.prepare("SELECT * FROM threads WHERE lead_id = ? AND telefone = ? AND COALESCE(instancia_id,0) = ?").get(leadId, tel, instanciaId)
-      || db.prepare("SELECT * FROM threads WHERE lead_id = ? AND telefone = ? AND instancia_id IS NULL").get(leadId, tel)
+      || (opts.estrita ? null : db.prepare("SELECT * FROM threads WHERE lead_id = ? AND telefone = ? AND instancia_id IS NULL").get(leadId, tel))
     : db.prepare("SELECT * FROM threads WHERE lead_id = ? AND telefone = ?").get(leadId, tel);
   if (existe) {
     // thread antiga com rotulo generico ganha o nome certo ("Contato" -> "Decisor"/"Empresa")

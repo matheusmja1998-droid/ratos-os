@@ -364,7 +364,9 @@
       <select id="dash-usuario" onchange="carregarDashboard()" style="margin-left:auto; font-size:13px" title="de quem são os números">
         <option value="">Equipe toda</option>
       </select>
-      <select id="dash-dias" onchange="carregarDashboard()" style="font-size:13px"
+      <button class="btn mini sec" onclick="personalizarDash()">personalizar</button>
+      <select id="dash-dias" onchange="carregarDashboard()" style="font-size:13px">
+        <option value="hoje">hoje</option>
         <option value="7">últimos 7 dias</option>
         <option value="30" selected>últimos 30 dias</option>
         <option value="90">últimos 90 dias</option>
@@ -2387,10 +2389,14 @@ async function excluirTelefone(telId, leadId) {
 // logado — a original continua intacta no numero antigo. IA nao assume essa.
 async function conversarPeloMeuNumero(leadId) {
   const d = await api("/api/lead/" + leadId);
+  const tels = (d.telefones || []).length ? d.telefones : [{ numero: d.lead.telefone, tipo: "empresa", rotulo: "Empresa" }];
   modal("Conversar pelo meu número", `
     <div style="font-size:13.5px; line-height:1.65">
       A conversa com <b>${d.lead.nome_clinica}</b> vai ser iniciada <b>pelo SEU número</b>.<br><br>
-      • mensagens pro <b>${fmtTel(d.lead.telefone)}</b> saem do seu chip<br>
+      <b>Pra qual número do lead?</b>
+      <select id="meu-num-alvo" style="width:100%; font-size:13px; padding:8px; margin-top:5px">
+        ${tels.map((t) => `<option value="${t.numero}">${fmtTel(t.numero)} · ${t.tipo === "decisor" ? "Decisor" : t.rotulo || "Empresa"}</option>`).join("")}
+      </select><br>
       • a conversa antiga continua no número original (${d.chip ? d.chip.nome : "chip antigo"})<br>
       • a IA <b>não</b> assume essa conversa — você devolve pra ela se quiser
     </div>
@@ -2400,7 +2406,8 @@ async function conversarPeloMeuNumero(leadId) {
     </div>`, 430);
 }
 async function confirmarMeuNumero(leadId) {
-  const r = await api("/api/lead/" + leadId + "/threads", { method: "POST", body: JSON.stringify({ minha: true }) });
+  const alvo = $("#meu-num-alvo")?.value || null;
+  const r = await api("/api/lead/" + leadId + "/threads", { method: "POST", body: JSON.stringify({ minha: true, telefone: alvo }) });
   if (r?.erro) return alert(r.erro);
   fecharModal();
   toast(`conversa aberta no seu número${r.chip ? " (" + r.chip.nome + ")" : ""}`);
@@ -3087,10 +3094,52 @@ async function carregarDashboard() {
   document.querySelectorAll(".dash-tab").forEach((b) => b.classList.toggle("sec", b.dataset.dash !== dashAtual));
   const quem = $("#dash-usuario")?.selectedOptions?.[0]?.text || "";
   const sufixo = $("#dash-usuario")?.value ? ` · ${quem.replace("", "")}` : "";
-  $("#dash-titulo").textContent = { geral: "Visão geral", disparo: "Dashboard de Disparo", prospeccao: "Dashboard de Ligações" }[dashAtual] + sufixo;
-  if (dashAtual === "geral") return dashGeral();
-  if (dashAtual === "prospeccao") return dashProspeccao();
-  return dashDisparo();
+  const periodo = $("#dash-dias")?.value === "hoje" ? " · HOJE" : "";
+  $("#dash-titulo").textContent = { geral: "Visão geral", disparo: "Dashboard de Disparo", prospeccao: "Dashboard de Ligações" }[dashAtual] + sufixo + periodo;
+  if (dashAtual === "geral") await dashGeral();
+  else if (dashAtual === "prospeccao") await dashProspeccao();
+  else await dashDisparo();
+  aplicarBlocosDash(); // esconde o que a pessoa escolheu tirar da visualizacao
+}
+
+// ---- PERSONALIZAR A VISUALIZACAO: cada pessoa escolhe quais blocos ve ----
+// (salvo por aba no navegador; nao mexe no dashboard dos outros)
+function blocosDoDash() {
+  const out = [];
+  document.querySelectorAll("#dash-corpo .grid-metricas").forEach((el, i) => {
+    el.dataset.bloco = "kpis" + (i || "");
+    out.push({ id: el.dataset.bloco, rot: i ? `Números do topo (${i + 1})` : "Números do topo", el });
+  });
+  document.querySelectorAll("#dash-corpo .card").forEach((el) => {
+    const t = el.querySelector("h3")?.textContent?.trim();
+    if (!t) return;
+    el.dataset.bloco = "c:" + t;
+    out.push({ id: el.dataset.bloco, rot: t, el });
+  });
+  return out;
+}
+function aplicarBlocosDash() {
+  const ocultos = JSON.parse(localStorage.getItem("dash_ocultos_" + dashAtual) || "[]");
+  for (const b of blocosDoDash()) b.el.style.display = ocultos.includes(b.id) ? "none" : "";
+}
+function personalizarDash() {
+  const ocultos = new Set(JSON.parse(localStorage.getItem("dash_ocultos_" + dashAtual) || "[]"));
+  const blocos = blocosDoDash();
+  if (!blocos.length) return toast("abre uma aba do dashboard primeiro");
+  modal("Personalizar visualização", `
+    <div style="font-size:12.5px; color:var(--muted); margin-bottom:10px">Marca o que você quer VER nessa aba do dashboard. Vale só pra você, neste navegador.</div>
+    ${blocos.map((b) => `<label style="display:flex; gap:9px; align-items:center; padding:8px 4px; border-bottom:1px solid var(--border); cursor:pointer; font-size:13.5px">
+      <input type="checkbox" class="dash-bloco-chk" value="${b.id}" ${ocultos.has(b.id) ? "" : "checked"}>
+      <span>${b.rot}</span>
+    </label>`).join("")}
+    <button class="btn" style="width:100%; margin-top:12px" onclick="salvarBlocosDash()">salvar visualização</button>`, 420);
+}
+function salvarBlocosDash() {
+  const ocultos = [...document.querySelectorAll(".dash-bloco-chk")].filter((c) => !c.checked).map((c) => c.value);
+  localStorage.setItem("dash_ocultos_" + dashAtual, JSON.stringify(ocultos));
+  fecharModal();
+  aplicarBlocosDash();
+  toast("visualização salva");
 }
 
 // barra comparando o que você fez com o benchmark de mercado

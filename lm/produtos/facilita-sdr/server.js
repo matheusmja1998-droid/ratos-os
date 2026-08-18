@@ -87,6 +87,11 @@ const novaSessao = (usuarioId) => {
   return token;
 };
 
+// rotas de NAVEGACAO (link/target _blank nao manda header): validam ?t= na mao.
+// Aceita a senha mestre E sessao de usuario — sem isso o Valentino (login proprio)
+// tomava 401 em conectar agenda / exportar / ouvir audio.
+const tokenQueryValido = (t) => Boolean(t) && (t === PAINEL_SENHA || sessoes.has(String(t)));
+
 function auth(req, res, next) {
   if (!PAINEL_SENHA) return res.status(500).json({ erro: "PAINEL_SENHA nao configurada" });
   const token = String(req.headers.authorization || "").replace(/^Bearer\s+/i, "");
@@ -862,7 +867,7 @@ app.post("/api/importar", auth, upload.single("csv"), async (req, res) => {
 
 // EXPORTAR leads em CSV (do funil pedido, ou todos). Auth por query (download direto).
 app.get("/api/exportar.csv", (req, res) => {
-  if (String(req.query.t || "") !== PAINEL_SENHA) return res.status(401).end();
+  if (!tokenQueryValido(String(req.query.t || ""))) return res.status(401).end();
   const pid = req.query.pipeline_id ? Number(req.query.pipeline_id) : null;
   const leads = db.prepare(`SELECT l.*, e.nome etapa_nome, p.nome pipeline_nome,
       (SELECT nome FROM usuarios u WHERE u.id = l.usuario_id) responsavel
@@ -899,7 +904,7 @@ const COLUNAS_MODELO = [
   ["nota", "Nota no Google"],
 ];
 app.get("/api/modelo-importacao.csv", (req, res) => {
-  if (String(req.query.t || "") !== PAINEL_SENHA) return res.status(401).end();
+  if (!tokenQueryValido(String(req.query.t || ""))) return res.status(401).end();
   const head = COLUNAS_MODELO.map(([c]) => c).join(",");
   const ex1 = ["Clínica Exemplo", "31999998888", "Belo Horizonte", "Odontologia", "https://exemplo.com.br",
     "https://maps.google.com/?cid=123", "Juliana", "Dr. Paulo", "31988887777", "1500", "42", "4.8"];
@@ -969,7 +974,7 @@ app.delete("/api/audio", auth, (req, res) => {
 
 // toca o audio oficial no painel (auth por query, tag <audio> nao manda header)
 app.get("/api/audio-arquivo", async (req, res) => {
-  if (String(req.query.t || "") !== PAINEL_SENHA) return res.status(401).end();
+  if (!tokenQueryValido(String(req.query.t || ""))) return res.status(401).end();
   const uid = req.query.usuario_id ? Number(req.query.usuario_id) : null;
   const caminho = getConfig(chaveAudio(uid), "") || (uid ? getConfig("audio_oficial", "") : "");
   const { existsSync } = await import("node:fs");
@@ -1095,7 +1100,7 @@ const assinaState = (closer, ts) => sha(`${WEBHOOK_SECRET}|gcal|${closer}|${ts}`
 
 app.get("/api/gcal/conectar", (req, res) => {
   const t = String(req.query.t || "");
-  if (t !== PAINEL_SENHA) return res.status(401).send("sessao invalida — abre pelo painel");
+  if (!tokenQueryValido(t)) return res.status(401).send("sessao invalida — abre pelo painel");
   const closer = req.query.closer === "valentino" ? "valentino" : "matheus";
   const ts = Date.now();
   const state = `${closer}.${ts}.${assinaState(closer, ts)}`;
@@ -1616,7 +1621,7 @@ app.post("/api/lead/:id/threads", auth, exige("conversar"), (req, res) => {
   const rot = minha && inst ? `${rot0} · ${inst.nome}` : rot0;
   // thread criada PELO HUMANO nasce com a IA pausada: quem mandou mensagem
   // primeiro foi voce, a IA so entra se voce devolver pra ela
-  const th = abrirThread(lead.id, tel, rot, inst?.id || null, { iaPausada: 1 });
+  const th = abrirThread(lead.id, tel, rot, inst?.id || null, { iaPausada: 1, estrita: Boolean(minha) });
   if (!ehEmpresa) addTelefone(lead.id, tel, ehDecisor ? "decisor" : "outro", rot0); // fica vinculado no card
   res.json({ ok: true, thread: th, chip: inst ? { nome: inst.nome, numero: inst.numero } : null });
 });
@@ -1698,8 +1703,10 @@ app.delete("/api/tarefa/:id", auth, (req, res) => {
 // DASHBOARD (funil + metricas + benchmarks Adriano Aquino)
 // ============================================================
 app.get("/api/dashboard", auth, (req, res) => {
-  const dias = Math.min(90, Math.max(1, Number(req.query.dias) || 30));
-  const desde = `datetime('now','-${dias} days')`;
+  const soHoje = req.query.dias === "hoje";
+  const dias = soHoje ? 1 : Math.min(90, Math.max(1, Number(req.query.dias) || 30));
+  // "hoje" = o DIA CIVIL em SP (nao "ultimas 24h")
+  const desde = soHoje ? `datetime(date('now','-3 hours'), '+3 hours')` : `datetime('now','-${dias} days')`;
   // filtro por pessoa (dono do lead ou da pipeline)
   const uidD = req.query.usuario_id ? Number(req.query.usuario_id) : null;
   const doDonoD = uidD ? ` AND l.id IN (SELECT id FROM leads WHERE usuario_id = ${uidD}
@@ -1798,8 +1805,9 @@ app.post("/api/lead/:id/ligacao", auth, exige("conversar"), (req, res) => {
 // contra os Benchmarks de Mercado.
 // ============================================================
 app.get("/api/dashboard/prospeccao", auth, (req, res) => {
-  const dias = Math.min(90, Math.max(1, Number(req.query.dias) || 30));
-  const desde = `datetime('now','-${dias} days')`;
+  const soHoje = req.query.dias === "hoje";
+  const dias = soHoje ? 1 : Math.min(90, Math.max(1, Number(req.query.dias) || 30));
+  const desde = soHoje ? `datetime(date('now','-3 hours'), '+3 hours')` : `datetime('now','-${dias} days')`;
   // FILTRO POR PESSOA: conta só os leads de quem for pedido (usuario_id do lead
   // ou dono da pipeline). Sem filtro = a equipe toda.
   const uid = req.query.usuario_id ? Number(req.query.usuario_id) : null;
@@ -1874,8 +1882,9 @@ app.get("/api/dashboard/prospeccao", auth, (req, res) => {
 // DASHBOARD GERAL — junta os dois canais
 // ============================================================
 app.get("/api/dashboard/geral", auth, (req, res) => {
-  const dias = Math.min(90, Math.max(1, Number(req.query.dias) || 30));
-  const desde = `datetime('now','-${dias} days')`;
+  const soHoje = req.query.dias === "hoje";
+  const dias = soHoje ? 1 : Math.min(90, Math.max(1, Number(req.query.dias) || 30));
+  const desde = soHoje ? `datetime(date('now','-3 hours'), '+3 hours')` : `datetime('now','-${dias} days')`;
   // filtro por pessoa (mesma regra do dashboard de prospecção)
   const uid = req.query.usuario_id ? Number(req.query.usuario_id) : null;
   const doDono = uid ? ` AND l.id IN (SELECT id FROM leads WHERE usuario_id = ${uid}
