@@ -9,6 +9,7 @@ import { COOKIE_NOME, lerSessao } from "@/lib/auth";
 const PUBLICO_EXATO = new Set([
   "/api/webhook",
   "/api/cron",
+  "/api/cron/saude-trial", // raio-x do trial (tem o mesmo CRON_SECRET no handler)
   "/api/stripe/webhook",
   "/api/login",
   "/login",

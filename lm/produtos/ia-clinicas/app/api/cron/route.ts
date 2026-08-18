@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rodarTodasReguas } from "@/lib/reguas";
+import { rodarSaudeTrials } from "@/lib/saude-trial";
 import { alertarErro, enviarAlerta } from "@/lib/alertas";
 import { listTodasInstancias, atualizarStatusInstancia } from "@/lib/db";
 import { statusInstanciaLive } from "@/lib/uazapi";
@@ -56,6 +57,14 @@ export async function GET(req: NextRequest) {
     if (tarefa === "watchdog") {
       const whatsapp = await watchdogWhatsapp();
       return NextResponse.json({ ok: true, whatsapp });
+    }
+    // tarefa=saude-trial: raio-x das clinicas em trial no Telegram DA LM (suporte
+    // ativo antes do trial acabar). ?dias=N muda a janela; ?analise=0 pula a IA.
+    if (tarefa === "saude-trial") {
+      const dias = Number(req.nextUrl.searchParams.get("dias")) || 7;
+      const comAnalise = req.nextUrl.searchParams.get("analise") !== "0";
+      const r = await rodarSaudeTrials({ dias, comAnalise });
+      return NextResponse.json({ ok: true, ...r });
     }
     const resultado = await rodarTodasReguas();
     const whatsapp = await watchdogWhatsapp().catch(() => []);

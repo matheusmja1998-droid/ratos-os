@@ -2165,6 +2165,24 @@ export async function mensagensDeTesteNaUltimaHora(clinicaId: string): Promise<n
   return naJanela.filter((m: any) => String(m.telefone || "").startsWith("0000")).length;
 }
 
+// Mensagens de uma clinica num periodo (raio-x do trial: quem respondeu o que,
+// e o que ficou sem resposta). Ignora numeros de teste (prefixo 0000).
+export async function mensagensDoPeriodo(clinicaId: string, desdeISO: string) {
+  const desde = IS_PG ? desdeISO : desdeISO.replace("T", " ");
+  const rows = await driver().query("mensagens", {
+    eq: { clinica_id: clinicaId },
+    gte: { criado_em: desde },
+  });
+  return rows.filter((m: any) => !String(m.telefone || "").startsWith("0000"));
+}
+
+// Pacientes da clinica (sem os numeros de teste) — pro raio-x saber quem esta
+// com a IA pausada e o nome de quem ficou esperando resposta.
+export async function pacientesDaClinica(clinicaId: string) {
+  const pacs = await driver().selectMany("pacientes", { clinica_id: clinicaId });
+  return pacs.filter((p: any) => !String(p.telefone || "").startsWith("0000"));
+}
+
 export async function historicoConversa(clinicaId: string, telefone: string, limite = 20) {
   // pega as ultimas N no banco (order desc + limit) em vez de puxar tudo
   const ultimas = await driver().query("mensagens", {
