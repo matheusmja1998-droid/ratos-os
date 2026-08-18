@@ -371,6 +371,7 @@ app.get("/api/leads", auth, (req, res) => {
     // Se a IA está tocando a conversa, fica normal (não é problema meu).
     l.precisa_resposta = !!(u?.role === "user" && l.ia_pausada) || contThreadNaoLida.get(l.id).c > 0;
     l.ultima_msg = u?.texto ? String(u.texto).slice(0, 120) : null; // preview curto (a lista so mostra 90)
+    l.ultima_msg_em = u?.criado_em || null; // pra lista de Conversas separar "cobrados hoje"
     l.qtd_notas = contNotas.get(l.id).c;
     // TAREFA (só pra lead que ENGAJOU; follow-up frio de quem nunca respondeu está desligado):
     // 0) MINHA tarefa manual (ligar pro decisor etc) — vence as automáticas no card

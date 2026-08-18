@@ -1643,19 +1643,32 @@ function nomeEtapaDoLead(l) {
   }
   return l.status;
 }
+// data (em SP) de um timestamp UTC do banco — pra saber se a msg foi HOJE
+const dataSPde = (utc) => utc ? new Date(utc + "Z").toLocaleDateString("sv-SE", { timeZone: "America/Sao_Paulo" }) : null;
+
 function renderListaConv() {
   const busca = ($("#busca-conv").value || "").toLowerCase();
   const etapa = $("#filtro-etapa-conv")?.value || "";
   const comMsg = leads.filter((l) => !["novo"].includes(l.status))
     .filter((l) => !etapa || (etapa === "__humano" ? l.ia_pausada : l.etapa_id === Number(etapa)))
     .filter((l) => !busca || (l.nome_clinica + l.telefone + (l.cidade || "")).toLowerCase().includes(busca));
-  // NEGRITO = precisa de mim (lead falou por último e a IA não vai responder).
-  // Se a IA está tocando a conversa, fica normal.
-  $("#lista-conv").innerHTML = comMsg.map((l) => `
+
+  // AGRUPA pra fila de trabalho nao misturar: quem respondeu e espera VOCE,
+  // quem voce ja cobrou HOJE (follow-up feito), e o resto aguardando
+  const hoje = hojeISO();
+  const grupos = [
+    ["🔴 Precisa de você", comMsg.filter((l) => l.precisa_resposta)],
+    ["📤 Cobrados hoje", comMsg.filter((l) => !l.precisa_resposta && l.ultima_role !== "user" && dataSPde(l.ultima_msg_em) === hoje)],
+    ["⏳ Aguardando", comMsg.filter((l) => !l.precisa_resposta && !(l.ultima_role !== "user" && dataSPde(l.ultima_msg_em) === hoje))],
+  ];
+  const item = (l) => `
     <div class="conv-item ${convAberta === l.id ? "on" : ""}${l.precisa_resposta ? " pendente" : ""}" onclick="abrirConversa(${l.id})">
-      <div class="conv-nome" style="font-weight:600; font-size:14px">${l.precisa_resposta ? "" : l.ia_pausada ? "" : ""}${l.nome_clinica}</div>
+      <div class="conv-nome" style="font-weight:600; font-size:14px">${l.nome_clinica}</div>
       <div style="font-size:12px; color:var(--muted)">${l.telefone} · ${nomeEtapaDoLead(l)}</div>
-    </div>`).join("") || '<div style="color:var(--muted); font-size:13px">nenhuma conversa ainda</div>';
+    </div>`;
+  $("#lista-conv").innerHTML = grupos.filter(([, ls]) => ls.length).map(([rot, ls]) => `
+    <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); padding:9px 4px 4px; border-bottom:1px solid var(--border)">${rot} · ${ls.length}</div>
+    ${ls.map(item).join("")}`).join("") || '<div style="color:var(--muted); font-size:13px">nenhuma conversa ainda</div>';
 }
 
 // card verde do topo da conversa: aberto/fechado (fica salvo entre conversas)
