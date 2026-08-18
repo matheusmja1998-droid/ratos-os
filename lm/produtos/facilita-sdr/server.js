@@ -24,6 +24,7 @@ import {
   moverLead, kanbanDaPipeline,
   telefonesDoLead, addTelefone, removerTelefone, editarTelefone, normalizarTelefone, variantesTelefone,
   threadsDoLead, getThread, threadPorTelefone, abrirThread, instanciaDoLead, fixarChipDoLead,
+  audioDoLead,
 } from "./lib/db.js";
 import {
   parseWebhook, enviarTexto, enviarMidia, mostrarDigitando, criarInstancia,
@@ -1242,6 +1243,43 @@ app.post("/api/lead/:id/audio", auth, exige("conversar"), upload.single("audio")
     const ins = salvarMensagem(lead.id, "assistant", "[áudio enviado]", "audio");
     if (thread) db.prepare("UPDATE mensagens SET thread_id = ? WHERE id = ?").run(thread.id, ins.lastInsertRowid);
     if (!lead.ia_pausada && !thread) { atualizarLead(lead.id, { ia_pausada: 1 }); registrarEvento(lead.id, "handoff", "painel (áudio)"); }
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ erro: e.message });
+  }
+});
+
+// ENVIAR O AUDIO OFICIAL do dono (1 clique no painel, sem upload) — o mesmo
+// arquivo que a IA manda na acao `audio`, mas disparado pela pessoa.
+app.post("/api/lead/:id/audio-oficial", auth, exige("conversar"), async (req, res) => {
+  const lead = getLead(req.params.id);
+  if (!lead) return res.status(404).json({ erro: "lead nao existe" });
+  const caminho = audioDoLead(lead);
+  if (!caminho || !fsExiste(caminho))
+    return res.status(400).json({ erro: "áudio oficial não configurado (Configurações > Áudio)" });
+  try {
+    let thread = null;
+    if (req.body?.thread_id) {
+      thread = getThread(Number(req.body.thread_id));
+      if (!thread || thread.lead_id !== lead.id) return res.status(400).json({ erro: "thread não é desse lead" });
+    }
+    const alvo = thread?.telefone || lead.telefone;
+    const inst = instanciaDoLead(lead, thread?.instancia_id || null);
+    const trava = chipBloqueado(inst, req.usuario);
+    if (trava) return res.status(403).json({ erro: trava });
+    const simulado = String(alvo).startsWith("0000");
+    if (!inst && !simulado) return res.status(502).json({ erro: "nenhum WhatsApp conectado" });
+    const ext = extname(caminho).toLowerCase().replace(".", "");
+    const mime = ext === "mp3" ? "audio/mpeg" : ext === "m4a" ? "audio/mp4" : "audio/ogg";
+    const b64 = readFileSync(caminho).toString("base64");
+    const r = simulado ? { ok: true }
+      : await enviarMidia(inst.uazapi_token, alvo, { tipo: "audio", arquivo: `data:${mime};base64,${b64}` });
+    if (!r.ok) return res.status(502).json({ erro: r.erro });
+    if (inst && !thread) fixarChipDoLead(lead.id, inst.id);
+    atualizarLead(lead.id, { audio_enviado: 1 }); // a IA nao manda de novo
+    const ins = salvarMensagem(lead.id, "assistant", "[🎙️ áudio oficial enviado]", "audio");
+    if (thread) db.prepare("UPDATE mensagens SET thread_id = ? WHERE id = ?").run(thread.id, ins.lastInsertRowid);
+    registrarEvento(lead.id, "audio", "áudio oficial enviado pelo painel");
     res.json({ ok: true });
   } catch (e) {
     res.status(500).json({ erro: e.message });

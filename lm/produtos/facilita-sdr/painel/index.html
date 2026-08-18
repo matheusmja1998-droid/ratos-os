@@ -1649,7 +1649,10 @@ const dataSPde = (utc) => utc ? new Date(utc + "Z").toLocaleDateString("sv-SE", 
 function renderListaConv() {
   const busca = ($("#busca-conv").value || "").toLowerCase();
   const etapa = $("#filtro-etapa-conv")?.value || "";
-  const comMsg = leads.filter((l) => !["novo"].includes(l.status))
+  // sem filtro, esconde lead "novo" (nunca falou com ninguem). Com etapa escolhida,
+  // mostra TODOS dela — inclusive a coluna Novos, senao o filtro parecia quebrado.
+  const comMsg = leads
+    .filter((l) => etapa || busca || l.status !== "novo")
     .filter((l) => !etapa || (etapa === "__humano" ? l.ia_pausada : l.etapa_id === Number(etapa)))
     .filter((l) => !busca || (l.nome_clinica + l.telefone + (l.cidade || "")).toLowerCase().includes(busca));
 
@@ -1732,6 +1735,7 @@ async function abrirConversa(id, auto) {
       <div class="bolha ${m.role}">${m.texto}<span class="hora">${horaSP(m.criado_em)}</span></div>`).join("")}</div>
     <div class="chat-envio">
       <textarea id="chat-texto" rows="2" placeholder="responder como humano (pausa a IA)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMsg(${l.id})}"></textarea>
+      <button class="btn sec" id="btn-audio-oficial" title="enviar o áudio oficial já gravado${l.audio_enviado ? " (esse lead JÁ recebeu)" : ""}" onclick="enviarAudioOficial(${l.id})" style="padding:8px 11px; ${l.audio_enviado ? "opacity:.5" : ""}">🎙️</button>
       <button class="btn sec" id="btn-gravar" title="gravar áudio" onclick="gravarAudio(${l.id})" style="padding:8px 11px"><span data-ic="microfone"></span></button>
       <input type="file" id="audio-chat" accept="audio/*" style="display:none" onchange="enviarAudioArquivo(${l.id})">
       <button class="btn sec" title="enviar arquivo de áudio" onclick="$('#audio-chat').click()" style="padding:8px 11px"><span data-ic="mais"></span></button>
@@ -2319,6 +2323,19 @@ async function excluirTarefa(tarefaId, leadId) {
   abrirConversa(leadId); atualizar();
 }
 // ---- audio na conversa: grava pelo microfone ou manda um arquivo ----
+// manda o AUDIO OFICIAL do dono (o mesmo da IA) num clique, sem upload
+async function enviarAudioOficial(leadId) {
+  const btn = $("#btn-audio-oficial");
+  if (btn) { btn.disabled = true; btn.textContent = "..."; }
+  const r = await api("/api/lead/" + leadId + "/audio-oficial", {
+    method: "POST", body: JSON.stringify({ thread_id: threadAberta || null }),
+  }).catch(() => ({ erro: "falha de rede" }));
+  if (btn) { btn.disabled = false; btn.textContent = "🎙️"; }
+  if (r?.erro) return alert(r.erro);
+  toast("áudio oficial enviado");
+  abrirConversa(leadId); atualizar();
+}
+
 let gravador = null, pedacos = [];
 async function gravarAudio(leadId) {
   const btn = $("#btn-gravar");

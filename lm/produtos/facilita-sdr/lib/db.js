@@ -543,11 +543,12 @@ export function kanbanDaPipeline(pipelineId, filtros = {}) {
   // tarefa aberta mais urgente de cada lead (pro card vermelho de atrasada)
   const tAberta = db.prepare(`SELECT id, texto, quando, hora, tipo FROM tarefas
     WHERE lead_id = ? AND feita = 0 ORDER BY COALESCE(quando,'9999') ASC, id ASC LIMIT 1`);
-  const hoje = agoraSP().data;
+  const agora = agoraSP();
+  const hoje = agora.data;
   for (const l of leads) {
     const t = tAberta.get(l.id);
     l.tarefa = t || null;
-    l.tarefa_atrasada = !!(t?.quando && t.quando < hoje);
+    l.tarefa_atrasada = tarefaVenceu(t, hoje, agora.hora);
   }
   if (filtros.atrasadas) leads = leads.filter((l) => l.tarefa_atrasada);
 
@@ -680,9 +681,20 @@ export const addTarefa = (leadId, texto, quando, extra = {}) =>
 export const setTarefaGcal = (id, eventId) =>
   db.prepare("UPDATE tarefas SET gcal_event_id = ? WHERE id = ?").run(eventId, id);
 // TAREFAS ATRASADAS (pro card vermelho e o filtro do Kanban)
-export const tarefasAtrasadas = () =>
-  db.prepare(`SELECT t.*, l.nome_clinica, l.pipeline_id FROM tarefas t JOIN leads l ON l.id = t.lead_id
-    WHERE t.feita = 0 AND t.quando IS NOT NULL AND t.quando < ? ORDER BY t.quando`).all(agoraSP().data);
+// VENCEU? dia anterior sempre; HOJE so depois da hora marcada (tarefa das 13h
+// vira atrasada as 13h01, nao so amanha). Sem hora, vence no fim do dia.
+export function tarefaVenceu(t, hoje = agoraSP().data, horaAgora = agoraSP().hora) {
+  if (!t?.quando || t.feita) return false;
+  if (t.quando < hoje) return true;
+  if (t.quando > hoje) return false;
+  return !!(t.hora && t.hora < horaAgora);
+}
+export const tarefasAtrasadas = () => {
+  const { data, hora } = agoraSP();
+  return db.prepare(`SELECT t.*, l.nome_clinica, l.pipeline_id FROM tarefas t JOIN leads l ON l.id = t.lead_id
+    WHERE t.feita = 0 AND t.quando IS NOT NULL AND t.quando <= ? ORDER BY t.quando`).all(data)
+    .filter((t) => tarefaVenceu(t, data, hora));
+};
 export const marcarTarefa = (id, feita) =>
   db.prepare("UPDATE tarefas SET feita = ? WHERE id = ?").run(feita ? 1 : 0, id);
 // editar tarefa existente (texto/data/hora/tipo/responsavel) — pro modal de edicao do painel
