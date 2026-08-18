@@ -774,21 +774,30 @@ app.post("/api/importar", auth, upload.single("csv"), async (req, res) => {
     if (linhas.length < 2) return res.status(400).json({ erro: "csv vazio" });
     const header = linhas[0].map((h) => h.trim().toLowerCase());
     const col = (...nomes) => header.findIndex((h) => nomes.includes(h));
-    const iNome = col("title", "nome", "name", "nome_clinica");
-    const iTel = col("phone", "telefone", "phoneunformatted", "whatsapp");
-    const iCidade = col("city", "cidade");
-    const iSite = col("website", "site", "url");
-    const iNota = col("totalscore", "nota", "rating");
-    const iAval = col("reviewscount", "avaliacoes", "reviews");
-    const iNicho = col("categoryname", "nicho", "categoria");
+    // MAPEAMENTO CONFERIDO NO PAINEL: {indiceDaColuna: campo}. Quando vem, ele
+    // MANDA — o palpite automatico e so fallback (import antigo/via API).
+    let mapa = null;
+    try { mapa = req.body?.mapeamento ? JSON.parse(req.body.mapeamento) : null; } catch { /* ignora mapa invalido */ }
+    const doMapa = (campo) => {
+      const k = Object.keys(mapa || {}).find((i) => mapa[i] === campo);
+      return k === undefined ? -1 : Number(k);
+    };
+    const idx = (campo, fallback) => (mapa ? doMapa(campo) : fallback);
+    const iNome = idx("nome", col("title", "nome", "name", "nome_clinica"));
+    const iTel = idx("telefone", col("phone", "telefone", "phoneunformatted", "whatsapp", "numero", "número"));
+    const iCidade = idx("cidade", col("city", "cidade"));
+    const iSite = idx("site", col("website", "site", "url"));
+    const iNota = idx("nota", col("totalscore", "nota", "rating"));
+    const iAval = idx("avaliacoes", col("reviewscount", "avaliacoes", "reviews"));
+    const iNicho = idx("nicho", col("categoryname", "nicho", "categoria"));
     if (iTel === -1) return res.status(400).json({ erro: `coluna de telefone nao achada. header: ${header.join(", ")}` });
 
     // colunas extras do modelo novo (decisor, valor, GMN)
-    const iDecisorNome = col("decisor", "nome_decisor", "responsavel", "responsável");
-    const iDecisorTel = col("telefone_decisor", "tel_decisor", "whatsapp_decisor", "celular_decisor");
-    const iValor = col("valor", "valor_venda", "ticket");
-    const iGmn = col("google_meu_negocio", "gmn", "google", "maps");
-    const iAtendente = col("atendente", "contato", "nome_contato");
+    const iDecisorNome = idx("decisor", col("decisor", "nome_decisor", "responsavel", "responsável"));
+    const iDecisorTel = idx("telefone_decisor", col("telefone_decisor", "tel_decisor", "whatsapp_decisor", "celular_decisor"));
+    const iValor = idx("valor", col("valor", "valor_venda", "ticket"));
+    const iGmn = idx("gmn", col("google_meu_negocio", "gmn", "google", "maps"));
+    const iAtendente = idx("atendente", col("atendente", "contato", "nome_contato"));
 
     const origem = req.body?.origem || req.file.originalname || "csv";
     // TAG da importação (agrupa a lista) e PIPELINE de destino

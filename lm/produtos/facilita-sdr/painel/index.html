@@ -2680,14 +2680,107 @@ async function verColunasModelo() {
       <span>${c.desc}</span></div>`).join("")}
     <button class="btn mini" style="margin-top:11px; width:100%" onclick="baixarModelo()">baixar modelo preenchido</button>`, 520);
 }
+// mesmo parser de CSV do servidor (aspas, ; ou , como separador)
+function parseCSVBrowser(texto) {
+  const linhas = [];
+  let atual = [], campo = "", aspas = false;
+  for (let i = 0; i < texto.length; i++) {
+    const c = texto[i];
+    if (aspas) {
+      if (c === '"' && texto[i + 1] === '"') { campo += '"'; i++; }
+      else if (c === '"') aspas = false;
+      else campo += c;
+    } else if (c === '"') aspas = true;
+    else if (c === "," || c === ";") { atual.push(campo); campo = ""; }
+    else if (c === "\n" || c === "\r") {
+      if (c === "\r" && texto[i + 1] === "\n") i++;
+      atual.push(campo); campo = "";
+      if (atual.some((x) => x.trim())) linhas.push(atual);
+      atual = [];
+    } else campo += c;
+  }
+  atual.push(campo);
+  if (atual.some((x) => x.trim())) linhas.push(atual);
+  return linhas;
+}
+
+// campos que uma coluna pode virar + sinonimos pro palpite automatico
+const CAMPOS_IMPORT = [
+  ["", "— ignorar essa coluna —", []],
+  ["nome", "Nome da clínica/empresa", ["title", "nome", "name", "nome_clinica", "empresa", "clinica", "clínica"]],
+  ["telefone", "Telefone (WhatsApp)", ["phone", "telefone", "phoneunformatted", "whatsapp", "numero", "número", "fone", "celular"]],
+  ["cidade", "Cidade", ["city", "cidade"]],
+  ["nicho", "Nicho", ["categoryname", "nicho", "categoria"]],
+  ["site", "Site", ["website", "site", "url"]],
+  ["nota", "Nota (Google)", ["totalscore", "nota", "rating"]],
+  ["avaliacoes", "Nº de avaliações", ["reviewscount", "avaliacoes", "avaliações", "reviews"]],
+  ["decisor", "Nome do decisor", ["decisor", "nome_decisor", "responsavel", "responsável"]],
+  ["telefone_decisor", "Telefone do decisor", ["telefone_decisor", "tel_decisor", "whatsapp_decisor", "celular_decisor"]],
+  ["atendente", "Nome do atendente", ["atendente", "contato", "nome_contato"]],
+  ["valor", "Valor (R$)", ["valor", "valor_venda", "ticket"]],
+  ["gmn", "Link Google Meu Negócio", ["google_meu_negocio", "gmn", "google", "maps"]],
+];
+
+// PASSO 1: escolheu o arquivo -> mostra PRA ONDE VAI CADA COLUNA e deixa corrigir
 async function importarCSV() {
   const f = $("#csv-file").files[0];
   if (!f) return alert("escolhe o arquivo CSV primeiro");
-  const pipelineId = Number($("#imp-pipeline")?.value) || pipelineAtual;
+  const texto = await f.text();
+  const linhas = parseCSVBrowser(texto);
+  if (linhas.length < 2) return alert("esse arquivo está vazio (precisa de cabeçalho + pelo menos 1 lead)");
+  const header = linhas[0];
+  const amostras = linhas.slice(1, 4); // 3 primeiras linhas pra conferir
+  const palpite = (h) => {
+    const hn = String(h || "").trim().toLowerCase();
+    const m = CAMPOS_IMPORT.find(([campo, , sins]) => campo && sins.includes(hn));
+    return m ? m[0] : "";
+  };
+  modal("Conferir a importação", `
+    <div style="font-size:12.5px; color:var(--muted); margin-bottom:10px">
+      Confere se cada coluna do teu arquivo vai pro lugar certo. O que estiver errado, troca no seletor. Nada sobe antes de você confirmar.
+    </div>
+    <div style="max-height:340px; overflow-y:auto">
+      ${header.map((h, i) => `
+        <div style="display:flex; gap:8px; align-items:center; padding:7px 0; border-bottom:1px solid var(--border)">
+          <div style="flex:1; min-width:0">
+            <b style="font-size:13px">${(h || "(sem nome)")}</b>
+            <div style="font-size:11.5px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis" title="${amostras.map((l) => l[i]).filter(Boolean).join(" · ")}">
+              ex: ${amostras.map((l) => l[i]).filter(Boolean).slice(0, 2).join(" · ") || "(vazio)"}
+            </div>
+          </div>
+          <span style="color:var(--muted)">→</span>
+          <select class="map-campo" data-col="${i}" style="width:190px; font-size:12.5px; padding:6px">
+            ${CAMPOS_IMPORT.map(([campo, rot]) => `<option value="${campo}" ${palpite(h) === campo ? "selected" : ""}>${rot}</option>`).join("")}
+          </select>
+        </div>`).join("")}
+    </div>
+    <div id="map-aviso" style="font-size:12.5px; color:#a3241c; margin-top:8px"></div>
+    <div style="display:flex; gap:6px; margin-top:12px">
+      <button class="btn sec" style="flex:1; padding:9px" onclick="fecharModal()">cancelar</button>
+      <button class="btn" style="flex:1; padding:9px" onclick="confirmarImportacao()">confirmar e importar ${linhas.length - 1} leads</button>
+    </div>`, 560);
+}
+
+// PASSO 2: confirmou o mapeamento -> sobe com ele amarrado
+async function confirmarImportacao() {
+  const mapa = {};
+  const usados = {};
+  for (const sel of document.querySelectorAll(".map-campo")) {
+    const campo = sel.value;
+    if (!campo) continue;
+    if (usados[campo]) { $("#map-aviso").textContent = `duas colunas apontando pra "${usados[campo]}": deixa só uma`; return; }
+    usados[campo] = sel.options[sel.selectedIndex].text;
+    mapa[sel.dataset.col] = campo;
+  }
+  if (!Object.values(mapa).includes("telefone")) { $("#map-aviso").textContent = "marca qual coluna é o TELEFONE (obrigatório)"; return; }
+  if (!Object.values(mapa).includes("nome") && !confirm("Nenhuma coluna marcada como NOME: os leads vão entrar como \"Clínica\". Continuar assim mesmo?")) return;
+  const f = $("#csv-file").files[0];
   const fd = new FormData();
   fd.append("csv", f);
-  fd.append("pipeline_id", pipelineId);
+  fd.append("pipeline_id", Number($("#imp-pipeline")?.value) || pipelineAtual);
   fd.append("tag", $("#imp-tag")?.value.trim() || "");
+  fd.append("mapeamento", JSON.stringify(mapa));
+  fecharModal();
   $("#import-res").textContent = "importando…";
   const r = await api("/api/importar", { method: "POST", body: fd });
   if (!r.ok) { $("#import-res").textContent = "erro: " + r.erro; return; }
