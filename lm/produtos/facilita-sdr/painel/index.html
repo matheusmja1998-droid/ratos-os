@@ -408,8 +408,11 @@
     <div class="conversas-wrap">
       <div class="card lista-conv">
         <input id="busca-conv" style="width:100%; margin-bottom:6px" placeholder="buscar clínica ou telefone" oninput="renderListaConv()">
-        <select id="filtro-etapa-conv" style="width:100%; margin-bottom:10px; font-size:13px" onchange="renderListaConv()">
+        <select id="filtro-etapa-conv" style="width:100%; margin-bottom:5px; font-size:13px" onchange="renderListaConv()">
           <option value="">todas as etapas</option>
+        </select>
+        <select id="filtro-tag-conv" style="width:100%; margin-bottom:10px; font-size:13px" onchange="renderListaConv()">
+          <option value="">todas as listas (tags)</option>
         </select>
         <div id="lista-conv"></div>
       </div>
@@ -1649,11 +1652,25 @@ const dataSPde = (utc) => utc ? new Date(utc + "Z").toLocaleDateString("sv-SE", 
 function renderListaConv() {
   const busca = ($("#busca-conv").value || "").toLowerCase();
   const etapa = $("#filtro-etapa-conv")?.value || "";
-  // sem filtro, esconde lead "novo" (nunca falou com ninguem). Com etapa escolhida,
+  const tag = $("#filtro-tag-conv")?.value || "";
+  // opcoes de tag: as listas que existem nos leads (preserva a escolha atual)
+  const selTag = $("#filtro-tag-conv");
+  if (selTag) {
+    const tags = [...new Set(leads.map((l) => l.tag_importacao || l.origem_lista).filter(Boolean))].sort();
+    const assinatura = tags.join("|");
+    if (selTag.dataset.assinatura !== assinatura) {
+      selTag.dataset.assinatura = assinatura;
+      selTag.innerHTML = `<option value="">todas as listas (tags)</option>` +
+        tags.map((t) => `<option value="${t}">${t}</option>`).join("");
+      if (tag && tags.includes(tag)) selTag.value = tag;
+    }
+  }
+  // sem filtro, esconde lead "novo" (nunca falou com ninguem). Com etapa/tag escolhida,
   // mostra TODOS dela — inclusive a coluna Novos, senao o filtro parecia quebrado.
   const comMsg = leads
-    .filter((l) => etapa || busca || l.status !== "novo")
+    .filter((l) => etapa || tag || busca || l.status !== "novo")
     .filter((l) => !etapa || (etapa === "__humano" ? l.ia_pausada : l.etapa_id === Number(etapa)))
+    .filter((l) => !tag || (l.tag_importacao || l.origem_lista) === tag)
     .filter((l) => !busca || (l.nome_clinica + l.telefone + (l.cidade || "")).toLowerCase().includes(busca));
 
   // AGRUPA pra fila de trabalho nao misturar: quem respondeu e espera VOCE,
@@ -2288,9 +2305,20 @@ async function excluirTelefone(telId, leadId) {
   await api("/api/telefone/" + telId, { method: "DELETE" });
   abrirConversa(leadId);
 }
-// abrir conversa paralela com um numero do MESMO lead (nao cria card novo)
+// abrir conversa paralela com um numero do MESMO lead (nao cria card novo).
+// CHECA antes se o numero tem WhatsApp — sem isso a pessoa digitava mensagem
+// pro vazio e so descobria depois que o numero nao existe.
 async function conversarCom(leadId, numero, rotulo) {
-  const r = await api("/api/lead/" + leadId + "/threads", { method: "POST", body: JSON.stringify({ telefone: numero, rotulo: rotulo || "Contato" }) });
+  toast("verificando o número...");
+  const chk = await api("/api/lead/" + leadId + "/checar-whatsapp", {
+    method: "POST", body: JSON.stringify({ telefone: numero }),
+  }).catch(() => null);
+  if (chk?.tem === false) {
+    return alert(`Esse número NÃO tem WhatsApp:\n${fmtTel(numero)}\n\nConfere se está certo (usa "Editar número" no menu) ou fala por ligação.`);
+  }
+  if (chk?.tem === null && chk?.motivo) toast("não deu pra verificar o número: " + chk.motivo);
+  const alvo = chk?.numero || numero; // usa o numero corrigido pela uazapi (9o digito)
+  const r = await api("/api/lead/" + leadId + "/threads", { method: "POST", body: JSON.stringify({ telefone: alvo, rotulo: rotulo || "Contato" }) });
   if (r?.erro) return alert(r.erro);
   threadAberta = r.thread.id;
   abrirConversa(leadId);

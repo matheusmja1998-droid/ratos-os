@@ -1501,6 +1501,24 @@ app.patch("/api/telefone/:id", auth, exige("editar_lead"), (req, res) => {
 
 // ---- threads (conversa paralela com o decisor, no MESMO card) ----
 app.get("/api/lead/:id/threads", auth, (req, res) => res.json(threadsDoLead(req.params.id)));
+// checa se um numero TEM WhatsApp antes de abrir conversa (avisa em vez de
+// deixar a pessoa mandar mensagem pro vazio)
+app.post("/api/lead/:id/checar-whatsapp", auth, async (req, res) => {
+  const lead = getLead(req.params.id);
+  if (!lead) return res.status(404).json({ erro: "lead nao existe" });
+  const tel = normalizarTelefone(String(req.body?.telefone || ""), lead.telefone);
+  if (!tel) return res.status(400).json({ erro: "telefone invalido" });
+  if (String(tel).startsWith("0000")) return res.json({ tem: true, numero: tel }); // numero de teste
+  const inst = instanciaDoLead(lead);
+  if (!inst) return res.json({ tem: null, motivo: "nenhum WhatsApp conectado pra checar" });
+  const r = await checarWhatsapp(inst.uazapi_token, tel).catch(() => ({ temWhatsapp: null }));
+  // numero corrigido pela uazapi (9o digito): grava pra conversa sair certo
+  if (r.temWhatsapp && r.numeroCorrigido && r.numeroCorrigido !== tel) {
+    const linha = telefonesDoLead(lead.id).find((t) => variantesTelefone(t.numero).includes(tel));
+    if (linha) editarTelefone(linha.id, r.numeroCorrigido);
+  }
+  res.json({ tem: r.temWhatsapp, numero: r.numeroCorrigido || tel });
+});
 app.post("/api/lead/:id/threads", auth, exige("conversar"), (req, res) => {
   const { telefone, rotulo } = req.body || {};
   if (!telefone) return res.status(400).json({ erro: "telefone obrigatório" });
