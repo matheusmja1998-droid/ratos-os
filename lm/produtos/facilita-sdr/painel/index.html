@@ -2273,9 +2273,31 @@ async function salvarCampanha() {
 }
 async function patchCampanha(id, status) { await api("/api/campanha/" + id, { method: "PATCH", body: JSON.stringify({ status }) }); carregarCampanhas(); }
 async function vincularLeads(id) {
-  const cidade = prompt("Filtrar por cidade? (vazio = todos os leads novos DO FUNIL dessa campanha)") || "";
-  const r = await api("/api/campanha/" + id + "/leads", { method: "POST", body: JSON.stringify({ cidade }) });
-  alert(r.vinculados + " leads vinculados"); carregarCampanhas();
+  const listas = await api("/api/campanha/" + id + "/listas");
+  if (listas?.erro) return alert(listas.erro);
+  if (!listas.length) return alert("Nenhum lead novo no funil dessa campanha. Importa uma lista primeiro (o destino da importação tem que ser o funil dessa campanha).");
+  modal("Vincular leads na campanha", `
+    <div style="font-size:12.5px; color:var(--muted); margin-bottom:9px">Escolhe qual lista entra na fila de disparo. Só aparecem listas com leads novos <b>do funil dessa campanha</b>.</div>
+    ${listas.map((x, i) => `<label style="display:flex; gap:9px; align-items:center; padding:9px 11px; border:1px solid var(--border); border-radius:8px; margin-bottom:5px; cursor:pointer">
+      <input type="radio" name="vl-lista" value="${x.tag.replace(/"/g, "&quot;")}" ${i === 0 ? "checked" : ""}>
+      <span style="flex:1; font-size:13.5px">${x.tag}</span>
+      <span style="font-size:12px; color:var(--muted)">${x.faltam} de ${x.novos} fora da fila</span>
+    </label>`).join("")}
+    <label style="display:flex; gap:9px; align-items:center; padding:9px 11px; border:1px dashed var(--border); border-radius:8px; margin-bottom:5px; cursor:pointer">
+      <input type="radio" name="vl-lista" value="">
+      <span style="flex:1; font-size:13.5px"><b>Todas as listas</b> (todo lead novo do funil)</span>
+    </label>
+    <input id="vl-cidade" placeholder="filtrar por cidade (opcional)" style="width:100%; font-size:13px; padding:8px 10px; margin-top:4px">
+    <button class="btn" style="width:100%; margin-top:10px" onclick="confirmarVinculo(${id})">vincular</button>`, 460);
+}
+async function confirmarVinculo(id) {
+  const tag = document.querySelector('input[name="vl-lista"]:checked')?.value || "";
+  const cidade = $("#vl-cidade")?.value.trim() || "";
+  const r = await api("/api/campanha/" + id + "/leads", { method: "POST", body: JSON.stringify({ tag: tag || null, cidade }) });
+  if (r?.erro) return alert(r.erro);
+  fecharModal();
+  toast(r.vinculados + " leads vinculados");
+  carregarCampanhas();
 }
 // ---- IMPORTACAO (aba Campanhas) ----
 // Preenche o seletor de pipelines de destino. Pipeline de DISPARO joga o lead

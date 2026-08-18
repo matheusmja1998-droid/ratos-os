@@ -636,14 +636,29 @@ app.patch("/api/campanha/:id/templates", auth, (req, res) => {
 });
 
 // vincula todos os leads status=novo (opcionalmente filtrando cidade) na campanha
+// listas (tags) disponiveis pra vincular: so do funil da campanha, com contagem
+app.get("/api/campanha/:id/listas", auth, (req, res) => {
+  const camp = db.prepare("SELECT pipeline_id FROM campanhas WHERE id = ?").get(req.params.id);
+  if (!camp) return res.status(404).json({ erro: "campanha nao existe" });
+  const listas = db.prepare(`SELECT COALESCE(l.tag_importacao, l.origem_lista, 'sem tag') tag,
+      COUNT(*) novos,
+      SUM(CASE WHEN cl.lead_id IS NULL THEN 1 ELSE 0 END) faltam
+    FROM leads l LEFT JOIN campanha_leads cl ON cl.lead_id = l.id AND cl.campanha_id = ?
+    WHERE l.status = 'novo' AND l.eh_teste = 0 AND COALESCE(l.pipeline_id,0) = COALESCE(?,0)
+    GROUP BY tag ORDER BY MAX(l.criado_em) DESC`).all(req.params.id, camp.pipeline_id);
+  res.json(listas);
+});
 app.post("/api/campanha/:id/leads", auth, (req, res) => {
-  const { cidade } = req.body || {};
+  const { cidade, tag } = req.body || {};
   // SO leads do funil da propria campanha — sem isso, "vincular" puxava lead de
   // TODOS os funis (inclusive de outro dono) pra dentro da campanha errada
   const camp = db.prepare("SELECT pipeline_id FROM campanhas WHERE id = ?").get(req.params.id);
   if (!camp) return res.status(404).json({ erro: "campanha nao existe" });
-  const leads = db.prepare(`SELECT id FROM leads WHERE status = 'novo' AND COALESCE(pipeline_id,0) = COALESCE(?,0) ${cidade ? "AND cidade LIKE ?" : ""}`)
-    .all(camp.pipeline_id, ...(cidade ? [`%${cidade}%`] : []));
+  const leads = db.prepare(`SELECT id FROM leads WHERE status = 'novo' AND eh_teste = 0
+      AND COALESCE(pipeline_id,0) = COALESCE(?,0)
+      ${tag ? "AND COALESCE(tag_importacao, origem_lista, 'sem tag') = ?" : ""}
+      ${cidade ? "AND cidade LIKE ?" : ""}`)
+    .all(camp.pipeline_id, ...(tag ? [tag] : []), ...(cidade ? [`%${cidade}%`] : []));
   const ins = db.prepare("INSERT OR IGNORE INTO campanha_leads (campanha_id, lead_id) VALUES (?, ?)");
   let n = 0;
   for (const l of leads) n += ins.run(req.params.id, l.id).changes;
