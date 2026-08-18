@@ -64,12 +64,29 @@ solver.
 **Não sincronizar wearable já é posição do MacroFactor**, com artigo público
 dedicado. É paridade com o melhor da categoria.
 
-## Riscos
+## Licença das bases (verificado na fonte primária)
 
-**Licença das bases.** TBCA (USP/FoRC) está sob CC BY-NC-ND 4.0 — não-comercial,
-proíbe alteração; uso comercial exige contato com os coordenadores. TACO
-(NEPA/Unicamp) tem download livre mas não declara licença comercial. Consulta
-formal necessária antes de vender.
+| Base | Itens | Licença | Uso comercial |
+|---|---|---|---|
+| TACO (NEPA/Unicamp, 4a ed. 2011) | 597 | "reprodução parcial ou total permitida, desde que citada a fonte" | **Sim**, com citação |
+| TBCA (USP/FoRC, v7.3 2025) | 5.700+ | CC BY-NC-ND 4.0 | **Não** — proíbe comércio E alteração |
+| POF/IBGE (2011) | 1.971 | obra pública | Sim |
+| Open Food Facts BR | 35.508 | ODbL (share-alike) | Sim, com share-alike |
+
+Baixei o PDF oficial da TACO e li a página de rosto: *"É permitida a reprodução
+parcial ou total desta obra, desde que citada a fonte."* Não há cláusula
+não-comercial. Isso corrige a leitura anterior de que a TACO seria um risco —
+ela é justamente a base BR séria que pode ser usada em produto pago.
+
+A TBCA é que é armadilha: o `NC` barra o uso comercial e o `ND` barra até
+normalizar os dados pro schema próprio. Fica fora de qualquer versão paga até
+haver acordo com a USP.
+
+Verifiquei também o modo de preparo: o PDF da TACO tem 1.082 linhas com preparo
+explícito no nome do alimento (cru, cozido, frito, grelhado, assado, refogado).
+O dado que sustenta o diferencial já existe estruturado na origem.
+
+## Outros riscos
 
 **Foto com IA subestima sistematicamente.** Estudo NIH/NIDDK apresentado no
 NUTRITION 2026, 102 refeições pesadas a 0,1g: Cal AI −345 kcal/refeição,
@@ -93,4 +110,22 @@ MyFitnessPal em março/2026, removido da App Store em abril por paywall que a
 Apple descreveu como "desenhado pra enganar", e teve vazamento de 3,2 milhões
 de usuários (Firebase sem autenticação). Yazio tem 0% de reclamações
 respondidas no Reclame Aqui, reputação Não Recomendada. Tecnonutri, único
-tracker BR de massa, usa base do IBGE com 2.000 itens e abandonou o iOS.
+tracker BR de massa, abandonou o iOS (parado na v5.1.3 de 07/02/2024, dois anos
+e meio sem update) e trancou o Pro atrás do Wellhub — não dá mais pra assinar
+direto.
+
+**Correção sobre o mercado BR:** Dieta e Saúde foi descontinuado em 01/11/2022
+(hoje pertence à Vitat, do Grupo Raia Drogasil, junto com o Tecnonutri). Não
+consegui confirmar o redirect do domínio por conta própria — a resolução de DNS
+falhou na minha rede — então trate essa parte como não verificada em primeira mão.
+
+Quem ocupa o espaço hoje: Alimente-se (4,82 · 5.656 avaliações), FitCal (4,84),
+Nutri Inteligente (4,77), Kaloria (4,86). Todos com base colaborativa sem
+curadoria. Review real do líder BR, que é exatamente a dor que este app ataca:
+*"quando pesquiso um alimento, aparecem várias opções do mesmo alimento e com
+valores nutricionais completamente diferentes. Como vou saber qual é o certo?"*
+A resposta da empresa foi "estamos estudando fazer uma revisão no nosso banco
+de dados".
+
+Dietbox (71.460 avaliações) e WebDiet (198.029) são B2B2C — apps companheiros
+do paciente pra receber a dieta do nutricionista, não trackers self-service.

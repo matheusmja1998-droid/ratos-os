@@ -5,6 +5,23 @@
  * Valores por 100 g da porção comestível, no modo de preparo indicado.
  * Modo de preparo faz parte da identidade: arroz cru e arroz cozido são
  * itens diferentes, e é o cozido que vai pro prato.
+ *
+ * LICENÇA — importa se este app virar produto pago:
+ *
+ *   TACO (NEPA/Unicamp, 4a ed. 2011, 597 alimentos) — o PDF oficial diz
+ *   "É permitida a reprodução parcial ou total desta obra, desde que citada
+ *   a fonte". Sem cláusula não-comercial: pode ser usada, inclusive
+ *   comercialmente, com a citação.
+ *
+ *   TBCA (USP/FoRC) — CC BY-NC-ND 4.0: proíbe uso comercial E proíbe obra
+ *   derivada, o que já barra normalizar os valores pro schema daqui. Os itens
+ *   marcados abaixo com fonte 'TBCA' estão aqui por conveniência de uso
+ *   pessoal e PRECISAM sair (ou virar equivalente TACO/rótulo) antes de
+ *   qualquer versão comercial. Uso comercial exige acordo com os
+ *   coordenadores da USP.
+ *
+ *   ROTULO — valor declarado pelo fabricante na embalagem. Fato comercial
+ *   publicado, sem restrição de uso.
  */
 export interface SeedAlimento {
   nome: string;
@@ -188,7 +205,15 @@ export const ALIMENTOS_TACO: SeedAlimento[] = [
   { nome: 'Açúcar refinado', modoPreparo: 'industrializado', fonte: 'TACO', codigoFonte: 'S0002',
     kcal100g: 387, proteina100g: 0, carboidrato100g: 99.9, gordura100g: 0,
     porcoes: [{ rotulo: '1 colher de chá', gramas: 5 }] },
-  { nome: 'Psyllium', modoPreparo: 'industrializado', fonte: 'ROTULO',
-    kcal100g: 200, proteina100g: 2.0, carboidrato100g: 80.0, gordura100g: 0.5, fibra100g: 71.0,
-    porcoes: [{ rotulo: '1 colher de sopa', gramas: 10 }] },
+  { nome: 'Pão de queijo', modoPreparo: 'assado', fonte: 'TBCA',
+    kcal100g: 363, proteina100g: 5.2, carboidrato100g: 39.0, gordura100g: 20.0, fibra100g: 1.0, gorduraSaturada100g: 7.5,
+    porcoes: [{ rotulo: '1 unidade pequena', gramas: 20 }, { rotulo: '1 unidade média', gramas: 35 }] },
+  { nome: 'Açaí polpa com guaraná', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 110, proteina100g: 1.0, carboidrato100g: 22.0, gordura100g: 2.5, fibra100g: 2.0, gorduraSaturada100g: 0.6,
+    porcoes: [{ rotulo: '1 tigela (300 g)', gramas: 300 }] },
+
+  // Psyllium saiu daqui de propósito: os valores que eu tinha eram estimativa,
+  // não leitura de rótulo, e não fechavam na conferência de coerência. Cadastre
+  // pelo rótulo da marca que você usa — a rota POST /alimentos confere a soma
+  // dos macros contra as calorias na hora de salvar.
 ];

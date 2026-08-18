@@ -20,7 +20,7 @@ Sobe em `http://localhost:3000/api`, com documentação interativa em
 com a base de alimentos.
 
 ```bash
-npm test          # 19 testes do motor de cálculo e do planejador
+npm test          # 33 testes: cálculo, planejador, busca e licença das fontes
 npm run build
 ```
 
@@ -167,28 +167,54 @@ src/
 
 ## Base de alimentos
 
-68 alimentos iniciais referenciados em TACO (NEPA/Unicamp), TBCA (USP) e
-rótulos. Cobre a comida do dia a dia brasileiro — arroz, feijão, farofa,
-tapioca, bisteca, mandioca — e também pizza, pastel, brigadeiro, cerveja e
-creme de avelã, tratados como comida normal, porque é o que são.
+**649 alimentos**, sendo 632 da TACO completa (4ª edição, NEPA/Unicamp),
+extraídos do PDF oficial, mais itens curados à mão que a TACO não cobre:
+porções caseiras ("1 fatia", "1 concha"), produtos de rótulo e comida de
+padaria e boteco.
+
+Cobre o dia a dia brasileiro — arroz, feijão, farofa, tapioca, bisteca,
+mandioca, cuscuz, quibe, feijoada — e também pizza, pastel, brigadeiro,
+cerveja e creme de avelã, tratados como comida normal, porque é o que são.
+
+**O modo de preparo é campo próprio, e é aí que está o diferencial.** A TACO
+já traz isso estruturado na origem, e o app promove a campo pesquisável:
+
+```
+Mandioca [cozido]  ->  125 kcal
+Mandioca [frito]   ->  300 kcal      mesmo alimento, 2,4x a energia
+Mandioca [cru]     ->  151 kcal
+```
+
+A busca entende: "mandioca frita" devolve a frita, "peito de frango grelhado"
+devolve o grelhado. Nenhum concorrente trata preparo como atributo — o USDA
+enfia no meio do nome e o NCCDB "nem sempre especifica se os valores são de
+alimento cozido".
 
 A busca ignora acento e entende como as pessoas falam: "nutella" acha creme de
 avelã, "filé de frango" acha peito de frango, "bife" acha patinho.
 
-**Licenciamento — resolver antes de vender.** A TACO (4ª ed., NEPA/Unicamp) tem
-download livre, mas não declara licença para uso comercial. A TBCA (USP/FoRC)
-está sob CC BY-NC-ND 4.0, que é explicitamente **não-comercial** e proíbe
-alteração. Para uso pessoal não há problema; virando produto pago, é preciso
-consulta formal ao NEPA e ao FoRC. Isso é risco de fundação, não detalhe — os
-dados de origem estão marcados em cada registro justamente pra essa troca ser
-possível depois.
+**Licenciamento.** Verificado direto no PDF oficial da 4ª edição: *"É permitida
+a reprodução parcial ou total desta obra, desde que citada a fonte."* Sem
+cláusula não-comercial — a TACO serve inclusive a produto pago, desde que
+citada. São 597 alimentos.
+
+A **TBCA** (USP/FoRC) é outra história: CC BY-NC-ND 4.0 proíbe uso comercial
+**e** proíbe alteração, o que já barra normalizar os dados pro schema daqui.
+Os poucos itens marcados como `TBCA` neste seed devem sair ou ser substituídos
+por equivalente TACO antes de qualquer uso comercial.
+
+Como cada registro guarda a fonte, essa troca é localizada e não mexe no resto
+do app.
 
 ## Limitações conhecidas
 
 - SQLite com `synchronize: true`. Serve pra uso pessoal; virando produto, migra
   pra Postgres com migrations de verdade.
-- Base de 68 alimentos é o começo. A TACO completa tem ~600 itens e a TBCA
-  passa de 5.000 — importar é trabalho mecânico, ainda não feito.
+- A TACO é de 2011 e tem 597 itens. Para produto de marca com código de
+  barras, o caminho é o Open Food Facts BR (~35 mil itens, licença ODbL com
+  share-alike). Ainda não integrado.
+- Sete dos 649 alimentos vêm da TACO com valores de 2011; alimento
+  industrializado muda de formulação, então rótulo atual sempre ganha da tabela.
 - Sem app cliente. É só a API, com o Swagger em `/docs` como interface.
 - Receita composta tem entidade modelada mas ainda não tem rota.
 - Sem integração com wearable, e isso é deliberado: importar caloria de

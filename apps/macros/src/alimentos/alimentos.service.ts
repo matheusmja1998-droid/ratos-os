@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { Alimento } from '../comum/entidades';
 import { ALIMENTOS_TACO } from './taco.seed';
+import { ALIMENTOS_TACO_COMPLETO } from './taco.completo';
 
 /** Remove acentos e normaliza pra busca: "pão" e "pao" acham a mesma coisa. */
 export function normalizar(texto: string): string {
@@ -56,7 +57,23 @@ export class AlimentosService implements OnModuleInit {
     const total = await this.repo.count();
     if (total > 0) return;
 
-    const registros = ALIMENTOS_TACO.map((a) =>
+    // A TACO completa é a espinha dorsal. Por cima dela vêm os itens curados
+    // à mão, que trazem o que a TACO não tem: porções caseiras ("1 fatia",
+    // "1 concha"), produtos de rótulo e comida de padaria e boteco.
+    // O curado tem prioridade quando o par nome+preparo coincide.
+    const chave = (nome: string, preparo: string) =>
+      normalizar(`${nome}|${preparo}`);
+    const curados = new Set(
+      ALIMENTOS_TACO.map((a) => chave(a.nome, a.modoPreparo)),
+    );
+    const seed = [
+      ...ALIMENTOS_TACO,
+      ...ALIMENTOS_TACO_COMPLETO.filter(
+        (a) => !curados.has(chave(a.nome, a.modoPreparo)),
+      ),
+    ];
+
+    const registros = seed.map((a) =>
       this.repo.create({
         nome: a.nome,
         nomeBusca: normalizar(`${a.nome} ${a.modoPreparo}`),
@@ -85,10 +102,58 @@ export class AlimentosService implements OnModuleInit {
     const alvo = normalizar(termo);
     if (!alvo) return [];
 
-    const achados = await this.repo.find({
+    let achados = await this.repo.find({
       where: { nomeBusca: Like(`%${alvo}%`) },
       take: limite * 3,
     });
+
+    // "mandioca cozida" não casa literalmente com "mandioca|cozido": a ordem
+    // das palavras e a flexão diferem. Tenta então casar cada palavra do termo,
+    // que é como as pessoas realmente digitam.
+    if (achados.length === 0) {
+      const preparo = this.preparoNoTermo(alvo);
+      // Descarta preposições e a própria palavra de preparo: em "filé de frango"
+      // quem carrega o sentido é "frango", não "filé".
+      const vazias = new Set(['de', 'da', 'do', 'com', 'sem', 'ao', 'em', 'no', 'na']);
+      const palavras = alvo
+        .split(/\s+/)
+        .filter((p) => p.length >= 3 && !vazias.has(p) && !this.preparoNoTermo(p))
+        // Traduz o termo coloquial no caminho: "filé" sozinho casaria com
+        // qualquer filé de peixe, mas "filé de frango" quer dizer peito.
+        .map((p) => {
+          for (const [coloquial, tecnicos] of Object.entries(SINONIMOS)) {
+            if (alvo.includes(coloquial) && coloquial.includes(p)) return tecnicos[0];
+          }
+          return p;
+        });
+
+      if (palavras.length > 0) {
+        // Casa cada palavra e fica com quem aparece em mais delas — assim
+        // "filé de frango" premia o registro que tem os dois termos.
+        const contagem = new Map<string, { a: Alimento; hits: number }>();
+        for (const palavra of palavras) {
+          const parciais = await this.repo.find({
+            where: { nomeBusca: Like(`%${palavra}%`) },
+            take: limite * 5,
+          });
+          for (const a of parciais) {
+            const reg = contagem.get(a.id);
+            if (reg) reg.hits += 1;
+            else contagem.set(a.id, { a, hits: 1 });
+          }
+        }
+
+        const maxHits = Math.max(0, ...[...contagem.values()].map((v) => v.hits));
+        const melhores = [...contagem.values()]
+          .filter((v) => v.hits === maxHits)
+          .map((v) => v.a);
+
+        const comPreparo = preparo
+          ? melhores.filter((a) => a.modoPreparo === preparo)
+          : [];
+        achados = comPreparo.length > 0 ? comPreparo : melhores;
+      }
+    }
 
     // Nada encontrado pelo nome literal: tenta como a pessoa fala.
     if (achados.length === 0) {
@@ -96,8 +161,18 @@ export class AlimentosService implements OnModuleInit {
       if (porSinonimo.length > 0) return porSinonimo;
     }
 
+    // Se a pessoa digitou o preparo ("mandioca frita"), ele passa a ser
+    // critério de ordenação: é justamente o que distingue 125 kcal de 300 kcal.
+    const preparoPedido = this.preparoNoTermo(alvo);
+
     return achados
       .sort((a, b) => {
+        if (preparoPedido) {
+          const casaA = a.modoPreparo === preparoPedido ? 1 : 0;
+          const casaB = b.modoPreparo === preparoPedido ? 1 : 0;
+          if (casaA !== casaB) return casaB - casaA;
+        }
+
         // Quem começa com o termo digitado vem antes.
         const inicioA = a.nomeBusca.startsWith(alvo) ? 1 : 0;
         const inicioB = b.nomeBusca.startsWith(alvo) ? 1 : 0;
@@ -110,6 +185,22 @@ export class AlimentosService implements OnModuleInit {
         return a.nome.length - b.nome.length;
       })
       .slice(0, limite);
+  }
+
+  /** Detecta o modo de preparo dentro do termo digitado, com as flexões. */
+  private preparoNoTermo(alvo: string): string | null {
+    const flexoes: Record<string, string> = {
+      cru: 'cru', crua: 'cru', crus: 'cru', cruas: 'cru',
+      cozido: 'cozido', cozida: 'cozido', cozidos: 'cozido', cozidas: 'cozido',
+      frito: 'frito', frita: 'frito', fritos: 'frito', fritas: 'frito',
+      grelhado: 'grelhado', grelhada: 'grelhado',
+      assado: 'assado', assada: 'assado',
+      refogado: 'refogado', refogada: 'refogado',
+    };
+    for (const palavra of alvo.split(/\s+/)) {
+      if (flexoes[palavra]) return flexoes[palavra];
+    }
+    return null;
   }
 
   /**
