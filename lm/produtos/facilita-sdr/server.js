@@ -1144,26 +1144,49 @@ app.get("/api/gcal/callback", async (req, res) => {
 });
 
 // ---------- notificacoes no Telegram: quem recebe os alertas ----------
+// Cada destino e um par (bot, chat): da pra ter o bot PROPRIO de cada pessoa.
 app.get("/api/telegram/chats", auth, async (req, res) => {
-  const { chatsDestino, chatsRecentes } = await import("./lib/telegram.js");
-  const atuais = chatsDestino();
-  const recentes = (await chatsRecentes()).filter((c) => !atuais.includes(c.id));
-  res.json({ atuais, recentes, principal: process.env.TELEGRAM_CHAT_ID || null });
+  const { destinosExtras, chatsRecentes, nomeDoBot } = await import("./lib/telegram.js");
+  const extras = destinosExtras();
+  const principal = process.env.TELEGRAM_CHAT_ID || null;
+  const jaTem = new Set([principal, ...extras.map((d) => d.chat)].filter(Boolean));
+  // "procurar novos" so no bot principal (o extra ja veio com chat definido)
+  const recentes = req.query.buscar === "1"
+    ? (await chatsRecentes()).filter((c) => !jaTem.has(c.id))
+    : [];
+  res.json({
+    principal,
+    bot_principal: req.query.buscar === "1" ? await nomeDoBot(process.env.TELEGRAM_BOT_TOKEN) : null,
+    extras: extras.map((d) => ({ nome: d.nome, chat: d.chat, bot_proprio: d.token !== (process.env.TELEGRAM_BOT_TOKEN || "") })),
+    recentes,
+  });
 });
 app.post("/api/telegram/chats", auth, async (req, res) => {
   const chatId = String(req.body?.chat_id || "").trim();
-  if (!/^-?\d+$/.test(chatId)) return res.status(400).json({ erro: "chat_id inválido" });
-  const extras = String(getConfig("telegram_chats_extras", "") || "").split(",").map((c) => c.trim()).filter(Boolean);
-  if (!extras.includes(chatId)) setConfig("telegram_chats_extras", [...extras, chatId].join(","));
-  const { alertar } = await import("./lib/telegram.js");
-  await alertar(`✅ Esse chat agora recebe os avisos do Prospecta AI (adicionado por ${req.usuario?.nome || "alguém"} pelo painel).`);
-  res.json({ ok: true });
+  const token = String(req.body?.token || "").trim();       // bot proprio (opcional)
+  const nome = String(req.body?.nome || "").trim() || "extra";
+  if (!/^-?\d+$/.test(chatId)) return res.status(400).json({ erro: "chat_id inválido (só números)" });
+  if (token && !/^\d+:[\w-]{20,}$/.test(token)) return res.status(400).json({ erro: "token do bot com formato inválido" });
+  const { destinosExtras, salvarDestinos, enviarPara, nomeDoBot } = await import("./lib/telegram.js");
+
+  const tokenUsado = token || process.env.TELEGRAM_BOT_TOKEN || "";
+  if (!tokenUsado) return res.status(400).json({ erro: "sem bot configurado no servidor: informe o token do bot" });
+  // valida ANTES de salvar: token vivo + chat alcancavel (mensagem de teste)
+  const bot = await nomeDoBot(tokenUsado);
+  if (!bot) return res.status(400).json({ erro: "esse token não respondeu no Telegram (bot inválido ou revogado)" });
+  const teste = await enviarPara({ token: tokenUsado, chat: chatId },
+    `✅ Pronto! Esse chat agora recebe os avisos do Prospecta AI (cadastrado por ${req.usuario?.nome || "alguém"} pelo painel).`);
+  if (!teste.ok) return res.status(400).json({ erro: `não consegui mandar mensagem nesse chat: ${teste.erro}. A pessoa já mandou /start pro @${bot}?` });
+
+  const extras = destinosExtras().filter((d) => !(d.chat === chatId && d.token === tokenUsado));
+  salvarDestinos([...extras, { nome, token, chat: chatId }]);
+  res.json({ ok: true, bot });
 });
-app.delete("/api/telegram/chats/:chatId", auth, (req, res) => {
+app.delete("/api/telegram/chats/:chatId", auth, async (req, res) => {
   const alvo = String(req.params.chatId);
   if (alvo === String(process.env.TELEGRAM_CHAT_ID || "")) return res.status(400).json({ erro: "esse é o chat principal (fixado no servidor)" });
-  const extras = String(getConfig("telegram_chats_extras", "") || "").split(",").map((c) => c.trim()).filter(Boolean);
-  setConfig("telegram_chats_extras", extras.filter((c) => c !== alvo).join(","));
+  const { destinosExtras, salvarDestinos } = await import("./lib/telegram.js");
+  salvarDestinos(destinosExtras().filter((d) => d.chat !== alvo));
   res.json({ ok: true });
 });
 

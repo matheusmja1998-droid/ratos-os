@@ -729,7 +729,10 @@ VOCÊ: Opa! Aqui é o Matheus..."></textarea>
           Pra entrar na lista: manda <b>/start</b> pro bot no Telegram e clica em "procurar novos" aqui.
         </p>
         <div id="tg-chats" style="font-size:13px; color:var(--muted)">carregando…</div>
-        <button class="btn mini sec" style="margin-top:6px" onclick="procurarChatsTelegram()">procurar novos</button>
+        <div style="display:flex; gap:6px; margin-top:8px; flex-wrap:wrap">
+          <button class="btn mini sec" onclick="procurarChatsTelegram()">procurar novos (bot da casa)</button>
+          <button class="btn mini sec" onclick="cadastrarBotProprio()">cadastrar bot próprio</button>
+        </div>
         <hr style="border:none; border-top:1px solid var(--border); margin:14px 0">
         <h3 style="margin-bottom:6px">Horários de reunião</h3>
         <p style="font-size:13px; color:var(--muted)">Formato: dias|horas → <code>1,2,3,4,5|10:00,11:00,15:00,16:00</code> (1=seg … 7=dom)</p>
@@ -2970,21 +2973,23 @@ async function carregarConfig() {
 }
 // ---- notificacoes no Telegram: quem recebe os avisos ----
 async function carregarChatsTelegram(comRecentes = false) {
-  const d = await api("/api/telegram/chats").catch(() => null);
+  const d = await api("/api/telegram/chats" + (comRecentes ? "?buscar=1" : "")).catch(() => null);
   const el = $("#tg-chats");
   if (!el) return;
   if (!d) { el.textContent = "não deu pra consultar o Telegram"; return; }
-  const linhaAtual = (id) => `<div style="display:flex; gap:8px; align-items:center; margin:4px 0">
-    <span>🔔 chat <b>${id}</b>${id === d.principal ? " (principal)" : ""}</span>
-    ${id !== d.principal ? `<span onclick="removerChatTelegram('${id}')" style="cursor:pointer; color:#c62828; font-size:12px">remover</span>` : ""}
-  </div>`;
+  const linhas = [];
+  if (d.principal) linhas.push(`<div style="margin:4px 0">🔔 chat <b>${d.principal}</b> · bot da casa <span style="color:var(--muted)">(principal, fixo)</span></div>`);
+  for (const e of d.extras) linhas.push(`<div style="display:flex; gap:8px; align-items:center; margin:4px 0">
+    <span>🔔 <b>${e.nome}</b> · chat ${e.chat} · ${e.bot_proprio ? "bot próprio" : "bot da casa"}</span>
+    <span onclick="removerChatTelegram('${e.chat}')" style="cursor:pointer; color:#c62828; font-size:12px">remover</span>
+  </div>`);
   const linhaNovo = (c) => `<div style="display:flex; gap:8px; align-items:center; margin:4px 0">
     <span>💬 <b>${c.nome}</b> mandou mensagem pro bot</span>
     <button class="btn mini" style="font-size:11px" onclick="addChatTelegram('${c.id}')">receber avisos aqui</button>
   </div>`;
-  el.innerHTML = (d.atuais.length ? d.atuais.map(linhaAtual).join("") : "<div>nenhum chat recebendo ainda</div>")
-    + (comRecentes ? (d.recentes.length ? `<div style="margin-top:8px; font-weight:700">novos no bot:</div>` + d.recentes.map(linhaNovo).join("")
-      : `<div style="margin-top:8px">ninguém novo falou com o bot. A pessoa precisa mandar <b>/start</b> pro bot e clicar aqui de novo.</div>`) : "");
+  el.innerHTML = (linhas.length ? linhas.join("") : "<div>nenhum chat recebendo ainda</div>")
+    + (comRecentes ? (d.recentes.length ? `<div style="margin-top:8px; font-weight:700">novos no bot ${d.bot_principal ? "@" + d.bot_principal : "da casa"}:</div>` + d.recentes.map(linhaNovo).join("")
+      : `<div style="margin-top:8px">ninguém novo falou com o bot${d.bot_principal ? " @" + d.bot_principal : ""}. A pessoa manda <b>/start</b> pro bot e clica aqui de novo.</div>`) : "");
 }
 const procurarChatsTelegram = () => carregarChatsTelegram(true);
 async function addChatTelegram(id) {
@@ -2992,6 +2997,31 @@ async function addChatTelegram(id) {
   if (r?.erro) return alert(r.erro);
   toast("chat adicionado — mandei uma mensagem de teste lá");
   carregarChatsTelegram(true);
+}
+// bot PROPRIO: quem tem o proprio bot cadastra token + chat (avisos saem por ele)
+function cadastrarBotProprio() {
+  modal("Cadastrar bot próprio", `
+    <div style="font-size:12.5px; color:var(--muted); margin-bottom:10px">
+      Pra quem tem o próprio bot do Telegram (criado no @BotFather). Os avisos saem por esse bot, sem mexer nos outros.<br>
+      A pessoa precisa ter mandado <b>/start</b> pro bot dela antes.
+    </div>
+    <label style="font-size:12.5px">De quem é</label>
+    <input id="tg-nome" placeholder="ex: Valentino" style="width:100%; font-size:13px; padding:8px; margin-bottom:8px">
+    <label style="font-size:12.5px">Token do bot (BotFather)</label>
+    <input id="tg-token" placeholder="123456789:AA..." style="width:100%; font-size:13px; padding:8px; margin-bottom:8px">
+    <label style="font-size:12.5px">Chat ID</label>
+    <input id="tg-chat" placeholder="somente números" style="width:100%; font-size:13px; padding:8px">
+    <button class="btn" style="width:100%; margin-top:12px" onclick="salvarBotProprio()">testar e cadastrar</button>`, 430);
+}
+async function salvarBotProprio() {
+  const nome = $("#tg-nome").value.trim(), token = $("#tg-token").value.trim(), chat = $("#tg-chat").value.trim();
+  if (!token || !chat) return alert("preenche o token e o chat ID");
+  toast("testando o bot...");
+  const r = await api("/api/telegram/chats", { method: "POST", body: JSON.stringify({ chat_id: chat, token, nome }) });
+  if (r?.erro) return alert(r.erro);
+  fecharModal();
+  toast(`bot @${r.bot} cadastrado — mandei uma mensagem de teste`);
+  carregarChatsTelegram();
 }
 async function removerChatTelegram(id) {
   if (!confirm("Esse chat vai parar de receber os avisos. Remover?")) return;
