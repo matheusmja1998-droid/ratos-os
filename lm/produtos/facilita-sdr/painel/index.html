@@ -257,6 +257,12 @@
   .pn-nota { display:flex; gap:9px; align-items:flex-start; padding:11px 14px; font-size:14px;
     line-height:1.5; background:#fbf8ec; border-bottom:1px solid var(--border); }
   html[data-tema="dark"] .pn-nota { background:#26251c; }
+  /* "IA digitando": 3 pontinhos pulando no fim do chat (so o painel ve) */
+  .dots { display:inline-flex; gap:4px; padding:2px 2px; }
+  .dots i { width:7px; height:7px; border-radius:50%; background:var(--muted); animation:dotp 1.2s infinite; }
+  .dots i:nth-child(2) { animation-delay:.2s; }
+  .dots i:nth-child(3) { animation-delay:.4s; }
+  @keyframes dotp { 0%,60%,100% { transform:none; opacity:.35 } 30% { transform:translateY(-4px); opacity:1 } }
   html[data-tema="dark"] #resumo-ia { background:#1c2620 !important; color:#cfe0d6 !important; }
   html[data-tema="dark"] #dash-corpo [style*="background:#eef6ff"],
   html[data-tema="dark"] #dash-corpo [style*="background:#fdeaea"],
@@ -1723,6 +1729,8 @@ async function abrirConversa(id, auto) {
   const rascunhoComp = mesmoLead ? ($("#comp-texto")?.value || "") : "";
   // thread: se o usuario escolheu uma conversa paralela (decisor), busca só ela
   const d = await api("/api/lead/" + id + (threadAberta ? "?thread=" + threadAberta : ""));
+  const thAtual = threadAberta ? (d.threads || []).find((t) => t.id === threadAberta) : null;
+  const iaPausadaConv = thAtual ? thAtual.ia_pausada : d.lead.ia_pausada;
   // clicou em OUTRO lead enquanto essa resposta viajava: descarta (senão a resposta
   // atrasada sobrescreve o painel e os botoes de salvar apontam pro lead errado)
   if (convAberta !== id) return;
@@ -1732,7 +1740,8 @@ async function abrirConversa(id, auto) {
   $("#chat").innerHTML = `
     <div class="chat-topo">
       <b>${l.nome_clinica}</b> <span style="color:var(--muted); font-size:13px">${fmtTel(l.telefone)}${l.cidade ? " · " + l.cidade : ""}</span>
-      <button class="btn mini ${l.ia_pausada ? "" : "sec"}" onclick="toggleIA(${l.id}, ${l.ia_pausada ? 0 : 1})">${l.ia_pausada ? "Devolver pra IA" : "Assumir conversa"}</button>
+      <button class="btn mini ${iaPausadaConv ? "" : "sec"}" onclick="toggleIA(${l.id}, ${iaPausadaConv ? 0 : 1})">${iaPausadaConv ? "Devolver pra IA" : "Assumir conversa"}</button>
+      ${d.chip ? `<span class="tag" title="as mensagens dessa conversa saem por esse número">📱 ${d.chip.nome}${d.chip.numero ? " · " + fmtTel(d.chip.numero) : ""}</span>` : ""}
       <select onchange="mudarStatus(${l.id}, this.value)" style="font-size:12px">
         ${STATUS_COLS.map(([s, r]) => `<option value="${s}" ${l.status === s ? "selected" : ""}>${r}</option>`).join("")}
         <option value="optout" ${l.status === "optout" ? "selected" : ""}>Opt-out</option>
@@ -1749,7 +1758,8 @@ async function abrirConversa(id, auto) {
       ${d.threads.map((t) => `<button class="btn mini ${threadAberta === t.id ? "" : "sec"}" style="font-size:11.5px" onclick="abrirThread(${l.id}, ${t.id})">${t.rotulo || t.telefone}${t.nao_lida ? " " : ""}</button>`).join("")}
     </div>` : ""}
     <div class="chat-msgs" id="chat-msgs">${d.mensagens.map((m) => `
-      <div class="bolha ${m.role}">${m.texto}<span class="hora">${horaSP(m.criado_em)}</span></div>`).join("")}</div>
+      <div class="bolha ${m.role}">${m.texto}<span class="hora">${horaSP(m.criado_em)}</span></div>`).join("")}${d.ia_digitando ? `
+      <div class="bolha assistant" title="a IA está preparando uma resposta"><span class="dots"><i></i><i></i><i></i></span></div>` : ""}</div>
     <div class="chat-envio">
       <textarea id="chat-texto" rows="2" placeholder="responder como humano (pausa a IA)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMsg(${l.id})}"></textarea>
       <button class="btn sec" id="btn-audio-oficial" title="enviar o áudio oficial já gravado${l.audio_enviado ? " (esse lead JÁ recebeu)" : ""}" onclick="enviarAudioOficial(${l.id})" style="padding:8px 11px; ${l.audio_enviado ? "opacity:.5" : ""}">🎙️</button>
@@ -2232,6 +2242,7 @@ function menuLead(ev, leadId) {
   abrirMenuCtx(ev, [
     { icone: "copiar", rot: "Copiar telefone", acao: () => copiar(l.telefone || "") },
     { icone: "busca", rot: "Buscar no Google", acao: () => window.open(`https://www.google.com/search?q=${encodeURIComponent(l.nome_clinica || "")}`, "_blank") },
+    { icone: "whatsapp", rot: "Conversar pelo MEU número", acao: () => conversarPeloMeuNumero(leadId) },
     "-",
     { icone: "lixeira", rot: "Excluir lead", acao: () => excluirLead(leadId, l.nome_clinica || "esse lead") },
   ]);
@@ -2305,6 +2316,33 @@ async function excluirTelefone(telId, leadId) {
   await api("/api/telefone/" + telId, { method: "DELETE" });
   abrirConversa(leadId);
 }
+// CONVERSAR PELO MEU NUMERO: lead cuja conversa nasceu no chip do outro socio.
+// Abre uma SEGUNDA conversa (aba propria no card) que sai pelo chip do usuario
+// logado — a original continua intacta no numero antigo. IA nao assume essa.
+async function conversarPeloMeuNumero(leadId) {
+  const d = await api("/api/lead/" + leadId);
+  modal("Conversar pelo meu número", `
+    <div style="font-size:13.5px; line-height:1.65">
+      A conversa com <b>${d.lead.nome_clinica}</b> vai ser iniciada <b>pelo SEU número</b>.<br><br>
+      • mensagens pro <b>${fmtTel(d.lead.telefone)}</b> saem do seu chip<br>
+      • a conversa antiga continua no número original (${d.chip ? d.chip.nome : "chip antigo"})<br>
+      • a IA <b>não</b> assume essa conversa — você devolve pra ela se quiser
+    </div>
+    <div style="display:flex; gap:6px; margin-top:14px">
+      <button class="btn sec" style="flex:1; padding:9px" onclick="fecharModal()">cancelar</button>
+      <button class="btn" style="flex:1; padding:9px" onclick="confirmarMeuNumero(${leadId})">iniciar com meu número</button>
+    </div>`, 430);
+}
+async function confirmarMeuNumero(leadId) {
+  const r = await api("/api/lead/" + leadId + "/threads", { method: "POST", body: JSON.stringify({ minha: true }) });
+  if (r?.erro) return alert(r.erro);
+  fecharModal();
+  toast(`conversa aberta no seu número${r.chip ? " (" + r.chip.nome + ")" : ""}`);
+  threadAberta = r.thread.id;
+  aba("conversas");
+  abrirConversa(leadId);
+}
+
 // abrir conversa paralela com um numero do MESMO lead (nao cria card novo).
 // CHECA antes se o numero tem WhatsApp — sem isso a pessoa digitava mensagem
 // pro vazio e so descobria depois que o numero nao existe.
@@ -2416,7 +2454,10 @@ async function enviarMsg(id) {
   } finally { enviandoMsg = false; }
 }
 async function toggleIA(id, pausar) {
-  await api("/api/lead/" + id + "/ia", { method: "POST", body: JSON.stringify({ pausar: Boolean(pausar) }) });
+  // com uma conversa paralela aberta, o botao assume/devolve SO aquela thread
+  if (threadAberta) await api("/api/thread/" + threadAberta + "/ia", { method: "POST", body: JSON.stringify({ pausar: Boolean(pausar) }) });
+  else await api("/api/lead/" + id + "/ia", { method: "POST", body: JSON.stringify({ pausar: Boolean(pausar) }) });
+  toast(pausar ? "conversa é sua (IA parada)" : "IA reassumiu a conversa");
   await atualizar(); abrirConversa(id);
 }
 async function mudarStatus(id, status) {

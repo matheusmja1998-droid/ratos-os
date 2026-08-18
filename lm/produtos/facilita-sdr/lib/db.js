@@ -615,17 +615,28 @@ export function editarTelefone(id, numeroNovo) {
 export const threadsDoLead = (leadId) =>
   db.prepare("SELECT * FROM threads WHERE lead_id = ? ORDER BY id").all(leadId);
 export const getThread = (id) => db.prepare("SELECT * FROM threads WHERE id = ?").get(id);
-export function threadPorTelefone(telefone) {
+export function threadPorTelefone(telefone, instanciaId = null) {
   for (const v of variantesTelefone(telefone)) {
+    // com 2 threads do mesmo numero (chips diferentes), a da instancia que
+    // recebeu a mensagem vence — cada conversa segue no proprio numero
+    if (instanciaId) {
+      const tInst = db.prepare("SELECT * FROM threads WHERE telefone = ? AND instancia_id = ?").get(v, instanciaId);
+      if (tInst) return tInst;
+    }
     const t = db.prepare("SELECT * FROM threads WHERE telefone = ?").get(v);
     if (t) return t;
   }
   return null;
 }
 // abre (ou reusa) a conversa paralela com um numero do MESMO lead — nunca cria lead novo
-export function abrirThread(leadId, telefone, rotulo = null, instanciaId = null) {
+export function abrirThread(leadId, telefone, rotulo = null, instanciaId = null, opts = {}) {
   const tel = String(telefone).replace(/\D/g, "");
-  const existe = db.prepare("SELECT * FROM threads WHERE lead_id = ? AND telefone = ?").get(leadId, tel);
+  // dedup por telefone + CHIP: o mesmo numero da empresa pode ter duas conversas
+  // (uma no chip do Matheus, outra no do Valentino) — cada uma e uma thread
+  const existe = instanciaId
+    ? db.prepare("SELECT * FROM threads WHERE lead_id = ? AND telefone = ? AND COALESCE(instancia_id,0) = ?").get(leadId, tel, instanciaId)
+      || db.prepare("SELECT * FROM threads WHERE lead_id = ? AND telefone = ? AND instancia_id IS NULL").get(leadId, tel)
+    : db.prepare("SELECT * FROM threads WHERE lead_id = ? AND telefone = ?").get(leadId, tel);
   if (existe) {
     // thread antiga com rotulo generico ganha o nome certo ("Contato" -> "Decisor"/"Empresa")
     if (rotulo && (!existe.rotulo || existe.rotulo === "Contato")) {
@@ -634,8 +645,8 @@ export function abrirThread(leadId, telefone, rotulo = null, instanciaId = null)
     }
     return existe;
   }
-  const id = db.prepare("INSERT INTO threads (lead_id, telefone, rotulo, instancia_id) VALUES (?,?,?,?)")
-    .run(leadId, tel, rotulo, instanciaId).lastInsertRowid;
+  const id = db.prepare("INSERT INTO threads (lead_id, telefone, rotulo, instancia_id, ia_pausada) VALUES (?,?,?,?,?)")
+    .run(leadId, tel, rotulo, instanciaId, opts.iaPausada ? 1 : 0).lastInsertRowid;
   return getThread(id);
 }
 

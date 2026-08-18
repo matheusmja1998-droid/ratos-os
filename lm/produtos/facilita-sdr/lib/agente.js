@@ -194,8 +194,17 @@ async function executarAcoes(lead, acoes, instanceToken, thread = null) {
   const simulado = String(alvoTel).startsWith("0000");
   // se e o 2o bot_detectado, o lead vira perdido e NAO mandamos texto (nao adianta falar com bot)
   const segundoBot = acoes.some((a) => a.tipo === "bot_detectado") && (getLead(lead.id).pedidos_humano || 0) >= 1;
+  // HUMANO ASSUMIU NO MEIO? A pausa pode chegar enquanto o Claude pensa (10-30s)
+  // ou entre uma bolha e outra — re-checa ANTES de cada envio pra parada ser
+  // imediata (sem isso, clicar "assumir" e a IA mandava mensagem mesmo assim).
+  const humanoAssumiu = () =>
+    Boolean(getLead(lead.id)?.ia_pausada) || (thread ? Boolean(getThread(thread.id)?.ia_pausada) : false);
   for (const acao of acoes) {
     if (segundoBot && acao.tipo === "texto") continue; // 2o bot: nao responde a maquina
+    if (["texto", "audio"].includes(acao.tipo) && humanoAssumiu()) {
+      registrarEvento(lead.id, "handoff", "IA segurou a resposta: humano assumiu durante o processamento");
+      return;
+    }
     if (acao.tipo === "texto" && acao.texto) {
       const r = simulado ? { ok: true } : await enviarTexto(instanceToken, alvoTel, acao.texto);
       if (r.ok) salvarMsg("assistant", acao.texto);

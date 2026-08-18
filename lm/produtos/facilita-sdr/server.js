@@ -166,19 +166,29 @@ app.post("/webhook", async (req, res) => {
     if (!m || m.ehGrupo || m.tipo === "figurinha") return;
     if (webhookJaVisto(m.messageId)) return;
 
+    // qual CHIP recebeu essa mensagem (decide pra qual conversa ela vai)
+    const instChegada = getInstanciaPorToken(req.body?.token || req.body?.instance || null) || null;
+
     let lead = getLeadPorTelefone(m.telefone);
     // THREAD paralela (decisor): o numero nao e o principal de nenhum lead, mas
     // pertence a uma conversa aberta dentro de um card. Sem isso a resposta do
     // decisor era DESCARTADA como "nao e lead" e nunca chegava no painel.
     let threadParalela = null;
     if (!lead) {
-      threadParalela = threadPorTelefone(m.telefone);
+      threadParalela = threadPorTelefone(m.telefone, instChegada?.id || null);
       if (threadParalela) {
         lead = getLead(threadParalela.lead_id);
         // se a thread achada e a principal do lead (mesmo numero), trata como conversa normal
         if (lead && variantesTelefone(lead.telefone).includes(threadParalela.telefone)) threadParalela = null;
       }
       if (!lead) return; // chip proprio: conversa que nao e lead NAO EXISTE pra gente
+    } else if (instChegada && lead.instancia_id && instChegada.id !== lead.instancia_id) {
+      // a mensagem chegou num chip DIFERENTE do da conversa principal: se o outro
+      // socio abriu conversa com essa empresa pelo numero DELE, a mensagem e da
+      // thread dele — nunca da conversa principal (cada papo fica no seu numero)
+      const tOutroChip = threadPorTelefone(m.telefone, instChegada.id);
+      if (tOutroChip && tOutroChip.lead_id === lead.id && tOutroChip.instancia_id === instChegada.id)
+        threadParalela = tOutroChip;
     }
 
     // AUDIO DO LEAD: baixa e transcreve no whisper local pra IA entender e responder.
@@ -417,8 +427,17 @@ app.get("/api/lead/:id", auth, (req, res) => {
   }
   // ultimo resultado de ligacao registrado (pro botao clicado ficar marcado)
   const ultLig = db.prepare("SELECT detalhe FROM eventos WHERE lead_id = ? AND tipo = 'ligacao' ORDER BY id DESC LIMIT 1").get(lead.id);
+  // por qual NUMERO essa conversa sai (chip da thread aberta ou do lead)
+  const instConv = instanciaDoLead(lead, threadId ? getThread(threadId)?.instancia_id || null : null);
+  // a IA esta preparando resposta AGORA? (debounce ou claude rodando) — vira os
+  // "3 pontinhos" no painel, so pra quem olha (nada vai pro WhatsApp por isso)
+  const chaveTh = threadId ? `th${threadId}` : null;
+  const iaDigitando = debounces.has(lead.id) || processando.has(lead.id)
+    || (chaveTh ? debounces.has(chaveTh) || processando.has(chaveTh) : false);
   res.json({
     lead, mensagens, reuniao: reuniaoAtivaDoLead(lead.id) || null, notas, tarefas,
+    chip: instConv ? { nome: instConv.nome, numero: instConv.numero } : null,
+    ia_digitando: iaDigitando,
     resumo: lead.resumo || null,
     ultima_ligacao: ultLig ? ultLig.detalhe.split(" · ")[0] : null,
     telefones: telefonesDoLead(lead.id),
@@ -500,6 +519,24 @@ app.post("/api/lead/:id/mensagem", auth, async (req, res) => {
   const msgId = salvarMensagem(lead.id, "assistant", texto);
   if (thread) db.prepare("UPDATE mensagens SET thread_id = ? WHERE id = ?").run(thread.id, msgId?.lastInsertRowid ?? msgId);
   if (!lead.ia_pausada && !thread) { atualizarLead(lead.id, { ia_pausada: 1 }); registrarEvento(lead.id, "handoff", "painel"); }
+  // humano falou NUMA THREAD: a IA daquela thread para tambem (antes ela seguia
+  // respondendo e atropelava a conversa do humano)
+  if (thread && !thread.ia_pausada) db.prepare("UPDATE threads SET ia_pausada = 1 WHERE id = ?").run(thread.id);
+  res.json({ ok: true });
+});
+
+// assumir/devolver a conversa de UMA thread (o botao do topo opera a thread aberta)
+app.post("/api/thread/:id/ia", auth, (req, res) => {
+  const th = getThread(Number(req.params.id));
+  if (!th) return res.status(404).json({ erro: "thread nao existe" });
+  const pausar = Boolean(req.body?.pausar);
+  db.prepare("UPDATE threads SET ia_pausada = ? WHERE id = ?").run(pausar ? 1 : 0, th.id);
+  if (pausar) {
+    const d = debounces.get(`th${th.id}`);
+    if (d) { clearTimeout(d.timer); debounces.delete(`th${th.id}`); }
+  }
+  registrarEvento(th.lead_id, "handoff",
+    pausar ? `humano assumiu a conversa "${th.rotulo || th.telefone}"` : `IA retomou a conversa "${th.rotulo || th.telefone}"`);
   res.json({ ok: true });
 });
 
@@ -508,6 +545,12 @@ app.post("/api/lead/:id/ia", auth, async (req, res) => {
   if (!lead) return res.status(404).json({ erro: "lead nao existe" });
   const pausar = Boolean(req.body?.pausar);
   atualizarLead(lead.id, { ia_pausada: pausar ? 1 : 0 });
+  // assumiu = parada IMEDIATA: mata resposta pendente no debounce (sem isso a
+  // IA ainda soltava a mensagem que estava preparando)
+  if (pausar) {
+    const d = debounces.get(lead.id);
+    if (d) { clearTimeout(d.timer); debounces.delete(lead.id); }
+  }
   registrarEvento(lead.id, "handoff", pausar ? "humano assumiu (painel)" : "devolvido pra IA (painel)");
   res.json({ ok: true });
 
@@ -1243,6 +1286,7 @@ app.post("/api/lead/:id/audio", auth, exige("conversar"), upload.single("audio")
     const ins = salvarMensagem(lead.id, "assistant", "[áudio enviado]", "audio");
     if (thread) db.prepare("UPDATE mensagens SET thread_id = ? WHERE id = ?").run(thread.id, ins.lastInsertRowid);
     if (!lead.ia_pausada && !thread) { atualizarLead(lead.id, { ia_pausada: 1 }); registrarEvento(lead.id, "handoff", "painel (áudio)"); }
+    if (thread && !thread.ia_pausada) db.prepare("UPDATE threads SET ia_pausada = 1 WHERE id = ?").run(thread.id);
     res.json({ ok: true });
   } catch (e) {
     res.status(500).json({ erro: e.message });
@@ -1520,23 +1564,34 @@ app.post("/api/lead/:id/checar-whatsapp", auth, async (req, res) => {
   res.json({ tem: r.temWhatsapp, numero: r.numeroCorrigido || tel });
 });
 app.post("/api/lead/:id/threads", auth, exige("conversar"), (req, res) => {
-  const { telefone, rotulo } = req.body || {};
-  if (!telefone) return res.status(400).json({ erro: "telefone obrigatório" });
+  const { telefone, rotulo, minha } = req.body || {};
   const lead = getLead(req.params.id);
   if (!lead) return res.status(404).json({ erro: "lead não existe" });
-  // a thread sai do MESMO chip do lead (o numero que a empresa dele ja conhece)
-  const inst = instanciaDoLead(lead) || null;
-  const tel = normalizarTelefone(telefone, lead.telefone);
+  if (!telefone && !minha) return res.status(400).json({ erro: "telefone obrigatório" });
+  // a thread sai do MESMO chip do lead (o numero que a empresa dele ja conhece),
+  // SALVO com minha=1: sai pelo chip DO USUARIO LOGADO (conversa iniciada por
+  // outro socio segue no numero antigo; a nova e SUA, no SEU numero)
+  let inst = instanciaDoLead(lead) || null;
+  if (minha) {
+    const minhas = listarInstancias().filter((i) => i.usuario_id === req.usuario?.id && i.status === "conectado");
+    if (!minhas.length) return res.status(400).json({ erro: "você não tem um WhatsApp seu conectado (Configurações > WhatsApps)" });
+    inst = minhas[0];
+  }
+  const tel = normalizarTelefone(telefone || lead.telefone, lead.telefone);
   // rotulo diz O QUE e o numero (nunca o generico "Contato"): empresa, decisor ou o que veio
   const ehEmpresa = variantesTelefone(lead.telefone).includes(tel);
   const ehDecisor = !ehEmpresa && (variantesTelefone(lead.telefone_decisor || "").includes(tel)
     || telefonesDoLead(lead.id).some((t) => t.tipo === "decisor" && variantesTelefone(t.numero).includes(tel)));
-  const rot = ehEmpresa ? "Empresa"
+  const rot0 = ehEmpresa ? "Empresa"
     : ehDecisor ? ((lead.nome_decisor || "").split(" ")[0] ? `${lead.nome_decisor.split(" ")[0]} (decisor)` : "Decisor")
     : (rotulo && rotulo !== "Contato" ? rotulo : "Outro número");
-  const th = abrirThread(lead.id, tel, rot, inst?.id || null);
-  if (!ehEmpresa) addTelefone(lead.id, tel, ehDecisor ? "decisor" : "outro", rot); // fica vinculado no card
-  res.json({ ok: true, thread: th });
+  // conversa pelo MEU chip ganha o nome do chip no rotulo (da pra ver de qual numero e)
+  const rot = minha && inst ? `${rot0} · ${inst.nome}` : rot0;
+  // thread criada PELO HUMANO nasce com a IA pausada: quem mandou mensagem
+  // primeiro foi voce, a IA so entra se voce devolver pra ela
+  const th = abrirThread(lead.id, tel, rot, inst?.id || null, { iaPausada: 1 });
+  if (!ehEmpresa) addTelefone(lead.id, tel, ehDecisor ? "decisor" : "outro", rot0); // fica vinculado no card
+  res.json({ ok: true, thread: th, chip: inst ? { nome: inst.nome, numero: inst.numero } : null });
 });
 
 // ============================================================
