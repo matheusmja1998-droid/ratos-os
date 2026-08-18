@@ -22,7 +22,7 @@ import {
   listarPipelines, getPipeline, criarPipeline, atualizarPipeline, removerPipeline,
   etapasDaPipeline, addEtapa, atualizarEtapa, removerEtapa, etapaDeEntrada,
   moverLead, kanbanDaPipeline,
-  telefonesDoLead, addTelefone, removerTelefone, normalizarTelefone, variantesTelefone,
+  telefonesDoLead, addTelefone, removerTelefone, editarTelefone, normalizarTelefone, variantesTelefone,
   threadsDoLead, getThread, threadPorTelefone, abrirThread, instanciaDoLead, fixarChipDoLead,
 } from "./lib/db.js";
 import {
@@ -1439,6 +1439,12 @@ app.delete("/api/telefone/:id", auth, exige("editar_lead"), (req, res) => {
   removerTelefone(Number(req.params.id));
   res.json({ ok: true });
 });
+// corrigir numero digitado errado (atualiza lead e threads junto)
+app.patch("/api/telefone/:id", auth, exige("editar_lead"), (req, res) => {
+  const r = editarTelefone(Number(req.params.id), String(req.body?.numero || ""));
+  if (r.erro) return res.status(400).json(r);
+  res.json(r);
+});
 
 // ---- threads (conversa paralela com o decisor, no MESMO card) ----
 app.get("/api/lead/:id/threads", auth, (req, res) => res.json(threadsDoLead(req.params.id)));
@@ -1450,8 +1456,15 @@ app.post("/api/lead/:id/threads", auth, exige("conversar"), (req, res) => {
   // a thread sai do MESMO chip do lead (o numero que a empresa dele ja conhece)
   const inst = instanciaDoLead(lead) || null;
   const tel = normalizarTelefone(telefone, lead.telefone);
-  const th = abrirThread(lead.id, tel, rotulo || "Decisor", inst?.id || null);
-  addTelefone(lead.id, tel, "decisor", rotulo || "Decisor"); // fica vinculado no card
+  // rotulo diz O QUE e o numero (nunca o generico "Contato"): empresa, decisor ou o que veio
+  const ehEmpresa = variantesTelefone(lead.telefone).includes(tel);
+  const ehDecisor = !ehEmpresa && (variantesTelefone(lead.telefone_decisor || "").includes(tel)
+    || telefonesDoLead(lead.id).some((t) => t.tipo === "decisor" && variantesTelefone(t.numero).includes(tel)));
+  const rot = ehEmpresa ? "Empresa"
+    : ehDecisor ? ((lead.nome_decisor || "").split(" ")[0] ? `${lead.nome_decisor.split(" ")[0]} (decisor)` : "Decisor")
+    : (rotulo && rotulo !== "Contato" ? rotulo : "Outro número");
+  const th = abrirThread(lead.id, tel, rot, inst?.id || null);
+  if (!ehEmpresa) addTelefone(lead.id, tel, ehDecisor ? "decisor" : "outro", rot); // fica vinculado no card
   res.json({ ok: true, thread: th });
 });
 
@@ -1497,6 +1510,15 @@ app.post("/api/lead/:id/tarefas", auth, exige("criar_tarefa"), async (req, res) 
     }
   }
   res.json({ ok: true, id, agenda });
+});
+// alerta de tarefas vencidas/vencendo HOJE (pro toast no canto da tela)
+app.get("/api/tarefas/alerta", auth, (req, res) => {
+  const hoje = agoraSP().data;
+  res.json(db.prepare(`SELECT t.id, t.lead_id, t.texto, t.quando, t.hora, t.tipo, l.nome_clinica,
+      CASE WHEN t.quando < ? THEN 'atrasada' ELSE 'vence_hoje' END situacao
+    FROM tarefas t JOIN leads l ON l.id = t.lead_id
+    WHERE t.feita = 0 AND t.quando IS NOT NULL AND t.quando <= ? AND l.eh_teste = 0
+    ORDER BY t.quando ASC LIMIT 30`).all(hoje, hoje));
 });
 app.patch("/api/tarefa/:id", auth, (req, res) => {
   const b = req.body || {};

@@ -239,11 +239,21 @@
     line-height:1.45; background:#fff5db; border-left:4px solid #d99a00; border-bottom:1px solid var(--border);
     cursor:pointer; }
   .pn-tarefa-dest:hover { filter:brightness(.97); }
-  .pn-tarefa-dest.venceu { background:#fdeaea; border-left-color:#c62828; color:#a3241c; }
-  .pn-tarefa-dest .tag-atrasada { display:inline-block; background:#c62828; color:#fff; font-size:10.5px;
+  .pn-tarefa-dest.venceu { background:#c62828; border-left-color:#8e1c1c; color:#fff; }
+  .pn-tarefa-dest.venceu > span:last-child { color:#fff !important; }
+  .pn-tarefa-dest .tag-atrasada { display:inline-block; background:#fff; color:#c62828; font-size:10.5px;
     font-weight:800; padding:1px 7px; border-radius:3px; margin-right:6px; letter-spacing:.4px; }
   html[data-tema="dark"] .pn-tarefa-dest { background:#332b18; border-left-color:#d99a00; }
-  html[data-tema="dark"] .pn-tarefa-dest.venceu { background:#3a1f1f; border-left-color:#e05a50; color:#ffb4ab; }
+  html[data-tema="dark"] .pn-tarefa-dest.venceu { background:#c62828; border-left-color:#8e1c1c; color:#fff; }
+  /* notificacao de tarefa vencendo (canto esquerdo de baixo, some em 5s) */
+  #alertas-tarefa { position:fixed; left:14px; bottom:14px; z-index:1300; display:flex; flex-direction:column; gap:8px; }
+  .alerta-tarefa { background:var(--card, #fff); border:1px solid #c62828; border-left:5px solid #c62828;
+    border-radius:10px; padding:10px 14px; cursor:pointer; box-shadow:0 6px 22px rgba(0,0,0,.22);
+    max-width:300px; font-size:13px; line-height:1.4; animation:al-in .22s ease-out; }
+  .alerta-tarefa b { display:block; font-size:13.5px; }
+  .alerta-tarefa .at-tarefa { color:#c62828; font-weight:700; }
+  html[data-tema="dark"] .alerta-tarefa { background:#232e28; }
+  @keyframes al-in { from { transform:translateY(12px); opacity:0 } to { transform:none; opacity:1 } }
   .pn-nota { display:flex; gap:9px; align-items:flex-start; padding:11px 14px; font-size:14px;
     line-height:1.5; background:#fbf8ec; border-bottom:1px solid var(--border); }
   html[data-tema="dark"] .pn-nota { background:#26251c; }
@@ -386,8 +396,8 @@
         <span style="color:var(--muted); font-size:12px">até</span>
         <input type="date" id="filtro-ate" onchange="carregarKanban()" style="font-size:12px; padding:4px 6px">
       </span>
-      <select id="filtro-nicho" onchange="renderKanban()" style="font-size:13px"><option value="">Todos os nichos</option></select>
-      <select id="filtro-tag" onchange="renderKanban()" style="font-size:13px"><option value="">Todas as tags</option></select>
+      <select id="filtro-nicho" onchange="carregarKanban()" style="font-size:13px"><option value="">Todos os nichos</option></select>
+      <select id="filtro-tag" onchange="carregarKanban()" style="font-size:13px"><option value="">Todas as tags</option></select>
       <span id="busca-pipe-contador" style="font-size:13px; color:var(--muted)"></span>
     </div>
     <div class="dica-scroll">segura e arrasta um card pra mudar de etapa · card vermelho = tarefa atrasada</div>
@@ -400,18 +410,6 @@
         <input id="busca-conv" style="width:100%; margin-bottom:6px" placeholder="buscar clínica ou telefone" oninput="renderListaConv()">
         <select id="filtro-etapa-conv" style="width:100%; margin-bottom:10px; font-size:13px" onchange="renderListaConv()">
           <option value="">todas as etapas</option>
-          <option value="disparado">Disparados</option>
-          <option value="respondeu">Responderam</option>
-          <option value="em_conversa">Em conversa</option>
-          <option value="decisor">Contato c/ decisor</option>
-          <option value="negociando">Negociando reunião</option>
-          <option value="reuniao_marcada">Reunião marcada</option>
-          <option value="compareceu">Compareceu</option>
-          <option value="fechado">Fechados</option>
-          <option value="perdido">Perdidos</option>
-          <option value="optout">Opt-out</option>
-          <option value="sem_whatsapp">Sem WhatsApp</option>
-          <option value="__humano">com humano (pausadas)</option>
         </select>
         <div id="lista-conv"></div>
       </div>
@@ -859,6 +857,7 @@ async function atualizar() {
   const quentes = leads.filter((l) => l.ia_pausada && !["optout","descartado","perdido","fechado"].includes(l.status)).length;
   $("#badge-quente").textContent = quentes ? "" + quentes : "";
   renderMetricas(); renderListaConv(); renderChecklist();
+  checarAlertasTarefa(); // tarefa vencida/vencendo de OUTRO lead: card no canto
   // Kanban vem da API por pipeline (colunas configuráveis): carrega na 1a vez,
   // depois só redesenha com o que já está em memória pra não pesar o refresh.
   if (!kanbanDados) await carregarPipelines(); else renderKanban();
@@ -914,6 +913,17 @@ async function carregarPipelines() {
   if (sel) sel.innerHTML = pipelines.map((p) =>
     `<option value="${p.id}" ${p.id === pipelineAtual ? "selected" : ""}>${p.tipo === "ligacao" ? "" : ""} ${p.nome}</option>`).join("")
     + `<option value="__novo">adicionar funil de vendas</option>`;
+  // filtro de Conversas usa as etapas PERSONALIZADAS dos funis (nao a lista padrao)
+  const fec = $("#filtro-etapa-conv");
+  if (fec) {
+    const atual = fec.value;
+    fec.innerHTML = `<option value="">todas as etapas</option>` +
+      pipelines.map((p) => `<optgroup label="${p.nome}">
+        ${(p.etapas || []).map((e) => `<option value="${e.id}">${e.nome}</option>`).join("")}
+      </optgroup>`).join("") +
+      `<option value="__humano">com humano (pausadas)</option>`;
+    if ([...fec.options].some((o) => o.value === atual)) fec.value = atual;
+  }
   await carregarKanban();
 }
 function trocarPipeline(id) {
@@ -1596,18 +1606,55 @@ async function limparColuna(status, rotulo, qtd) {
   atualizar();
 }
 
+// ---- ALERTA DE TAREFA VENCIDA/VENCENDO (card no canto esquerdo de baixo, 5s) ----
+const tarefasAvisadas = new Set(JSON.parse(sessionStorage.getItem("tarefas_avisadas") || "[]"));
+let ultimoCheckAlerta = 0;
+async function checarAlertasTarefa() {
+  if (Date.now() - ultimoCheckAlerta < 55000) return; // no maximo 1 consulta por minuto
+  ultimoCheckAlerta = Date.now();
+  const ts = await api("/api/tarefas/alerta").catch(() => null);
+  if (!Array.isArray(ts)) return;
+  for (const t of ts) {
+    if (tarefasAvisadas.has(t.id)) continue;
+    if (t.lead_id === convAberta) continue; // o lead aberto ja mostra a tarefa em vermelho no card
+    tarefasAvisadas.add(t.id);
+    mostrarAlertaTarefa(t);
+  }
+  sessionStorage.setItem("tarefas_avisadas", JSON.stringify([...tarefasAvisadas]));
+}
+function mostrarAlertaTarefa(t) {
+  let box = $("#alertas-tarefa");
+  if (!box) { box = document.createElement("div"); box.id = "alertas-tarefa"; document.body.appendChild(box); }
+  const el = document.createElement("div");
+  el.className = "alerta-tarefa";
+  el.innerHTML = `<b>${t.nome_clinica}</b>
+    <span class="at-tarefa">${t.texto}</span>
+    <span style="color:var(--muted); font-size:11.5px; display:block; margin-top:2px">${t.situacao === "atrasada" ? "tarefa ATRASADA" : "vence hoje"}${t.hora ? " às " + t.hora : ""} · clica pra abrir o lead</span>`;
+  el.onclick = () => { aba("conversas"); abrirConversa(t.lead_id); el.remove(); };
+  box.appendChild(el);
+  setTimeout(() => el.remove(), 5000);
+}
+
+// nome da etapa PERSONALIZADA do lead (cai pro status se o funil nao carregou)
+function nomeEtapaDoLead(l) {
+  for (const p of (pipelines || [])) {
+    const e = (p.etapas || []).find((x) => x.id === l.etapa_id);
+    if (e) return e.nome;
+  }
+  return l.status;
+}
 function renderListaConv() {
   const busca = ($("#busca-conv").value || "").toLowerCase();
   const etapa = $("#filtro-etapa-conv")?.value || "";
   const comMsg = leads.filter((l) => !["novo"].includes(l.status))
-    .filter((l) => !etapa || (etapa === "__humano" ? l.ia_pausada : l.status === etapa))
+    .filter((l) => !etapa || (etapa === "__humano" ? l.ia_pausada : l.etapa_id === Number(etapa)))
     .filter((l) => !busca || (l.nome_clinica + l.telefone + (l.cidade || "")).toLowerCase().includes(busca));
   // NEGRITO = precisa de mim (lead falou por último e a IA não vai responder).
   // Se a IA está tocando a conversa, fica normal.
   $("#lista-conv").innerHTML = comMsg.map((l) => `
     <div class="conv-item ${convAberta === l.id ? "on" : ""}${l.precisa_resposta ? " pendente" : ""}" onclick="abrirConversa(${l.id})">
       <div class="conv-nome" style="font-weight:600; font-size:14px">${l.precisa_resposta ? "" : l.ia_pausada ? "" : ""}${l.nome_clinica}</div>
-      <div style="font-size:12px; color:var(--muted)">${l.telefone} · ${l.status}</div>
+      <div style="font-size:12px; color:var(--muted)">${l.telefone} · ${nomeEtapaDoLead(l)}</div>
     </div>`).join("") || '<div style="color:var(--muted); font-size:13px">nenhuma conversa ainda</div>';
 }
 
@@ -1627,14 +1674,20 @@ async function abrirConversa(id, auto) {
   if (auto) {
     const cx = $("#chat-texto"), nt = $("#nota-input");
     const digitando = (el) => el && (document.activeElement === el || el.value.trim());
-    if (convAberta === id && (digitando(cx) || digitando(nt))) return;
+    // digitando em QUALQUER campo do painel do lead (atendente, decisor, telefone...):
+    // nao redesenha, senao o texto some no meio da digitacao
+    const focoPainel = document.activeElement?.closest?.("#painel-notas");
+    if (convAberta === id && (digitando(cx) || digitando(nt) || focoPainel)) return;
   }
+  // trocando de lead com alteracao nao salva no painel: pergunta antes de descartar
+  if (!auto && convAberta && convAberta !== id) confirmarPendenciasPainel();
   // rascunho só sobrevive se for o MESMO lead — senão nota/tarefa digitada num
   // lead ia parar no outro (era assim que tarefa "aparecia" em lead errado)
   const mesmoLead = convAberta === id;
   convAberta = id;
   const rascunho = mesmoLead ? ($("#chat-texto")?.value || "") : "";
   const rascunhoNota = mesmoLead ? ($("#nota-input")?.value || "") : "";
+  const rascunhoComp = mesmoLead ? ($("#comp-texto")?.value || "") : "";
   // thread: se o usuario escolheu uma conversa paralela (decisor), busca só ela
   const d = await api("/api/lead/" + id + (threadAberta ? "?thread=" + threadAberta : ""));
   // clicou em OUTRO lead enquanto essa resposta viajava: descarta (senão a resposta
@@ -1674,7 +1727,8 @@ async function abrirConversa(id, auto) {
   renderPainelNotas(d);
   pintarIcones($("#chat"));
   if (rascunho) $("#chat-texto").value = rascunho; // devolve o texto que estava sendo digitado
-  if (rascunhoNota && $("#nota-input")) $("#nota-input").value = rascunhoNota; // idem pra nota
+  if (rascunhoNota && $("#nota-input")) { $("#nota-input").value = rascunhoNota; mostrarAcoesComposer(); } // idem pra nota
+  if (rascunhoComp && $("#comp-texto")) { $("#comp-texto").value = rascunhoComp; mostrarAcoesComposer(); } // idem pra tarefa digitada
   const box = $("#chat-msgs"); box.scrollTop = box.scrollHeight;
   renderListaConv();
   // resumo IA sob demanda (cacheado no servidor; atualiza o bloco quando chegar)
@@ -1712,6 +1766,7 @@ const ICONES = {
   nota: `<path d="M15 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9z"/><path d="M15 3v6h6M8 13h7M8 17h5"/>`,
   tarefa: `<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>`,
   lixeira: `<path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/>`,
+  lapis: `<path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>`,
   mais: `<path d="M12 5v14M5 12h14"/>`,
   pontos: `<circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/>`,
   relogio: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 1.9"/>`,
@@ -1825,6 +1880,8 @@ function renderPainelNotas(d) {
   const pipeAtual = pipes.find((p) => p.id === l.pipeline_id);
   const tels = d.telefones || [];
   const abertas = (d.tarefas || []).filter((t) => !t.feita);
+  painelTarefas = d.tarefas || [];
+  painelUsuarios = d.usuarios || [];
   const linha = (rot, conteudo) => `<div class="nota-linha"><span>${rot}</span><span>${conteudo}</span></div>`;
 
   el.innerHTML = `
@@ -1879,17 +1936,17 @@ function renderPainelNotas(d) {
       <div class="pn-secao">Contato</div>
       ${linha("Telefones", tels.filter((t) => t.tipo !== "decisor").map((t) => `
         <div style="display:flex; gap:6px; align-items:center; margin-bottom:3px">
-          <span class="num-clicavel" onclick="menuTelefone(event, '${t.numero}', ${l.id})">${fmtTel(t.numero)}</span>
+          <span class="num-clicavel" onclick="menuTelefone(event, '${t.numero}', ${l.id}, ${t.id}, 'Empresa')">${fmtTel(t.numero)}</span>
           ${t.rotulo ? `<span style="color:var(--muted); font-size:11px">${t.rotulo}</span>` : ""}
         </div>`).join("") + `
-        <input id="novo-tel" placeholder="+ adicionar telefone" style="font-size:12px; margin-top:2px" onkeydown="if(event.key==='Enter')addTelefone(${l.id})">`)}
+        <input id="novo-tel" placeholder="+ adicionar telefone (Enter salva)" style="font-size:12px; margin-top:2px" onkeydown="if(event.key==='Enter')addTelefone(${l.id})" onchange="addTelefone(${l.id})">`)}
       ${linha("Atendente", `<input value="${l.nome_atendente || l.nome_contato || ""}" placeholder="quem atendeu" onchange="editarCampo(${l.id}, 'nome_atendente', this.value)">`)}
       ${linha("Decisor", `<input value="${l.nome_decisor || ""}" placeholder="nome do decisor" onchange="editarCampo(${l.id}, 'nome_decisor', this.value)">`)}
       ${linha("Tel. decisor", tels.filter((t) => t.tipo === "decisor").map((t) => `
         <div style="display:flex; gap:6px; align-items:center">
-          <span class="num-clicavel" onclick="menuTelefone(event, '${t.numero}', ${l.id})">${fmtTel(t.numero)}</span>
+          <span class="num-clicavel" onclick="menuTelefone(event, '${t.numero}', ${l.id}, ${t.id}, 'Decisor')">${fmtTel(t.numero)}</span>
           ${t.rotulo ? `<span style="color:var(--muted); font-size:11px">${t.rotulo}</span>` : ""}
-        </div>`).join("") || `<input id="novo-tel-decisor" placeholder="telefone do decisor" style="font-size:12px" onkeydown="if(event.key==='Enter')addTelefoneDecisor(${l.id})">`)}
+        </div>`).join("") || `<input id="novo-tel-decisor" placeholder="telefone do decisor (Enter salva)" style="font-size:12px" onkeydown="if(event.key==='Enter')addTelefoneDecisor(${l.id})" onchange="addTelefoneDecisor(${l.id})">`)}
 
       <div class="pn-secao">Empresa</div>
       ${linha("Nicho", `<input value="${l.nicho || ""}" placeholder="ex: Odontologia" onchange="editarCampo(${l.id}, 'nicho', this.value)">`)}
@@ -1908,19 +1965,104 @@ function renderPainelNotas(d) {
 
     </div>
 
-    <!-- RODAPE FIXO: nota rapida + botao de tarefa (tarefa abre o card completo) -->
+    <!-- RODAPE FIXO: composer compacto (Nota / Tarefa / Agendamento no mesmo lugar) -->
     <div class="pn-rodape">
-      <div style="padding:9px 14px; border-top:1px solid var(--border)">
-        <textarea id="nota-input" rows="2" placeholder="escrever nota... (Enter salva)" style="width:100%; font-size:14px; padding:9px 11px; line-height:1.45; resize:vertical" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();addNota(${l.id})}"></textarea>
-        <div style="display:flex; gap:6px; margin-top:7px">
-          <button class="btn" style="flex:1; padding:9px" onclick="addNota(${l.id})">salvar nota</button>
-          <button class="btn sec" style="flex:1; padding:9px" onclick="abrirModalTarefa(${l.id})">+ tarefa</button>
+      <div style="padding:8px 12px; border-top:1px solid var(--border)">
+        <div style="display:flex; gap:6px; align-items:flex-start">
+          <button id="comp-modo" class="btn mini sec" style="white-space:nowrap; font-weight:700" onclick="menuComposer(event, ${l.id})">${MODOS_COMPOSER[modoComposer]} ▾</button>
+          <div style="flex:1; min-width:0" id="comp-campos">${htmlComposer(l.id)}</div>
+        </div>
+        <div id="comp-acoes" style="display:none; gap:6px; margin-top:7px; justify-content:flex-end">
+          <button class="btn sec mini" onclick="cancelarComposer(${l.id})">cancelar</button>
+          <button class="btn mini" onclick="salvarComposer(${l.id})">salvar</button>
         </div>
       </div>
     </div>`;
-  painelTarefas = d.tarefas || [];
-  painelUsuarios = d.usuarios || [];
   pintarIcones(el);
+  // marca o valor inicial de cada campo pra detectar alteracao nao salva ao sair
+  el.querySelectorAll(".pn-corpo input, .pn-corpo select").forEach((c) => {
+    c.dataset.ini = c.value;
+    c.addEventListener("change", () => { c.dataset.ini = c.value; });
+  });
+}
+
+// campos do painel alterados e ainda nao salvos (valor mudou sem disparar o change)
+function camposSujosPainel() {
+  return [...document.querySelectorAll("#painel-notas .pn-corpo input, #painel-notas .pn-corpo select")]
+    .filter((c) => c.dataset.ini !== undefined && c.value !== c.dataset.ini);
+}
+function confirmarPendenciasPainel() {
+  const sujos = camposSujosPainel();
+  if (!sujos.length) return;
+  if (confirm("Você alterou dados desse lead e não salvou. Salvar as alterações?"))
+    sujos.forEach((c) => c.dispatchEvent(new Event("change")));
+}
+
+// ---- COMPOSER do rodape: Nota / Tarefa / Agendamento no mesmo espaco compacto ----
+const MODOS_COMPOSER = { nota: "Nota", tarefa: "Tarefa", agendamento: "Agendamento" };
+let modoComposer = "nota";
+function htmlComposer(leadId) {
+  if (modoComposer === "nota")
+    return `<textarea id="nota-input" rows="1" placeholder="escrever nota..." style="width:100%; font-size:13.5px; padding:7px 10px; line-height:1.45; resize:vertical" oninput="mostrarAcoesComposer()" onfocus="mostrarAcoesComposer()" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();salvarComposer(${leadId})}"></textarea>`;
+  const rotQuem = modoComposer === "agendamento" ? "com" : "para";
+  return `<div style="display:flex; gap:4px; flex-wrap:wrap; align-items:center; font-size:12px; color:var(--muted)">
+      <span>vencimento</span>
+      <input id="comp-quando" type="date" style="font-size:12px; padding:5px 6px" onfocus="mostrarAcoesComposer()">
+      <input id="comp-hora" type="time" style="font-size:12px; padding:5px 6px; width:88px" onfocus="mostrarAcoesComposer()">
+      <span>${rotQuem}</span>
+      <select id="comp-usuario" style="font-size:12px; padding:5px 6px" onfocus="mostrarAcoesComposer()">
+        ${painelUsuarios.map((u) => `<option value="${u.id}">${u.nome}</option>`).join("")}
+      </select>
+    </div>
+    <input id="comp-texto" placeholder="${modoComposer === "agendamento" ? "assunto da reunião (vai pra agenda)..." : "escrever sobre a tarefa..."}" style="width:100%; font-size:13.5px; padding:7px 10px; margin-top:4px" oninput="mostrarAcoesComposer()" onfocus="mostrarAcoesComposer()" onkeydown="if(event.key==='Enter')salvarComposer(${leadId})">`;
+}
+function menuComposer(ev, leadId) {
+  abrirMenuCtx(ev, [
+    { icone: "nota", rot: "Notas", acao: () => setModoComposer("nota", leadId) },
+    { icone: "tarefa", rot: "Tarefas", acao: () => setModoComposer("tarefa", leadId) },
+    { icone: "calendario", rot: "Agendamento", acao: () => setModoComposer("agendamento", leadId) },
+  ]);
+}
+function setModoComposer(m, leadId) {
+  modoComposer = m;
+  if ($("#comp-modo")) $("#comp-modo").innerHTML = `${MODOS_COMPOSER[m]} ▾`;
+  if ($("#comp-campos")) $("#comp-campos").innerHTML = htmlComposer(leadId);
+  mostrarAcoesComposer();
+  (m === "nota" ? $("#nota-input") : $("#comp-texto"))?.focus();
+}
+function mostrarAcoesComposer() {
+  const a = $("#comp-acoes"); if (a) a.style.display = "flex";
+}
+function cancelarComposer(leadId) {
+  if ($("#comp-campos")) $("#comp-campos").innerHTML = htmlComposer(leadId);
+  const a = $("#comp-acoes"); if (a) a.style.display = "none";
+}
+async function salvarComposer(leadId) {
+  if (modoComposer === "nota") return addNota(leadId);
+  const texto = $("#comp-texto")?.value.trim();
+  if (!texto) return toast(modoComposer === "agendamento" ? "escreve o assunto da reunião" : "escreve a tarefa primeiro");
+  const body = {
+    texto,
+    quando: $("#comp-quando")?.value || null,
+    hora: $("#comp-hora")?.value || null,
+    tipo: modoComposer === "agendamento" ? "reuniao" : "followup",
+    usuario_id: Number($("#comp-usuario")?.value) || null,
+  };
+  if (body.tipo === "reuniao" && (!body.quando || !body.hora))
+    return alert("pra ir pra agenda, preenche o dia E a hora");
+  if (body.tipo === "reuniao") {
+    const c = await api(`/api/agenda/conflito?inicio=${body.quando}T${body.hora}`).catch(() => null);
+    if (c?.conflito) {
+      const lista = c.reunioes.map((r) => `• ${(r.inicio || "").slice(11, 16)} — ${r.nome_clinica}`).join("\n");
+      if (!confirm(`Atenção: já tem reunião perto desse horário.\n\n${lista}\n\nMarcar assim mesmo?`)) return;
+    }
+  }
+  const r = await api("/api/lead/" + leadId + "/tarefas", { method: "POST", body: JSON.stringify(body) });
+  if (r?.erro) return alert("erro ao salvar: " + r.erro);
+  if (r?.agenda?.erro) alert(r.agenda.erro);
+  else if (r?.agenda?.id) alert("Reunião criada e já subiu pra agenda");
+  toast(modoComposer === "agendamento" ? "agendamento criado" : "tarefa criada");
+  abrirConversa(leadId); atualizar(); carregarKanban();
 }
 
 // ---- MODAL DE TAREFA (criar e editar) — estilo Kommo: atalhos de prazo na lateral ----
@@ -2004,7 +2146,7 @@ function abrirMenuCtx(ev, itens) {
   m.className = "menu-ctx";
   m.innerHTML = itens.map((i, n) => i === "-"
     ? `<div style="height:1px; background:var(--border); margin:4px 2px"></div>`
-    : `<button data-n="${n}">${ic(i.icone)}<span>${i.rot}</span></button>`).join("");
+    : `<button data-n="${n}" ${i.perigo ? 'style="background:#c62828; color:#fff"' : ""}>${ic(i.icone)}<span>${i.rot}</span></button>`).join("");
   document.body.appendChild(m);
   // posiciona sem sair da tela
   const r = ev.target.getBoundingClientRect();
@@ -2015,13 +2157,32 @@ function abrirMenuCtx(ev, itens) {
   });
 }
 
-function menuTelefone(ev, numero, leadId) {
-  abrirMenuCtx(ev, [
+function menuTelefone(ev, numero, leadId, telId, rotulo) {
+  const itens = [
     { icone: "telefone", rot: "Ligar", acao: () => { location.href = "tel:+" + numero; } },
-    { icone: "whatsapp", rot: "WhatsApp", acao: () => conversarCom(leadId, numero, "Contato") },
-    { icone: "link", rot: "Abrir wa.me", acao: () => window.open("https://wa.me/" + numero, "_blank") },
+    // abre a conversa AQUI DENTRO do sistema (nao no wa.me)
+    { icone: "whatsapp", rot: "WhatsApp", acao: () => conversarCom(leadId, numero, rotulo || "Empresa") },
     { icone: "copiar", rot: "Copiar", acao: () => copiar(numero) },
-  ]);
+  ];
+  if (telId) {
+    itens.push({ icone: "lapis", rot: "Editar número", acao: () => editarNumero(telId, leadId, numero) });
+    itens.push({ icone: "lixeira", rot: "Apagar", perigo: true, acao: () => apagarNumero(telId, leadId) });
+  }
+  abrirMenuCtx(ev, itens);
+}
+async function editarNumero(telId, leadId, atual) {
+  const novo = prompt("Novo número (com DDD):", fmtTel(atual));
+  if (!novo || !novo.trim()) return;
+  const r = await api("/api/telefone/" + telId, { method: "PATCH", body: JSON.stringify({ numero: novo }) });
+  if (r?.erro) return alert(r.erro);
+  toast("número corrigido");
+  abrirConversa(leadId); atualizar();
+}
+async function apagarNumero(telId, leadId) {
+  if (!confirm("Apagar esse número do lead?")) return;
+  await api("/api/telefone/" + telId, { method: "DELETE" });
+  toast("número apagado");
+  abrirConversa(leadId); atualizar();
 }
 function menuLink(ev, url) {
   const u = url.startsWith("http") ? url : "https://" + url;
@@ -2088,16 +2249,22 @@ async function editarCampo(id, campo, valor) {
   await carregarKanban(); atualizar();
 }
 async function addTelefone(id) {
-  const n = $("#novo-tel").value.trim(); if (!n) return;
+  const el = $("#novo-tel");
+  const n = el?.value.trim(); if (!n) return;
+  el.value = ""; // evita disparo duplo (Enter + blur salvando o mesmo numero)
   const r = await api("/api/lead/" + id + "/telefones", { method: "POST", body: JSON.stringify({ numero: n, tipo: "empresa" }) });
-  if (r?.erro) return alert(r.erro);
-  abrirConversa(id);
+  if (r?.erro) { if (el) el.value = n; return alert(r.erro); }
+  toast("telefone salvo");
+  if (convAberta === id) abrirConversa(id);
 }
 async function addTelefoneDecisor(id) {
-  const n = $("#novo-tel-decisor").value.trim(); if (!n) return;
+  const el = $("#novo-tel-decisor");
+  const n = el?.value.trim(); if (!n) return;
+  el.value = "";
   const r = await api("/api/lead/" + id + "/telefones", { method: "POST", body: JSON.stringify({ numero: n, tipo: "decisor", rotulo: "Decisor" }) });
-  if (r?.erro) return alert(r.erro);
-  abrirConversa(id);
+  if (r?.erro) { if (el) el.value = n; return alert(r.erro); }
+  toast("telefone do decisor salvo");
+  if (convAberta === id) abrirConversa(id);
 }
 async function excluirTelefone(telId, leadId) {
   await api("/api/telefone/" + telId, { method: "DELETE" });

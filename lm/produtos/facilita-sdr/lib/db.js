@@ -592,6 +592,23 @@ export function addTelefone(leadId, numero, tipo = "empresa", rotulo = null) {
     .run(leadId, tel, tipo, rotulo, primeiro ? 1 : 0).lastInsertRowid;
 }
 export const removerTelefone = (id) => db.prepare("DELETE FROM telefones WHERE id = ?").run(id);
+// EDITAR numero (digitou errado): corrige na linha, no lead (se for o decisor ou o
+// principal) e nas threads que apontavam pro numero antigo — a conversa segue no card
+export function editarTelefone(id, numeroNovo) {
+  const t = db.prepare("SELECT * FROM telefones WHERE id = ?").get(id);
+  if (!t) return { erro: "telefone nao existe" };
+  const lead = getLead(t.lead_id);
+  const novo = normalizarTelefone(numeroNovo, lead?.telefone);
+  if (!novo) return { erro: "numero invalido" };
+  db.prepare("UPDATE telefones SET numero = ? WHERE id = ?").run(novo, id);
+  if (t.tipo === "decisor" && lead?.telefone_decisor === t.numero)
+    db.prepare("UPDATE leads SET telefone_decisor = ? WHERE id = ?").run(novo, lead.id);
+  if (t.principal && lead?.telefone === t.numero)
+    db.prepare("UPDATE leads SET telefone = ? WHERE id = ?").run(novo, lead.id);
+  for (const v of variantesTelefone(t.numero))
+    db.prepare("UPDATE threads SET telefone = ? WHERE lead_id = ? AND telefone = ?").run(novo, t.lead_id, v);
+  return { ok: true, numero: novo };
+}
 
 // ---------- threads (conversas paralelas do mesmo lead) ----------
 export const threadsDoLead = (leadId) =>
@@ -608,7 +625,14 @@ export function threadPorTelefone(telefone) {
 export function abrirThread(leadId, telefone, rotulo = null, instanciaId = null) {
   const tel = String(telefone).replace(/\D/g, "");
   const existe = db.prepare("SELECT * FROM threads WHERE lead_id = ? AND telefone = ?").get(leadId, tel);
-  if (existe) return existe;
+  if (existe) {
+    // thread antiga com rotulo generico ganha o nome certo ("Contato" -> "Decisor"/"Empresa")
+    if (rotulo && (!existe.rotulo || existe.rotulo === "Contato")) {
+      db.prepare("UPDATE threads SET rotulo = ? WHERE id = ?").run(rotulo, existe.id);
+      existe.rotulo = rotulo;
+    }
+    return existe;
+  }
   const id = db.prepare("INSERT INTO threads (lead_id, telefone, rotulo, instancia_id) VALUES (?,?,?,?)")
     .run(leadId, tel, rotulo, instanciaId).lastInsertRowid;
   return getThread(id);

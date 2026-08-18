@@ -18,17 +18,21 @@ const rand = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
 
 // TOKEN DO LEAD: toda mensagem de continuação sai pelo chip GRAVADO do lead.
 // Se o chip dele caiu, NÃO envia por outro (trocar de número = queimar os dois).
-function tokenDoLead(lead) {
+function chipDoLead(lead) {
   const inst = lead?.instancia_id
     ? instanciasConectadas().find((i) => i.id === lead.instancia_id)
     : null;
-  if (inst) return inst.uazapi_token;
+  if (inst) return inst;
   if (lead?.instancia_id) {
     registrarEvento(lead.id, "erro", "chip do lead desconectado — envio segurado pra nao trocar de numero");
     return null;
   }
-  return instanciaDoLead(lead)?.uazapi_token || null; // lead antigo sem chip gravado
+  return instanciaDoLead(lead) || null; // lead antigo sem chip gravado
 }
+function tokenDoLead(lead) { return chipDoLead(lead)?.uazapi_token || null; }
+// COTA POR NUMERO: nenhum envio frio (followup, reengajamento) pode estourar o
+// limite diario configurado do chip — estourar = risco de restricao do numero
+const chipComFolga = (inst) => !!inst && (!inst.cota_dia || (inst.disparos_hoje || 0) < inst.cota_dia);
 
 function dentroDaJanela(camp) {
   const { hora, diaSemana } = agoraSP();
@@ -75,13 +79,14 @@ async function tickDisparo() {
         : (tipo === "followup1"
           ? `Oi! Consegui falar com o responsável da ${followLead.nome_clinica}?`
           : `Última tentativa por aqui: se fizer sentido conversar sobre a agenda da ${followLead.nome_clinica}, é só responder essa mensagem. Senão, não incomodo mais!`);
-      const tokF = tokenDoLead(followLead) || instanceToken;
-      const r = await enviarTexto(tokF, followLead.telefone, texto);
+      const instF = chipDoLead(followLead) || instAtiva;
+      if (!chipComFolga(instF)) continue; // cota do chip batida: segura pro proximo dia
+      const r = await enviarTexto(instF.uazapi_token, followLead.telefone, texto);
       if (r.ok) {
         salvarMensagem(followLead.id, "assistant", texto);
         marcarFollowup(camp.id, followLead.id, tipo === "followup1" ? "followup1_em" : "followup2_em");
         registrarEvento(followLead.id, "followup", tipo);
-        addDisparoInstancia(instAtiva.id);
+        addDisparoInstancia(instF.id);
       } else {
         registrarEvento(followLead.id, "erro", `followup falhou: ${r.erro}`);
       }
@@ -169,21 +174,24 @@ async function tickFollowupsIA() {
   // MESMO delay global; teto avaliado pela campanha DO FUNIL do lead
   if (Date.now() < Number(getConfig("proximo_disparo_em", "0"))) return;
   for (const lead of followupsVencidos()) {
-    limparFollowup(lead.id);
-    if (String(lead.telefone).startsWith("0000")) continue;
+    if (String(lead.telefone).startsWith("0000")) { limparFollowup(lead.id); continue; }
     // se o lead ja respondeu depois do agendamento, a conversa seguiu — nao cobra
     const ultima = db.prepare("SELECT role FROM mensagens WHERE lead_id = ? ORDER BY id DESC LIMIT 1").get(lead.id);
-    if (ultima?.role === "user") continue;
+    if (ultima?.role === "user") { limparFollowup(lead.id); continue; }
+    // teto/cota batidos ou chip fora: NAO limpa — o followup fica agendado e sai depois
     const camp = campanhaDaPipeline(lead.pipeline_id) || campanhasAtivas()[0] || null;
-    if (camp && disparosHojeDaCampanha(camp) >= camp.teto_dia) continue; // teto do funil batido
-    const tok = tokenDoLead(lead);
-    if (!tok) continue;
+    if (camp && disparosHojeDaCampanha(camp) >= camp.teto_dia) continue;
+    const inst = chipDoLead(lead);
+    if (!inst) continue;
+    if (!chipComFolga(inst)) continue; // cota do numero batida: cobra quando abrir folga
+    limparFollowup(lead.id);
     const msg = lead.followup_msg ||
       "Oi! Conseguiu encaminhar pro responsável? Qualquer coisa eu explico direto pra ele, é rapidinho.";
-    const r = await enviarTexto(tok, lead.telefone, msg);
+    const r = await enviarTexto(inst.uazapi_token, lead.telefone, msg);
     if (r.ok) {
       salvarMensagem(lead.id, "assistant", msg);
       registrarEvento(lead.id, "followup", "follow-up agendado pela IA enviado");
+      addDisparoInstancia(inst.id);
       if (camp) setConfig("proximo_disparo_em", Date.now() + rand(camp.cadencia_min_seg, camp.cadencia_max_seg) * 1000);
     }
     return; // 1 por tick + gate
@@ -208,11 +216,13 @@ async function tickReengajar() {
       const cotaReeng = Math.round((camp.teto_dia * (camp.pct_reengajar ?? 30)) / 100);
       if (reengajamentosHojeDaCampanha(camp) >= cotaReeng) continue;
     }
-    const tok = tokenDoLead(lead);
-    if (!tok) continue; // chip do lead fora: nao reengaja por outro numero
+    const inst = chipDoLead(lead);
+    if (!inst) continue; // chip do lead fora: nao reengaja por outro numero
+    if (!chipComFolga(inst)) continue; // cota do numero batida: fica pra depois
     marcarReengajado(lead.id); // marca ANTES (nunca insiste, mesmo se falhar)
     salvarMensagem(lead.id, "sistema", "[o lead parou de responder; retome com naturalidade uma mensagem curta pra reengajar, sem soar cobrança]");
-    await responderLead(lead.id, tok);
+    await responderLead(lead.id, inst.uazapi_token);
+    addDisparoInstancia(inst.id);
     registrarEvento(lead.id, "reengajamento", `${horas}h sem resposta`);
     if (camp) setConfig("proximo_disparo_em", Date.now() + rand(camp.cadencia_min_seg, camp.cadencia_max_seg) * 1000);
     return; // 1 por tick + gate de cadencia

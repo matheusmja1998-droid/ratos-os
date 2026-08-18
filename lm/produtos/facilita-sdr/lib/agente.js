@@ -22,6 +22,18 @@ const PROMPT_SDR = readFileSync(join(__dirname, "..", "prompts", ARQ_PROMPT), "u
 const CLAUDE_BIN = process.env.CLAUDE_BIN || "claude";
 const CLAUDE_MODEL = process.env.CLAUDE_MODEL || ""; // vazio = default do plano
 
+// PERSONA: a IA se identifica como o DONO DO NUMERO que envia (chip do lead);
+// sem dono no chip, cai pro dono do funil; ultimo recurso "Matheus".
+// Mensagem saindo no numero do Valentino NUNCA pode se apresentar como Matheus.
+export function personaDoLead(lead) {
+  const donoChip = lead?.instancia_id
+    ? db.prepare("SELECT usuario_id FROM instancias WHERE id = ?").get(lead.instancia_id)?.usuario_id
+    : null;
+  const donoFunil = lead?.pipeline_id ? getPipeline(lead.pipeline_id)?.usuario_id : null;
+  const dono = donoChip || donoFunil || lead?.usuario_id || null;
+  return (dono ? getUsuario(dono)?.nome : null) || "Matheus";
+}
+
 // ---------- horarios de reuniao ----------
 // Slots por closer na config: "slots_matheus" = "1,2,3,4,5|10:00,11:00,15:00,16:00"
 // (dias da semana | horas). Disponivel = slots dos proximos 7 dias MENOS reunioes ativas.
@@ -90,6 +102,9 @@ function montarPrompt(lead, thread = null) {
 
   return `${PROMPT_SDR}
 ${blocoTreinamento()}
+
+## PERSONA (OBRIGATÓRIO)
+Nesta conversa VOCÊ É ${personaDoLead(lead)} — a mensagem sai no número dele. Apresente-se e assine SEMPRE como ${personaDoLead(lead)}, nunca como outro nome (mesmo que o treinamento cite outro diretor como exemplo).
 
 ## AGORA
 Data/hora em São Paulo: ${data} ${hora} (${DIAS_PT[diaSemana]})
@@ -410,8 +425,15 @@ export async function abordarDecisor(leadId, telefoneCru, nomeDecisor, instanceT
   const jaTem = db.prepare("SELECT id FROM threads WHERE lead_id = ? AND telefone = ?").get(leadId, tel);
   if (jaTem) return;
 
-  const dono = getPipeline(lead.pipeline_id)?.usuario_id || lead.usuario_id || null;
-  const persona = (dono ? getUsuario(dono)?.nome : null) || "Matheus";
+  // persona = dono do NUMERO que envia (nunca se apresentar como outro socio)
+  const persona = personaDoLead(lead);
+  // cota do chip: abordagem fria conta como disparo — nao pode estourar o limite do numero
+  const instEnvio = db.prepare("SELECT * FROM instancias WHERE uazapi_token = ?").get(instanceToken || "") || null;
+  if (instEnvio && instEnvio.cota_dia && (instEnvio.disparos_hoje || 0) >= instEnvio.cota_dia) {
+    registrarEvento(leadId, "decisor_abordagem_segurada", `cota do chip ${instEnvio.nome} batida (${instEnvio.disparos_hoje}/${instEnvio.cota_dia})`);
+    await alertar(`⏸️ IA NÃO chamou o decisor da ${lead.nome_clinica}: cota diária do chip "${instEnvio.nome}" batida. O contato ficou salvo no card — chama manual ou aguarda amanhã.`);
+    return;
+  }
   const nomeDecCompleto = nomeDecisor || lead.nome_decisor || null;
   const decisor = (nomeDecCompleto || "").split(" ")[0] || null;
   // atendente = quem passou o contato; nunca usar o proprio nome do decisor aqui
@@ -438,6 +460,7 @@ export async function abordarDecisor(leadId, telefoneCru, nomeDecisor, instanceT
     await new Promise((r2) => setTimeout(r2, 2500 + Math.random() * 2000));
   }
   registrarEvento(leadId, "decisor_abordado", tel);
+  if (!simulado && instEnvio) db.prepare("UPDATE instancias SET disparos_hoje = disparos_hoje + 1 WHERE id = ?").run(instEnvio.id);
   await alertar(`🤖➡️📞 IA chamou o decisor da ${lead.nome_clinica} (${tel}) como ${persona}. A conversa segue na aba do card.`);
 }
 
