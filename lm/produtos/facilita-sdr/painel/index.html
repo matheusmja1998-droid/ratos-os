@@ -2162,7 +2162,8 @@ function menuTelefone(ev, numero, leadId, telId, rotulo) {
     { icone: "telefone", rot: "Ligar", acao: () => { location.href = "tel:+" + numero; } },
     // abre a conversa AQUI DENTRO do sistema (nao no wa.me)
     { icone: "whatsapp", rot: "WhatsApp", acao: () => conversarCom(leadId, numero, rotulo || "Empresa") },
-    { icone: "copiar", rot: "Copiar", acao: () => copiar(numero) },
+    // copia SEM o 55 (só DDD + numero) — colando no celular o discador aceita direto
+    { icone: "copiar", rot: "Copiar", acao: () => copiar(String(numero).replace(/^55(?=\d{10,11}$)/, "")) },
   ];
   if (telId) {
     itens.push({ icone: "lapis", rot: "Editar número", acao: () => editarNumero(telId, leadId, numero) });
