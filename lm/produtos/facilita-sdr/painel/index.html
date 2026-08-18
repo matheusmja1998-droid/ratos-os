@@ -2073,6 +2073,7 @@ function renderPainelNotas(d) {
       <div style="padding:9px 14px; display:flex; gap:5px; flex-wrap:wrap">
         ${[["nao_atendeu", "não atendeu"], ["conectou", "atendeu"], ["decisor", "falei c/ decisor"], ["reuniao", "marquei reunião"], ["recusou", "recusou"]]
           .map(([v, r]) => `<button class="btn mini ${d.ultima_ligacao === v ? "" : "sec"}" style="font-size:11px" onclick="registrarLigacao(${l.id}, '${v}')">${r}</button>`).join("")}
+        <button class="btn mini" style="font-size:11px; background:#1e5aa8; border-color:#1e5aa8" title="conta a ligação nas métricas E manda o lead pra fila de disparo da IA" onclick="registrarLigacao(${l.id}, 'nao_atendeu', true)">não atendeu · IA dispara 🤖</button>
       </div>
 
     </div>
@@ -2349,12 +2350,17 @@ const hojeISO = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Americ
 const tarefaAtrasada = (t) => !!(t.quando && !t.feita && t.quando < hojeISO());
 
 // registra o resultado da ligação: vira evento (dashboard) e move o card
-async function registrarLigacao(id, resultado) {
+async function registrarLigacao(id, resultado, disparar = false) {
   const obs = ["reuniao", "recusou"].includes(resultado)
     ? prompt(resultado === "reuniao" ? "Anota o combinado (dia/hora):" : "Por que recusou?") : null;
   if (obs === null && ["reuniao", "recusou"].includes(resultado)) return; // cancelou
-  const r = await api("/api/lead/" + id + "/ligacao", { method: "POST", body: JSON.stringify({ resultado, obs: obs || "" }) });
+  const r = await api("/api/lead/" + id + "/ligacao", { method: "POST", body: JSON.stringify({ resultado, obs: obs || "", disparar }) });
   if (r?.erro) return alert(r.erro);
+  if (disparar) {
+    if (r.disparo?.erro) alert(r.disparo.erro);
+    else if (r.disparo?.aviso) alert("Ligação contabilizada. " + r.disparo.aviso);
+    else toast(`ligação contabilizada · lead na fila da IA (${r.disparo?.pipeline || "disparo"})`);
+  }
   abrirConversa(id); carregarKanban(); atualizar();
 }
 

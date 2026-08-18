@@ -1797,7 +1797,34 @@ app.post("/api/lead/:id/ligacao", auth, exige("conversar"), (req, res) => {
     if (chave) etapaAlvo = db.prepare("SELECT * FROM etapas WHERE pipeline_id = ? AND chave = ?").get(pipe.id, chave);
   }
   if (etapaAlvo) moverLead(leadId, etapaAlvo.id);
-  res.json({ ok: true, lead: getLead(leadId), moveu_para: etapaAlvo?.nome || null });
+
+  // "NAO ATENDEU (IA DISPARA)": a ligacao ja foi CONTABILIZADA acima; agora o
+  // lead vai pro funil de disparo do usuario e entra na fila da campanha — a IA
+  // tenta por WhatsApp o que a ligacao nao alcancou. (Mover na mao nao contava
+  // a ligacao — por isso o numero de ligacoes ficava baixo nas metricas.)
+  let disparo = null;
+  if (req.body?.disparar && resultado === "nao_atendeu") {
+    const pipeDisparo =
+      listarPipelines().find((p) => p.tipo === "disparo" && p.usuario_id === req.usuario?.id) ||
+      listarPipelines().find((p) => p.tipo === "disparo");
+    if (!pipeDisparo) {
+      disparo = { erro: "nenhum funil de disparo existe ainda" };
+    } else {
+      const etapaEntrada = etapaDeEntrada(pipeDisparo.id);
+      const camp = db.prepare("SELECT id, status, nome FROM campanhas WHERE pipeline_id = ? AND status IN ('ativa','pausada') ORDER BY id DESC LIMIT 1").get(pipeDisparo.id);
+      db.prepare("UPDATE leads SET pipeline_id = ?, etapa_id = ?, status = 'novo' WHERE id = ?")
+        .run(pipeDisparo.id, etapaEntrada?.id || null, leadId);
+      if (camp) db.prepare("INSERT OR IGNORE INTO campanha_leads (campanha_id, lead_id) VALUES (?,?)").run(camp.id, leadId);
+      registrarEvento(leadId, "ligacao_para_disparo", `nao atendeu -> fila da IA (${pipeDisparo.nome})`);
+      disparo = {
+        pipeline: pipeDisparo.nome,
+        na_fila: Boolean(camp),
+        aviso: !camp ? "foi pro funil de disparo, mas ele não tem campanha — cria uma pra IA começar a enviar"
+          : camp.status === "pausada" ? `entrou na fila da campanha "${camp.nome}", que está PAUSADA — ativa ela pra sair` : null,
+      };
+    }
+  }
+  res.json({ ok: true, lead: getLead(leadId), moveu_para: etapaAlvo?.nome || null, disparo });
 });
 
 // ============================================================
