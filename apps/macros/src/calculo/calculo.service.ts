@@ -21,6 +21,15 @@ const GORDURA_MINIMA_G = 40;
 /** Piso de carboidrato antes de começar a cortar gordura. */
 const CARBO_MINIMO_G = 50;
 
+/**
+ * Fração máxima do GET que pode virar déficit.
+ *
+ * Um déficit fixo de 500 kcal é razoável pra quem gasta 3000, mas é agressivo
+ * demais pra quem gasta 1600 — viraria quase um terço da energia do dia.
+ * O déficit efetivo é limitado a 25% do GET.
+ */
+const DEFICIT_MAXIMO_DO_GET = 0.25;
+
 @Injectable()
 export class CalculoService {
   /**
@@ -125,8 +134,35 @@ export class CalculoService {
     const pesoAlvoKg = this.calcularPesoAlvo(d.sexo, d.alturaCm);
 
     const sinal = objetivo === 'emagrecer' ? -1 : objetivo === 'ganhar' ? 1 : 0;
-    const ajuste = sinal * Math.abs(deficitKcal);
-    const metaCalorica = Math.round((get + ajuste) / 10) * 10;
+
+    // Dois limites pro déficit, e vale o mais restritivo:
+    //  - no máximo 25% do GET;
+    //  - a meta nunca desce abaixo da TMB, porque comer menos do que o corpo
+    //    gasta em repouso não se sustenta e cobra caro depois.
+    // Em perfis sedentários o GET é só 1,2 × TMB, então é a TMB que segura.
+    const tetoPorFracao = Math.round(get * DEFICIT_MAXIMO_DO_GET);
+    const tetoPorTmb = Math.max(0, get - tmb);
+    const tetoDeficit = Math.min(tetoPorFracao, tetoPorTmb);
+    const deficitPedido = Math.abs(deficitKcal);
+    const deficitAplicado =
+      sinal < 0 ? Math.min(deficitPedido, tetoDeficit) : deficitPedido;
+
+    if (sinal < 0 && deficitAplicado < deficitPedido) {
+      const motivo =
+        tetoPorTmb < tetoPorFracao
+          ? 'mais que isso deixaria você comendo abaixo do que seu corpo gasta parado'
+          : 'mais que isso passaria de 25% do seu gasto diário';
+      avisos.push(
+        `O déficit de ${deficitPedido} kcal foi reduzido para ${deficitAplicado} kcal: ${motivo}. Pra acelerar, o caminho é aumentar o gasto (cardio), não cortar mais comida.`,
+      );
+    }
+
+    const ajuste = sinal * deficitAplicado;
+    // Arredonda a meta pra cima quando há déficit: arredondar pra baixo poderia
+    // cruzar o piso da TMB que acabamos de proteger.
+    const metaBruta = get + ajuste;
+    const metaCalorica =
+      sinal < 0 ? Math.ceil(metaBruta / 10) * 10 : Math.round(metaBruta / 10) * 10;
 
     const macros = this.distribuirMacros(metaCalorica, pesoAlvoKg);
 
@@ -167,7 +203,7 @@ export class CalculoService {
       ordem: 4,
       titulo: 'Meta calórica',
       formula: objetivo === 'manter' ? 'GET' : `GET ${sinal < 0 ? '−' : '+'} ajuste`,
-      substituicao: objetivo === 'manter' ? `${get}` : `${get} ${sinal < 0 ? '−' : '+'} ${Math.abs(deficitKcal)}`,
+      substituicao: objetivo === 'manter' ? `${get}` : `${get} ${sinal < 0 ? '−' : '+'} ${deficitAplicado}`,
       resultado: `${metaCalorica} kcal`,
       porque:
         objetivo === 'emagrecer'
@@ -212,7 +248,7 @@ export class CalculoService {
         'Você marcou um nível de atividade alto. Se na prática você não treina pesado quase todo dia, isso superestima seu gasto e o déficit não acontece. Na dúvida, escolha o nível abaixo.',
       );
     }
-    if (metaCalorica < tmb) {
+    if (metaCalorica < tmb && sinal >= 0) {
       avisos.push(
         `Sua meta (${metaCalorica} kcal) ficou abaixo da sua TMB (${tmb} kcal). Isso é agressivo demais pra manter no longo prazo — considere um déficit menor e mais cardio.`,
       );
