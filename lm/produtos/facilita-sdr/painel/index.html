@@ -270,6 +270,18 @@
     display:flex; gap:8px; align-items:center; box-shadow:0 8px 28px rgba(0,0,0,.22); font-size:13px; }
   #barra-selecao .btn[disabled] { opacity:.5; }
   html[data-tema="dark"] #barra-selecao { background:#232e28; }
+  /* switch assumir/devolver (estilo "Atendida pela IA") */
+  .ia-switch { display:inline-flex; align-items:center; gap:7px; cursor:pointer; user-select:none; }
+  .ia-switch .ia-pill { font-size:12px; font-weight:700; padding:4px 10px; border-radius:99px; border:1px solid var(--border); }
+  .ia-switch.on .ia-pill { background:#e8f3ee; color:#0b6b46; border-color:#bfe0d2; }
+  .ia-switch.off .ia-pill { background:#eef2ff; color:#3949ab; border-color:#c9d3f5; }
+  .ia-trilho { width:36px; height:20px; border-radius:99px; background:#c9cfcb; position:relative; transition:background .15s; flex-shrink:0; }
+  .ia-switch.on .ia-trilho { background:var(--verde); }
+  .ia-bolinha { position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:#fff; transition:left .15s; box-shadow:0 1px 3px rgba(0,0,0,.25); }
+  .ia-switch.on .ia-bolinha { left:18px; }
+  .ia-rot { font-size:12px; color:var(--muted); font-weight:600; white-space:nowrap; }
+  html[data-tema="dark"] .ia-switch.on .ia-pill { background:#1c2e26; }
+  html[data-tema="dark"] .ia-switch.off .ia-pill { background:#232b3d; }
   /* "IA digitando": 3 pontinhos pulando no fim do chat (so o painel ve) */
   .dots { display:inline-flex; gap:4px; padding:2px 2px; }
   .dots i { width:7px; height:7px; border-radius:50%; background:var(--muted); animation:dotp 1.2s infinite; }
@@ -710,6 +722,14 @@ VOCÊ: Opa! Aqui é o Matheus..."></textarea>
         <h3 style="margin-bottom:6px">Agenda Google (Meet automático)</h3>
         <p style="font-size:12px; color:var(--muted); margin-bottom:8px">Conecte sua agenda 1 vez. Reunião marcada pela IA vira evento na agenda com link do Meet gerado sozinho. Se o Google avisar "app não verificado": Avançado → Ir para o app.</p>
         <div id="gcal-status" style="font-size:13px; color:var(--muted)">verificando…</div>
+        <hr style="border:none; border-top:1px solid var(--border); margin:14px 0">
+        <h3 style="margin-bottom:4px">Notificações no Telegram</h3>
+        <p style="font-size:12.5px; color:var(--muted); margin-bottom:8px">
+          Todos os avisos (lead quente, reunião marcada, decisor, chip caiu) chegam nesses chats.
+          Pra entrar na lista: manda <b>/start</b> pro bot no Telegram e clica em "procurar novos" aqui.
+        </p>
+        <div id="tg-chats" style="font-size:13px; color:var(--muted)">carregando…</div>
+        <button class="btn mini sec" style="margin-top:6px" onclick="procurarChatsTelegram()">procurar novos</button>
         <hr style="border:none; border-top:1px solid var(--border); margin:14px 0">
         <h3 style="margin-bottom:6px">Horários de reunião</h3>
         <p style="font-size:13px; color:var(--muted)">Formato: dias|horas → <code>1,2,3,4,5|10:00,11:00,15:00,16:00</code> (1=seg … 7=dom)</p>
@@ -1808,7 +1828,11 @@ async function abrirConversa(id, auto) {
   $("#chat").innerHTML = `
     <div class="chat-topo">
       <b>${l.nome_clinica}</b> <span style="color:var(--muted); font-size:13px">${fmtTel(l.telefone)}${l.cidade ? " · " + l.cidade : ""}</span>
-      <button class="btn mini ${iaPausadaConv ? "" : "sec"}" onclick="toggleIA(${l.id}, ${iaPausadaConv ? 0 : 1})">${iaPausadaConv ? "Devolver pra IA" : "Assumir conversa"}</button>
+      <span class="ia-switch ${iaPausadaConv ? "off" : "on"}" onclick="toggleIA(${l.id}, ${iaPausadaConv ? 0 : 1})" title="${iaPausadaConv ? "clica pra DEVOLVER o atendimento pra IA" : "clica pra ASSUMIR o atendimento (IA para na hora)"}">
+        <span class="ia-pill">${iaPausadaConv ? "🧑 Atendida por você" : "🤖 Atendida pela IA"}</span>
+        <span class="ia-trilho"><span class="ia-bolinha"></span></span>
+        <span class="ia-rot">${iaPausadaConv ? "você no comando" : "IA atendendo"}</span>
+      </span>
       ${d.chip ? `<span class="tag" title="as mensagens dessa conversa saem por esse número">📱 ${d.chip.nome}${d.chip.numero ? " · " + fmtTel(d.chip.numero) : ""}</span>` : ""}
       <select onchange="mudarStatus(${l.id}, this.value)" style="font-size:12px">
         ${STATUS_COLS.map(([s, r]) => `<option value="${s}" ${l.status === s ? "selected" : ""}>${r}</option>`).join("")}
@@ -2935,6 +2959,7 @@ async function carregarConfig() {
   }
   carregarAudio();
   carregarWhats();
+  carregarChatsTelegram();
   api("/api/gcal-status").then((g) => {
     const linha = (nome, ok) => `<div style="display:flex; align-items:center; gap:10px; margin:6px 0">
       <span style="min-width:150px"><b>${nome[0].toUpperCase() + nome.slice(1)}</b>: ${ok ? "agenda conectada" : "não conectada"}</span>
@@ -2943,6 +2968,37 @@ async function carregarConfig() {
     $("#gcal-status").innerHTML = linha("matheus", g.matheus) + linha("valentino", g.valentino);
   });
 }
+// ---- notificacoes no Telegram: quem recebe os avisos ----
+async function carregarChatsTelegram(comRecentes = false) {
+  const d = await api("/api/telegram/chats").catch(() => null);
+  const el = $("#tg-chats");
+  if (!el) return;
+  if (!d) { el.textContent = "não deu pra consultar o Telegram"; return; }
+  const linhaAtual = (id) => `<div style="display:flex; gap:8px; align-items:center; margin:4px 0">
+    <span>🔔 chat <b>${id}</b>${id === d.principal ? " (principal)" : ""}</span>
+    ${id !== d.principal ? `<span onclick="removerChatTelegram('${id}')" style="cursor:pointer; color:#c62828; font-size:12px">remover</span>` : ""}
+  </div>`;
+  const linhaNovo = (c) => `<div style="display:flex; gap:8px; align-items:center; margin:4px 0">
+    <span>💬 <b>${c.nome}</b> mandou mensagem pro bot</span>
+    <button class="btn mini" style="font-size:11px" onclick="addChatTelegram('${c.id}')">receber avisos aqui</button>
+  </div>`;
+  el.innerHTML = (d.atuais.length ? d.atuais.map(linhaAtual).join("") : "<div>nenhum chat recebendo ainda</div>")
+    + (comRecentes ? (d.recentes.length ? `<div style="margin-top:8px; font-weight:700">novos no bot:</div>` + d.recentes.map(linhaNovo).join("")
+      : `<div style="margin-top:8px">ninguém novo falou com o bot. A pessoa precisa mandar <b>/start</b> pro bot e clicar aqui de novo.</div>`) : "");
+}
+const procurarChatsTelegram = () => carregarChatsTelegram(true);
+async function addChatTelegram(id) {
+  const r = await api("/api/telegram/chats", { method: "POST", body: JSON.stringify({ chat_id: id }) });
+  if (r?.erro) return alert(r.erro);
+  toast("chat adicionado — mandei uma mensagem de teste lá");
+  carregarChatsTelegram(true);
+}
+async function removerChatTelegram(id) {
+  if (!confirm("Esse chat vai parar de receber os avisos. Remover?")) return;
+  await api("/api/telegram/chats/" + id, { method: "DELETE" });
+  carregarChatsTelegram();
+}
+
 async function salvarConfig() {
   const body = {};
   for (const k of ["slots_matheus", "slots_valentino", "meet_matheus", "meet_valentino", "closer_valentino_ativo", "link_apresentacao"]) body[k] = $("#cfg-" + k).value;

@@ -1143,6 +1143,30 @@ app.get("/api/gcal/callback", async (req, res) => {
   }
 });
 
+// ---------- notificacoes no Telegram: quem recebe os alertas ----------
+app.get("/api/telegram/chats", auth, async (req, res) => {
+  const { chatsDestino, chatsRecentes } = await import("./lib/telegram.js");
+  const atuais = chatsDestino();
+  const recentes = (await chatsRecentes()).filter((c) => !atuais.includes(c.id));
+  res.json({ atuais, recentes, principal: process.env.TELEGRAM_CHAT_ID || null });
+});
+app.post("/api/telegram/chats", auth, async (req, res) => {
+  const chatId = String(req.body?.chat_id || "").trim();
+  if (!/^-?\d+$/.test(chatId)) return res.status(400).json({ erro: "chat_id inválido" });
+  const extras = String(getConfig("telegram_chats_extras", "") || "").split(",").map((c) => c.trim()).filter(Boolean);
+  if (!extras.includes(chatId)) setConfig("telegram_chats_extras", [...extras, chatId].join(","));
+  const { alertar } = await import("./lib/telegram.js");
+  await alertar(`✅ Esse chat agora recebe os avisos do Prospecta AI (adicionado por ${req.usuario?.nome || "alguém"} pelo painel).`);
+  res.json({ ok: true });
+});
+app.delete("/api/telegram/chats/:chatId", auth, (req, res) => {
+  const alvo = String(req.params.chatId);
+  if (alvo === String(process.env.TELEGRAM_CHAT_ID || "")) return res.status(400).json({ erro: "esse é o chat principal (fixado no servidor)" });
+  const extras = String(getConfig("telegram_chats_extras", "") || "").split(",").map((c) => c.trim()).filter(Boolean);
+  setConfig("telegram_chats_extras", extras.filter((c) => c !== alvo).join(","));
+  res.json({ ok: true });
+});
+
 // ---------- status da agenda Google por closer ----------
 app.get("/api/gcal-status", auth, async (req, res) => {
   const { statusConexao } = await import("./lib/gcal.js");
