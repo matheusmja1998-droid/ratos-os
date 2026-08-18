@@ -638,8 +638,12 @@ app.patch("/api/campanha/:id/templates", auth, (req, res) => {
 // vincula todos os leads status=novo (opcionalmente filtrando cidade) na campanha
 app.post("/api/campanha/:id/leads", auth, (req, res) => {
   const { cidade } = req.body || {};
-  const leads = db.prepare(`SELECT id FROM leads WHERE status = 'novo' ${cidade ? "AND cidade LIKE ?" : ""}`)
-    .all(...(cidade ? [`%${cidade}%`] : []));
+  // SO leads do funil da propria campanha — sem isso, "vincular" puxava lead de
+  // TODOS os funis (inclusive de outro dono) pra dentro da campanha errada
+  const camp = db.prepare("SELECT pipeline_id FROM campanhas WHERE id = ?").get(req.params.id);
+  if (!camp) return res.status(404).json({ erro: "campanha nao existe" });
+  const leads = db.prepare(`SELECT id FROM leads WHERE status = 'novo' AND COALESCE(pipeline_id,0) = COALESCE(?,0) ${cidade ? "AND cidade LIKE ?" : ""}`)
+    .all(camp.pipeline_id, ...(cidade ? [`%${cidade}%`] : []));
   const ins = db.prepare("INSERT OR IGNORE INTO campanha_leads (campanha_id, lead_id) VALUES (?, ?)");
   let n = 0;
   for (const l of leads) n += ins.run(req.params.id, l.id).changes;
