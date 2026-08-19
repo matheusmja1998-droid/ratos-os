@@ -4,7 +4,7 @@ import {
 } from 'class-validator';
 
 const SEXOS = ['masculino', 'feminino'];
-const NIVEIS = ['sedentario', 'leve', 'moderado', 'intenso', 'atleta'];
+const NIVEIS = ['sedentario', 'leve', 'moderado', 'intenso', 'muito_intenso'];
 const OBJETIVOS = ['emagrecer', 'manter', 'ganhar'];
 const PREPAROS = ['cru', 'cozido', 'grelhado', 'frito', 'assado', 'refogado', 'industrializado'];
 const FONTES = ['TACO', 'TBCA', 'USDA', 'ROTULO', 'USUARIO'];
@@ -19,6 +19,11 @@ export class RegistrarDto {
   @IsOptional() @IsNumber() @Min(120) @Max(250) alturaCm?: number;
   @IsOptional() @IsIn(NIVEIS) nivelAtividade?: string;
   @IsOptional() @IsIn(OBJETIVOS) objetivo?: string;
+
+  // Com o peso, o cadastro já sai com as metas calculadas e o primeiro
+  // ponto da série de peso registrado.
+  @IsOptional() @IsNumber() @Min(30) @Max(400) pesoKg?: number;
+  @IsOptional() @IsInt() @Min(0) @Max(1500) deficitKcal?: number;
 }
 
 export class EntrarDto {

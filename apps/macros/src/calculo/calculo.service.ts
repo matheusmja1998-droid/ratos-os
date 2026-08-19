@@ -60,17 +60,16 @@ export class CalculoService {
    * um alvo irrealisticamente baixo em pessoas altas.
    */
   calcularPesoAlvo(sexo: string, alturaCm: number): number {
-    const polegadasAcimaDe152 = Math.max(0, (alturaCm - 152.4) / 2.54);
-    const devine =
-      sexo === 'masculino'
-        ? 50 + 2.3 * polegadasAcimaDe152
-        : 45.5 + 2.3 * polegadasAcimaDe152;
+    const base = sexo === 'masculino' ? 50 : 45.5;
+    const alvo = base + 0.91 * (alturaCm - 152.4);
 
-    // Piso: IMC 20 costuma ser um alvo mais realista que Devine puro em pessoas altas.
+    // Piso de IMC 18,5 (limite inferior do peso saudável). Só entra em ação em
+    // estaturas baixas, onde a fórmula sozinha devolveria um alvo magro demais
+    // — e, como ela é a base da proteína, isso rebaixaria a meta proteica.
     const alturaM = alturaCm / 100;
-    const pisoImc20 = 20 * alturaM * alturaM;
+    const pisoSaudavel = 18.5 * alturaM * alturaM;
 
-    return Math.round(Math.max(devine, pisoImc20) * 10) / 10;
+    return Math.round(Math.max(alvo, pisoSaudavel));
   }
 
   /**
@@ -129,8 +128,9 @@ export class CalculoService {
     const tmb = Math.round(this.calcularTmb(d));
     const fator = NIVEIS_ATIVIDADE[d.nivelAtividade].fator;
     const getBruto = this.calcularGet(d);
-    // Arredonda pra dezena: a fórmula é estimativa, precisão decimal é ilusória.
-    const get = Math.round(getBruto / 10) * 10;
+    // Arredonda na centena antes de tudo: a fórmula é uma estimativa e carregar
+    // decimais adiante dá falsa precisão. Tudo depois usa este número.
+    const get = Math.round(getBruto / 100) * 100;
     const pesoAlvoKg = this.calcularPesoAlvo(d.sexo, d.alturaCm);
 
     const sinal = objetivo === 'emagrecer' ? -1 : objetivo === 'ganhar' ? 1 : 0;
@@ -157,12 +157,9 @@ export class CalculoService {
       );
     }
 
+    // GET já vem arredondado, então a meta sai inteira.
     const ajuste = sinal * deficitAplicado;
-    // Arredonda a meta pra cima quando há déficit: arredondar pra baixo poderia
-    // cruzar o piso da TMB que acabamos de proteger.
-    const metaBruta = get + ajuste;
-    const metaCalorica =
-      sinal < 0 ? Math.ceil(metaBruta / 10) * 10 : Math.round(metaBruta / 10) * 10;
+    const metaCalorica = get + ajuste;
 
     const macros = this.distribuirMacros(metaCalorica, pesoAlvoKg);
 
@@ -243,9 +240,11 @@ export class CalculoService {
         'É a energia do pedreiro pra levantar a parede. Leva o que sobrou, e é o macro que você ajusta quando estaciona.',
     });
 
-    if (d.nivelAtividade === 'intenso' || d.nivelAtividade === 'atleta') {
+    // Regra anti-superestimativa: o erro mais caro do método é inflar o nível
+    // de atividade, porque aí o déficit simplesmente não acontece.
+    if (d.nivelAtividade === 'intenso' || d.nivelAtividade === 'muito_intenso') {
       avisos.push(
-        'Você marcou um nível de atividade alto. Se na prática você não treina pesado quase todo dia, isso superestima seu gasto e o déficit não acontece. Na dúvida, escolha o nível abaixo.',
+        'Você marcou um nível de atividade alto. Caminhada leve diária não conta como treino: se na prática você não treina pesado quase todo dia, isso superestima seu gasto e o déficit não acontece. Na dúvida entre dois níveis, escolha sempre o menor.',
       );
     }
     if (metaCalorica < tmb && sinal >= 0) {
@@ -258,9 +257,17 @@ export class CalculoService {
         'Sua gordura está no piso mínimo. Cortar mais que isso compromete a produção hormonal.',
       );
     }
-    if (macros.carboidratoG <= CARBO_MINIMO_G) {
+    if (macros.carboidratoG < CARBO_MINIMO_G) {
       avisos.push(
-        'Seu carboidrato está bem baixo. A partir daqui, pra continuar progredindo, o caminho é aumentar o cardio em vez de cortar mais comida.',
+        `Seu carboidrato ficou em ${macros.carboidratoG} g, abaixo do mínimo de ${CARBO_MINIMO_G} g. O déficit está agressivo demais: reduza o déficit ou suba o nível de atividade.`,
+      );
+    }
+
+    // Piso calórico absoluto: abaixo disso não se sustenta nutrição adequada.
+    const pisoSexo = d.sexo === 'feminino' ? 1200 : 1500;
+    if (metaCalorica < pisoSexo) {
+      avisos.push(
+        `Sua meta (${metaCalorica} kcal) está abaixo de ${pisoSexo} kcal, o mínimo recomendado. Reduza o déficit e ganhe o resto com mais movimento.`,
       );
     }
 

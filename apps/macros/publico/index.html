@@ -19,12 +19,20 @@
 
   <section class="secao">
     <h2 id="entrada-titulo">Entrar</h2>
+    <p id="passo-indicador" class="tenue some"></p>
     <div id="campos-conta" class="pilha"></div>
     <div class="linha-flex" style="margin-top:1rem">
+      <button id="btn-voltar" class="leve some">Voltar</button>
       <button id="btn-entrar" class="cresce">Entrar</button>
       <button id="btn-alternar" class="leve">Criar conta</button>
     </div>
     <p id="erro-conta" class="nota some"></p>
+  </section>
+
+  <!-- Resultado do onboarding: a conta aberta, passo a passo -->
+  <section class="secao some" id="secao-resultado">
+    <h2>Sua conta</h2>
+    <div id="onboarding-resultado"></div>
   </section>
 </main>
 

@@ -15,10 +15,18 @@ export type Sexo = 'masculino' | 'feminino';
  */
 export const NIVEIS_ATIVIDADE = {
   sedentario: { fator: 1.2, rotulo: 'Sedentário', ajuda: 'Trabalho sentado, nenhum exercício regular' },
-  leve: { fator: 1.375, rotulo: 'Leve', ajuda: 'Exercício leve 1-3x/semana (ex: caminhada)' },
-  moderado: { fator: 1.55, rotulo: 'Moderado', ajuda: 'Musculação séria 3-5x/semana' },
-  intenso: { fator: 1.725, rotulo: 'Intenso', ajuda: 'Treino pesado 6-7x/semana' },
-  atleta: { fator: 1.9, rotulo: 'Atleta', ajuda: 'Treino 2x/dia ou trabalho físico pesado' },
+  leve: { fator: 1.375, rotulo: 'Leve', ajuda: 'Exercício 1 a 3x por semana' },
+  moderado: {
+    fator: 1.55,
+    rotulo: 'Moderado',
+    ajuda: 'Treino 3 a 5x por semana, com intensidade real',
+  },
+  intenso: { fator: 1.725, rotulo: 'Intenso', ajuda: 'Treino 6 a 7x por semana' },
+  muito_intenso: {
+    fator: 1.9,
+    rotulo: 'Muito intenso',
+    ajuda: 'Treino 2x por dia ou trabalho físico pesado',
+  },
 } as const;
 
 export type NivelAtividade = keyof typeof NIVEIS_ATIVIDADE;

@@ -45,13 +45,49 @@ describe('CalculoService', () => {
     expect(Math.abs(r.macros.calorias - r.metaCalorica)).toBeLessThanOrEqual(10);
   });
 
+  it('arredonda o GET na centena e o peso alvo em inteiro', () => {
+    const r = s.calcular(gustavo);
+    expect(r.get % 100).toBe(0);
+    expect(Number.isInteger(r.pesoAlvoKg)).toBe(true);
+  });
+
+  it('usa a fórmula de peso alvo da metodologia (0,91 por cm)', () => {
+    // Homem de 178 cm: 50 + 0,91 × (178 − 152,4) = 73,3 → 73
+    expect(s.calcularPesoAlvo('masculino', 178)).toBe(73);
+    // Mulher de 165 cm: 45,5 + 0,91 × (165 − 152,4) = 56,9 → 57
+    expect(s.calcularPesoAlvo('feminino', 165)).toBe(57);
+  });
+
+  it('avisa quando a meta fica abaixo do piso calórico do sexo', () => {
+    const r = s.calcular(
+      { sexo: 'feminino', idadeAnos: 60, pesoKg: 52, alturaCm: 150, nivelAtividade: 'sedentario' },
+      'emagrecer',
+      500,
+    );
+    if (r.metaCalorica < 1200) {
+      expect(r.avisos.some((a) => a.includes('1200'))).toBe(true);
+    }
+  });
+
+  it('avisa quando o carboidrato cai abaixo do mínimo', () => {
+    const r = s.calcular(
+      { sexo: 'feminino', idadeAnos: 55, pesoKg: 58, alturaCm: 172, nivelAtividade: 'sedentario' },
+      'emagrecer',
+      1000,
+    );
+    if (r.macros.carboidratoG < 50) {
+      expect(r.avisos.some((a) => a.includes('agressivo'))).toBe(true);
+    }
+  });
+
   it('limita o déficit a 25% do GET pra quem gasta pouco', () => {
     const r = s.calcular(
       { sexo: 'feminino', idadeAnos: 45, pesoKg: 60, alturaCm: 155, nivelAtividade: 'sedentario' },
       'emagrecer',
       500,
     );
-    expect(r.metaCalorica).toBeGreaterThan(r.tmb);
+    // A meta nunca desce abaixo da TMB (pode empatar com ela).
+    expect(r.metaCalorica).toBeGreaterThanOrEqual(r.tmb);
     expect(r.avisos.some((a) => a.includes('reduzido'))).toBe(true);
   });
 

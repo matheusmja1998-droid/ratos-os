@@ -39,7 +39,8 @@ const ENTIDADES = [Usuario, Meta, Alimento, Refeicao, ItemRefeicao, RegistroPeso
     DiarioController, MetasController, IaController,
   ],
   providers: [
-    AuthService, JwtStrategy, CalculoService, AlimentosService,
+    // CalculoService entra antes: o AuthService usa no onboarding.
+    CalculoService, AuthService, JwtStrategy, AlimentosService,
     DiarioService, PlanejadorService, ProgressoService, IaService,
   ],
 })

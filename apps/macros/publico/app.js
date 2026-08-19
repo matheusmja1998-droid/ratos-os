@@ -55,45 +55,120 @@ async function api(caminho, opcoes = {}) {
 /* ---------- entrada ---------- */
 
 const NIVEIS = [
-  ['sedentario', 'Sedentário — trabalho sentado, sem exercício'],
+  ['sedentario', 'Sedentário — trabalho sentado, nenhum exercício'],
   ['leve', 'Leve — exercício 1 a 3 vezes por semana'],
-  ['moderado', 'Moderado — treino sério 3 a 5 vezes'],
-  ['intenso', 'Intenso — treino pesado quase todo dia'],
-  ['atleta', 'Atleta — duas sessões por dia'],
+  ['moderado', 'Moderado — treino 3 a 5 vezes, intensidade real'],
+  ['intenso', 'Intenso — treino 6 a 7 vezes por semana'],
+  ['muito_intenso', 'Muito intenso — 2 treinos por dia ou trabalho pesado'],
+];
+
+/** Etapa atual do cadastro: 1 = quem é você, 2 = seu corpo, 3 = seu objetivo. */
+let etapa = 1;
+
+/**
+ * Guarda o que já foi preenchido entre as etapas do cadastro.
+ * Trocar de etapa redesenha o formulário, então os valores vivem aqui.
+ */
+const rascunho = {
+  nome: '', email: '', senha: '',
+  sexo: 'masculino', idadeAnos: '', alturaCm: '', pesoKg: '',
+  nivelAtividade: 'moderado', objetivo: 'emagrecer', deficitKcal: 500,
+};
+
+function guardarEtapaAtual() {
+  $$('#campos-conta [id^="e-"]').forEach((el) => {
+    const chave = el.dataset.campo;
+    if (chave) rascunho[chave] = el.value;
+  });
+}
+
+const ETAPAS = [
+  { titulo: 'Criar conta', indicador: 'Passo 1 de 3 · quem é você' },
+  { titulo: 'Seu corpo', indicador: 'Passo 2 de 3 · a base da conta' },
+  { titulo: 'Seu objetivo', indicador: 'Passo 3 de 3 · o quanto acelerar' },
 ];
 
 function montarCamposConta() {
-  const comuns = `
-    <div class="campo"><label for="e-email">E-mail</label>
-      <input id="e-email" type="email" autocomplete="email"></div>
-    <div class="campo"><label for="e-senha">Senha</label>
-      <input id="e-senha" type="password" autocomplete="current-password"></div>`;
+  const alvo = $('#campos-conta');
 
-  const extras = `
-    <div class="campo"><label for="e-nome">Nome</label>
-      <input id="e-nome" autocomplete="name"></div>
-    <div class="dupla">
-      <div class="campo"><label for="e-idade">Idade</label>
-        <input id="e-idade" type="number" inputmode="numeric"></div>
-      <div class="campo"><label for="e-altura">Altura (cm)</label>
-        <input id="e-altura" type="number" inputmode="numeric"></div>
-    </div>
-    <div class="dupla">
-      <div class="campo"><label for="e-sexo">Sexo</label>
-        <select id="e-sexo">
-          <option value="masculino">Masculino</option>
-          <option value="feminino">Feminino</option>
-        </select></div>
-      <div class="campo"><label for="e-nivel">Atividade</label>
-        <select id="e-nivel">
-          ${NIVEIS.map(([v, r]) => `<option value="${v}">${esc(r.split(' — ')[0])}</option>`).join('')}
-        </select></div>
-    </div>`;
+  // Login: dois campos e pronto.
+  if (!estado.criandoConta) {
+    alvo.innerHTML = `
+      <div class="campo"><label for="e-email">E-mail</label>
+        <input id="e-email" data-campo="email" type="email" autocomplete="email" value="${esc(rascunho.email)}"></div>
+      <div class="campo"><label for="e-senha">Senha</label>
+        <input id="e-senha" data-campo="senha" type="password" autocomplete="current-password"></div>`;
+    $('#entrada-titulo').textContent = 'Entrar';
+    $('#passo-indicador').classList.add('some');
+    $('#btn-entrar').textContent = 'Entrar';
+    $('#btn-voltar').classList.add('some');
+    $('#btn-alternar').textContent = 'Criar conta';
+    $('#btn-alternar').classList.remove('some');
+    return;
+  }
 
-  $('#campos-conta').innerHTML = estado.criandoConta ? extras + comuns : comuns;
-  $('#entrada-titulo').textContent = estado.criandoConta ? 'Criar conta' : 'Entrar';
-  $('#btn-entrar').textContent = estado.criandoConta ? 'Criar conta' : 'Entrar';
-  $('#btn-alternar').textContent = estado.criandoConta ? 'Já tenho conta' : 'Criar conta';
+  if (etapa === 1) {
+    alvo.innerHTML = `
+      <div class="campo"><label for="e-nome">Como você se chama</label>
+        <input id="e-nome" data-campo="nome" autocomplete="name" value="${esc(rascunho.nome)}"></div>
+      <div class="campo"><label for="e-email">E-mail</label>
+        <input id="e-email" data-campo="email" type="email" autocomplete="email" value="${esc(rascunho.email)}"></div>
+      <div class="campo"><label for="e-senha">Senha</label>
+        <input id="e-senha" data-campo="senha" type="password" autocomplete="new-password" value="${esc(rascunho.senha)}">
+        <small class="tenue">Pelo menos 8 caracteres.</small></div>`;
+  }
+
+  if (etapa === 2) {
+    alvo.innerHTML = `
+      <p class="tenue">Esses números são a base do cálculo. Se algum estiver errado, a meta sai errada junto.</p>
+      <div class="dupla" style="margin-top:.8rem">
+        <div class="campo"><label for="e-idade">Idade</label>
+          <input id="e-idade" data-campo="idadeAnos" type="number" inputmode="numeric" value="${esc(rascunho.idadeAnos)}"></div>
+        <div class="campo"><label for="e-altura">Altura (cm)</label>
+          <input id="e-altura" data-campo="alturaCm" type="number" inputmode="numeric" placeholder="178" value="${esc(rascunho.alturaCm)}">
+          <small class="tenue">Em centímetros: 178, não 1,78.</small></div>
+      </div>
+      <div class="dupla">
+        <div class="campo"><label for="e-peso">Peso hoje (kg)</label>
+          <input id="e-peso" data-campo="pesoKg" type="number" step="0.1" inputmode="decimal" value="${esc(rascunho.pesoKg)}"></div>
+        <div class="campo"><label for="e-sexo">Sexo</label>
+          <select id="e-sexo" data-campo="sexo">
+            <option value="masculino"${rascunho.sexo === 'masculino' ? ' selected' : ''}>Masculino</option>
+            <option value="feminino"${rascunho.sexo === 'feminino' ? ' selected' : ''}>Feminino</option>
+          </select></div>
+      </div>`;
+  }
+
+  if (etapa === 3) {
+    alvo.innerHTML = `
+      <div class="campo"><label for="e-nivel">Quanto você se movimenta</label>
+        <select id="e-nivel" data-campo="nivelAtividade">
+          ${NIVEIS.map(([v, r]) =>
+            `<option value="${v}"${rascunho.nivelAtividade === v ? ' selected' : ''}>${esc(r)}</option>`).join('')}
+        </select></div>
+      <p class="nota">Caminhada leve todo dia não conta como treino. Na dúvida entre dois níveis, escolha o menor: superestimar aqui faz o déficit simplesmente não acontecer.</p>
+      <div class="dupla">
+        <div class="campo"><label for="e-objetivo">Objetivo</label>
+          <select id="e-objetivo" data-campo="objetivo">
+            <option value="emagrecer"${rascunho.objetivo === 'emagrecer' ? ' selected' : ''}>Emagrecer</option>
+            <option value="manter"${rascunho.objetivo === 'manter' ? ' selected' : ''}>Manter o peso</option>
+            <option value="ganhar"${rascunho.objetivo === 'ganhar' ? ' selected' : ''}>Ganhar massa</option>
+          </select></div>
+        <div class="campo"><label for="e-deficit">Déficit (kcal)</label>
+          <select id="e-deficit" data-campo="deficitKcal">
+            <option value="500"${String(rascunho.deficitKcal) === '500' ? ' selected' : ''}>500 — meio quilo por semana</option>
+            <option value="1000"${String(rascunho.deficitKcal) === '1000' ? ' selected' : ''}>1000 — só com obesidade alta</option>
+          </select></div>
+      </div>`;
+  }
+
+  $('#entrada-titulo').textContent = ETAPAS[etapa - 1].titulo;
+  $('#passo-indicador').textContent = ETAPAS[etapa - 1].indicador;
+  $('#passo-indicador').classList.remove('some');
+  $('#btn-entrar').textContent = etapa === 3 ? 'Ver minha conta' : 'Continuar';
+  $('#btn-voltar').classList.toggle('some', etapa === 1);
+  $('#btn-alternar').textContent = 'Já tenho conta';
+  $('#btn-alternar').classList.toggle('some', etapa !== 1);
 }
 
 function mostrarErroConta(msg) {
@@ -102,40 +177,170 @@ function mostrarErroConta(msg) {
   el.classList.toggle('some', !msg);
 }
 
+/** Valida a etapa atual e devolve o que estiver errado, em linguagem direta. */
+function validarEtapa() {
+  if (etapa === 1) {
+    if (rascunho.nome.trim().length < 2) return 'Escreva seu nome.';
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(rascunho.email.trim())) return 'E-mail inválido.';
+    if (rascunho.senha.length < 8) return 'A senha precisa de pelo menos 8 caracteres.';
+  }
+  if (etapa === 2) {
+    const idade = Number(rascunho.idadeAnos);
+    const altura = Number(rascunho.alturaCm);
+    const peso = Number(rascunho.pesoKg);
+    if (!idade || idade < 14 || idade > 100) return 'Informe uma idade entre 14 e 100.';
+    if (!altura || altura < 120 || altura > 250) {
+      return altura && altura < 3
+        ? 'A altura vai em centímetros: 178, não 1,78.'
+        : 'Informe a altura em centímetros, entre 120 e 250.';
+    }
+    if (!peso || peso < 30 || peso > 400) return 'Informe seu peso de hoje, em quilos.';
+  }
+  return null;
+}
+
 async function autenticar() {
   mostrarErroConta('');
-  const email = $('#e-email').value.trim();
-  const senha = $('#e-senha').value;
 
+  // Login continua sendo um passo só.
+  if (!estado.criandoConta) {
+    try {
+      const dados = await api('/auth/entrar', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: $('#e-email').value.trim(),
+          senha: $('#e-senha').value,
+        }),
+      });
+      estado.token = dados.token;
+      estado.usuario = dados.usuario;
+      localStorage.setItem(guardaToken, dados.token);
+      await abrirApp();
+    } catch (e) {
+      mostrarErroConta(e.message);
+    }
+    return;
+  }
+
+  guardarEtapaAtual();
+  const problema = validarEtapa();
+  if (problema) { mostrarErroConta(problema); return; }
+
+  // Ainda há etapas pela frente.
+  if (etapa < 3) {
+    etapa += 1;
+    montarCamposConta();
+    window.scrollTo(0, 0);
+    return;
+  }
+
+  // Última etapa: cria a conta já com as metas calculadas.
+  const botao = $('#btn-entrar');
+  botao.disabled = true;
+  botao.textContent = 'calculando…';
   try {
-    const dados = estado.criandoConta
-      ? await api('/auth/registrar', {
-          method: 'POST',
-          body: JSON.stringify({
-            email, senha,
-            nome: $('#e-nome').value.trim(),
-            idadeAnos: Number($('#e-idade').value) || undefined,
-            alturaCm: Number($('#e-altura').value) || undefined,
-            sexo: $('#e-sexo').value,
-            nivelAtividade: $('#e-nivel').value,
-          }),
-        })
-      : await api('/auth/entrar', { method: 'POST', body: JSON.stringify({ email, senha }) });
+    const dados = await api('/auth/registrar', {
+      method: 'POST',
+      body: JSON.stringify({
+        nome: rascunho.nome.trim(),
+        email: rascunho.email.trim(),
+        senha: rascunho.senha,
+        sexo: rascunho.sexo,
+        idadeAnos: Number(rascunho.idadeAnos),
+        alturaCm: Number(rascunho.alturaCm),
+        pesoKg: Number(rascunho.pesoKg),
+        nivelAtividade: rascunho.nivelAtividade,
+        objetivo: rascunho.objetivo,
+        deficitKcal:
+          rascunho.objetivo === 'manter' ? 0 : Number(rascunho.deficitKcal) || 500,
+      }),
+    });
 
     estado.token = dados.token;
     estado.usuario = dados.usuario;
     localStorage.setItem(guardaToken, dados.token);
-    await abrirApp();
+
+    if (dados.calculo) mostrarContaDoOnboarding(dados.calculo);
+    else await abrirApp();
   } catch (e) {
     mostrarErroConta(e.message);
+    botao.disabled = false;
+    botao.textContent = 'Ver minha conta';
   }
+}
+
+/**
+ * Fecha o cadastro mostrando a conta inteira antes de entrar no app.
+ *
+ * É o ponto do método: a pessoa vê de onde saiu cada número e pode refazer no
+ * papel. Entregar a meta pronta sem mostrar a conta seria o oposto disso.
+ */
+function mostrarContaDoOnboarding(calculo) {
+  // O formulário sai de cena inteiro: deixar o cabeçalho dele acima do
+  // resultado criaria um bloco vazio.
+  $('#entrada-titulo').closest('.secao').classList.add('some');
+
+  const m = calculo.macros;
+  $('#onboarding-resultado').innerHTML = `
+    <div class="calorias-linha">
+      <div>
+        <div class="calorias-num">${arred(calculo.metaCalorica)}</div>
+        <div class="tenue">kcal por dia</div>
+      </div>
+      <div class="calorias-de">
+        gasto estimado ${arred(calculo.get)}<br>
+        peso alvo ${arred(calculo.pesoAlvoKg)} kg
+      </div>
+    </div>
+
+    <div class="macros" style="margin:1rem 0">
+      <div class="macro-nome"><b>proteína</b><span>${arred(m.proteinaG)} g · não se mexe</span></div>
+      <div class="macro-nome"><b>carboidrato</b><span>${arred(m.carboidratoG)} g · macro de ajuste</span></div>
+      <div class="macro-nome"><b>gordura</b><span>${arred(m.gorduraG)} g</span></div>
+    </div>
+
+    ${calculo.avisos.map((a) => `<p class="nota">${esc(a)}</p>`).join('')}
+
+    <details style="margin-top:1rem">
+      <summary style="cursor:pointer;font-family:var(--serif);font-weight:600">
+        Ver a conta passo a passo
+      </summary>
+      <div style="margin-top:.8rem">
+        ${calculo.passos.map((p) => `
+          <div class="passo">
+            <b>${p.ordem}. ${esc(p.titulo)}</b>
+            <div class="conta">${esc(p.formula)}</div>
+            <div class="conta">${esc(p.substituicao)} = ${esc(p.resultado)}</div>
+            <div class="porque">${esc(p.porque)}</div>
+          </div>`).join('')}
+      </div>
+    </details>
+
+    <button id="btn-comecar" style="margin-top:1.2rem;width:100%">Começar a usar</button>`;
+
+  $('#secao-resultado').classList.remove('some');
+  window.scrollTo(0, 0);
+
+  $('#btn-comecar').addEventListener('click', async () => {
+    $('#secao-resultado').classList.add('some');
+    $('#entrada-titulo').closest('.secao').classList.remove('some');
+    await abrirApp();
+  });
 }
 
 function sair() {
   localStorage.removeItem(guardaToken);
   estado.token = null;
   estado.usuario = null;
+  estado.criandoConta = false;
+  etapa = 1;
   $('#app').classList.add('some');
+  $('#secao-resultado').classList.add('some');
+  $('#entrada-titulo').closest('.secao').classList.remove('some');
+  $$('#btn-entrar, #btn-alternar').forEach((b) => b.classList.remove('some'));
+  $('#btn-entrar').disabled = false;
+  $('#erro-conta').classList.add('some');
+  montarCamposConta();
   $('#tela-entrada').classList.remove('some');
 }
 
@@ -587,6 +792,14 @@ async function abrirApp() {
 $('#btn-entrar').addEventListener('click', autenticar);
 $('#btn-alternar').addEventListener('click', () => {
   estado.criandoConta = !estado.criandoConta;
+  etapa = 1;
+  montarCamposConta();
+  mostrarErroConta('');
+});
+
+$('#btn-voltar').addEventListener('click', () => {
+  guardarEtapaAtual();
+  if (etapa > 1) etapa -= 1;
   montarCamposConta();
   mostrarErroConta('');
 });
