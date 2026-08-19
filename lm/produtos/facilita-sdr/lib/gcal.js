@@ -69,14 +69,14 @@ async function accessToken(closer) {
  * Cria evento de 30min no calendario primario do closer com Meet automatico.
  * inicio = "AAAA-MM-DDTHH:MM" (hora de parede SP). Best-effort: null em falha.
  */
-export async function criarEventoMeet(closer, inicio, { resumo, descricao, duracaoMin = 30 } = {}) {
+export async function criarEventoMeet(closer, inicio, { resumo, descricao, duracaoMin = 30, convidados = [] } = {}) {
   const token = await accessToken(closer);
   if (!token) return null;
   const fim = new Date(new Date(`${inicio}:00-03:00`).getTime() + duracaoMin * 60_000)
     .toISOString(); // fim em UTC; o Google aceita com timeZone no start
   try {
     const res = await fetch(
-      "https://www.googleapis.com/calendar/v3/calendars/primary/events?conferenceDataVersion=1",
+      "https://www.googleapis.com/calendar/v3/calendars/primary/events?conferenceDataVersion=1&sendUpdates=all",
       {
         method: "POST",
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
@@ -86,6 +86,8 @@ export async function criarEventoMeet(closer, inicio, { resumo, descricao, durac
           start: { dateTime: `${inicio}:00`, timeZone: "America/Sao_Paulo" },
           end: { dateTime: fim },
           conferenceData: { createRequest: { requestId: `sdr-${Date.now()}-${Math.floor(Math.random() * 1e6)}`, conferenceSolutionKey: { type: "hangoutsMeet" } } },
+          // convidados (o socio recebe o convite na agenda dele tambem)
+          ...(convidados.length ? { attendees: convidados.map((email) => ({ email })) } : {}),
           reminders: { useDefault: true },
         }),
         signal: AbortSignal.timeout(15_000),

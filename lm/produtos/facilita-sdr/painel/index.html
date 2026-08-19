@@ -722,6 +722,13 @@ VOCÊ: Opa! Aqui é o Matheus..."></textarea>
         <h3 style="margin-bottom:6px">Agenda Google (Meet automático)</h3>
         <p style="font-size:12px; color:var(--muted); margin-bottom:8px">Conecte sua agenda 1 vez. Reunião marcada pela IA vira evento na agenda com link do Meet gerado sozinho. Se o Google avisar "app não verificado": Avançado → Ir para o app.</p>
         <div id="gcal-status" style="font-size:13px; color:var(--muted)">verificando…</div>
+        <p style="font-size:12.5px; color:var(--muted); margin:10px 0 4px">
+          <b>Convite pro sócio:</b> toda reunião marcada pela IA convida o outro também. Precisa do e-mail de cada agenda:
+        </p>
+        <div style="display:flex; gap:6px; flex-wrap:wrap">
+          <input id="cfg-gcal_email_matheus" placeholder="e-mail da agenda do Matheus" style="flex:1; min-width:200px; font-size:12.5px; padding:7px">
+          <input id="cfg-gcal_email_valentino" placeholder="e-mail da agenda do Valentino" style="flex:1; min-width:200px; font-size:12.5px; padding:7px">
+        </div>
         <hr style="border:none; border-top:1px solid var(--border); margin:14px 0">
         <h3 style="margin-bottom:4px">Notificações no Telegram</h3>
         <p style="font-size:12.5px; color:var(--muted); margin-bottom:8px">
@@ -2957,7 +2964,7 @@ async function patchReuniao(id, status) { await api("/api/reuniao/" + id, { meth
 // config
 async function carregarConfig() {
   const c = await api("/api/config");
-  for (const k of ["slots_matheus", "slots_valentino", "meet_matheus", "meet_valentino", "closer_valentino_ativo", "link_apresentacao"]) {
+  for (const k of ["slots_matheus", "slots_valentino", "meet_matheus", "meet_valentino", "closer_valentino_ativo", "link_apresentacao", "link_site", "gcal_email_matheus", "gcal_email_valentino"]) {
     const el = $("#cfg-" + k); if (el) el.value = c[k] || (k.startsWith("slots") ? "1,2,3,4,5|10:00,11:00,15:00,16:00" : k === "closer_valentino_ativo" ? "1" : "");
   }
   carregarAudio();
@@ -3031,7 +3038,9 @@ async function removerChatTelegram(id) {
 
 async function salvarConfig() {
   const body = {};
-  for (const k of ["slots_matheus", "slots_valentino", "meet_matheus", "meet_valentino", "closer_valentino_ativo", "link_apresentacao"]) body[k] = $("#cfg-" + k).value;
+  for (const k of ["slots_matheus", "slots_valentino", "meet_matheus", "meet_valentino", "closer_valentino_ativo", "link_apresentacao", "link_site", "gcal_email_matheus", "gcal_email_valentino"]) {
+    const el = $("#cfg-" + k); if (el) body[k] = el.value;
+  }
   await api("/api/config", { method: "POST", body: JSON.stringify(body) });
   $("#cfg-ok").textContent = "salvo ✓"; setTimeout(() => $("#cfg-ok").textContent = "", 2000);
 }

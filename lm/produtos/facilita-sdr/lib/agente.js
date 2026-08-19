@@ -120,6 +120,7 @@ Data/hora em São Paulo: ${data} ${hora} (${DIAS_PT[diaSemana]})
 - Dor mapeada: ${lead.dor || "nenhuma ainda"}
 - Status: ${lead.status}
 - LINK_APRESENTACAO: ${getConfig("link_apresentacao", "") || "(não configurado — NUNCA mencione link de apresentação)"}
+- LINK_SITE: ${getConfig("link_site", "https://facilitaai-lp.lovable.app") || "(não configurado — se pedirem site/Instagram, ofereça mandar o material por aqui)"}
 
 ## HORARIOS_DISPONIVEIS
 ${horarios}
@@ -283,9 +284,16 @@ async function executarAcoes(lead, acoes, instanceToken, thread = null) {
       let meet = getConfig(`meet_${closer}`, "");
       let gcalId = null;
       if (!simulado) {
+        // convidados: o outro socio SEMPRE recebe o convite (os dois na agenda);
+        // e-mails em config `convidados_reuniao` (separados por virgula) entram junto
+        const convidados = [
+          getConfig(`gcal_email_${closer === "matheus" ? "valentino" : "matheus"}`, ""),
+          ...String(getConfig("convidados_reuniao", "") || "").split(",").map((x) => x.trim()),
+        ].filter((e) => e && e.includes("@"));
         const ev = await criarEventoMeet(closer, acao.inicio, {
           resumo: `Facilita × ${lead.nome_clinica}`,
           descricao: `Reunião marcada pelo SDR.\nClínica: ${lead.nome_clinica} (${lead.cidade || "?"})\nContato: ${lead.nome_contato || "?"} · ${lead.telefone}\nDor: ${lead.dor || "ver conversa no painel"}`,
+          convidados,
         });
         if (ev) { gcalId = ev.eventId; if (ev.meet) meet = ev.meet; }
       }

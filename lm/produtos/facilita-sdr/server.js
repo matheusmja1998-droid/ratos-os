@@ -1003,6 +1003,7 @@ app.get("/api/audio-info", auth, (req, res) => {
 app.get("/api/config", auth, (req, res) => {
   const chaves = ["slots_matheus", "slots_valentino", "meet_matheus", "meet_valentino",
     "closer_matheus_ativo", "closer_valentino_ativo", "audio_oficial", "instancia_status",
+    "link_site", "gcal_email_matheus", "gcal_email_valentino", "convidados_reuniao",
     "treino_geral", "treino_pitch", "treino_objecoes", "treino_exemplo", "link_apresentacao"];
   res.json(Object.fromEntries(chaves.map((c) => [c, getConfig(c, "")])));
 });
@@ -1108,7 +1109,7 @@ app.get("/api/gcal/conectar", (req, res) => {
     client_id: process.env.GOOGLE_CLIENT_ID || "",
     redirect_uri: `${process.env.APP_URL}/api/gcal/callback`,
     response_type: "code",
-    scope: "https://www.googleapis.com/auth/calendar.events",
+    scope: "https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.email",
     access_type: "offline",
     prompt: "consent",
     state,
@@ -1136,6 +1137,13 @@ app.get("/api/gcal/callback", async (req, res) => {
     const d = await r.json();
     if (!d.refresh_token) return res.status(502).send("Google nao devolveu autorizacao: " + JSON.stringify(d).slice(0, 200));
     setConfig(`gcal_refresh_${closer}`, d.refresh_token);
+    // guarda o E-MAIL da agenda: usado pra convidar o socio nas reunioes marcadas
+    try {
+      const perfil = await (await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+        headers: { Authorization: `Bearer ${d.access_token}` }, signal: AbortSignal.timeout(8_000),
+      })).json();
+      if (perfil?.email) setConfig(`gcal_email_${closer}`, perfil.email);
+    } catch { /* sem e-mail: convite do socio so nao acontece */ }
     registrarEvento(null, "gcal", `agenda conectada: ${closer}`);
     res.redirect(`${PAINEL_URL}?gcal=${closer}`);
   } catch (e) {
