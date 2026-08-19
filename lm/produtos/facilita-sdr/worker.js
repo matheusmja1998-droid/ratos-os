@@ -9,6 +9,8 @@ import {
   metricas, atualizarLead, followupsVencidos, limparFollowup, removerDaFila,
   listarInstancias, instanciasConectadas, proximaInstanciaDisparo, addDisparoInstancia, zerarDisparosInstancias, atualizarInstancia,
   leadsPraReengajar, marcarReengajado, reengajamentosHoje, instanciaDoLead, fixarChipDoLead,
+  threadsPraReengajar, marcarReengajadoThread, MAX_FOLLOWS_CONVERSA, MAX_FOLLOWS_DECISOR,
+  addTarefa, getPipeline, sincronizarEtapa,
 } from "./lib/db.js";
 import { responderLead } from "./lib/agente.js";
 import { enviarTexto, statusInstanciaLive, checarWhatsapp } from "./lib/uazapi.js";
@@ -207,9 +209,10 @@ async function tickReengajar() {
   // reengajamento em rajada, mesmo ritmo humano das aberturas (3-7 min).
   if (Date.now() < Number(getConfig("proximo_disparo_em", "0"))) return; // gate global
   const horas = Number(getConfig("reengajar_horas", "20"));
+
+  // 1) EM CONVERSA (numero da empresa): ate MAX_FOLLOWS_CONVERSA follows
   for (const lead of leadsPraReengajar(horas)) {
     if (String(lead.telefone).startsWith("0000")) continue;
-    // teto e cota avaliados pela campanha DO FUNIL do lead
     const camp = campanhaDaPipeline(lead.pipeline_id) || campanhasAtivas()[0] || null;
     if (camp) {
       if (disparosHojeDaCampanha(camp) >= camp.teto_dia) continue;
@@ -219,14 +222,80 @@ async function tickReengajar() {
     const inst = chipDoLead(lead);
     if (!inst) continue; // chip do lead fora: nao reengaja por outro numero
     if (!chipComFolga(inst)) continue; // cota do numero batida: fica pra depois
-    marcarReengajado(lead.id); // marca ANTES (nunca insiste, mesmo se falhar)
-    salvarMensagem(lead.id, "sistema", "[o lead parou de responder; retome com naturalidade uma mensagem curta pra reengajar, sem soar cobrança]");
+    const n = marcarReengajado(lead.id); // marca ANTES (nunca insiste, mesmo se falhar)
+    salvarMensagem(lead.id, "sistema", `[follow-up ${n} de ${MAX_FOLLOWS_CONVERSA}: o lead parou de responder; retome com naturalidade UMA mensagem curta, sem soar cobranca]`);
     await responderLead(lead.id, inst.uazapi_token);
     addDisparoInstancia(inst.id);
-    registrarEvento(lead.id, "reengajamento", `${horas}h sem resposta`);
+    registrarEvento(lead.id, "reengajamento", `follow ${n}/${MAX_FOLLOWS_CONVERSA} · ${horas}h sem resposta`);
+    tarefaDeFollow(lead, `IA fez o follow-up ${n} de ${MAX_FOLLOWS_CONVERSA} (empresa)`);
     if (camp) setConfig("proximo_disparo_em", Date.now() + rand(camp.cadencia_min_seg, camp.cadencia_max_seg) * 1000);
     return; // 1 por tick + gate de cadencia
   }
+
+  // 2) CONTATO C/ DECISOR (thread dele): ate MAX_FOLLOWS_DECISOR follows
+  for (const th of threadsPraReengajar(horas)) {
+    if (String(th.telefone).startsWith("0000")) continue;
+    const lead = getLead(th.lead_id);
+    if (!lead) continue;
+    const camp = campanhaDaPipeline(lead.pipeline_id) || campanhasAtivas()[0] || null;
+    if (camp && disparosHojeDaCampanha(camp) >= camp.teto_dia) continue;
+    const inst = instanciaDoLead(lead, th.instancia_id) || null;
+    if (!inst || !chipComFolga(inst)) continue;
+    const n = marcarReengajadoThread(th.id);
+    const ins = salvarMensagem(lead.id, "sistema", `[follow-up ${n} de ${MAX_FOLLOWS_DECISOR} com o decisor: ele parou de responder; retome com UMA mensagem curta e natural, sem cobrar]`);
+    db.prepare("UPDATE mensagens SET thread_id = ? WHERE id = ?").run(th.id, ins.lastInsertRowid);
+    await responderLead(lead.id, inst.uazapi_token, { threadId: th.id });
+    addDisparoInstancia(inst.id);
+    registrarEvento(lead.id, "reengajamento", `decisor: follow ${n}/${MAX_FOLLOWS_DECISOR}`);
+    tarefaDeFollow(lead, `IA fez o follow-up ${n} de ${MAX_FOLLOWS_DECISOR} com o decisor (${lead.nome_decisor || th.rotulo || "decisor"})`);
+    if (camp) setConfig("proximo_disparo_em", Date.now() + rand(camp.cadencia_min_seg, camp.cadencia_max_seg) * 1000);
+    return;
+  }
+}
+
+// TAREFA VISIVEL do follow: aparece no card pra pessoa saber que a IA cobrou
+function tarefaDeFollow(lead, texto) {
+  try {
+    const dono = getPipeline(lead.pipeline_id)?.usuario_id || lead.usuario_id || null;
+    addTarefa(lead.id, texto, agoraSP().data, { tipo: "followup", usuario_id: dono });
+  } catch (e) {
+    registrarEvento(lead.id, "erro", "tarefa de follow falhou: " + e.message);
+  }
+}
+
+// ESGOTOU A REGUA -> PERDIDO. Roda 1x por hora: quem ja levou todos os follows
+// (2 na empresa / 3 no decisor) e continua mudo vira perdido com o motivo certo.
+async function tickEsgotados() {
+  const horas = Number(getConfig("reengajar_horas", "20"));
+  const finais = ["optout", "descartado", "perdido", "fechado", "reuniao_marcada", "compareceu", "trial"];
+
+  const conversas = db.prepare(`SELECT l.* FROM leads l
+    WHERE l.eh_teste = 0 AND l.ia_pausada = 0
+      AND l.status IN ('respondeu','em_conversa')
+      AND (l.telefone_decisor IS NULL OR l.telefone_decisor = '')
+      AND COALESCE(l.follows_feitos,0) >= ?
+      AND (SELECT role FROM mensagens WHERE lead_id = l.id ORDER BY id DESC LIMIT 1) = 'assistant'
+      AND (SELECT criado_em FROM mensagens WHERE lead_id = l.id ORDER BY id DESC LIMIT 1) <= datetime('now', '-' || ? || ' hours')
+    LIMIT 20`).all(MAX_FOLLOWS_CONVERSA, horas);
+  for (const l of conversas) {
+    atualizarLead(l.id, { status: "perdido", motivo_perda: `sem resposta apos ${MAX_FOLLOWS_CONVERSA} follow-ups` });
+    registrarEvento(l.id, "perdido", `regua esgotada (${MAX_FOLLOWS_CONVERSA} follows sem resposta)`);
+  }
+
+  const decisores = db.prepare(`SELECT t.*, l.id lead_id2 FROM threads t JOIN leads l ON l.id = t.lead_id
+    WHERE l.eh_teste = 0 AND l.ia_pausada = 0 AND t.ia_pausada = 0
+      AND l.status NOT IN (${finais.map(() => "?").join(",")})
+      AND t.telefone <> l.telefone
+      AND COALESCE(t.follows_feitos,0) >= ?
+      AND (SELECT role FROM mensagens WHERE thread_id = t.id ORDER BY id DESC LIMIT 1) = 'assistant'
+      AND (SELECT criado_em FROM mensagens WHERE thread_id = t.id ORDER BY id DESC LIMIT 1) <= datetime('now', '-' || ? || ' hours')
+    LIMIT 20`).all(...finais, MAX_FOLLOWS_DECISOR, horas);
+  for (const t of decisores) {
+    atualizarLead(t.lead_id, { status: "perdido", motivo_perda: `decisor nao respondeu apos ${MAX_FOLLOWS_DECISOR} follow-ups` });
+    registrarEvento(t.lead_id, "perdido", `regua do decisor esgotada (${MAX_FOLLOWS_DECISOR} follows)`);
+  }
+  if (conversas.length + decisores.length)
+    console.log(`[regua] ${conversas.length + decisores.length} lead(s) movidos pra perdido (follow-ups esgotados)`);
 }
 
 // ---------- watchdog da instancia ----------
@@ -303,6 +372,8 @@ export function iniciarWorker() {
   };
   setInterval(tick, 25_000);
   setInterval(() => tickWatchdog().catch(() => {}), 5 * 60_000);
+  // regua esgotada -> perdido: de hora em hora (nao precisa ser no tick rapido)
+  setInterval(() => tickEsgotados().catch((e) => console.error("[regua]", e.message)), 60 * 60_000);
   tickWatchdog().catch(() => {});
-  console.log("[worker] iniciado (tick 25s, watchdog 5min)");
+  console.log("[worker] iniciado (tick 25s, watchdog 5min, regua 1h)");
 }

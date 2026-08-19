@@ -160,6 +160,10 @@ for (const sql of [
   "ALTER TABLE leads ADD COLUMN instancia_id INTEGER",
   "ALTER TABLE instancias ADD COLUMN pipeline_id INTEGER",
   "ALTER TABLE instancias ADD COLUMN usuario_id INTEGER",
+  "ALTER TABLE leads ADD COLUMN follows_feitos INTEGER DEFAULT 0",
+  "ALTER TABLE leads ADD COLUMN ultimo_follow_em TEXT",
+  "ALTER TABLE threads ADD COLUMN follows_feitos INTEGER DEFAULT 0",
+  "ALTER TABLE threads ADD COLUMN ultimo_follow_em TEXT",
   // mapa clique-da-ligacao -> etapa (JSON {"nao_atendeu": etapaId, ...}); configuravel por pipeline
   "ALTER TABLE pipelines ADD COLUMN mapa_ligacao TEXT",
 ]) { try { db.exec(sql); } catch { /* ja existe */ } }
@@ -724,17 +728,50 @@ export const removerTarefa = (id) => db.prepare("DELETE FROM tarefas WHERE id = 
 // REENGAJAMENTO: leads que ENGAJARAM (respondeu/em conversa/decisor/negociando) e
 // PARARAM de responder — a ultima mensagem foi NOSSA ha mais de `horas`. A IA cobra
 // sozinha 1x (marca reengajado_em pra nao insistir). So em horario comercial (worker).
+// REGUA DE FOLLOW-UP (cadencia diaria, 1 por dia por lead):
+//   EM CONVERSA (empresa, sem contato do decisor): ate 2 follows -> depois PERDIDO
+//   CONTATO C/ DECISOR (thread do decisor): ate 3 follows -> depois PERDIDO
+// Espera `horas` desde a ultima mensagem NOSSA e so 1 follow por dia civil SP.
+export const MAX_FOLLOWS_CONVERSA = 2;
+export const MAX_FOLLOWS_DECISOR = 3;
+
 export const leadsPraReengajar = (horas = 20) =>
   db.prepare(`SELECT l.* FROM leads l
-    WHERE l.eh_teste = 0 AND l.ia_pausada = 0 AND l.reengajado_em IS NULL
+    WHERE l.eh_teste = 0 AND l.ia_pausada = 0
+      AND COALESCE(l.follows_feitos,0) < ?
       AND l.status IN ('respondeu','em_conversa')
       AND (l.telefone_decisor IS NULL OR l.telefone_decisor = '')
       AND l.telefone NOT IN (SELECT telefone FROM blocklist)
       AND (SELECT role FROM mensagens WHERE lead_id = l.id ORDER BY id DESC LIMIT 1) = 'assistant'
       AND (SELECT criado_em FROM mensagens WHERE lead_id = l.id ORDER BY id DESC LIMIT 1) <= datetime('now', '-' || ? || ' hours')
-    LIMIT 5`).all(horas);
-export const marcarReengajado = (leadId) =>
-  db.prepare("UPDATE leads SET reengajado_em = datetime('now') WHERE id = ?").run(leadId);
+      AND (l.ultimo_follow_em IS NULL OR date(l.ultimo_follow_em,'-3 hours') < date('now','-3 hours'))
+    LIMIT 5`).all(MAX_FOLLOWS_CONVERSA, horas);
+
+// THREADS do decisor paradas: a IA falou por ultimo e o decisor sumiu
+export const threadsPraReengajar = (horas = 20) =>
+  db.prepare(`SELECT t.*, l.nome_clinica, l.nome_decisor, l.pipeline_id, l.instancia_id lead_instancia
+    FROM threads t JOIN leads l ON l.id = t.lead_id
+    WHERE l.eh_teste = 0 AND l.ia_pausada = 0 AND t.ia_pausada = 0
+      AND COALESCE(t.follows_feitos,0) < ?
+      AND l.status NOT IN ('optout','descartado','perdido','fechado','reuniao_marcada')
+      AND t.telefone <> l.telefone
+      AND t.telefone NOT IN (SELECT telefone FROM blocklist)
+      AND (SELECT role FROM mensagens WHERE thread_id = t.id ORDER BY id DESC LIMIT 1) = 'assistant'
+      AND (SELECT criado_em FROM mensagens WHERE thread_id = t.id ORDER BY id DESC LIMIT 1) <= datetime('now', '-' || ? || ' hours')
+      AND (t.ultimo_follow_em IS NULL OR date(t.ultimo_follow_em,'-3 hours') < date('now','-3 hours'))
+    LIMIT 5`).all(MAX_FOLLOWS_DECISOR, horas);
+
+// registra o follow (contador + data) e devolve quantos ja foram
+export function marcarReengajado(leadId) {
+  db.prepare(`UPDATE leads SET reengajado_em = datetime('now'), ultimo_follow_em = datetime('now'),
+    follows_feitos = COALESCE(follows_feitos,0) + 1 WHERE id = ?`).run(leadId);
+  return db.prepare("SELECT follows_feitos f FROM leads WHERE id = ?").get(leadId)?.f || 0;
+}
+export function marcarReengajadoThread(threadId) {
+  db.prepare(`UPDATE threads SET ultimo_follow_em = datetime('now'),
+    follows_feitos = COALESCE(follows_feitos,0) + 1 WHERE id = ?`).run(threadId);
+  return db.prepare("SELECT follows_feitos f FROM threads WHERE id = ?").get(threadId)?.f || 0;
+}
 
 // leads com follow-up agendado pela IA (mostra "tarefa" no card)
 export const leadsComTarefa = () =>
