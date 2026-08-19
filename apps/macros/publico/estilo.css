@@ -68,14 +68,14 @@
 
 body {
   background: var(--papel-fundo);
-  /* Textura de papel: fibras finas em duas direções. */
+  /* Textura de fibra do papel, em duas direções e bem discreta. */
   background-image:
-    repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.008) 3px 4px),
-    repeating-linear-gradient(90deg, transparent 0 5px, rgba(0,0,0,.006) 5px 6px);
+    repeating-linear-gradient(90deg, rgba(35,32,26,.022) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(0deg, rgba(35,32,26,.014) 0 1px, transparent 1px 4px);
   color: var(--tinta);
   font-family: var(--texto);
-  font-size: 17px;
-  line-height: 1.55;
+  font-size: 16px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   /* Espaço pra barra fixa não cobrir o fim da página, no iPhone inclusive. */
   padding-bottom: calc(6.5rem + env(safe-area-inset-bottom));
@@ -86,13 +86,13 @@ body {
 .folha {
   max-width: 620px;
   margin: 0 auto;
-  padding: 0 1.1rem;
+  padding: 0 16px;
 }
 
 header.capa {
-  padding: 2.2rem 0 1.4rem;
-  border-bottom: 2px solid var(--tinta);
-  margin-bottom: 1.6rem;
+  padding: var(--s7) 0 var(--s5);
+  border-bottom: 1px solid var(--tinta);
+  margin-bottom: var(--s5);
 }
 
 .marca {
@@ -105,10 +105,12 @@ header.capa {
 }
 
 .subtitulo {
+  font-family: var(--texto);
   font-style: italic;
   color: var(--tinta-fraca);
-  margin-top: .35rem;
-  font-size: .97rem;
+  margin-top: var(--s2);
+  font-size: 15px;
+  line-height: 1.4;
 }
 
 .secao {
@@ -139,9 +141,9 @@ header.capa {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 1rem;
-  padding-bottom: .8rem;
-  border-bottom: 1px dashed var(--linha);
+  gap: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--linha);
 }
 
 .calorias-num {
@@ -155,7 +157,8 @@ header.capa {
 
 .calorias-de {
   font-family: var(--mono);
-  font-size: .82rem;
+  font-size: 11.5px;
+  line-height: 1.65;
   color: var(--tinta-fraca);
   text-align: right;
   white-space: nowrap;
@@ -259,14 +262,15 @@ header.capa {
 
 /* ---------- Refeições ---------- */
 
-.refeicao { border-bottom: 1px solid var(--linha); padding: .75rem 0; }
+.refeicao { border-bottom: 1px solid var(--linha); padding: 12px 0; }
 .refeicao:last-child { border-bottom: 0; }
 
 .refeicao-topo {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: .6rem;
+  gap: 8px;
+  min-height: 44px;
   cursor: pointer;
 }
 .refeicao-nome {
@@ -275,7 +279,12 @@ header.capa {
   font-size: 19px;
   line-height: 1.2;
 }
-.refeicao-kcal { font-family: var(--mono); font-size: .8rem; color: var(--tinta-fraca); }
+.refeicao-kcal {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--tinta-fraca);
+  white-space: nowrap;
+}
 
 .item {
   display: flex;
@@ -334,45 +343,67 @@ header.capa {
 
 /* ---------- Controles ---------- */
 
+/* Botão afunda no toque, não pula: papel sendo pressionado. */
 button, .botao {
   font-family: var(--serif);
-  font-weight: 600;
-  font-size: .93rem;
-  letter-spacing: .02em;
-  color: var(--papel);
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: 0;
+  color: var(--papel-alto);
   background: var(--tinta);
   border: 1px solid var(--tinta);
   border-radius: 2px;
-  padding: .62rem 1.05rem;
+  padding: 11px 18px;
+  min-height: 44px;          /* alvo de toque */
   cursor: pointer;
-  transition: transform .12s ease, opacity .15s ease;
+  transition: background .15s ease, color .15s ease;
 }
-button:hover  { transform: translateY(-1px); }
-button:active { transform: translateY(0); opacity: .82; }
-button.leve { background: transparent; color: var(--tinta); }
-button.mini { padding: .3rem .6rem; font-size: .78rem; }
-button:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+button:active { background: var(--papel-alto); color: var(--tinta); }
+
+button.leve {
+  background: transparent;
+  color: var(--tinta);
+  border-color: var(--linha-forte);
+}
+button.leve:active { background: var(--papel-alto); }
+
+button.mini {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  padding: 7px 11px;
+  min-height: 34px;
+}
+button:disabled { opacity: .4; cursor: not-allowed; }
 
 input, select {
   font-family: var(--texto);
   font-size: 16px; /* impede o zoom automático do iOS */
   color: var(--tinta);
   background: var(--papel-alto);
-  border: 1px solid var(--linha);
+  border: 1px solid var(--linha-forte);
   border-radius: 2px;
-  padding: .6rem .7rem;
+  padding: 11px 12px;
+  min-height: 44px;
   width: 100%;
 }
-input:focus, select:focus { outline: 2px solid var(--tinta); outline-offset: -1px; }
+/* Foco marca a borda, sem glow. */
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--tinta);
+  box-shadow: inset 0 0 0 1px var(--tinta);
+}
+input::placeholder { color: var(--tinta-tenue); }
 
 label {
   display: block;
-  font-family: var(--serif);
-  font-size: .72rem;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: .13em;
+  letter-spacing: .20em;
   color: var(--tinta-fraca);
-  margin-bottom: .3rem;
+  margin-bottom: var(--s1);
 }
 .campo { margin-bottom: .85rem; }
 .dupla { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
@@ -406,15 +437,17 @@ label {
 /* ---------- Avisos e conversa ---------- */
 
 .nota {
+  font-family: var(--texto);
   font-style: italic;
+  font-size: 14px;
+  line-height: 1.5;
   color: var(--tinta-fraca);
-  font-size: .92rem;
-  padding: .7rem .9rem;
+  padding: 10px 12px;
   border-left: 3px solid var(--grifo);
   background: var(--papel-alto);
-  margin: .7rem 0;
+  margin: 10px 0;
 }
-.nota.seco { border-left-color: var(--tinta-tenue); }
+.nota.seco { border-left-color: var(--linha-forte); }
 
 /* Memória de cálculo: página de caderno.
    Cada passo tem margem à esquerda com o número em cinza — a margem do
@@ -500,23 +533,31 @@ nav.rodape button {
   color: var(--tinta-fraca);
   border: 0;
   border-radius: 0;
-  padding: .85rem .2rem;
-  font-size: .78rem;
+  padding: 13px 4px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: .1em;
+  letter-spacing: .18em;
   transition: none;
 }
-nav.rodape button:hover { transform: none; }
+nav.rodape button:active { background: var(--papel-alto); color: var(--tinta); }
 nav.rodape button[aria-current='true'] {
   color: var(--tinta);
-  box-shadow: inset 0 3px 0 var(--tinta);
+  box-shadow: inset 0 2px 0 var(--tinta);
 }
 
 /* ---------- Utilitários ---------- */
 
 .some { display: none !important; }
 .centro { text-align: center; }
-.tenue { color: var(--tinta-fraca); font-size: .88rem; }
+.tenue {
+  font-family: var(--texto);
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--tinta-fraca);
+}
 .mono  { font-family: var(--mono); }
 
 .carregando { color: var(--tinta-tenue); font-style: italic; padding: 1rem 0; }
