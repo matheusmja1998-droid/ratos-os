@@ -12,6 +12,10 @@ async function bootstrap() {
   // Sem build separado — abre no celular e funciona.
   app.useStaticAssets(PASTA_PUBLICA);
 
+  // Foto de prato chega em base64 e passa fácil do limite padrão de 100 kB do
+  // Express — sem isso a requisição morre com 413 antes de chegar na rota.
+  app.useBodyParser('json', { limit: '12mb' });
+
   app.setGlobalPrefix('api');
   app.enableCors();
   app.useGlobalPipes(

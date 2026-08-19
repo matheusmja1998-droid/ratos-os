@@ -691,9 +691,22 @@ async function carregarDia() {
 /* ---------- comer ---------- */
 
 function preencherRefeicoesNoSeletor() {
-  const opcoes = (estado.dia?.refeicoes || [])
+  const refeicoes = estado.dia?.refeicoes || [];
+  const opcoes = refeicoes
     .map((r) => `<option value="${esc(r.id)}">${esc(r.nome)}</option>`).join('');
   $$('.seletor-refeicao').forEach((s) => { s.innerHTML = opcoes; });
+
+  // Seletor fixo no topo da tela Comer: sem ele, quem chega pela busca acaba
+  // anotando o lanche das 10h no café da manhã sem perceber.
+  const topo = $('#refeicao-alvo');
+  if (!topo) return;
+
+  topo.innerHTML = opcoes;
+  if (estado.refeicaoEscolhida && refeicoes.some((r) => r.id === estado.refeicaoEscolhida)) {
+    topo.value = estado.refeicaoEscolhida;
+  } else {
+    estado.refeicaoEscolhida = refeicoes[0]?.id ?? null;
+  }
 }
 
 /**
@@ -720,14 +733,6 @@ function blocoAdicionar(alimento, gramasSugeridas = 100) {
 
   return `
     <div class="pilha" style="margin:.6rem 0 .2rem">
-      <div class="linha-flex">
-        <select class="seletor-refeicao cresce">
-          ${(estado.dia?.refeicoes || []).map((r) =>
-            `<option value="${esc(r.id)}"${
-              estado.refeicaoEscolhida === r.id ? ' selected' : ''
-            }>${esc(r.nome)}</option>`).join('')}
-        </select>
-      </div>
       <div class="linha-flex">
         <input type="number" class="campo-qtd" style="width:5rem" value="${qtdInicial}"
                step="${temPorcao ? '0.5' : '5'}" min="0" aria-label="Quantidade">
@@ -801,7 +806,9 @@ function ligarBotoesAdicionar(escopo) {
         await api('/diario/itens', {
           method: 'POST',
           body: JSON.stringify({
-            refeicaoId: caixa.querySelector('.seletor-refeicao').value,
+            // A refeição vem do seletor do topo: uma escolha só, visível,
+            // valendo pra tudo que for anotado nesta visita.
+            refeicaoId: $('#refeicao-alvo')?.value || estado.refeicaoEscolhida,
             alimentoId: b.dataset.add,
             gramas,
             ehMaravilha: caixa.querySelector('.campo-maravilha').checked,
@@ -855,6 +862,143 @@ async function buscar(termo) {
     }));
 
   ligarBotoesAdicionar($('#resultados'));
+}
+
+/**
+ * Reduz a foto antes de enviar.
+ *
+ * Foto de celular passa de 4 MB e demora numa rede ruim. 1280 px de lado
+ * maior é mais que suficiente pra identificar comida, e corta o envio em
+ * quase dez vezes.
+ */
+function reduzirImagem(arquivo, ladoMaximo = 1280, qualidade = 0.82) {
+  return new Promise((resolve, reject) => {
+    const leitor = new FileReader();
+    leitor.onerror = () => reject(new Error('Não consegui ler a foto.'));
+    leitor.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Arquivo não parece ser uma imagem.'));
+      img.onload = () => {
+        const escala = Math.min(1, ladoMaximo / Math.max(img.width, img.height));
+        const tela = document.createElement('canvas');
+        tela.width = Math.round(img.width * escala);
+        tela.height = Math.round(img.height * escala);
+        tela.getContext('2d').drawImage(img, 0, 0, tela.width, tela.height);
+        const url = tela.toDataURL('image/jpeg', qualidade);
+        resolve({ base64: url.split(',')[1], previa: url });
+      };
+      img.src = leitor.result;
+    };
+    leitor.readAsDataURL(arquivo);
+  });
+}
+
+/** Desenha os alimentos identificados, cada um pronto pra confirmar e anotar. */
+function desenharItensDaIa(alvo, resposta) {
+  alvo.innerHTML = `
+    <p class="nota">${esc(resposta.aviso)}</p>
+    ${resposta.observacao ? `<p class="tenue">${esc(resposta.observacao)}</p>` : ''}
+    ${resposta.itens.length === 0
+      ? '<p class="tenue">Não reconheci nenhum alimento. Tente pela busca abaixo.</p>'
+      : ''}
+    ${resposta.itens.filter((i) => i.candidatos?.length > 1).length > 1
+      ? `<button id="btn-anotar-tudo" class="mini" style="margin:.2rem 0 .6rem">Anotar tudo de uma vez</button>`
+      : ''}
+    ${resposta.itens.map((item) => {
+      if (!item.candidatos?.length) {
+        return `<p class="tenue">Não achei “${esc(item.termoBusca)}” na tabela.
+          Procure pelo nome mais simples logo abaixo.</p>`;
+      }
+      const c = item.candidatos[0];
+      const vista = item.porcaoVista ? ` · ${esc(item.porcaoVista)}` : '';
+      const outros = item.candidatos.slice(1);
+      return `
+        <div style="padding:.7rem 0;border-bottom:1px solid var(--linha)">
+          <div class="resultado-nome">
+            <small class="tenue">você disse: ${esc(item.termoBusca)}</small>
+            ${esc(c.nome)} <span class="fonte-selo">${esc(c.fonte)}</span>
+            <small>${esc(c.modoPreparo)}${vista} · confiança ${esc(item.confianca)}</small>
+          </div>
+          ${outros.length
+            ? `<button class="mini leve" data-trocar="${esc(c.id)}"
+                       style="margin-top:.4rem">não é isso</button>
+               <div class="outros-candidatos some" data-outros="${esc(c.id)}">
+                 ${outros.map((o) => `
+                   <div class="resultado" data-usar='${esc(JSON.stringify({
+                     id: o.id, nome: o.nome, modoPreparo: o.modoPreparo,
+                     fonte: o.fonte, porcoes: o.porcoes,
+                   }))}' data-gramas="${item.gramasEstimadas}">
+                     <div class="resultado-nome">
+                       ${esc(o.nome)} <span class="fonte-selo">${esc(o.fonte)}</span>
+                       <small>${esc(o.modoPreparo)} · ${arred(o.macros.kcal)} kcal</small>
+                     </div>
+                     <span class="mono tenue">usar</span>
+                   </div>`).join('')}
+               </div>`
+            : ''}
+          ${blocoAdicionar(c, item.gramasEstimadas)}
+        </div>`;
+    }).join('')}`;
+
+  ligarBotoesAdicionar(alvo);
+
+  // "não é isso": abre as outras opções que a busca trouxe.
+  alvo.querySelectorAll('[data-trocar]').forEach((b) =>
+    b.addEventListener('click', () => {
+      alvo.querySelector(`[data-outros="${b.dataset.trocar}"]`)?.classList.toggle('some');
+    }));
+
+  alvo.querySelectorAll('[data-usar]').forEach((el) =>
+    el.addEventListener('click', () => {
+      const escolhido = JSON.parse(el.dataset.usar);
+      const bloco = el.closest('div[style]');
+      const caixa = bloco.querySelector('.pilha');
+      const titulo = bloco.querySelector('.resultado-nome');
+
+      // Troca o alimento mantendo a quantidade que a IA estimou.
+      titulo.innerHTML = `${esc(escolhido.nome)}
+        <span class="fonte-selo">${esc(escolhido.fonte)}</span>
+        <small>${esc(escolhido.modoPreparo)}</small>`;
+      caixa.outerHTML = blocoAdicionar(escolhido, Number(el.dataset.gramas));
+      bloco.querySelector('.outros-candidatos')?.classList.add('some');
+      ligarBotoesAdicionar(bloco);
+    }));
+
+  const todos = alvo.querySelector('#btn-anotar-tudo');
+  if (todos) {
+    todos.addEventListener('click', async () => {
+      todos.disabled = true;
+      todos.textContent = 'anotando…';
+      // Em série: se um falhar, os outros já entraram e dá pra ver onde parou.
+      for (const b of alvo.querySelectorAll('[data-add]')) {
+        if (!b.disabled) { b.click(); await new Promise((r) => setTimeout(r, 450)); }
+      }
+      todos.textContent = 'anotados ✓';
+    });
+  }
+}
+
+async function fotografarPrato(arquivo) {
+  const alvo = $('#saida-foto');
+  alvo.innerHTML = '<p class="carregando">olhando a foto…</p>';
+
+  try {
+    const { base64, previa } = await reduzirImagem(arquivo);
+    alvo.innerHTML = `<img class="previa-foto" src="${previa}" alt="Foto do prato">
+      <p class="carregando">identificando os alimentos…</p>`;
+
+    const r = await api('/ia/prato', {
+      method: 'POST',
+      body: JSON.stringify({ base64: undefined, imagemBase64: base64, tipoMime: 'image/jpeg' }),
+    });
+
+    const caixa = document.createElement('div');
+    desenharItensDaIa(caixa, r);
+    alvo.innerHTML = `<img class="previa-foto" src="${previa}" alt="Foto do prato">`;
+    alvo.appendChild(caixa);
+  } catch (e) {
+    alvo.innerHTML = `<p class="nota seco">${esc(e.message)}</p>`;
+  }
 }
 
 async function interpretarTexto() {
@@ -923,6 +1067,8 @@ function salvarDescartados() {
 
 /** Quantas sugestões já foram puladas nesta rodada de "outras opções". */
 let pularSugestoes = 0;
+/** Macro escolhido à mão; null deixa o app decidir pelo que mais falta. */
+let alvoSugestao = null;
 
 async function verFechamento() {
   $('#fechamento').innerHTML = '<p class="carregando">pensando…</p>';
@@ -930,6 +1076,7 @@ async function verFechamento() {
   const params = new URLSearchParams();
   if (descartados.size) params.set('excluir', [...descartados].join(','));
   if (pularSugestoes) params.set('pular', String(pularSugestoes));
+  if (alvoSugestao) params.set('alvo', alvoSugestao);
 
   const r = await api(`/diario/fechar?${params}`);
 
@@ -948,7 +1095,20 @@ async function verFechamento() {
     return;
   }
 
+  // Botões pra escolher o que fechar: o app propõe o maior buraco, mas quem
+  // decide é quem vai comer.
+  const abas = (r.faltando || []).length
+    ? `<div class="linha-flex" style="flex-wrap:wrap;margin-bottom:.8rem">
+         ${r.faltando.map((f) => `
+           <button class="mini ${r.alvo === f.macro ? '' : 'leve'}"
+                   data-alvo="${esc(f.macro)}">
+             ${esc(f.rotulo)} <span class="mono">−${arred(f.falta)}g</span>
+           </button>`).join('')}
+       </div>`
+    : '';
+
   $('#fechamento').innerHTML = `
+    ${abas}
     ${r.sugestoes.map((s) => `
       <div style="padding:.65rem 0;border-bottom:1px solid var(--linha)">
         <div class="linha-flex" style="align-items:flex-start">
@@ -976,6 +1136,13 @@ async function verFechamento() {
 
   ligarBotoesAdicionar($('#fechamento'));
 
+  $$('[data-alvo]').forEach((b) =>
+    b.addEventListener('click', () => {
+      alvoSugestao = b.dataset.alvo;
+      pularSugestoes = 0;
+      verFechamento();
+    }));
+
   $$('[data-descartar]').forEach((b) =>
     b.addEventListener('click', async () => {
       descartados.add(b.dataset.descartar);
@@ -994,6 +1161,7 @@ async function verFechamento() {
 
   $('#btn-recomecar-sug')?.addEventListener('click', () => {
     pularSugestoes = 0;
+    alvoSugestao = null;
     verFechamento();
   });
 
@@ -1228,6 +1396,7 @@ async function abrirApp() {
     if (!s.disponivel) {
       $('#bloco-conversa').classList.add('some');
       $('#texto-ia').closest('.secao').classList.add('some');
+      $('#secao-foto').classList.add('some');
     }
   } catch { /* sem IA, segue o jogo */ }
 }
@@ -1262,6 +1431,12 @@ $('#busca').addEventListener('input', (e) => {
     }),
     280,
   );
+});
+
+$('#foto-prato').addEventListener('change', (e) => {
+  const arquivo = e.target.files?.[0];
+  if (arquivo) fotografarPrato(arquivo);
+  e.target.value = '';   // permite refotografar o mesmo arquivo
 });
 
 $('#btn-ia').addEventListener('click', interpretarTexto);
@@ -1314,6 +1489,10 @@ $('#btn-salvar-restricoes').addEventListener('click', async () => {
   }
   aviso.classList.remove('some');
 });
+$('#refeicao-alvo').addEventListener('change', (e) => {
+  estado.refeicaoEscolhida = e.target.value;
+});
+
 $('#btn-add-refeicao').addEventListener('click', async () => {
   await api('/diario/refeicoes', { method: 'POST', body: JSON.stringify({}) });
   await carregarDia();

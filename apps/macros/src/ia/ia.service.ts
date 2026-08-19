@@ -149,6 +149,81 @@ FORMATO:
   }
 
   /**
+   * Identifica os alimentos de uma foto de prato.
+   *
+   * A IA diz O QUE está no prato e arrisca uma porção caseira — nunca o valor
+   * nutricional. Quem tem o número é a base TACO, e a pessoa confirma a
+   * quantidade antes de anotar.
+   *
+   * Essa fronteira existe por um motivo medido: apps que estimam a caloria
+   * direto da foto erram cerca de -30%, sempre para baixo (NIH, NUTRITION
+   * 2026, 102 refeições pesadas). Erro aleatório se dilui na semana; viés
+   * sistemático acumula e come o déficit inteiro sem a pessoa perceber.
+   * Prato brasileiro é o pior caso: comida misturada derruba o reconhecimento
+   * de 95% para 65-75%.
+   */
+  async verPrato(imagemBase64: string, tipoMime = 'image/jpeg'): Promise<{
+    itens: {
+      termoBusca: string;
+      modoPreparo: string;
+      porcaoVista: string;
+      gramasEstimadas: number;
+      confianca: string;
+    }[];
+    observacao: string | null;
+  }> {
+    if (!this.cliente) throw new Error('IA indisponível: configure ANTHROPIC_API_KEY.');
+
+    const r = await this.cliente.messages.create({
+      model: MODELO,
+      max_tokens: 1500,
+      system: `Você olha fotos de pratos de comida brasileira e lista o que está visível.
+
+REGRAS:
+- NUNCA devolva calorias, proteína, carboidrato ou gordura. Seu trabalho é
+  dizer QUAIS alimentos estão no prato e estimar a porção visível.
+- Indique o modo de preparo quando der pra ver: cru, cozido, grelhado, frito,
+  assado, refogado, industrializado. Na dúvida em prato brasileiro, arroz e
+  feijão são "cozido"; carne costuma ser "grelhado".
+- "porcaoVista" descreve o que você vê em linguagem caseira: "2 conchas",
+  "1 filé médio", "3 colheres de servir".
+- "gramasEstimadas" é sua melhor estimativa em gramas, sabendo que a pessoa
+  vai conferir. Use porções brasileiras: colher de servir de arroz ~45 g,
+  concha de feijão ~80 g, filé de frango médio ~120 g, bife ~100 g.
+- "confianca" é "alta" quando o alimento e a porção estão nítidos, "media"
+  quando dá pra estimar, "baixa" quando o prato está misturado ou encoberto.
+- Se a foto não for de comida, devolva itens vazio e explique em "observacao".
+- Nenhum julgamento sobre a comida. Nenhuma comida é boa ou ruim aqui.
+- Responda SOMENTE com JSON válido.
+
+FORMATO:
+{"itens":[{"termoBusca":"arroz branco","modoPreparo":"cozido","porcaoVista":"3 colheres de servir","gramasEstimadas":135,"confianca":"media"}],"observacao":null}`,
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'image',
+              source: {
+                type: 'base64',
+                media_type: tipoMime as 'image/jpeg',
+                data: imagemBase64,
+              },
+            },
+            { type: 'text', text: 'Que alimentos estão neste prato e em que quantidade?' },
+          ],
+        },
+      ],
+    });
+
+    const texto = r.content
+      .filter((b): b is Anthropic.TextBlock => b.type === 'text')
+      .map((b) => b.text)
+      .join('\n');
+    return this.extrairJson(texto);
+  }
+
+  /**
    * Comentário sobre o dia — descritivo, nunca corretivo.
    *
    * A diferença que importa: "faltam 40 g de proteína, um filé resolve" ensina;

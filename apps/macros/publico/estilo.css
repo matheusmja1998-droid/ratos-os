@@ -487,3 +487,40 @@ nav.rodape button[aria-current='true'] {
 }
 .restricao small { color: var(--tinta-tenue); font-size: .78rem; }
 .restricao.marcada b { text-decoration: line-through; color: var(--tinta-fraca); }
+
+/* ---------- Botão de foto ---------- */
+
+.botao-foto {
+  display: block;
+  text-align: center;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: .93rem;
+  color: var(--papel);
+  background: var(--tinta);
+  border: 1px solid var(--tinta);
+  border-radius: 2px;
+  padding: .7rem 1.05rem;
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: .02em;
+  margin: 0;
+}
+.botao-foto:active { opacity: .82; }
+
+.previa-foto {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border: 1px solid var(--linha);
+  border-radius: 2px;
+  margin: .7rem 0;
+}
+
+/* Alternativas quando a foto casou o alimento errado */
+.outros-candidatos {
+  margin: .4rem 0;
+  padding-left: .7rem;
+  border-left: 2px solid var(--linha);
+}

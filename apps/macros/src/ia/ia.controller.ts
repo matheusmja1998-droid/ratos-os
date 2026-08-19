@@ -50,6 +50,51 @@ export class IaController {
     };
   }
 
+  @Post('prato')
+  @ApiOperation({
+    summary: 'Foto do prato: a IA identifica os alimentos, você confirma o peso',
+  })
+  async prato(@Body() dto: LerRotuloDto) {
+    const leitura = await this.ia.verPrato(dto.imagemBase64, dto.tipoMime);
+
+    // A IA identifica; quem dá o número é a base verificada.
+    const itens = await Promise.all(
+      leitura.itens.map(async (item) => {
+        const termo = `${item.termoBusca} ${item.modoPreparo ?? ''}`.trim();
+
+        // A busca por sinônimo pode devolver algo distante quando o termo é
+        // uma descrição composta ("purê de batata com molho de cogumelos").
+        // Nesse caso vale mais tentar o primeiro substantivo sozinho.
+        let achados = await this.alimentos.buscar(termo, 5);
+        const primeiraPalavra = item.termoBusca.split(/\s+/)[0];
+        if (achados.length === 0 && primeiraPalavra.length >= 4) {
+          achados = await this.alimentos.buscar(primeiraPalavra, 5);
+        }
+
+        return {
+          ...item,
+          candidatos: achados.map((a) => ({
+            id: a.id,
+            nome: a.nome,
+            modoPreparo: a.modoPreparo,
+            fonte: a.fonte,
+            porcoes: this.alimentos.porcoesComMacros(a),
+            macros: this.alimentos.calcularPorGramas(a, item.gramasEstimadas),
+          })),
+        };
+      }),
+    );
+
+    return {
+      itens,
+      observacao: leitura.observacao,
+      aviso:
+        'A foto identifica os alimentos; confira se o nome bateu e ajuste a ' +
+        'quantidade. A estimativa de peso costuma vir baixa, e os valores ' +
+        'nutricionais vêm da tabela, não da foto.',
+    };
+  }
+
   @Post('rotulo')
   @ApiOperation({ summary: 'Lê a tabela nutricional de uma foto de rótulo' })
   async rotulo(@Body() dto: LerRotuloDto) {

@@ -1,6 +1,6 @@
 import {
   IsArray, IsEmail, IsIn, IsInt, IsNumber, IsOptional, IsString, IsBoolean,
-  Max, Min, MinLength, Matches,
+  Max, MaxLength, Min, MinLength, Matches,
 } from 'class-validator';
 
 const SEXOS = ['masculino', 'feminino'];
@@ -88,8 +88,10 @@ export class InterpretarTextoDto {
 }
 
 export class LerRotuloDto {
-  @IsString() imagemBase64: string;
-  @IsOptional() @IsString() tipoMime?: string;
+  // Foto em base64. O limite protege a função serverless: acima disso o
+  // cliente deve reduzir a imagem antes de enviar.
+  @IsString() @MaxLength(8_000_000) imagemBase64: string;
+  @IsOptional() @IsIn(['image/jpeg', 'image/png', 'image/webp']) tipoMime?: string;
 }
 
 export class AtualizarPerfilDto {

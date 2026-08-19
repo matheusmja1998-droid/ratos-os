@@ -27,6 +27,9 @@ let servidor: unknown;
 async function criar() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  // Foto de prato em base64 passa do limite padrão de 100 kB do Express.
+  app.useBodyParser('json', { limit: '12mb' });
+
   app.setGlobalPrefix('api');
   app.enableCors();
   app.useGlobalPipes(

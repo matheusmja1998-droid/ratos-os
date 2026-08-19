@@ -12,6 +12,8 @@ export interface EspacoRestante {
   proteinaG: number;
   carboidratoG: number;
   gorduraG: number;
+  /** Fibra não tem teto: é meta a atingir, não limite a respeitar. */
+  fibraG?: number;
 }
 
 export interface SugestaoPorcao {
@@ -22,7 +24,63 @@ export interface SugestaoPorcao {
   gramasSugeridas: number;
   macros: ReturnType<AlimentosService['calcularPorGramas']>;
   motivo: string;
+  /** Que macro esta sugestão resolve melhor. */
+  resolve: MacroAlvo;
 }
+
+/** O que ainda falta no dia e vale sugerir. */
+export type MacroAlvo = 'proteina' | 'carboidrato' | 'gordura' | 'fibra';
+
+interface PerfilAlvo {
+  chave: MacroAlvo;
+  rotulo: string;
+  /** Mínimo por 100 g pro alimento ser considerado boa fonte. */
+  minimoPor100g: number;
+  /** Quanto o alimento precisa entregar na porção pra valer a pena. */
+  minimoNaPorcao: number;
+  por100g: (a: Alimento) => number;
+  naPorcao: (m: ReturnType<AlimentosService['calcularPorGramas']>) => number;
+  faltaNoEspaco: (e: EspacoRestante) => number;
+}
+
+const ALVOS: PerfilAlvo[] = [
+  {
+    chave: 'proteina',
+    rotulo: 'proteína',
+    minimoPor100g: 10,
+    minimoNaPorcao: 5,
+    por100g: (a) => a.proteina100g,
+    naPorcao: (m) => m.proteinaG,
+    faltaNoEspaco: (e) => e.proteinaG,
+  },
+  {
+    chave: 'carboidrato',
+    rotulo: 'carboidrato',
+    minimoPor100g: 15,
+    minimoNaPorcao: 10,
+    por100g: (a) => a.carboidrato100g,
+    naPorcao: (m) => m.carboidratoG,
+    faltaNoEspaco: (e) => e.carboidratoG,
+  },
+  {
+    chave: 'gordura',
+    rotulo: 'gordura',
+    minimoPor100g: 8,
+    minimoNaPorcao: 4,
+    por100g: (a) => a.gordura100g,
+    naPorcao: (m) => m.gorduraG,
+    faltaNoEspaco: (e) => e.gorduraG,
+  },
+  {
+    chave: 'fibra',
+    rotulo: 'fibra',
+    minimoPor100g: 3,
+    minimoNaPorcao: 2,
+    por100g: (a) => a.fibra100g,
+    naPorcao: (m) => m.fibraG,
+    faltaNoEspaco: (e) => e.fibraG ?? 0,
+  },
+];
 
 /**
  * Planejamento reverso.
@@ -47,6 +105,7 @@ export class PlanejadorService {
       proteinaG: arred(meta.proteinaG - totais.proteinaG),
       carboidratoG: arred(meta.carboidratoG - totais.carboidratoG),
       gorduraG: arred(meta.gorduraG - totais.gorduraG),
+      fibraG: arred((meta.fibraMetaG ?? 30) - totais.fibraG),
     };
   }
 
@@ -97,14 +156,35 @@ export class PlanejadorService {
   async sugerirFechamento(
     espaco: EspacoRestante,
     limite = 6,
-    opcoes: { excluir?: string[]; pular?: number; restricoes?: string[] } = {},
-  ): Promise<{ sugestoes: SugestaoPorcao[]; temMais: boolean }> {
+    opcoes: { excluir?: string[]; pular?: number; restricoes?: string[]; alvo?: MacroAlvo } = {},
+  ): Promise<{
+    sugestoes: SugestaoPorcao[];
+    temMais: boolean;
+    alvo: MacroAlvo;
+    faltando: { macro: MacroAlvo; rotulo: string; falta: number }[];
+  }> {
     const candidatos = await this.alimentosRepo.find({ where: { verificado: true } });
-    const sugestoes: SugestaoPorcao[] = [];
 
     // Alimentos que a pessoa não come. Sugerir de novo o que ela já recusou é
     // ignorá-la — e ela para de olhar as sugestões.
     const excluir = new Set(opcoes.excluir ?? []);
+
+    // O que ainda falta, do maior buraco pro menor. A proteína desempata na
+    // frente quando o buraco é parecido: é o macro que não se recupera depois.
+    const faltando = ALVOS.map((a) => ({
+      macro: a.chave,
+      rotulo: a.rotulo,
+      falta: Math.round(Math.max(0, a.faltaNoEspaco(espaco)) * 10) / 10,
+      peso: Math.max(0, a.faltaNoEspaco(espaco)) * (a.chave === 'proteina' ? 1.3 : 1),
+    }))
+      .sort((x, y) => y.peso - x.peso)
+      .map(({ macro, rotulo, falta }) => ({ macro, rotulo, falta }));
+
+    const alvo = opcoes.alvo ?? faltando[0]?.macro ?? 'proteina';
+    const perfil = ALVOS.find((a) => a.chave === alvo)!;
+
+    const sugestoes: SugestaoPorcao[] = [];
+    const faltaDoAlvo = Math.max(0, perfil.faltaNoEspaco(espaco));
 
     for (const a of candidatos) {
       if (excluir.has(a.id)) continue;
@@ -113,7 +193,7 @@ export class PlanejadorService {
       // Ingrediente não é refeição: fermento e tempero têm proteína por 100 g,
       // mas ninguém come 40 g de fermento pra fechar a proteína do dia.
       if (this.ehIngrediente(a.nome)) continue;
-      if (a.proteina100g < 10) continue;
+      if (perfil.por100g(a) < perfil.minimoPor100g) continue;
 
       const cabe = this.quantoCabe(a, espaco);
       if (!cabe.cabe || cabe.gramas < 20) continue;
@@ -121,19 +201,20 @@ export class PlanejadorService {
       // Porção máxima plausível numa refeição só, pelo tipo de alimento.
       const tetoPorcao = this.tetoPorcaoRealista(a);
 
-      // O quanto bastaria pra zerar a proteína que falta — pode ser mais do
-      // que cabe num prato, e aí o teto vale.
-      const gramasParaProteina =
-        Math.ceil(((Math.max(0, espaco.proteinaG) / a.proteina100g) * 100) / 5) * 5;
+      // O quanto bastaria pra zerar o que falta do macro alvo — pode ser mais
+      // do que cabe num prato, e aí o teto vale.
+      const gramasParaAlvo =
+        Math.ceil(((faltaDoAlvo / perfil.por100g(a)) * 100) / 5) * 5;
 
-      const gramas = Math.min(cabe.gramas, tetoPorcao, Math.max(20, gramasParaProteina));
+      const gramas = Math.min(cabe.gramas, tetoPorcao, Math.max(20, gramasParaAlvo));
       if (gramas < 20) continue;
 
       const macros = this.alimentos.calcularPorGramas(a, gramas);
-      if (macros.proteinaG < 5) continue;
+      const entrega = perfil.naPorcao(macros);
+      if (entrega < perfil.minimoNaPorcao) continue;
 
-      const fechaTudo = macros.proteinaG >= espaco.proteinaG;
-      const restaria = Math.round((espaco.proteinaG - macros.proteinaG) * 10) / 10;
+      const fechaTudo = entrega >= faltaDoAlvo;
+      const restaria = Math.round((faltaDoAlvo - entrega) * 10) / 10;
 
       sugestoes.push({
         alimentoId: a.id,
@@ -142,25 +223,56 @@ export class PlanejadorService {
         fonte: a.fonte,
         gramasSugeridas: gramas,
         macros,
+        resolve: alvo,
         motivo: fechaTudo
-          ? `${macros.proteinaG} g de proteína usando ${macros.kcal} kcal — fecha o que faltava`
-          : `${macros.proteinaG} g de proteína usando ${macros.kcal} kcal; ainda faltariam ${restaria} g`,
+          ? `${entrega} g de ${perfil.rotulo} usando ${macros.kcal} kcal — fecha o que faltava`
+          : `${entrega} g de ${perfil.rotulo} usando ${macros.kcal} kcal; ainda faltariam ${restaria} g`,
       });
     }
 
-    // Melhor densidade de proteína por caloria gasta.
-    const ordenadas = sugestoes.sort(
-      (a, b) =>
-        b.macros.proteinaG / (b.macros.kcal || 1) -
-        a.macros.proteinaG / (a.macros.kcal || 1),
-    );
+    // Ordena por densidade do macro alvo por caloria, mas dá vantagem ao que
+    // se come numa refeição de verdade: doce em calda tem muito carboidrato e
+    // é péssima sugestão de "o que comer pra fechar o dia".
+    const ordenadas = sugestoes.sort((a, b) => {
+      const nota = (s: SugestaoPorcao) =>
+        (perfil.naPorcao(s.macros) / (s.macros.kcal || 1)) *
+        (this.ehComidaDeRefeicao(s.nome) ? 1.6 : 1);
+      return nota(b) - nota(a);
+    });
 
     // `pular` permite pedir "outras opções" sem repetir as já mostradas.
     const inicio = opcoes.pular ?? 0;
     return {
       sugestoes: ordenadas.slice(inicio, inicio + limite),
       temMais: ordenadas.length > inicio + limite,
+      alvo,
+      faltando: faltando.filter((f) => f.falta > 0),
     };
+  }
+
+  /**
+   * O alimento é do tipo que compõe uma refeição de verdade?
+   *
+   * Não é juízo sobre a comida — doce continua sendo comida e pode ser
+   * registrado normalmente. É só que, na hora de sugerir "o que comer pra
+   * fechar o carboidrato", arroz e batata resolvem melhor que compota.
+   */
+  private ehComidaDeRefeicao(nome: string): boolean {
+    const alvo = nome.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+    const base = [
+      'arroz', 'feijao', 'batata', 'mandioca', 'macarrao', 'pao', 'aveia',
+      'tapioca', 'cuscuz', 'inhame', 'cara', 'polenta', 'quinoa', 'lentilha',
+      'grao de bico', 'milho', 'farofa', 'frango', 'carne', 'peixe', 'ovo',
+      'atum', 'sardinha', 'tilapia', 'patinho', 'acem', 'file', 'peito',
+      'coxa', 'leite', 'iogurte', 'queijo', 'abacate', 'castanha', 'amendoim',
+      'azeite', 'banana', 'maca', 'laranja', 'mamao', 'melancia', 'abacaxi',
+      'brocolis', 'cenoura', 'abobrinha', 'couve', 'espinafre', 'tomate',
+    ];
+    const fora = ['calda', 'compota', 'marmelada', 'doce de', 'cristalizad', 'em conserva com'];
+
+    if (fora.some((t) => alvo.includes(t))) return false;
+    return base.some((t) => alvo.includes(t));
   }
 
   /**
@@ -175,6 +287,9 @@ export class PlanejadorService {
       'fermento', 'tempero', 'caldo de', 'sal ', 'pimenta', 'colorau',
       'corante', 'gelatina em po', 'leite em po', 'farinha lactea',
       'amido', 'polvilho', 'glutamato', 'bicarbonato', 'essencia',
+      // Ninguém come açúcar puro ou glicose pra fechar o carboidrato do dia.
+      'glicose', 'xarope', 'acucar', 'mel de', 'melado', 'rapadura',
+      'farinha de trigo', 'farinha de rosca', 'maisena', 'creme de milho',
     ].some((t) => alvo.includes(t));
   }
 
@@ -185,10 +300,27 @@ export class PlanejadorService {
    * prato, pra sugestão sair aplicável em vez de só aritmeticamente válida.
    */
   private tetoPorcaoRealista(a: Alimento): number {
-    const nome = a.nome.toLowerCase();
+    // Normaliza acento e pontuação: a TACO escreve "Leite (de coco)", e a
+    // regra precisa casar com "leite de coco".
+    const nome = a.nome
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[(),.]/g, ' ')
+      .replace(/\s+/g, ' ');
 
     if (nome.includes('whey') || nome.includes('psyllium')) return 40;
-    if (nome.includes('queijo') || nome.includes('requeijão')) return 60;
+    // Óleo e azeite entram a fio, não em concha: 65 g de azeite é meio copo.
+    if (nome.includes('oleo') || nome.includes('azeite') || nome.includes('banha')) return 15;
+    if (nome.includes('manteiga') || nome.includes('margarina')) return 20;
+    if (nome.includes('queijo') || nome.includes('requeijao')) return 60;
+    // Creme de leite, leite de coco e maionese vão de colher, não de copo.
+    if (
+      nome.includes('creme de leite') ||
+      nome.includes('leite de coco') ||
+      nome.includes('maionese') ||
+      nome.includes('nata')
+    ) return 60;
     if (nome.includes('clara')) return 200;
     if (nome.includes('ovo')) return 150;
     if (nome.includes('leite') || nome.includes('iogurte')) return 300;

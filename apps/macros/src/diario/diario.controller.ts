@@ -3,7 +3,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DiarioService } from './diario.service';
-import { PlanejadorService } from './planejador.service';
+import { MacroAlvo, PlanejadorService } from './planejador.service';
 import { AlimentosService } from '../alimentos/alimentos.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -137,7 +137,8 @@ export class DiarioController {
   })
   async fechar(
     @UsuarioAtual() u: { id: string },
-    @Query() query: { data?: string; excluir?: string; pular?: string },
+    @Query()
+    query: { data?: string; excluir?: string; pular?: string; alvo?: string },
   ) {
     const data = query.data;
     const resumo = await this.diario.resumoDia(u.id, data ?? hojeSP());
@@ -154,6 +155,7 @@ export class DiarioController {
       excluir: [...excluir, ...(perfil?.naoComeIds ?? [])],
       pular,
       restricoes: perfil?.restricoes ?? [],
+      alvo: query.alvo as MacroAlvo | undefined,
     });
     return { espaco, ...r };
   }

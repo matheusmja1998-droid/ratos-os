@@ -133,11 +133,17 @@ GET /api/diario/fechar
   -> o que fecha a proteína que sobrou, em porções que cabem num prato
 ```
 
-As sugestões respeitam o que a pessoa declarou não comer, e cada uma tem um
-botão "não como" que a tira dali para sempre — guardado no perfil, não só no
-navegador. "Outras opções" rotaciona a lista sem repetir o que já foi visto.
-Ingredientes (fermento, tempero, amido) ficam fora: têm proteína por 100 g e
-seriam absurdos como sugestão de refeição.
+As sugestões cobrem **os quatro macros**, não só proteína: o app propõe fechar
+o maior buraco do dia, e abas deixam trocar para carboidrato, gordura ou fibra
+conforme a pessoa preferir.
+
+Respeitam o que a pessoa declarou não comer, e cada sugestão tem um botão "não
+como" que a tira dali para sempre — guardado no perfil, não só no navegador.
+"Outras opções" rotaciona a lista sem repetir o que já foi visto.
+
+Ingredientes (fermento, açúcar, amido) ficam fora — têm macro por 100 g e
+seriam absurdos como refeição — e as porções são limitadas ao que se come de
+fato: azeite vai a fio (15 g), não em concha.
 
 Registra a sobremesa marcada com `ehMaravilha: true`, e o resto do dia se
 encaixa em volta.
@@ -207,9 +213,19 @@ O que ela faz:
 
 | Rota | Função |
 |---|---|
+| `POST /api/ia/prato` | foto do prato: identifica os alimentos e casa com a TACO; a pessoa confirma a quantidade |
 | `POST /api/ia/interpretar` | "comi duas conchas de feijão e um filé" vira itens com peso estimado e candidatos da base |
 | `POST /api/ia/rotulo` | lê a foto de um rótulo e converte a tabela pra 100 g |
 | `GET /api/ia/comentar-dia` | comentário descritivo do dia, sem julgamento |
+
+**Sobre a foto do prato.** A IA diz *o que* está no prato e arrisca a porção
+caseira; nunca devolve caloria. Essa fronteira é deliberada e medida: apps que
+estimam a caloria direto da foto erram cerca de −30%, sempre para baixo (NIH,
+NUTRITION 2026, 102 refeições pesadas a 0,1 g — Cal AI −345 kcal por refeição,
+MyFitnessPal −327). Erro aleatório se dilui na semana; viés sistemático acumula
+e come o déficit inteiro sem a pessoa perceber. Aqui a foto poupa digitação,
+não substitui a balança — e quando o alimento casa errado, "não é isso" mostra
+as outras opções da tabela.
 
 Sem `ANTHROPIC_API_KEY` esses três endpoints ficam desligados e todo o resto
 funciona igual.
