@@ -859,16 +859,20 @@ export const campanhaDaPipeline = (pipelineId) =>
     ? db.prepare("SELECT * FROM campanhas WHERE pipeline_id = ? AND status = 'ativa' ORDER BY id LIMIT 1").get(pipelineId)
     : null;
 // teto por campanha: conta so as mensagens dos leads DAQUELE funil
+// CONTAGEM DO DIA: sempre no fuso de SP ('-3 hours'). Com date(criado_em) cru
+// (UTC) o teto zerava as 21h de SP e a campanha voltava a disparar de noite.
 export const disparosHojeDaCampanha = (camp) => {
   if (!camp?.pipeline_id) return disparosHoje();
   return db.prepare(`SELECT COUNT(*) c FROM eventos e JOIN leads l ON l.id = e.lead_id
-    WHERE e.tipo IN ('disparo','reengajamento','followup') AND date(e.criado_em) = date('now')
+    WHERE e.tipo IN ('disparo','reengajamento','followup')
+      AND date(e.criado_em, '-3 hours') = date('now', '-3 hours')
       AND l.pipeline_id = ?`).get(camp.pipeline_id).c;
 };
 export const reengajamentosHojeDaCampanha = (camp) => {
   if (!camp?.pipeline_id) return reengajamentosHoje();
   return db.prepare(`SELECT COUNT(*) c FROM eventos e JOIN leads l ON l.id = e.lead_id
-    WHERE e.tipo = 'reengajamento' AND date(e.criado_em) = date('now')
+    WHERE e.tipo = 'reengajamento'
+      AND date(e.criado_em, '-3 hours') = date('now', '-3 hours')
       AND l.pipeline_id = ?`).get(camp.pipeline_id).c;
 };
 export const campanhaAtiva = () =>

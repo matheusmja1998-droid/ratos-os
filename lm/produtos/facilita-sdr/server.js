@@ -12,7 +12,7 @@ import {
   db, agoraSP, getConfig, setConfig, upsertLead, getLead, getLeadPorTelefone,
   atualizarLead, salvarMensagem, historicoLead, ultimaMensagemUsuario,
   naBlocklist, bloquear, registrarEvento, webhookJaVisto, metricas,
-  reunioesAtivas, reuniaoAtivaDoLead, cancelarReuniao, campanhaAtiva, disparosHoje,
+  reunioesAtivas, reuniaoAtivaDoLead, cancelarReuniao, campanhaAtiva, disparosHoje, disparosHojeDaCampanha,
   listarInstancias, getInstancia, getInstanciaPorToken, criarInstanciaDB,
   atualizarInstancia, removerInstancia, instanciasConectadas,
   tarefasDoLead, addTarefa, marcarTarefa, atualizarTarefa, removerTarefa, setTarefaGcal, tarefasAtrasadas,
@@ -663,9 +663,10 @@ app.get("/api/campanhas", auth, (req, res) => {
     c.disparados = db.prepare("SELECT COUNT(*) c FROM campanha_leads WHERE campanha_id = ? AND disparado_em IS NOT NULL").get(c.id).c;
     c.na_fila = db.prepare(`SELECT COUNT(*) c FROM campanha_leads cl JOIN leads l ON l.id = cl.lead_id
       WHERE cl.campanha_id = ? AND cl.disparado_em IS NULL AND l.status = 'novo'`).get(c.id).c;
-    // "hoje" = VOLUME TOTAL de mensagens ativas (disparo + reengajamento + follow-up),
-    // que e o que conta pro teto. Assim o X/25 do card bate com o limite real.
-    c.disparados_hoje = disparosHoje();
+    // "hoje" = volume de mensagens ativas (disparo + reengajamento + follow-up)
+    // DESTA campanha, que e o que o motor compara com o teto dela. Antes usava o
+    // total do sistema: com 2 campanhas, as duas mostravam a soma (60/20 e 60/40).
+    c.disparados_hoje = disparosHojeDaCampanha(c);
     c.aberturas_hoje = db.prepare(`SELECT COUNT(*) c FROM eventos e JOIN campanha_leads cl ON cl.lead_id = e.lead_id
       WHERE cl.campanha_id = ? AND e.tipo = 'disparo' AND datetime(e.criado_em,'-3 hours') >= datetime(? || ' 00:00')`).get(c.id, hoje).c;
     c.sem_whatsapp = db.prepare("SELECT COUNT(*) c FROM leads WHERE status = 'sem_whatsapp'").get().c;
