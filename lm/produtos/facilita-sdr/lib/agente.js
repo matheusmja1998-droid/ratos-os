@@ -26,6 +26,21 @@ const CLAUDE_MODEL = process.env.CLAUDE_MODEL || ""; // vazio = default do plano
 // sem dono no chip, cai pro dono do funil; ultimo recurso "Matheus".
 // Mensagem saindo no numero do Valentino NUNCA pode se apresentar como Matheus.
 export function personaDoLead(lead) {
+  // 1) COERENCIA COM O QUE JA FOI DITO: se a abertura ja se apresentou com um
+  // nome, a IA mantem esse nome nessa conversa (trocar no meio confunde o lead).
+  // Cobre o caso do template errado ter saido pelo chip de outra pessoa.
+  const abertura = lead?.id
+    ? db.prepare("SELECT texto FROM mensagens WHERE lead_id = ? AND role = 'assistant' ORDER BY id LIMIT 1").get(lead.id)?.texto
+    : null;
+  if (abertura) {
+    const limpa = (x) => String(x || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const t = limpa(abertura);
+    for (const u of db.prepare("SELECT nome FROM usuarios WHERE ativo = 1").all()) {
+      const nome = limpa(u.nome).split(" ")[0];
+      if (nome.length >= 3 && new RegExp(`(^|[^a-z])${nome}([^a-z]|$)`).test(t)) return u.nome;
+    }
+  }
+  // 2) padrao: dono do NUMERO que envia > dono do funil > fallback
   const donoChip = lead?.instancia_id
     ? db.prepare("SELECT usuario_id FROM instancias WHERE id = ?").get(lead.instancia_id)?.usuario_id
     : null;

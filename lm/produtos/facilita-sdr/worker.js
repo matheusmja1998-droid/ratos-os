@@ -10,13 +10,29 @@ import {
   listarInstancias, instanciasConectadas, proximaInstanciaDisparo, addDisparoInstancia, zerarDisparosInstancias, atualizarInstancia,
   leadsPraReengajar, marcarReengajado, reengajamentosHoje, instanciaDoLead, fixarChipDoLead,
   threadsPraReengajar, marcarReengajadoThread, MAX_FOLLOWS_CONVERSA, MAX_FOLLOWS_DECISOR,
-  addTarefa, getPipeline, sincronizarEtapa,
+  addTarefa, getPipeline, sincronizarEtapa, getUsuario, listarUsuarios,
 } from "./lib/db.js";
 import { responderLead } from "./lib/agente.js";
 import { enviarTexto, statusInstanciaLive, checarWhatsapp } from "./lib/uazapi.js";
 import { alertar } from "./lib/telegram.js";
 
 const rand = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
+
+// o texto se apresenta com o nome de ALGUEM que nao e o dono do chip?
+// devolve o nome conflitante (ou null). Compara so o primeiro nome, sem acento.
+function nomeDeOutroDono(texto, donoChip) {
+  const limpa = (x) => String(x || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const t = limpa(texto);
+  const dono = limpa(donoChip).split(" ")[0];
+  for (const u of listarUsuarios()) {
+    const nome = limpa(u.nome).split(" ")[0];
+    if (!nome || nome === dono || nome.length < 3) continue;
+    // "aqui e o joao", "joao aqui", "me chamo joao", "sou o joao"
+    const re = new RegExp(`(^|[^a-z])${nome}([^a-z]|$)`);
+    if (re.test(t)) return u.nome;
+  }
+  return null;
+}
 
 // TOKEN DO LEAD: toda mensagem de continuação sai pelo chip GRAVADO do lead.
 // Se o chip dele caiu, NÃO envia por outro (trocar de número = queimar os dois).
@@ -116,6 +132,19 @@ async function tickDisparo() {
 
     const tpl = tpls[rand(0, tpls.length - 1)];
     const texto = preencher(tpl.texto, lead);
+
+    // TRAVA DE PERSONA: template que se apresenta com o nome de OUTRA pessoa nao
+    // sai pelo chip errado (campanha do Valentino apontada pro funil do Matheus
+    // mandou "Valentino aqui" pelo numero do Matheus — 19/08). Pausa e avisa.
+    const donoChip = instAtiva.usuario_id ? getUsuario(instAtiva.usuario_id)?.nome : null;
+    const conflito = donoChip && nomeDeOutroDono(texto, donoChip);
+    if (conflito) {
+      db.prepare("UPDATE campanhas SET status = 'pausada' WHERE id = ?").run(camp.id);
+      registrarEvento(lead.id, "erro", `disparo BLOQUEADO: template diz "${conflito}" mas o chip e do ${donoChip}`);
+      await alertar(`🛑 CAMPANHA PAUSADA: "${camp.nome}"\nO texto de abertura se apresenta como *${conflito}*, mas ia sair pelo WhatsApp do *${donoChip}* (${instAtiva.nome}).\nCorrige o funil da campanha ou o texto e reativa. Nenhuma mensagem errada foi enviada.`);
+      continue;
+    }
+
     const r = await enviarTexto(instanceToken, alvo, texto);
     if (r.ok) {
       fixarChipDoLead(lead.id, instAtiva.id); // a conversa NASCE e MORRE neste chip
