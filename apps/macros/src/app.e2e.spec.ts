@@ -126,7 +126,8 @@ describe('Macros (e2e)', () => {
     const chocolate = busca.body[0];
 
     const antes = await req().get('/api/diario').set(auth).expect(200);
-    const refeicao = antes.body.refeicoes[4];
+    // A última refeição do dia — normalmente onde entra a sobremesa.
+    const refeicao = antes.body.refeicoes[antes.body.refeicoes.length - 1];
 
     await req().post('/api/diario/itens').set(auth).send({
       refeicaoId: refeicao.id, alimentoId: chocolate.id, gramas: 50, ehMaravilha: true,
@@ -221,6 +222,46 @@ describe('Macros (e2e)', () => {
 
     expect(r.body.gorduraG).toBe(40);
     expect(r.body.proteinaG).toBe(antes.body.proteinaG); // intocada
+  });
+
+  it('deixa montar as refeições do dia', async () => {
+    const auth = { Authorization: `Bearer ${token}` };
+
+    const antes = await req().get('/api/diario').set(auth).expect(200);
+    const quantas = antes.body.refeicoes.length;
+
+    // Acrescenta uma com nome próprio.
+    const nova = await req().post('/api/diario/refeicoes').set(auth)
+      .send({ nome: 'Pós-treino' }).expect(201);
+    expect(nova.body.nome).toBe('Pós-treino');
+
+    const depois = await req().get('/api/diario').set(auth).expect(200);
+    expect(depois.body.refeicoes).toHaveLength(quantas + 1);
+
+    // Renomeia.
+    const renomeada = await req().patch(`/api/diario/refeicoes/${nova.body.id}`)
+      .set(auth).send({ nome: 'Ceia' }).expect(200);
+    expect(renomeada.body.nome).toBe('Ceia');
+
+    // Remove a vazia.
+    await req().delete(`/api/diario/refeicoes/${nova.body.id}`).set(auth).expect(200);
+    const final = await req().get('/api/diario').set(auth).expect(200);
+    expect(final.body.refeicoes).toHaveLength(quantas);
+  });
+
+  it('não apaga refeição que tem comida anotada', async () => {
+    const auth = { Authorization: `Bearer ${token}` };
+    const dia = await req().get('/api/diario').set(auth).expect(200);
+
+    // A primeira refeição já recebeu itens nos testes anteriores.
+    const comItens = dia.body.refeicoes.find(
+      (r: { itens: unknown[] }) => (r.itens ?? []).length > 0,
+    );
+    expect(comItens).toBeTruthy();
+
+    const r = await req().delete(`/api/diario/refeicoes/${comItens.id}`)
+      .set(auth).expect(400);
+    expect(r.body.message).toContain('Tire os itens');
   });
 
   it('serve o cliente web', async () => {

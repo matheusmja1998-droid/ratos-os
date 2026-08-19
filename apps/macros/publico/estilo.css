@@ -376,3 +376,45 @@ nav.rodape button[aria-current='true'] {
 @media (prefers-reduced-motion: reduce) {
   *, .secao { animation: none !important; transition: none !important; }
 }
+
+/* ---------- Explicação numerada ---------- */
+
+.explicacao {
+  list-style: none;
+  counter-reset: passo;
+  display: grid;
+  gap: .7rem;
+}
+.explicacao li {
+  counter-increment: passo;
+  position: relative;
+  padding-left: 2rem;
+  font-size: .93rem;
+  color: var(--tinta-fraca);
+}
+.explicacao li::before {
+  content: counter(passo);
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 1.4rem;
+  height: 1.4rem;
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: .72rem;
+  color: var(--papel);
+  background: var(--tinta);
+  border-radius: 50%;
+}
+.explicacao b { color: var(--tinta); font-weight: 500; }
+
+/* Ações de organizar refeições */
+.refeicao-acoes { display: flex; gap: .35rem; }
+.refeicao-nome-edit {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1rem;
+  padding: .25rem .4rem;
+  width: 100%;
+}

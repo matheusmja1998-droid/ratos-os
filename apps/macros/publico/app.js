@@ -18,6 +18,8 @@ const estado = {
   meta: null,
   dia: null,
   criandoConta: false,
+  /** Refeição escolhida na tela Hoje, pré-selecionada ao anotar. */
+  refeicaoEscolhida: null,
 };
 
 /* ---------- utilidades ---------- */
@@ -435,6 +437,9 @@ function desenharPainel() {
       ? `<p class="nota seco">${esc(estado.dia.coerencia.aviso)}</p>` : ''}`;
 }
 
+/** Modo de organização: mostra renomear e remover em cada refeição. */
+let organizando = false;
+
 function desenharRefeicoes() {
   const html = estado.dia.refeicoes.map((r) => {
     const itens = r.itens || [];
@@ -453,14 +458,19 @@ function desenharRefeicoes() {
         <button class="mini leve" data-remover="${esc(i.id)}" aria-label="Remover">×</button>
       </div>`).join('');
 
-    return `
-      <div class="refeicao">
-        <div class="refeicao-topo">
-          <span class="refeicao-nome">${esc(r.nome)}</span>
-          <span class="refeicao-kcal">${kcal ? kcal + ' kcal' : '—'}</span>
-        </div>
-        ${listaItens}
-      </div>`;
+    const topo = organizando
+      ? `<div class="linha-flex">
+           <input class="refeicao-nome-edit cresce" value="${esc(r.nome)}"
+                  data-renomear="${esc(r.id)}" aria-label="Nome da refeição">
+           <button class="mini leve" data-apagar-refeicao="${esc(r.id)}"
+                   aria-label="Remover refeição">×</button>
+         </div>`
+      : `<div class="refeicao-topo" data-anotar="${esc(r.id)}">
+           <span class="refeicao-nome">${esc(r.nome)}</span>
+           <span class="refeicao-kcal">${kcal ? kcal + ' kcal' : 'anotar +'}</span>
+         </div>`;
+
+    return `<div class="refeicao">${topo}${listaItens}</div>`;
   }).join('');
 
   $('#refeicoes').innerHTML = html;
@@ -470,6 +480,43 @@ function desenharRefeicoes() {
       await api(`/diario/itens/${b.dataset.remover}`, { method: 'DELETE' });
       await carregarDia();
     }));
+
+  // Tocar numa refeição leva pra tela de anotar, já com ela escolhida.
+  $$('[data-anotar]').forEach((el) =>
+    el.addEventListener('click', () => {
+      estado.refeicaoEscolhida = el.dataset.anotar;
+      trocarTela('comer');
+      $('#busca')?.focus();
+    }));
+
+  $$('[data-renomear]').forEach((el) => {
+    const salvar = async () => {
+      const nome = el.value.trim();
+      if (!nome) return;
+      await api(`/diario/refeicoes/${el.dataset.renomear}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ nome }),
+      });
+      await carregarDia();
+    };
+    el.addEventListener('blur', salvar);
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter') el.blur(); });
+  });
+
+  $$('[data-apagar-refeicao]').forEach((b) =>
+    b.addEventListener('click', async () => {
+      try {
+        await api(`/diario/refeicoes/${b.dataset.apagarRefeicao}`, { method: 'DELETE' });
+        await carregarDia();
+      } catch (e) {
+        $('#dica-refeicoes').textContent = e.message;
+      }
+    }));
+
+  $('#dica-refeicoes').textContent = organizando
+    ? 'Toque no nome pra renomear. O × remove a refeição, se ela estiver vazia.'
+    : 'Toque numa refeição pra anotar comida nela.';
+  $('#btn-editar-refeicoes').textContent = organizando ? 'Pronto' : 'Organizar';
 }
 
 async function carregarDia() {
@@ -495,7 +542,9 @@ function blocoAdicionar(alimento, gramasSugeridas = 100) {
       <div class="linha-flex">
         <select class="seletor-refeicao cresce">
           ${(estado.dia?.refeicoes || []).map((r) =>
-            `<option value="${esc(r.id)}">${esc(r.nome)}</option>`).join('')}
+            `<option value="${esc(r.id)}"${
+              estado.refeicaoEscolhida === r.id ? ' selected' : ''
+            }>${esc(r.nome)}</option>`).join('')}
         </select>
         <input type="number" class="campo-gramas" style="width:6.5rem" value="${gramasSugeridas}" step="5" aria-label="Gramas">
       </div>
@@ -899,6 +948,16 @@ $('#btn-comentar').addEventListener('click', async () => {
 });
 
 $('#btn-salvar-perfil').addEventListener('click', salvarPerfil);
+$('#btn-add-refeicao').addEventListener('click', async () => {
+  await api('/diario/refeicoes', { method: 'POST', body: JSON.stringify({}) });
+  await carregarDia();
+});
+
+$('#btn-editar-refeicoes').addEventListener('click', () => {
+  organizando = !organizando;
+  desenharRefeicoes();
+});
+
 $('#btn-sair').addEventListener('click', sair);
 
 /* ---------- partida ---------- */

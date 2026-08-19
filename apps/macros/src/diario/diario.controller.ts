@@ -31,6 +31,33 @@ export class DiarioController {
     };
   }
 
+  @Post('refeicoes')
+  @ApiOperation({ summary: 'Acrescenta uma refeição ao dia' })
+  adicionarRefeicao(
+    @UsuarioAtual() u: { id: string },
+    @Body() dto: { nome?: string },
+    @Query('data') data?: string,
+  ) {
+    return this.diario.adicionarRefeicao(u.id, data ?? hojeSP(), dto?.nome);
+  }
+
+  @Patch('refeicoes/:id')
+  @ApiOperation({ summary: 'Renomeia uma refeição' })
+  renomearRefeicao(
+    @UsuarioAtual() u: { id: string },
+    @Param('id') id: string,
+    @Body() dto: { nome: string },
+  ) {
+    return this.diario.renomearRefeicao(u.id, id, dto.nome);
+  }
+
+  @Delete('refeicoes/:id')
+  @ApiOperation({ summary: 'Remove uma refeição vazia do dia' })
+  async removerRefeicao(@UsuarioAtual() u: { id: string }, @Param('id') id: string) {
+    await this.diario.removerRefeicao(u.id, id);
+    return { removida: true };
+  }
+
   @Post('itens')
   @ApiOperation({ summary: 'Adiciona alimento à refeição (peso sempre em GRAMAS)' })
   adicionar(@UsuarioAtual() u: { id: string }, @Body() dto: AdicionarItemDto, @Query('data') data?: string) {

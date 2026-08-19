@@ -54,6 +54,13 @@
     <section class="secao">
       <h2>Refeições</h2>
       <div id="refeicoes"></div>
+      <div class="linha-flex" style="margin-top:.9rem">
+        <button id="btn-add-refeicao" class="mini leve">+ refeição</button>
+        <button id="btn-editar-refeicoes" class="mini leve">Organizar</button>
+      </div>
+      <p class="tenue" id="dica-refeicoes" style="margin-top:.5rem">
+        Toque numa refeição pra anotar comida nela.
+      </p>
     </section>
 
     <section class="secao" id="bloco-conversa">
@@ -72,25 +79,34 @@
     </header>
 
     <section class="secao">
-      <h2>Escrever o que comeu</h2>
-      <p class="tenue">Escreva do seu jeito: “duas conchas de feijão e um filé de frango”.</p>
+      <h2>Como funciona</h2>
+      <ol class="explicacao">
+        <li><b>Escreva ou procure</b> o alimento — comece pela sobremesa ou pelo prato que você quer mesmo.</li>
+        <li><b>Toque no resultado</b> pra abrir: escolha a refeição, o peso em gramas e anote.</li>
+        <li><b>O resto do dia</b> se encaixa em volta. Em “Fechar o dia” o app sugere o que completa a proteína.</li>
+      </ol>
+    </section>
+
+    <section class="secao">
+      <h2>1 · Escreva o que comeu</h2>
+      <p class="tenue">Do seu jeito, em português: “duas conchas de feijão e um filé de frango”. A IA identifica os alimentos e você confirma o peso.</p>
       <div class="linha-flex" style="margin-top:.7rem">
-        <input id="texto-ia" class="cresce" placeholder="o que você comeu…">
+        <input id="texto-ia" class="cresce" placeholder="ex: arroz, feijão e um bife">
         <button id="btn-ia">Ler</button>
       </div>
       <div id="saida-ia"></div>
     </section>
 
     <section class="secao">
-      <h2>Procurar alimento</h2>
-      <p class="tenue">Toque num resultado pra anotar no dia ou ver quanto ainda cabe. O preparo muda tudo: mandioca cozida tem 125 kcal, frita tem 300.</p>
+      <h2>2 · Ou procure pelo nome</h2>
+      <p class="tenue">O preparo muda tudo: mandioca cozida tem 125 kcal, frita tem 300. Escreva o preparo junto pra achar o certo.</p>
       <input id="busca" placeholder="mandioca frita, arroz cozido, nutella…" style="margin-top:.7rem">
       <div id="resultados"></div>
     </section>
 
     <section class="secao">
-      <h2>Fechar o dia</h2>
-      <p class="tenue">O que completa a proteína que ainda falta.</p>
+      <h2>3 · Fechar o dia</h2>
+      <p class="tenue">O que completa a proteína que ainda falta, em porções que cabem num prato.</p>
       <button id="btn-fechar" class="leve" style="margin-top:.7rem">Ver sugestões</button>
       <div id="fechamento"></div>
     </section>

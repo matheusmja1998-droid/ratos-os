@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ItemRefeicao, Meta, Refeicao } from '../comum/entidades';
@@ -17,10 +17,16 @@ const ZERO: TotaisDia = {
   kcal: 0, proteinaG: 0, carboidratoG: 0, gorduraG: 0, fibraG: 0, gorduraSaturadaG: 0,
 };
 
-/** Nomes neutros por padrão: "Refeição 1" não pressupõe rotina de ninguém. */
-const REFEICOES_PADRAO = [
-  'Refeição 1', 'Refeição 2', 'Refeição 3', 'Refeição 4', 'Refeição 5', 'Refeição 6',
-];
+/**
+ * Quantas refeições um dia novo começa tendo.
+ *
+ * Quatro cobre a rotina mais comum sem entulhar a tela. Quem faz mais come
+ * mais vezes, e adiciona; quem faz menos, remove. O número não é doutrina.
+ */
+const REFEICOES_INICIAIS = 4;
+
+/** Nome neutro: "Refeição 3" não pressupõe a rotina de ninguém. */
+const nomePadrao = (ordem: number) => `Refeição ${ordem + 1}`;
 
 @Injectable()
 export class DiarioService {
@@ -40,9 +46,22 @@ export class DiarioService {
     });
     if (existentes.length > 0) return existentes;
 
-    const novas = REFEICOES_PADRAO.map((nome, i) =>
-      this.refeicoes.create({ usuarioId, data, nome, ordem: i }),
-    );
+    // Um dia novo herda a estrutura do último dia que a pessoa montou: se ela
+    // organizou 5 refeições ontem, não faz sentido recomeçar do zero hoje.
+    const ultimo = await this.refeicoes.find({
+      where: { usuarioId },
+      order: { data: 'DESC', ordem: 'ASC' },
+      take: 12,
+    });
+    const modelo = ultimo.filter((r) => r.data === ultimo[0]?.data);
+
+    const novas = (modelo.length > 0
+      ? modelo.map((r) => ({ nome: r.nome, ordem: r.ordem }))
+      : Array.from({ length: REFEICOES_INICIAIS }, (_, i) => ({
+          nome: nomePadrao(i),
+          ordem: i,
+        }))
+    ).map((r) => this.refeicoes.create({ usuarioId, data, ...r }));
     await this.refeicoes.save(novas);
     return this.refeicoes.find({
       where: { usuarioId, data },
@@ -84,6 +103,61 @@ export class DiarioService {
       consumido: params.consumido ?? true,
     });
     return this.itens.save(item);
+  }
+
+  /** Acrescenta uma refeição ao dia, no fim da lista. */
+  async adicionarRefeicao(usuarioId: string, data: string, nome?: string): Promise<Refeicao> {
+    const doDia = await this.refeicoes.find({ where: { usuarioId, data } });
+    const ordem = doDia.length;
+    return this.refeicoes.save(
+      this.refeicoes.create({
+        usuarioId,
+        data,
+        nome: nome?.trim() || nomePadrao(ordem),
+        ordem,
+      }),
+    );
+  }
+
+  /** Renomeia uma refeição — "Café", "Pós-treino", o que fizer sentido. */
+  async renomearRefeicao(usuarioId: string, refeicaoId: string, nome: string): Promise<Refeicao> {
+    const r = await this.refeicoes.findOne({ where: { id: refeicaoId, usuarioId } });
+    if (!r) throw new NotFoundException('Refeição não encontrada');
+    r.nome = nome.trim() || r.nome;
+    return this.refeicoes.save(r);
+  }
+
+  /**
+   * Remove uma refeição do dia.
+   *
+   * Recusa se houver comida registrada nela: apagar em silêncio o que a pessoa
+   * anotou seria pior do que pedir pra ela tirar os itens antes.
+   */
+  async removerRefeicao(usuarioId: string, refeicaoId: string): Promise<void> {
+    const r = await this.refeicoes.findOne({
+      where: { id: refeicaoId, usuarioId },
+      relations: { itens: true },
+    });
+    if (!r) throw new NotFoundException('Refeição não encontrada');
+
+    if ((r.itens ?? []).length > 0) {
+      throw new BadRequestException(
+        'Essa refeição tem comida anotada. Tire os itens antes de removê-la.',
+      );
+    }
+
+    await this.refeicoes.delete(r.id);
+
+    // Renumera as que sobraram pra não deixar buraco na ordem.
+    const restantes = await this.refeicoes.find({
+      where: { usuarioId, data: r.data },
+      order: { ordem: 'ASC' },
+    });
+    await Promise.all(
+      restantes.map((item, i) =>
+        item.ordem === i ? null : this.refeicoes.update(item.id, { ordem: i }),
+      ),
+    );
   }
 
   async removerItem(usuarioId: string, itemId: string): Promise<void> {
