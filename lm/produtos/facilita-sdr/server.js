@@ -5,7 +5,7 @@
 import express from "express";
 import multer from "multer";
 import { execFile } from "node:child_process";
-import { mkdirSync, renameSync, readFileSync, copyFileSync, existsSync as fsExiste } from "node:fs";
+import { mkdirSync, renameSync, readFileSync, copyFileSync, unlinkSync, existsSync as fsExiste } from "node:fs";
 import { dirname, join, extname } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -772,7 +772,6 @@ function parseCSV(texto) {
 
 app.post("/api/importar", auth, upload.single("csv"), async (req, res) => {
   try {
-    const { unlinkSync } = await import("node:fs");
     const texto = readFileSync(req.file.path, "utf8");
     unlinkSync(req.file.path);
     const linhas = parseCSV(texto);
@@ -1281,14 +1280,38 @@ app.get("/apresentacao", async (req, res) => {
 app.get("/api/lead/:id/notas", auth, (req, res) => {
   res.json(db.prepare("SELECT * FROM notas WHERE lead_id = ? ORDER BY id DESC").all(req.params.id));
 });
-app.post("/api/lead/:id/notas", auth, (req, res) => {
+// nota com FOTO opcional (print de conversa, cartao, foto da fachada...).
+// A imagem fica em dados/anexos e o caminho relativo vai na coluna `anexo`.
+app.post("/api/lead/:id/notas", auth, upload.single("foto"), (req, res) => {
   const texto = String(req.body?.texto || "").trim();
-  if (!texto) return res.status(400).json({ erro: "nota vazia" });
-  const id = db.prepare("INSERT INTO notas (lead_id, texto) VALUES (?, ?)").run(req.params.id, texto).lastInsertRowid;
-  registrarEvento(Number(req.params.id), "nota", texto.slice(0, 60));
-  res.json({ ok: true, id });
+  if (!texto && !req.file) return res.status(400).json({ erro: "nota vazia" });
+  let anexo = null;
+  if (req.file) {
+    const ok = /^image\//.test(req.file.mimetype || "");
+    if (!ok) { try { unlinkSync(req.file.path); } catch {} return res.status(400).json({ erro: "só aceito imagem" }); }
+    const dir = join(DADOS_DIR, "anexos");
+    mkdirSync(dir, { recursive: true });
+    const ext = (extname(req.file.originalname || "") || ".jpg").toLowerCase();
+    const nome = `nota-${Date.now()}-${Math.floor(Math.random() * 1e6)}${ext}`;
+    renameSync(req.file.path, join(dir, nome));
+    anexo = nome;
+  }
+  const id = db.prepare("INSERT INTO notas (lead_id, texto, anexo, usuario_id) VALUES (?,?,?,?)")
+    .run(req.params.id, texto || "[foto]", anexo, req.usuario?.id || null).lastInsertRowid;
+  registrarEvento(Number(req.params.id), "nota", (texto || "foto").slice(0, 60));
+  res.json({ ok: true, id, anexo });
+});
+// serve a foto da nota (auth por query: <img> nao manda header)
+app.get("/api/nota-anexo/:arquivo", (req, res) => {
+  if (!tokenQueryValido(String(req.query.t || ""))) return res.status(401).end();
+  const nome = String(req.params.arquivo).replace(/[^\w.-]/g, ""); // sem path traversal
+  const caminho = join(DADOS_DIR, "anexos", nome);
+  if (!fsExiste(caminho)) return res.status(404).end();
+  res.sendFile(caminho);
 });
 app.delete("/api/nota/:id", auth, (req, res) => {
+  const n = db.prepare("SELECT anexo FROM notas WHERE id = ?").get(req.params.id);
+  if (n?.anexo) { try { unlinkSync(join(DADOS_DIR, "anexos", n.anexo)); } catch { /* ja sumiu */ } }
   db.prepare("DELETE FROM notas WHERE id = ?").run(req.params.id);
   res.json({ ok: true });
 });
@@ -1365,7 +1388,6 @@ app.post("/api/lead/:id/audio", auth, exige("conversar"), upload.single("audio")
     const b64 = readFileSync(req.file.path).toString("base64");
     const ext = (extname(req.file.originalname || "") || ".ogg").toLowerCase().replace(".", "");
     const mime = ext === "mp3" ? "audio/mpeg" : ext === "m4a" ? "audio/mp4" : ext === "webm" ? "audio/webm" : "audio/ogg";
-    const { unlinkSync } = await import("node:fs");
     const simulado = String(alvo).startsWith("0000");
     const r = simulado ? { ok: true } : await enviarMidia(instA?.uazapi_token || "", alvo, { tipo: "audio", arquivo: `data:${mime};base64,${b64}` });
     unlinkSync(req.file.path);

@@ -2062,6 +2062,7 @@ function renderPainelNotas(d) {
       ${(d.notas || []).length ? `<div class="pn-secao">Notas</div>
         ${d.notas.map((n) => `<div class="pn-nota">
           <span style="flex:1">${n.texto}
+            ${n.anexo ? `<div style="margin-top:6px"><img src="${API}/api/nota-anexo/${n.anexo}?t=${encodeURIComponent(SENHA)}" onclick="window.open(this.src,'_blank')" style="max-width:100%; max-height:170px; border-radius:8px; border:1px solid var(--border); cursor:zoom-in; display:block"></div>` : ""}
             <div style="color:var(--muted); font-size:11.5px; margin-top:3px">${dataHoraSP(n.criado_em)}${n.usuario_nome ? " · " + n.usuario_nome : ""}</div>
           </span>
           <span onclick="excluirNota(${n.id}, ${l.id})" style="cursor:pointer; color:var(--muted); font-size:15px">✕</span>
@@ -2150,7 +2151,12 @@ const MODOS_COMPOSER = { nota: "Nota", tarefa: "Tarefa", agendamento: "Agendamen
 let modoComposer = "nota";
 function htmlComposer(leadId) {
   if (modoComposer === "nota")
-    return `<textarea id="nota-input" rows="1" placeholder="escrever nota..." style="width:100%; font-size:13.5px; padding:7px 10px; line-height:1.45; resize:vertical" oninput="mostrarAcoesComposer()" onfocus="mostrarAcoesComposer()" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();salvarComposer(${leadId})}"></textarea>`;
+    return `<textarea id="nota-input" rows="1" placeholder="escrever nota..." style="width:100%; font-size:13.5px; padding:7px 10px; line-height:1.45; resize:vertical" oninput="mostrarAcoesComposer()" onfocus="mostrarAcoesComposer()" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();salvarComposer(${leadId})}"></textarea>
+      <input type="file" id="nota-foto" accept="image/*" style="display:none" onchange="mostrarFotoNota()">
+      <div style="display:flex; gap:8px; align-items:center; margin-top:4px">
+        <span onclick="$('#nota-foto').click()" style="cursor:pointer; font-size:12px; color:var(--verde); font-weight:600">📎 anexar foto</span>
+        <span id="nota-foto-nome" style="font-size:11.5px; color:var(--muted)"></span>
+      </div>`;
   const rotQuem = modoComposer === "agendamento" ? "com" : "para";
   return `<div style="display:flex; gap:4px; flex-wrap:wrap; align-items:center; font-size:12px; color:var(--muted)">
       <span>vencimento</span>
@@ -2479,14 +2485,30 @@ async function abrirThread(leadId, threadId) {
   abrirConversa(leadId);
 }
 
+function mostrarFotoNota() {
+  const f = $("#nota-foto")?.files?.[0];
+  if ($("#nota-foto-nome")) $("#nota-foto-nome").textContent = f ? f.name.slice(0, 34) : "";
+  mostrarAcoesComposer();
+}
 async function addNota(id) {
   const campo = $("#nota-input");
   const t = campo?.value.trim();
-  if (!t) return toast("escreve a nota primeiro");
-  const r = await api("/api/lead/" + id + "/notas", { method: "POST", body: JSON.stringify({ texto: t }) });
+  const foto = $("#nota-foto")?.files?.[0] || null;
+  if (!t && !foto) return toast("escreve a nota ou anexa uma foto");
+  // com foto vai multipart; sem foto segue JSON (mais leve)
+  let r;
+  if (foto) {
+    const fd = new FormData();
+    fd.append("texto", t || "");
+    fd.append("foto", foto);
+    r = await api("/api/lead/" + id + "/notas", { method: "POST", body: fd });
+  } else {
+    r = await api("/api/lead/" + id + "/notas", { method: "POST", body: JSON.stringify({ texto: t }) });
+  }
   if (r?.erro) return alert("erro ao salvar: " + r.erro);
   if (campo) campo.value = "";       // limpa só depois de salvar de verdade
-  toast("nota salva");
+  if ($("#nota-foto")) $("#nota-foto").value = "";
+  toast(foto ? "nota com foto salva" : "nota salva");
   abrirConversa(id); atualizar();
 }
 async function excluirNota(notaId, leadId) {

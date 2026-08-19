@@ -160,6 +160,7 @@ for (const sql of [
   "ALTER TABLE leads ADD COLUMN instancia_id INTEGER",
   "ALTER TABLE instancias ADD COLUMN pipeline_id INTEGER",
   "ALTER TABLE instancias ADD COLUMN usuario_id INTEGER",
+  "ALTER TABLE notas ADD COLUMN anexo TEXT",
   "ALTER TABLE leads ADD COLUMN follows_feitos INTEGER DEFAULT 0",
   "ALTER TABLE leads ADD COLUMN ultimo_follow_em TEXT",
   "ALTER TABLE threads ADD COLUMN follows_feitos INTEGER DEFAULT 0",
