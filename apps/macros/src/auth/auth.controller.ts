@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -40,7 +40,37 @@ export class AuthController {
       id: u.id, nome: u.nome, email: u.email, sexo: u.sexo,
       idadeAnos: u.idadeAnos, alturaCm: u.alturaCm,
       nivelAtividade: u.nivelAtividade, objetivo: u.objetivo,
+      restricoes: u.restricoes ?? [], naoComeIds: u.naoComeIds ?? [],
     };
+  }
+
+  @Post('nao-como/:alimentoId')
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Marca um alimento como "não como" — some das sugestões' })
+  async naoComo(
+    @UsuarioAtual() usuario: { id: string },
+    @Param('alimentoId') alimentoId: string,
+  ) {
+    const u = await this.usuarios.findOneOrFail({ where: { id: usuario.id } });
+    const lista = new Set(u.naoComeIds ?? []);
+    lista.add(alimentoId);
+    await this.usuarios.update(u.id, { naoComeIds: [...lista] });
+    return { naoComeIds: [...lista] };
+  }
+
+  @Delete('nao-como/:alimentoId')
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Volta a aceitar um alimento nas sugestões' })
+  async voltoAComer(
+    @UsuarioAtual() usuario: { id: string },
+    @Param('alimentoId') alimentoId: string,
+  ) {
+    const u = await this.usuarios.findOneOrFail({ where: { id: usuario.id } });
+    const lista = (u.naoComeIds ?? []).filter((i) => i !== alimentoId);
+    await this.usuarios.update(u.id, { naoComeIds: lista });
+    return { naoComeIds: lista };
   }
 
   @Patch('eu')

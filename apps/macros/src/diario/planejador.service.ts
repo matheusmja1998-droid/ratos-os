@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Alimento, Meta } from '../comum/entidades';
 import { AlimentosService } from '../alimentos/alimentos.service';
+import { violaRestricao } from '../alimentos/restricoes';
 import { KCAL_POR_GRAMA } from '../calculo/calculo.service';
 import { TotaisDia } from './diario.service';
 
@@ -93,11 +94,25 @@ export class PlanejadorService {
    * sugerir 570 g de atum pra fechar a proteína é matematicamente correto e
    * inútil na prática.
    */
-  async sugerirFechamento(espaco: EspacoRestante, limite = 6): Promise<SugestaoPorcao[]> {
+  async sugerirFechamento(
+    espaco: EspacoRestante,
+    limite = 6,
+    opcoes: { excluir?: string[]; pular?: number; restricoes?: string[] } = {},
+  ): Promise<{ sugestoes: SugestaoPorcao[]; temMais: boolean }> {
     const candidatos = await this.alimentosRepo.find({ where: { verificado: true } });
     const sugestoes: SugestaoPorcao[] = [];
 
+    // Alimentos que a pessoa não come. Sugerir de novo o que ela já recusou é
+    // ignorá-la — e ela para de olhar as sugestões.
+    const excluir = new Set(opcoes.excluir ?? []);
+
     for (const a of candidatos) {
+      if (excluir.has(a.id)) continue;
+      // Restrições declaradas no cadastro: some o grupo inteiro de uma vez.
+      if (violaRestricao(a.nome, opcoes.restricoes)) continue;
+      // Ingrediente não é refeição: fermento e tempero têm proteína por 100 g,
+      // mas ninguém come 40 g de fermento pra fechar a proteína do dia.
+      if (this.ehIngrediente(a.nome)) continue;
       if (a.proteina100g < 10) continue;
 
       const cabe = this.quantoCabe(a, espaco);
@@ -134,9 +149,33 @@ export class PlanejadorService {
     }
 
     // Melhor densidade de proteína por caloria gasta.
-    return sugestoes
-      .sort((a, b) => b.macros.proteinaG / (b.macros.kcal || 1) - a.macros.proteinaG / (a.macros.kcal || 1))
-      .slice(0, limite);
+    const ordenadas = sugestoes.sort(
+      (a, b) =>
+        b.macros.proteinaG / (b.macros.kcal || 1) -
+        a.macros.proteinaG / (a.macros.kcal || 1),
+    );
+
+    // `pular` permite pedir "outras opções" sem repetir as já mostradas.
+    const inicio = opcoes.pular ?? 0;
+    return {
+      sugestoes: ordenadas.slice(inicio, inicio + limite),
+      temMais: ordenadas.length > inicio + limite,
+    };
+  }
+
+  /**
+   * O alimento é ingrediente, não refeição?
+   *
+   * A base TACO tem fermento, tempero e leite em pó — corretos como dado,
+   * absurdos como sugestão de "o que comer pra fechar a proteína".
+   */
+  private ehIngrediente(nome: string): boolean {
+    const alvo = nome.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    return [
+      'fermento', 'tempero', 'caldo de', 'sal ', 'pimenta', 'colorau',
+      'corante', 'gelatina em po', 'leite em po', 'farinha lactea',
+      'amido', 'polvilho', 'glutamato', 'bicarbonato', 'essencia',
+    ].some((t) => alvo.includes(t));
   }
 
   /**

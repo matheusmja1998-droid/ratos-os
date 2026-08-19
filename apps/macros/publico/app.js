@@ -101,6 +101,7 @@ const rascunho = {
   nome: '', email: '', senha: '',
   sexo: 'masculino', idadeAnos: '', alturaCm: '', pesoKg: '',
   nivelAtividade: 'moderado', objetivo: 'emagrecer', deficitKcal: 500,
+  restricoes: [],
 };
 
 function guardarEtapaAtual() {
@@ -111,10 +112,14 @@ function guardarEtapaAtual() {
 }
 
 const ETAPAS = [
-  { titulo: 'Criar conta', indicador: 'Passo 1 de 3 · quem é você' },
-  { titulo: 'Seu corpo', indicador: 'Passo 2 de 3 · a base da conta' },
-  { titulo: 'Seu objetivo', indicador: 'Passo 3 de 3 · o quanto acelerar' },
+  { titulo: 'Criar conta', indicador: 'Passo 1 de 4 · quem é você' },
+  { titulo: 'Seu corpo', indicador: 'Passo 2 de 4 · a base da conta' },
+  { titulo: 'Seu objetivo', indicador: 'Passo 3 de 4 · o quanto acelerar' },
+  { titulo: 'O que você não come', indicador: 'Passo 4 de 4 · pra não sugerir errado' },
 ];
+
+/** Grupos de alimento carregados do servidor para a última etapa. */
+let gruposRestricao = null;
 
 function montarCamposConta() {
   const alvo = $('#campos-conta');
@@ -209,10 +214,22 @@ function montarCamposConta() {
     atualizarLeitura();
   }
 
+  if (etapa === 4) {
+    alvo.innerHTML = `
+      <p class="tenue">Marque o que você não come. Esses alimentos somem das
+      sugestões — você ainda pode buscá-los pelo nome quando quiser.</p>
+      <p class="tenue" style="margin-top:.5rem">Pode pular: dá pra mudar
+      depois em “A conta”.</p>
+      <div id="grupos-restricao" style="margin-top:.9rem">
+        <p class="carregando">carregando…</p>
+      </div>`;
+    carregarGruposRestricao();
+  }
+
   $('#entrada-titulo').textContent = ETAPAS[etapa - 1].titulo;
   $('#passo-indicador').textContent = ETAPAS[etapa - 1].indicador;
   $('#passo-indicador').classList.remove('some');
-  $('#btn-entrar').textContent = etapa === 3 ? 'Ver minha conta' : 'Continuar';
+  $('#btn-entrar').textContent = etapa === 4 ? 'Ver minha conta' : 'Continuar';
   $('#btn-voltar').classList.toggle('some', etapa === 1);
   $('#btn-alternar').textContent = 'Já tenho conta';
   $('#btn-alternar').classList.toggle('some', etapa !== 1);
@@ -222,6 +239,49 @@ function mostrarErroConta(msg) {
   const el = $('#erro-conta');
   el.textContent = msg;
   el.classList.toggle('some', !msg);
+}
+
+/**
+ * Carrega os grupos de alimento e desenha as caixas de seleção.
+ *
+ * Fica numa etapa própria e opcional: perguntar isso uma vez no cadastro evita
+ * que a pessoa tenha que descartar sardinha, fígado e leite um a um depois.
+ */
+async function carregarGruposRestricao() {
+  const caixa = $('#grupos-restricao');
+  if (!caixa) return;
+
+  try {
+    gruposRestricao ??= await api('/alimentos/restricoes');
+  } catch {
+    caixa.innerHTML = `<p class="tenue">Não consegui carregar agora. Você pode
+      definir isso depois em “A conta”.</p>`;
+    return;
+  }
+
+  const marcadas = new Set(rascunho.restricoes || []);
+
+  caixa.innerHTML = gruposRestricao.map((g) => `
+    <div style="margin-bottom:1rem">
+      <div class="grupo-titulo">${esc(g.grupo)}</div>
+      <div class="pilha-restricoes">
+        ${g.itens.map((i) => `
+          <label class="restricao ${marcadas.has(i.chave) ? 'marcada' : ''}">
+            <input type="checkbox" value="${esc(i.chave)}"
+                   ${marcadas.has(i.chave) ? 'checked' : ''}>
+            <span>
+              <b>${esc(i.rotulo)}</b>
+              <small>${esc(i.ajuda)}</small>
+            </span>
+          </label>`).join('')}
+      </div>
+    </div>`).join('');
+
+  caixa.querySelectorAll('input[type=checkbox]').forEach((c) =>
+    c.addEventListener('change', () => {
+      c.closest('.restricao').classList.toggle('marcada', c.checked);
+      rascunho.restricoes = [...caixa.querySelectorAll('input:checked')].map((i) => i.value);
+    }));
 }
 
 /** Valida a etapa atual e devolve o que estiver errado, em linguagem direta. */
@@ -270,7 +330,7 @@ async function autenticar() {
   if (problema) { mostrarErroConta(problema); return; }
 
   // Ainda há etapas pela frente.
-  if (etapa < 3) {
+  if (etapa < 4) {
     etapa += 1;
     montarCamposConta();
     window.scrollTo(0, 0);
@@ -296,6 +356,7 @@ async function autenticar() {
         objetivo: rascunho.objetivo,
         deficitKcal:
           rascunho.objetivo === 'manter' ? 0 : Number(rascunho.deficitKcal) || 500,
+        restricoes: rascunho.restricoes || [],
       }),
     });
 
@@ -635,8 +696,28 @@ function preencherRefeicoesNoSeletor() {
   $$('.seletor-refeicao').forEach((s) => { s.innerHTML = opcoes; });
 }
 
-/** Bloco de adicionar: refeição, gramas, marcar como maravilha. */
+/**
+ * Bloco de adicionar: refeição, quantidade e marcar como maravilha.
+ *
+ * A quantidade aceita porção caseira ("2 ovos", "1 fatia") ou gramas. A
+ * conversão continua acontecendo por baixo — o registro é sempre em gramas —
+ * mas ninguém precisa saber que um ovo tem 50 g pra anotar dois ovos.
+ */
 function blocoAdicionar(alimento, gramasSugeridas = 100) {
+  const porcoes = alimento.porcoes || [];
+  const temPorcao = porcoes.length > 0;
+
+  const opcoesUnidade = [
+    ...porcoes.map((p, i) =>
+      `<option value="${i}" data-gramas="${p.gramas}">${esc(p.rotulo)}</option>`),
+    '<option value="g">gramas</option>',
+  ].join('');
+
+  // Com porção disponível, começa nela: é como a pessoa pensa a comida.
+  const qtdInicial = temPorcao
+    ? Math.max(1, Math.round(gramasSugeridas / porcoes[0].gramas))
+    : gramasSugeridas;
+
   return `
     <div class="pilha" style="margin:.6rem 0 .2rem">
       <div class="linha-flex">
@@ -646,8 +727,14 @@ function blocoAdicionar(alimento, gramasSugeridas = 100) {
               estado.refeicaoEscolhida === r.id ? ' selected' : ''
             }>${esc(r.nome)}</option>`).join('')}
         </select>
-        <input type="number" class="campo-gramas" style="width:6.5rem" value="${gramasSugeridas}" step="5" aria-label="Gramas">
       </div>
+      <div class="linha-flex">
+        <input type="number" class="campo-qtd" style="width:5rem" value="${qtdInicial}"
+               step="${temPorcao ? '0.5' : '5'}" min="0" aria-label="Quantidade">
+        <select class="seletor-unidade cresce" aria-label="Unidade">${opcoesUnidade}</select>
+      </div>
+      <p class="tenue conversao" style="margin:-.2rem 0 .1rem"></p>
+      <input type="hidden" class="campo-gramas" value="${temPorcao ? porcoes[0].gramas * qtdInicial : gramasSugeridas}">
       <label class="linha-flex" style="text-transform:none;letter-spacing:0;font-size:.85rem;color:var(--tinta-fraca)">
         <input type="checkbox" class="campo-maravilha" style="width:auto;margin-right:.4rem">
         marcar como maravilha (o que eu quero comer)
@@ -656,7 +743,53 @@ function blocoAdicionar(alimento, gramasSugeridas = 100) {
     </div>`;
 }
 
+/**
+ * Liga o par quantidade + unidade: qualquer mudança recalcula as gramas reais
+ * e mostra a conversão, pra pessoa conferir o que vai ser registrado.
+ */
+function ligarConversaoPorcoes(escopo) {
+  escopo.querySelectorAll('.pilha').forEach((caixa) => {
+    const qtd = caixa.querySelector('.campo-qtd');
+    const unidade = caixa.querySelector('.seletor-unidade');
+    const gramas = caixa.querySelector('.campo-gramas');
+    const legenda = caixa.querySelector('.conversao');
+    if (!qtd || !unidade || !gramas) return;
+
+    const atualizar = () => {
+      const n = Number(qtd.value) || 0;
+      const opcao = unidade.selectedOptions[0];
+      const porGramas = Number(opcao?.dataset.gramas);
+
+      if (porGramas) {
+        const total = Math.round(n * porGramas);
+        gramas.value = total;
+        legenda.textContent = `= ${total} g`;
+      } else {
+        gramas.value = Math.round(n);
+        legenda.textContent = '';
+      }
+    };
+
+    unidade.addEventListener('change', () => {
+      // Ao trocar de unidade, converte o valor em vez de zerar o que a pessoa
+      // já digitou: 100 g vira "2 unidades", não "100 unidades".
+      const atual = Number(gramas.value) || 0;
+      const opcao = unidade.selectedOptions[0];
+      const porGramas = Number(opcao?.dataset.gramas);
+      qtd.value = porGramas
+        ? Math.max(0.5, Math.round((atual / porGramas) * 2) / 2)
+        : atual;
+      qtd.step = porGramas ? '0.5' : '5';
+      atualizar();
+    });
+    qtd.addEventListener('input', atualizar);
+    atualizar();
+  });
+}
+
 function ligarBotoesAdicionar(escopo) {
+  ligarConversaoPorcoes(escopo);
+
   escopo.querySelectorAll('[data-add]').forEach((b) =>
     b.addEventListener('click', async () => {
       const caixa = b.closest('.pilha');
@@ -772,26 +905,104 @@ async function interpretarTexto() {
   }
 }
 
+/**
+ * Alimentos que a pessoa descartou nas sugestões.
+ *
+ * Guardado no navegador porque é preferência pessoal e duradoura: quem não
+ * come sardinha hoje não vai comer amanhã, e ver a mesma sugestão recusada
+ * todo dia é o que faz a pessoa parar de olhar.
+ */
+const guardaDescartados = 'macros.descartados';
+const descartados = new Set(
+  JSON.parse(localStorage.getItem(guardaDescartados) || '[]'),
+);
+
+function salvarDescartados() {
+  localStorage.setItem(guardaDescartados, JSON.stringify([...descartados]));
+}
+
+/** Quantas sugestões já foram puladas nesta rodada de "outras opções". */
+let pularSugestoes = 0;
+
 async function verFechamento() {
   $('#fechamento').innerHTML = '<p class="carregando">pensando…</p>';
-  const r = await api('/diario/fechar');
+
+  const params = new URLSearchParams();
+  if (descartados.size) params.set('excluir', [...descartados].join(','));
+  if (pularSugestoes) params.set('pular', String(pularSugestoes));
+
+  const r = await api(`/diario/fechar?${params}`);
 
   if (r.erro) { $('#fechamento').innerHTML = `<p class="nota seco">${esc(r.erro)}</p>`; return; }
+
   if (!r.sugestoes.length) {
-    $('#fechamento').innerHTML = `<p class="nota">Seus macros já estão fechados. Nada a acrescentar.</p>`;
+    // Sem nada pra mostrar: ou o dia fechou, ou a pessoa já viu tudo.
+    $('#fechamento').innerHTML = pularSugestoes
+      ? `<p class="nota">Acabaram as opções dessa lista.
+           <button class="mini leve" id="btn-recomecar-sug">ver desde o começo</button></p>`
+      : `<p class="nota">Seus macros já estão fechados. Nada a acrescentar.</p>`;
+    $('#btn-recomecar-sug')?.addEventListener('click', () => {
+      pularSugestoes = 0;
+      verFechamento();
+    });
     return;
   }
 
-  $('#fechamento').innerHTML = r.sugestoes.map((s) => `
-    <div style="padding:.65rem 0;border-bottom:1px solid var(--linha)">
-      <div class="resultado-nome">
-        ${esc(s.nome)} <span class="fonte-selo">${esc(s.fonte)}</span>
-        <small>${esc(s.modoPreparo)} · ${arred(s.gramasSugeridas)} g · ${esc(s.motivo)}</small>
-      </div>
-      ${blocoAdicionar(s, s.gramasSugeridas)}
-    </div>`).join('');
+  $('#fechamento').innerHTML = `
+    ${r.sugestoes.map((s) => `
+      <div style="padding:.65rem 0;border-bottom:1px solid var(--linha)">
+        <div class="linha-flex" style="align-items:flex-start">
+          <div class="resultado-nome cresce">
+            ${esc(s.nome)} <span class="fonte-selo">${esc(s.fonte)}</span>
+            <small>${esc(s.modoPreparo)} · ${esc(s.motivo)}</small>
+          </div>
+          <button class="mini leve" data-descartar="${esc(s.alimentoId)}"
+                  title="Não como isso">não como</button>
+        </div>
+        ${blocoAdicionar(s, s.gramasSugeridas)}
+      </div>`).join('')}
+
+    <div class="linha-flex" style="margin-top:.9rem">
+      ${r.temMais ? '<button class="mini leve" id="btn-outras-sug">outras opções</button>' : ''}
+      ${pularSugestoes || descartados.size
+        ? '<button class="mini leve" id="btn-recomecar-sug">recomeçar</button>'
+        : ''}
+    </div>
+    ${descartados.size
+      ? `<p class="tenue" style="margin-top:.5rem">${descartados.size}
+           ${descartados.size === 1 ? 'alimento descartado' : 'alimentos descartados'} —
+           <button class="mini leve" id="btn-limpar-descartes">trazer de volta</button></p>`
+      : ''}`;
 
   ligarBotoesAdicionar($('#fechamento'));
+
+  $$('[data-descartar]').forEach((b) =>
+    b.addEventListener('click', async () => {
+      descartados.add(b.dataset.descartar);
+      salvarDescartados();
+      // Guarda também no perfil: vale em qualquer aparelho, não só neste.
+      try {
+        await api(`/auth/nao-como/${b.dataset.descartar}`, { method: 'POST' });
+      } catch { /* o descarte local já resolve por ora */ }
+      verFechamento();
+    }));
+
+  $('#btn-outras-sug')?.addEventListener('click', () => {
+    pularSugestoes += r.sugestoes.length;
+    verFechamento();
+  });
+
+  $('#btn-recomecar-sug')?.addEventListener('click', () => {
+    pularSugestoes = 0;
+    verFechamento();
+  });
+
+  $('#btn-limpar-descartes')?.addEventListener('click', () => {
+    descartados.clear();
+    salvarDescartados();
+    pularSugestoes = 0;
+    verFechamento();
+  });
 }
 
 /* ---------- peso ---------- */
@@ -877,6 +1088,37 @@ function preencherPerfil() {
   if (u.nivelAtividade) $('#perfil-nivel').value = u.nivelAtividade;
 }
 
+/** Mesma lista da etapa 4, agora editável depois do cadastro. */
+async function desenharRestricoesPerfil() {
+  const caixa = $('#grupos-restricao-perfil');
+  if (!caixa) return;
+
+  try {
+    gruposRestricao ??= await api('/alimentos/restricoes');
+  } catch {
+    caixa.innerHTML = '<p class="tenue">Não consegui carregar agora.</p>';
+    return;
+  }
+
+  const marcadas = new Set(estado.usuario?.restricoes || []);
+  caixa.innerHTML = gruposRestricao.map((g) => `
+    <div style="margin-bottom:1rem">
+      <div class="grupo-titulo">${esc(g.grupo)}</div>
+      <div class="pilha-restricoes">
+        ${g.itens.map((i) => `
+          <label class="restricao ${marcadas.has(i.chave) ? 'marcada' : ''}">
+            <input type="checkbox" value="${esc(i.chave)}"
+                   ${marcadas.has(i.chave) ? 'checked' : ''}>
+            <span><b>${esc(i.rotulo)}</b><small>${esc(i.ajuda)}</small></span>
+          </label>`).join('')}
+      </div>
+    </div>`).join('');
+
+  caixa.querySelectorAll('input[type=checkbox]').forEach((c) =>
+    c.addEventListener('change', () =>
+      c.closest('.restricao').classList.toggle('marcada', c.checked)));
+}
+
 async function salvarPerfil() {
   const aviso = $('#aviso-perfil');
   try {
@@ -953,7 +1195,11 @@ function trocarTela(nome) {
       $('#tendencia').innerHTML = `<p class="nota seco">${esc(e.message)}</p>`;
     });
   }
-  if (nome === 'conta') { desenharMetas(); preencherPerfil(); }
+  if (nome === 'conta') {
+    desenharMetas();
+    preencherPerfil();
+    desenharRestricoesPerfil();
+  }
   window.scrollTo(0, 0);
 }
 
@@ -1048,6 +1294,26 @@ $('#btn-comentar').addEventListener('click', async () => {
 });
 
 $('#btn-salvar-perfil').addEventListener('click', salvarPerfil);
+
+$('#btn-salvar-restricoes').addEventListener('click', async () => {
+  const aviso = $('#aviso-restricoes');
+  const escolhidas = [...$('#grupos-restricao-perfil').querySelectorAll('input:checked')]
+    .map((i) => i.value);
+  try {
+    estado.usuario = await api('/auth/eu', {
+      method: 'PATCH',
+      body: JSON.stringify({ restricoes: escolhidas }),
+    });
+    // Zera o rodízio pra próxima leva de sugestões já respeitar a mudança.
+    pularSugestoes = 0;
+    aviso.textContent = escolhidas.length
+      ? `Pronto. ${escolhidas.length} ${escolhidas.length === 1 ? 'grupo somiu' : 'grupos sumiram'} das sugestões.`
+      : 'Pronto. Nenhum grupo escondido — as sugestões voltam completas.';
+  } catch (e) {
+    aviso.textContent = e.message;
+  }
+  aviso.classList.remove('some');
+});
 $('#btn-add-refeicao').addEventListener('click', async () => {
   await api('/diario/refeicoes', { method: 'POST', body: JSON.stringify({}) });
   await carregarDia();

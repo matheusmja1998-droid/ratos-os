@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { Alimento } from '../comum/entidades';
 import { ALIMENTOS_TACO } from './taco.seed';
+import { porcoesDe } from './porcoes';
 import { ALIMENTOS_TACO_COMPLETO } from './taco.completo';
 
 /** Remove acentos e normaliza pra busca: "pão" e "pao" acham a mesma coisa. */
@@ -87,7 +88,8 @@ export class AlimentosService implements OnModuleInit {
         gordura100g: a.gordura100g,
         fibra100g: a.fibra100g ?? 0,
         gorduraSaturada100g: a.gorduraSaturada100g ?? 0,
-        porcoes: a.porcoes ?? [],
+        // Porção caseira curada no seed tem prioridade; senão, deduz pelo nome.
+        porcoes: a.porcoes?.length ? a.porcoes : porcoesDe(a.nome, a.modoPreparo),
         verificado: true,
       }),
     );
@@ -246,6 +248,23 @@ export class AlimentosService implements OnModuleInit {
    * Trabalhamos sempre em gramas, nunca em "porções": o erro clássico de app
    * de macro é registrar 20 porções de 25 g achando que registrou 20 g.
    */
+  /**
+   * Porções caseiras do alimento, com os macros de cada uma já calculados.
+   *
+   * É o que permite registrar "2 ovos" em vez de "100 g de ovo" — a conversão
+   * pra gramas continua acontecendo, só que o app faz por você.
+   */
+  porcoesComMacros(alimento: Alimento) {
+    const lista = alimento.porcoes?.length
+      ? alimento.porcoes
+      : porcoesDe(alimento.nome, alimento.modoPreparo);
+
+    return lista.map((p) => ({
+      ...p,
+      macros: this.calcularPorGramas(alimento, p.gramas),
+    }));
+  }
+
   calcularPorGramas(alimento: Alimento, gramas: number) {
     const f = gramas / 100;
     const arred = (n: number) => Math.round(n * 10) / 10;

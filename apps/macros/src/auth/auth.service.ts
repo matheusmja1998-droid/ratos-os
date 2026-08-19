@@ -31,6 +31,7 @@ export class AuthService {
     sexo?: string; idadeAnos?: number; alturaCm?: number;
     nivelAtividade?: string; objetivo?: string;
     pesoKg?: number; deficitKcal?: number;
+    restricoes?: string[];
   }) {
     const email = dados.email.toLowerCase().trim();
     if (await this.usuarios.findOne({ where: { email } })) {

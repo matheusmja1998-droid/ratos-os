@@ -1,5 +1,5 @@
 import {
-  IsEmail, IsIn, IsInt, IsNumber, IsOptional, IsString, IsBoolean,
+  IsArray, IsEmail, IsIn, IsInt, IsNumber, IsOptional, IsString, IsBoolean,
   Max, Min, MinLength, Matches,
 } from 'class-validator';
 
@@ -24,6 +24,9 @@ export class RegistrarDto {
   // ponto da série de peso registrado.
   @IsOptional() @IsNumber() @Min(30) @Max(400) pesoKg?: number;
   @IsOptional() @IsInt() @Min(0) @Max(1500) deficitKcal?: number;
+
+  /** Grupos que a pessoa não come, declarados no cadastro. */
+  @IsOptional() @IsArray() @IsString({ each: true }) restricoes?: string[];
 }
 
 export class EntrarDto {
@@ -96,4 +99,6 @@ export class AtualizarPerfilDto {
   @IsOptional() @IsNumber() @Min(120) @Max(250) alturaCm?: number;
   @IsOptional() @IsIn(NIVEIS) nivelAtividade?: string;
   @IsOptional() @IsIn(OBJETIVOS) objetivo?: string;
+  @IsOptional() @IsArray() @IsString({ each: true }) restricoes?: string[];
+  @IsOptional() @IsArray() @IsString({ each: true }) naoComeIds?: string[];
 }

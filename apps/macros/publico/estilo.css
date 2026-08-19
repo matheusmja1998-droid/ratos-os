@@ -444,3 +444,46 @@ nav.rodape button[aria-current='true'] {
   padding: .25rem .4rem;
   width: 100%;
 }
+
+/* ---------- Restrições alimentares ---------- */
+
+.grupo-titulo {
+  font-family: var(--serif);
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .13em;
+  color: var(--tinta-fraca);
+  margin-bottom: .5rem;
+  padding-bottom: .3rem;
+  border-bottom: 1px solid var(--linha);
+}
+
+.pilha-restricoes { display: grid; gap: .4rem; }
+
+.restricao {
+  display: flex;
+  align-items: flex-start;
+  gap: .55rem;
+  padding: .5rem .6rem;
+  border: 1px solid var(--linha);
+  border-radius: 2px;
+  background: var(--papel-alto);
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+  margin: 0;
+  transition: border-color .15s ease;
+}
+.restricao:hover { border-color: var(--tinta-tenue); }
+.restricao.marcada { border-color: var(--tinta); background: var(--papel); }
+
+.restricao input { width: auto; margin-top: .15rem; flex: none; }
+.restricao b {
+  display: block;
+  font-family: var(--texto);
+  font-size: .92rem;
+  font-weight: 500;
+  color: var(--tinta);
+}
+.restricao small { color: var(--tinta-tenue); font-size: .78rem; }
+.restricao.marcada b { text-decoration: line-through; color: var(--tinta-fraca); }

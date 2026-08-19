@@ -5,6 +5,9 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DiarioService } from './diario.service';
 import { PlanejadorService } from './planejador.service';
 import { AlimentosService } from '../alimentos/alimentos.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Usuario } from '../comum/entidades';
 import { AdicionarItemDto, AtualizarGramasDto } from '../comum/dtos';
 import { JwtGuard } from '../auth/jwt.guard';
 import { UsuarioAtual } from '../auth/usuario.decorator';
@@ -19,6 +22,7 @@ export class DiarioController {
     private readonly diario: DiarioService,
     private readonly planejador: PlanejadorService,
     private readonly alimentos: AlimentosService,
+    @InjectRepository(Usuario) private readonly usuarios: Repository<Usuario>,
   ) {}
 
   @Get()
@@ -127,15 +131,30 @@ export class DiarioController {
   }
 
   @Get('fechar')
-  @ApiOperation({ summary: 'Sugere o que fecha os macros que ainda faltam' })
-  async fechar(@UsuarioAtual() u: { id: string }, @Query('data') data?: string) {
+  @ApiOperation({
+    summary:
+      'Sugere o que fecha os macros que faltam; `excluir` tira alimentos e `pular` traz outras opções',
+  })
+  async fechar(
+    @UsuarioAtual() u: { id: string },
+    @Query() query: { data?: string; excluir?: string; pular?: string },
+  ) {
+    const data = query.data;
     const resumo = await this.diario.resumoDia(u.id, data ?? hojeSP());
     if (!resumo.meta) return { erro: 'Defina suas metas antes de planejar o dia.' };
 
     const espaco = this.planejador.calcularEspaco(resumo.meta, resumo.totais);
-    return {
-      espaco,
-      sugestoes: await this.planejador.sugerirFechamento(espaco),
-    };
+    const excluir = (query.excluir ?? '').split(',').filter(Boolean);
+    const pular = Number(query.pular) || 0;
+
+    // O perfil manda: restrições declaradas no cadastro mais o que a pessoa
+    // foi descartando no uso.
+    const perfil = await this.usuarios.findOne({ where: { id: u.id } });
+    const r = await this.planejador.sugerirFechamento(espaco, 6, {
+      excluir: [...excluir, ...(perfil?.naoComeIds ?? [])],
+      pular,
+      restricoes: perfil?.restricoes ?? [],
+    });
+    return { espaco, ...r };
   }
 }

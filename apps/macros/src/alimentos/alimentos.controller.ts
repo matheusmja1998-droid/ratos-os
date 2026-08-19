@@ -5,16 +5,34 @@ import { CriarAlimentoDto } from '../comum/dtos';
 import { JwtGuard } from '../auth/jwt.guard';
 import { UsuarioAtual } from '../auth/usuario.decorator';
 import { Alimento } from '../comum/entidades';
+import { GRUPOS_RESTRICAO, RESTRICOES } from './restricoes';
 
 @ApiTags('alimentos')
 @Controller('alimentos')
 export class AlimentosController {
   constructor(private readonly alimentos: AlimentosService) {}
 
+  @Get('restricoes')
+  @ApiOperation({ summary: 'Grupos de alimento que a pessoa pode dizer que não come' })
+  restricoes() {
+    return GRUPOS_RESTRICAO.map((grupo) => ({
+      grupo,
+      itens: RESTRICOES.filter((r) => r.grupo === grupo).map(
+        ({ chave, rotulo, ajuda }) => ({ chave, rotulo, ajuda }),
+      ),
+    }));
+  }
+
   @Get('buscar')
   @ApiOperation({ summary: 'Busca alimentos; fontes verificadas vêm primeiro' })
-  buscar(@Query('q') q: string, @Query('limite') limite?: string) {
-    return this.alimentos.buscar(q ?? '', limite ? Number(limite) : 25);
+  async buscar(@Query('q') q: string, @Query('limite') limite?: string) {
+    const achados = await this.alimentos.buscar(q ?? '', limite ? Number(limite) : 25);
+    // Já devolve as porções caseiras: evita uma segunda ida ao servidor só
+    // pra descobrir que ovo se conta em unidade.
+    return achados.map((a) => ({
+      ...a,
+      porcoes: this.alimentos.porcoesComMacros(a),
+    }));
   }
 
   @Get('codigo-barras/:codigo')
@@ -25,6 +43,17 @@ export class AlimentosController {
   @Get(':id')
   porId(@Param('id') id: string) {
     return this.alimentos.porId(id);
+  }
+
+  @Get(':id/porcoes')
+  @ApiOperation({ summary: 'Porções caseiras do alimento (unidade, fatia, colher)' })
+  async porcoes(@Param('id') id: string) {
+    const alimento = await this.alimentos.porId(id);
+    return {
+      alimento: alimento.nome,
+      modoPreparo: alimento.modoPreparo,
+      porcoes: this.alimentos.porcoesComMacros(alimento),
+    };
   }
 
   @Get(':id/porcao')

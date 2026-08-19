@@ -43,9 +43,14 @@ Nada de cair num app vazio tendo que descobrir onde configurar. E nada de
 receber um número pronto sem saber de onde veio: a memória de cálculo é parte
 da entrega, não um extra escondido.
 
-O formulário protege contra o erro mais comum (altura em metros em vez de
-centímetros) e avisa, na hora de escolher o nível de atividade, que caminhada
-leve não conta como treino — superestimar ali faz o déficit não acontecer.
+São quatro etapas. A última pergunta **o que a pessoa não come**, agrupado por
+tipo de alimento (carnes e ovos, laticínios, grãos, vegetais, outros): marcar
+"peixe" some com peixe inteiro das sugestões, em vez de a pessoa descartar
+sardinha, atum e tilápia um a um depois. É opcional e editável em "A conta".
+
+O formulário aceita altura como a pessoa fala — `1,84` ou `184`, e confirma o
+que entendeu — e avisa, na hora de escolher o nível de atividade, que caminhada
+leve não conta como treino: superestimar ali faz o déficit não acontecer.
 
 ## O app
 
@@ -128,6 +133,12 @@ GET /api/diario/fechar
   -> o que fecha a proteína que sobrou, em porções que cabem num prato
 ```
 
+As sugestões respeitam o que a pessoa declarou não comer, e cada uma tem um
+botão "não como" que a tira dali para sempre — guardado no perfil, não só no
+navegador. "Outras opções" rotaciona a lista sem repetir o que já foi visto.
+Ingredientes (fermento, tempero, amido) ficam fora: têm proteína por 100 g e
+seriam absurdos como sugestão de refeição.
+
 Registra a sobremesa marcada com `ehMaravilha: true`, e o resto do dia se
 encaixa em volta.
 
@@ -137,11 +148,18 @@ combinação: os meal planners têm solver e não têm acompanhamento adaptativo
 os trackers (MyFitnessPal, Cronometer, MacroFactor) têm acompanhamento e zero
 solver. Aqui as duas coisas moram no mesmo app.
 
-### 5. Gramas, nunca "porções"
+### 5. Gramas por baixo, porção caseira por cima
 
-A API só aceita peso em gramas. O erro mais comum em app de macro é registrar
-"20" num campo de porção de 25 g e lançar 500 g sem perceber. Aqui esse campo
-não existe.
+A API só aceita peso em gramas — o erro mais comum em app de macro é registrar
+"20" num campo de porção de 25 g e lançar 500 g sem perceber.
+
+Mas ninguém pesa ovo: come "dois ovos". Então a interface oferece a porção
+caseira que faz sentido para cada alimento (unidade para ovo, fatia para pão,
+colher para arroz, concha para feijão) e converte na hora, mostrando o
+resultado: `2 ovos = 100 g`. A conversão é visível e a opção de gramas continua
+lá para quem pesa.
+
+São 89 regras de porção casadas por nome, cobrindo o que se come no Brasil.
 
 ### 6. Platô: corta carbo, nunca proteína
 

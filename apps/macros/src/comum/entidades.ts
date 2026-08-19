@@ -24,6 +24,17 @@ export class Usuario {
   @Column({ type: 'text', default: 'moderado' }) nivelAtividade: string;
   @Column({ type: 'text', default: 'emagrecer' }) objetivo: string;
 
+  /**
+   * Alimentos que a pessoa não come, guardados como ids.
+   *
+   * Fica no perfil e não só no navegador: é preferência duradoura, e sugerir
+   * de novo o que já foi recusado faz a pessoa parar de olhar as sugestões.
+   */
+  @Column({ type: 'simple-json', default: '[]' }) naoComeIds: string[];
+
+  /** Restrições declaradas no cadastro (vegetariano, sem lactose...). */
+  @Column({ type: 'simple-json', default: '[]' }) restricoes: string[];
+
   @OneToMany(() => Meta, (m) => m.usuario) metas: Meta[];
   @OneToMany(() => RegistroPeso, (p) => p.usuario) pesos: RegistroPeso[];
 
