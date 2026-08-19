@@ -112,7 +112,12 @@ export async function criarInstancia(nome) {
     const raw = await res.json().catch(() => ({}));
     if (!res.ok) return { erro: raw?.error || raw?.message || `HTTP ${res.status}` };
     const token = raw?.token || raw?.instance?.token;
-    if (token) await configurarWebhook(token);
+    if (token) {
+      // instancia nova nasce com proxy gerenciado sem rota BR: ja poe em direto,
+      // senao o QR nunca aparece (19/08 — chip do Valentino travou nisso)
+      await desligarProxyGerenciado(token);
+      await configurarWebhook(token);
+    }
     return { token };
   } catch (e) {
     return { erro: e.message };
@@ -138,6 +143,7 @@ export async function statusInstanciaLive(instanceToken) {
   }
 }
 
+const _jaTentouProxy = new Set(); // evita loop: 1 tentativa de desligar proxy por token
 export async function conectarInstancia(instanceToken) {
   if (!uazapiConfigurada()) return { status: "demo", qrcode: null };
   try {
@@ -153,10 +159,36 @@ export async function conectarInstancia(instanceToken) {
     }
     if (!res.ok) return { status: "erro", erro: raw?.error || `HTTP ${res.status}` };
     const i = raw?.instance || raw;
+    // sem QR e travada no proxy gerenciado? desliga o proxy e tenta 1x de novo
+    const travouNoProxy = !i?.qrcode && String(i?.lastDisconnectReason || "").includes("plainproxies");
+    if (travouNoProxy && !_jaTentouProxy.has(instanceToken)) {
+      _jaTentouProxy.add(instanceToken);
+      console.warn("[uazapi] instancia travada no proxy gerenciado (sem rota BR) — desligando proxy e reconectando");
+      if (await desligarProxyGerenciado(instanceToken)) {
+        await new Promise((r) => setTimeout(r, 1500));
+        return conectarInstancia(instanceToken);
+      }
+    }
     return { status: i?.status || "desconhecido", qrcode: i?.qrcode || null, paircode: i?.paircode || null, owner: i?.owner };
   } catch (e) {
     return { status: "erro", erro: e.message };
   }
+}
+
+// PROXY GERENCIADO: instancia nova nasce com proxy da uazapi e o provedor nao
+// tem rota pro Brasil ("region route country unsupported: country=br") — ela
+// nunca inicia a sessao e o QR NUNCA aparece. Isso poe em modo direto.
+export async function desligarProxyGerenciado(instanceToken) {
+  if (!uazapiConfigurada() || !instanceToken) return false;
+  try {
+    const res = await fetch(`${UAZAPI_URL}/instance/proxy`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", token: instanceToken },
+      body: JSON.stringify({ mode: "none", confirm_no_proxy: true }),
+      signal: AbortSignal.timeout(10_000),
+    });
+    return res.ok;
+  } catch { return false; }
 }
 
 export async function desconectarInstancia(instanceToken) {
