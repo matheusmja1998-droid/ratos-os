@@ -41,6 +41,16 @@ export class DiarioController {
     return this.diario.adicionarRefeicao(u.id, data ?? hojeSP(), dto?.nome);
   }
 
+  @Post('refeicoes/:id/clonar')
+  @ApiOperation({ summary: 'Copia os itens desta refeição para outra' })
+  clonarRefeicao(
+    @UsuarioAtual() u: { id: string },
+    @Param('id') origemId: string,
+    @Body() dto: { destinoId: string },
+  ) {
+    return this.diario.clonarRefeicao(u.id, origemId, dto.destinoId);
+  }
+
   @Patch('refeicoes/:id')
   @ApiOperation({ summary: 'Renomeia uma refeição' })
   renomearRefeicao(

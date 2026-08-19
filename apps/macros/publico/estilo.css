@@ -409,6 +409,32 @@ nav.rodape button[aria-current='true'] {
 }
 .explicacao b { color: var(--tinta); font-weight: 500; }
 
+/* Resumo dos macros da refeição, visível com ela recolhida */
+.refeicao-resumo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .1rem .85rem;
+  font-family: var(--mono);
+  font-size: .76rem;
+  color: var(--tinta-fraca);
+  padding: .35rem 0 .1rem;
+}
+.refeicao-resumo b { color: var(--tinta); font-weight: 700; }
+
+/* Seta que gira ao abrir a refeição */
+.seta {
+  display: inline-block;
+  font-family: var(--mono);
+  color: var(--tinta-tenue);
+  margin-right: .35rem;
+  transition: transform .18s ease;
+}
+.seta.aberta { transform: rotate(90deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .seta { transition: none; }
+}
+
 /* Ações de organizar refeições */
 .refeicao-acoes { display: flex; gap: .35rem; }
 .refeicao-nome-edit {

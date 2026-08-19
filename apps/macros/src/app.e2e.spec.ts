@@ -249,6 +249,52 @@ describe('Macros (e2e)', () => {
     expect(final.body.refeicoes).toHaveLength(quantas);
   });
 
+  it('clona uma refeição inteira para outra', async () => {
+    const auth = { Authorization: `Bearer ${token}` };
+    const dia = await req().get('/api/diario').set(auth).expect(200);
+
+    const origem = dia.body.refeicoes.find(
+      (r: { itens: unknown[] }) => (r.itens ?? []).length > 0,
+    );
+    const destino = dia.body.refeicoes.find(
+      (r: { id: string; itens: unknown[] }) =>
+        r.id !== origem.id && (r.itens ?? []).length === 0,
+    );
+    expect(origem && destino).toBeTruthy();
+
+    const copias = await req().post(`/api/diario/refeicoes/${origem.id}/clonar`)
+      .set(auth).send({ destinoId: destino.id }).expect(201);
+
+    expect(copias.body).toHaveLength(origem.itens.length);
+
+    // A cópia bate item a item com a origem.
+    const depois = await req().get('/api/diario').set(auth).expect(200);
+    const novo = depois.body.refeicoes.find((r: { id: string }) => r.id === destino.id);
+    const soma = (itens: { kcal: number }[]) =>
+      itens.reduce((a, i) => a + i.kcal, 0);
+    expect(soma(novo.itens)).toBeCloseTo(soma(origem.itens), 1);
+  });
+
+  it('recusa clonar refeição vazia ou para ela mesma', async () => {
+    const auth = { Authorization: `Bearer ${token}` };
+    const dia = await req().get('/api/diario').set(auth).expect(200);
+
+    const cheia = dia.body.refeicoes.find(
+      (r: { itens: unknown[] }) => (r.itens ?? []).length > 0,
+    );
+    const vazia = dia.body.refeicoes.find(
+      (r: { itens: unknown[] }) => (r.itens ?? []).length === 0,
+    );
+
+    await req().post(`/api/diario/refeicoes/${cheia.id}/clonar`)
+      .set(auth).send({ destinoId: cheia.id }).expect(400);
+
+    if (vazia) {
+      await req().post(`/api/diario/refeicoes/${vazia.id}/clonar`)
+        .set(auth).send({ destinoId: cheia.id }).expect(400);
+    }
+  });
+
   it('não apaga refeição que tem comida anotada', async () => {
     const auth = { Authorization: `Bearer ${token}` };
     const dia = await req().get('/api/diario').set(auth).expect(200);

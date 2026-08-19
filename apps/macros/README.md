@@ -52,6 +52,10 @@ leve não conta como treino — superestimar ali faz o déficit não acontecer.
 Quatro telas, feitas pra funcionar no celular:
 
 - **Hoje** — o que já entrou, o que ainda cabe e as réguas de cada macro.
+  Cada refeição fica recolhida mostrando só o resumo dela (kcal e os macros);
+  um toque abre os itens. Dá para acrescentar, renomear e remover refeições,
+  e **copiar uma refeição inteira para outra** — quem almoça parecido todo dia
+  não precisa recadastrar arroz, feijão e frango cinco vezes por semana.
 - **Comer** — escreva "duas conchas de feijão e um filé" e a IA monta os itens,
   ou procure na base direto. Cada resultado diz quanto ainda cabe hoje.
 - **Peso** — registra o peso e mostra a tendência por média móvel, não o número

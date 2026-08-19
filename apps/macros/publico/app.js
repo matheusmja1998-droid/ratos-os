@@ -440,10 +440,35 @@ function desenharPainel() {
 /** Modo de organização: mostra renomear e remover em cada refeição. */
 let organizando = false;
 
+/**
+ * Refeições que o usuário abriu pra ver os itens.
+ *
+ * O padrão é recolhido: com o dia cheio, a lista item a item vira uma parede
+ * de texto. Recolhida, cada refeição mostra o que interessa de relance — o
+ * total dos macros dela.
+ */
+const refeicoesAbertas = new Set();
+
+/** Soma os macros de uma refeição. */
+function somarRefeicao(itens) {
+  return itens.reduce(
+    (a, i) => ({
+      kcal: a.kcal + i.kcal,
+      proteinaG: a.proteinaG + i.proteinaG,
+      carboidratoG: a.carboidratoG + i.carboidratoG,
+      gorduraG: a.gorduraG + i.gorduraG,
+      fibraG: a.fibraG + (i.fibraG || 0),
+    }),
+    { kcal: 0, proteinaG: 0, carboidratoG: 0, gorduraG: 0, fibraG: 0 },
+  );
+}
+
 function desenharRefeicoes() {
   const html = estado.dia.refeicoes.map((r) => {
     const itens = r.itens || [];
-    const kcal = arred(itens.reduce((s, i) => s + i.kcal, 0));
+    const tem = itens.length > 0;
+    const t = somarRefeicao(itens);
+    const aberta = refeicoesAbertas.has(r.id);
 
     const listaItens = itens.map((i) => `
       <div class="item ${i.ehMaravilha ? 'maravilha' : ''}">
@@ -458,6 +483,17 @@ function desenharRefeicoes() {
         <button class="mini leve" data-remover="${esc(i.id)}" aria-label="Remover">×</button>
       </div>`).join('');
 
+    // Resumo dos macros da refeição: é o que fica visível quando recolhida.
+    const resumo = tem
+      ? `<div class="refeicao-resumo">
+           <span><b>${arred(t.kcal)}</b> kcal</span>
+           <span>P <b>${arred(t.proteinaG, 1)}</b></span>
+           <span>C <b>${arred(t.carboidratoG, 1)}</b></span>
+           <span>G <b>${arred(t.gorduraG, 1)}</b></span>
+           <span>F <b>${arred(t.fibraG, 1)}</b></span>
+         </div>`
+      : '';
+
     const topo = organizando
       ? `<div class="linha-flex">
            <input class="refeicao-nome-edit cresce" value="${esc(r.nome)}"
@@ -465,15 +501,79 @@ function desenharRefeicoes() {
            <button class="mini leve" data-apagar-refeicao="${esc(r.id)}"
                    aria-label="Remover refeição">×</button>
          </div>`
-      : `<div class="refeicao-topo" data-anotar="${esc(r.id)}">
-           <span class="refeicao-nome">${esc(r.nome)}</span>
-           <span class="refeicao-kcal">${kcal ? kcal + ' kcal' : 'anotar +'}</span>
+      : `<div class="refeicao-topo" ${tem ? `data-abrir-refeicao="${esc(r.id)}"` : `data-anotar="${esc(r.id)}"`}>
+           <span class="refeicao-nome">
+             ${tem ? `<span class="seta ${aberta ? 'aberta' : ''}">›</span>` : ''}${esc(r.nome)}
+           </span>
+           <span class="refeicao-kcal">${
+             tem
+               ? `${itens.length} ${itens.length === 1 ? 'item' : 'itens'}`
+               : 'anotar +'
+           }</span>
          </div>`;
 
-    return `<div class="refeicao">${topo}${listaItens}</div>`;
+    return `
+      <div class="refeicao">
+        ${topo}
+        ${organizando ? '' : resumo}
+        ${!organizando && aberta ? listaItens : ''}
+        ${!organizando && aberta && tem
+          ? `<div class="linha-flex" style="margin-top:.6rem">
+               <button class="mini leve" data-anotar="${esc(r.id)}">+ anotar aqui</button>
+               <button class="mini leve" data-clonar="${esc(r.id)}">copiar para…</button>
+             </div>
+             <div class="painel-clonar some" data-clone-de="${esc(r.id)}">
+               <div class="linha-flex" style="margin-top:.5rem">
+                 <select class="destino-clone cresce" aria-label="Copiar para qual refeição">
+                   ${estado.dia.refeicoes
+                     .filter((d) => d.id !== r.id)
+                     .map((d) => `<option value="${esc(d.id)}">${esc(d.nome)}</option>`)
+                     .join('')}
+                 </select>
+                 <button class="mini" data-confirmar-clone="${esc(r.id)}">Copiar</button>
+               </div>
+             </div>`
+          : ''}
+      </div>`;
   }).join('');
 
   $('#refeicoes').innerHTML = html;
+
+  // Copiar uma refeição inteira pra outra.
+  $$('[data-clonar]').forEach((b) =>
+    b.addEventListener('click', () => {
+      const painel = $(`[data-clone-de="${b.dataset.clonar}"]`);
+      painel.classList.toggle('some');
+    }));
+
+  $$('[data-confirmar-clone]').forEach((b) =>
+    b.addEventListener('click', async () => {
+      const painel = b.closest('.painel-clonar');
+      const destinoId = painel.querySelector('.destino-clone').value;
+      b.disabled = true;
+      b.textContent = 'copiando…';
+      try {
+        await api(`/diario/refeicoes/${b.dataset.confirmarClone}/clonar`, {
+          method: 'POST',
+          body: JSON.stringify({ destinoId }),
+        });
+        // Abre o destino pra pessoa ver o que chegou e poder ajustar.
+        refeicoesAbertas.add(destinoId);
+        await carregarDia();
+      } catch (e) {
+        b.textContent = e.message;
+        b.disabled = false;
+      }
+    }));
+
+  // Recolher e expandir os itens.
+  $$('[data-abrir-refeicao]').forEach((el) =>
+    el.addEventListener('click', () => {
+      const id = el.dataset.abrirRefeicao;
+      if (refeicoesAbertas.has(id)) refeicoesAbertas.delete(id);
+      else refeicoesAbertas.add(id);
+      desenharRefeicoes();
+    }));
 
   $$('[data-remover]').forEach((b) =>
     b.addEventListener('click', async () => {

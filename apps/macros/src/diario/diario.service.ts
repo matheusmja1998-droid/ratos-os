@@ -119,6 +119,59 @@ export class DiarioService {
     );
   }
 
+  /**
+   * Copia todos os itens de uma refeição para outra.
+   *
+   * É o que torna o registro diário viável: quem almoça parecido todo dia não
+   * deveria recadastrar arroz, feijão e frango cinco vezes por semana. Depois
+   * de clonar, a refeição de destino é editável como qualquer outra — troca o
+   * que mudou, apaga o que não vai comer.
+   */
+  async clonarRefeicao(
+    usuarioId: string,
+    origemId: string,
+    destinoId: string,
+  ): Promise<ItemRefeicao[]> {
+    const origem = await this.refeicoes.findOne({
+      where: { id: origemId, usuarioId },
+      relations: { itens: true },
+    });
+    if (!origem) throw new NotFoundException('Refeição de origem não encontrada');
+
+    const destino = await this.refeicoes.findOne({
+      where: { id: destinoId, usuarioId },
+    });
+    if (!destino) throw new NotFoundException('Refeição de destino não encontrada');
+
+    if (origem.id === destino.id) {
+      throw new BadRequestException('Escolha uma refeição diferente pra copiar.');
+    }
+    if ((origem.itens ?? []).length === 0) {
+      throw new BadRequestException('Essa refeição está vazia, não há o que copiar.');
+    }
+
+    // Copia os valores já congelados no item de origem: se o alimento mudar na
+    // base depois, a cópia continua batendo com o que foi registrado.
+    const copias = origem.itens.map((i) =>
+      this.itens.create({
+        refeicaoId: destino.id,
+        alimentoId: i.alimentoId,
+        alimentoNome: i.alimentoNome,
+        gramas: i.gramas,
+        kcal: i.kcal,
+        proteinaG: i.proteinaG,
+        carboidratoG: i.carboidratoG,
+        gorduraG: i.gorduraG,
+        fibraG: i.fibraG,
+        gorduraSaturadaG: i.gorduraSaturadaG,
+        ehMaravilha: i.ehMaravilha,
+        consumido: i.consumido,
+      }),
+    );
+
+    return this.itens.save(copias);
+  }
+
   /** Renomeia uma refeição — "Café", "Pós-treino", o que fizer sentido. */
   async renomearRefeicao(usuarioId: string, refeicaoId: string, nome: string): Promise<Refeicao> {
     const r = await this.refeicoes.findOne({ where: { id: refeicaoId, usuarioId } });
