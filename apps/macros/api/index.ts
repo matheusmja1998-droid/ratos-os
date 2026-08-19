@@ -54,6 +54,7 @@ export default async function handler(req: unknown, res: unknown) {
       JSON.stringify({
         erro: 'Servidor não conseguiu iniciar.',
         motivo: (erro as Error).message,
+        pilha: (erro as Error).stack?.split('\n').slice(0, 6),
       }),
     );
     return;

@@ -1,23 +1,22 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "api/index.ts",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/diag.ts",
-      "use": "@vercel/node"
+  "outputDirectory": "publico",
+  "functions": {
+    "api/index.ts": {
+      "maxDuration": 30
     }
-  ],
-  "routes": [
+  },
+  "rewrites": [
     {
-      "src": "/diag",
-      "dest": "api/diag.ts"
+      "source": "/probe",
+      "destination": "/api/probe"
     },
     {
-      "src": "/(.*)",
-      "dest": "api/index.ts"
+      "source": "/api/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/docs(.*)",
+      "destination": "/api/index"
     }
   ]
 }
