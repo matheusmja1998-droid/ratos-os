@@ -192,7 +192,7 @@ async function tickLembretes() {
         db.prepare("UPDATE reunioes SET lembrete_1h = 1 WHERE id = ?").run(r.id);
         salvarMensagem(lead.id, "assistant", msg);
         registrarEvento(lead.id, "lembrete", "1h");
-        await alertar(`⏰ Reunião em ~1h: ${lead.nome_clinica} às ${r.inicio.slice(11)} (${r.closer})`);
+        await alertar(`⏰ Reunião em ~1h: ${lead.nome_clinica} às ${r.inicio.slice(11)} (${r.closer})`, { usuarioId: getPipeline(lead.pipeline_id)?.usuario_id || lead.usuario_id || null });
       }
     }
   }

@@ -49,6 +49,16 @@ export function personaDoLead(lead) {
   return (dono ? getUsuario(dono)?.nome : null) || "Matheus";
 }
 
+// DONO do lead (pra rotear o alerta do Telegram): dono do chip > dono do funil.
+// Sem isso, aviso de lead do Matheus caia no Telegram do Valentino e vice-versa.
+export function donoDoLeadId(lead) {
+  const donoChip = lead?.instancia_id
+    ? db.prepare("SELECT usuario_id FROM instancias WHERE id = ?").get(lead.instancia_id)?.usuario_id
+    : null;
+  const donoFunil = lead?.pipeline_id ? getPipeline(lead.pipeline_id)?.usuario_id : null;
+  return donoChip || donoFunil || lead?.usuario_id || null;
+}
+
 // ---------- horarios de reuniao ----------
 // Slots por closer na config: "slots_matheus" = "1,2,3,4,5|10:00,11:00,15:00,16:00"
 // (dias da semana | horas). Disponivel = slots dos proximos 7 dias MENOS reunioes ativas.
@@ -224,7 +234,7 @@ async function executarAcoes(lead, acoes, instanceToken, thread = null) {
     if (acao.tipo === "texto" && acao.texto) {
       const r = simulado ? { ok: true } : await enviarTexto(instanceToken, alvoTel, acao.texto);
       if (r.ok) salvarMsg("assistant", acao.texto);
-      else { registrarEvento(lead.id, "erro", `envio falhou: ${r.erro}`); await alertar(`⚠️ SDR: falha ao enviar msg pra ${lead.nome_clinica}: ${r.erro}`); }
+      else { registrarEvento(lead.id, "erro", `envio falhou: ${r.erro}`); await alertar(`⚠️ SDR: falha ao enviar msg pra ${lead.nome_clinica}: ${r.erro}`, { usuarioId: donoDoLeadId(lead) }); }
       if (lead.status === "respondeu") atualizarLead(lead.id, { status: "em_conversa" });
       await new Promise((r2) => setTimeout(r2, 2500 + Math.random() * 2500)); // pausa entre bolhas
     }
@@ -251,7 +261,7 @@ async function executarAcoes(lead, acoes, instanceToken, thread = null) {
         registrarEvento(lead.id, "audio", "audio oficial enviado");
       } else {
         registrarEvento(lead.id, "erro", `audio falhou: ${r.erro}`);
-        await alertar(`⚠️ SDR: áudio oficial falhou pra ${lead.nome_clinica}: ${r.erro}`);
+        await alertar(`⚠️ SDR: áudio oficial falhou pra ${lead.nome_clinica}: ${r.erro}`, { usuarioId: donoDoLeadId(lead) });
       }
     }
 
@@ -262,7 +272,7 @@ async function executarAcoes(lead, acoes, instanceToken, thread = null) {
       const tel = thread?.telefone || lead.telefone_decisor || lead.telefone;
       addTarefa(lead.id, `ligar pro ${lead.nome_decisor || lead.nome_contato || "decisor"} (pediu ligação)`,
         agoraSP().data, { hora: null, tipo: "ligacao", usuario_id: dono });
-      await alertar(`📞 PEDIU LIGAÇÃO!\n${lead.nome_clinica}\n${lead.nome_decisor || lead.nome_contato || "decisor"}: ${tel}\nTarefa criada${quem ? " pro " + quem : ""} — liga assim que puder.`);
+      await alertar(`📞 PEDIU LIGAÇÃO!\n${lead.nome_clinica}\n${lead.nome_decisor || lead.nome_contato || "decisor"}: ${tel}\nTarefa criada${quem ? " pro " + quem : ""} — liga assim que puder.`, { usuarioId: donoDoLeadId(lead) });
       registrarEvento(lead.id, "pediu_ligacao", tel);
     }
 
@@ -275,7 +285,7 @@ async function executarAcoes(lead, acoes, instanceToken, thread = null) {
       if (campos.telefone_decisor) {
         const nomeDec = campos.nome_decisor || campos.nome_contato || null;
         registrarEvento(lead.id, "decisor_contato", campos.telefone_decisor);
-        await alertar(`📞 CONTATO DO DECISOR!\n${lead.nome_clinica} (${lead.cidade || "?"})\nResponsável: ${nomeDec || "?"}\nWhatsApp: ${campos.telefone_decisor}\n➡️ a IA já vai chamar ele na segunda conversa do card`);
+        await alertar(`📞 CONTATO DO DECISOR!\n${lead.nome_clinica} (${lead.cidade || "?"})\nResponsável: ${nomeDec || "?"}\nWhatsApp: ${campos.telefone_decisor}\n➡️ a IA já vai chamar ele na segunda conversa do card`, { usuarioId: donoDoLeadId(lead) });
         // ABORDAGEM AUTOMATICA: abre a thread e a propria IA chama o decisor
         abordarDecisor(lead.id, campos.telefone_decisor, nomeDec, instanceToken)
           .catch((e) => registrarEvento(lead.id, "erro", "abordagem do decisor falhou: " + e.message));
@@ -316,7 +326,7 @@ async function executarAcoes(lead, acoes, instanceToken, thread = null) {
       if (!r.ok && gcalId) await apagarEventoMeet(closer, gcalId); // corrida: desfaz o evento
       if (r.ok) {
         registrarEvento(lead.id, "reuniao", `${acao.inicio} com ${closer}`);
-        await alertar(`📅 REUNIÃO MARCADA!\n${lead.nome_clinica} (${lead.cidade || "?"})\n${acao.inicio} com ${closer}\nDor: ${lead.dor || "ver conversa"}\nTel: ${lead.telefone}`);
+        await alertar(`📅 REUNIÃO MARCADA!\n${lead.nome_clinica} (${lead.cidade || "?"})\n${acao.inicio} com ${closer}\nDor: ${lead.dor || "ver conversa"}\nTel: ${lead.telefone}`, { usuarioId: donoDoLeadId(lead) });
         if (meet) {
           const msg = `Link da nossa call: ${meet}\nQualquer coisa antes, é só chamar aqui.`;
           const rr = simulado ? { ok: true } : await enviarTexto(instanceToken, lead.telefone, msg);
@@ -333,7 +343,7 @@ async function executarAcoes(lead, acoes, instanceToken, thread = null) {
     if (acao.tipo === "passar_pra_humano") {
       atualizarLead(lead.id, { ia_pausada: 1 });
       registrarEvento(lead.id, "handoff", acao.motivo || "");
-      await alertar(`🙋 SDR passou pra humano: ${lead.nome_clinica}\nMotivo: ${acao.motivo || "?"}\nTel: ${lead.telefone}\n(responda pelo painel ou pelo WhatsApp; IA pausada)`);
+      await alertar(`🙋 SDR passou pra humano: ${lead.nome_clinica}\nMotivo: ${acao.motivo || "?"}\nTel: ${lead.telefone}\n(responda pelo painel ou pelo WhatsApp; IA pausada)`, { usuarioId: donoDoLeadId(lead) });
     }
 
     // BOT do outro lado: a IA pede humano. 2 pedidos sem humano aparecer = so ha
@@ -463,7 +473,7 @@ export async function abordarDecisor(leadId, telefoneCru, nomeDecisor, instanceT
   const instEnvio = db.prepare("SELECT * FROM instancias WHERE uazapi_token = ?").get(instanceToken || "") || null;
   if (instEnvio && instEnvio.cota_dia && (instEnvio.disparos_hoje || 0) >= instEnvio.cota_dia) {
     registrarEvento(leadId, "decisor_abordagem_segurada", `cota do chip ${instEnvio.nome} batida (${instEnvio.disparos_hoje}/${instEnvio.cota_dia})`);
-    await alertar(`⏸️ IA NÃO chamou o decisor da ${lead.nome_clinica}: cota diária do chip "${instEnvio.nome}" batida. O contato ficou salvo no card — chama manual ou aguarda amanhã.`);
+    await alertar(`⏸️ IA NÃO chamou o decisor da ${lead.nome_clinica}: cota diária do chip "${instEnvio.nome}" batida. O contato ficou salvo no card — chama manual ou aguarda amanhã.`, { usuarioId: donoDoLeadId(lead) });
     return;
   }
   const nomeDecCompleto = nomeDecisor || lead.nome_decisor || null;
@@ -493,7 +503,7 @@ export async function abordarDecisor(leadId, telefoneCru, nomeDecisor, instanceT
   }
   registrarEvento(leadId, "decisor_abordado", tel);
   if (!simulado && instEnvio) db.prepare("UPDATE instancias SET disparos_hoje = disparos_hoje + 1 WHERE id = ?").run(instEnvio.id);
-  await alertar(`🤖➡️📞 IA chamou o decisor da ${lead.nome_clinica} (${tel}) como ${persona}. A conversa segue na aba do card.`);
+  await alertar(`🤖➡️📞 IA chamou o decisor da ${lead.nome_clinica} (${tel}) como ${persona}. A conversa segue na aba do card.`, { usuarioId: donoDoLeadId(lead) });
 }
 
 export async function responderLead(leadId, instanceToken, opts = {}) {
@@ -514,7 +524,7 @@ export async function responderLead(leadId, instanceToken, opts = {}) {
     if (!acoes) {
       registrarEvento(leadId, "erro", `saida sem JSON: ${String(saida).slice(0, 200)}`);
       if (tentativa === 0) continue; // segunda chance
-      await alertar(`⚠️ SDR: resposta da IA sem JSON pra ${lead.nome_clinica} (lead ${leadId}). Ver logs.`);
+      await alertar(`⚠️ SDR: resposta da IA sem JSON pra ${lead.nome_clinica} (lead ${leadId}). Ver logs.`, { usuarioId: donoDoLeadId(lead) });
       return;
     }
     const { reprocessar } = await executarAcoes(getLead(leadId), acoes, instanceToken, thread);

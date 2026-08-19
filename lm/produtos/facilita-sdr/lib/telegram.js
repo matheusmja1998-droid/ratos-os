@@ -20,7 +20,12 @@ function extrasSalvos() {
     try {
       return JSON.parse(bruto)
         .filter((d) => d && d.chat)
-        .map((d) => ({ nome: d.nome || "extra", token: String(d.token || "").trim() || TOKEN, chat: String(d.chat).trim() }));
+        .map((d) => ({
+          nome: d.nome || "extra",
+          token: String(d.token || "").trim() || TOKEN,
+          chat: String(d.chat).trim(),
+          usuario_id: d.usuario_id ? Number(d.usuario_id) : null,
+        }));
     } catch { /* json quebrado: ignora */ }
   }
   // formato antigo (so chat_id no bot principal): continua valendo
@@ -31,7 +36,8 @@ function extrasSalvos() {
 
 // lista de destinos (bot + chat), sem duplicar o mesmo par
 export function destinos() {
-  const todos = [{ nome: "principal", token: TOKEN, chat: CHAT_ID }, ...extrasSalvos()];
+  const donoPrincipal = Number(getConfig("telegram_usuario_principal", "") || 0) || null;
+  const todos = [{ nome: "principal", token: TOKEN, chat: CHAT_ID, usuario_id: donoPrincipal }, ...extrasSalvos()];
   const vistos = new Set();
   return todos.filter((d) => {
     if (!d.token || !d.chat) return false;
@@ -51,6 +57,7 @@ export function salvarDestinos(lista) {
       nome: String(d.nome || "extra").slice(0, 40),
       token: String(d.token || "").trim(),
       chat: String(d.chat).trim(),
+      usuario_id: d.usuario_id ? Number(d.usuario_id) : null,
     }))
   ));
   setConfig("telegram_chats_extras", ""); // migrou pro formato novo
@@ -76,9 +83,20 @@ export async function enviarPara({ token, chat }, texto) {
   }
 }
 
-export async function alertar(texto) {
-  const alvos = destinos();
-  if (!alvos.length) { console.log("[telegram DEMO]", texto); return false; }
+// alertar(texto) -> vai pra todos (avisos do sistema: chip caiu, erro da IA).
+// alertar(texto, { usuarioId }) -> vai SO pro Telegram daquela pessoa (avisos do
+// lead dela: decisor, reuniao, pediu ligacao). Quem nao tem dono cadastrado
+// continua recebendo tudo, pra nunca sumir aviso por config faltando.
+export async function alertar(texto, opts = {}) {
+  const todos = destinos();
+  if (!todos.length) { console.log("[telegram DEMO]", texto); return false; }
+  let alvos = todos;
+  if (opts.usuarioId) {
+    const doDono = todos.filter((d) => d.usuario_id === Number(opts.usuarioId));
+    const semDono = todos.filter((d) => !d.usuario_id);
+    // com destino do dono cadastrado, so ele recebe; senao cai no comportamento antigo
+    alvos = doDono.length ? doDono : (semDono.length ? semDono : todos);
+  }
   let algumOk = false;
   for (const d of alvos) if ((await enviarPara(d, texto)).ok) algumOk = true;
   return algumOk;

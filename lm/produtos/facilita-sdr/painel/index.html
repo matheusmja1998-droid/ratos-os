@@ -3006,11 +3006,20 @@ async function carregarChatsTelegram(comRecentes = false) {
   const el = $("#tg-chats");
   if (!el) return;
   if (!d) { el.textContent = "não deu pra consultar o Telegram"; return; }
+  const opcoesDono = (sel) => `<option value="">todos os avisos</option>` +
+    (d.usuarios || []).map((u) => `<option value="${u.id}" ${Number(sel) === u.id ? "selected" : ""}>só leads do ${u.nome}</option>`).join("");
   const linhas = [];
-  if (d.principal) linhas.push(`<div style="margin:4px 0">🔔 chat <b>${d.principal}</b> · bot da casa <span style="color:var(--muted)">(principal, fixo)</span></div>`);
-  for (const e of d.extras) linhas.push(`<div style="display:flex; gap:8px; align-items:center; margin:4px 0">
+  if (d.principal) linhas.push(`<div style="display:flex; gap:8px; align-items:center; margin:5px 0; flex-wrap:wrap">
+    <span>🔔 chat <b>${d.principal}</b> · bot da casa <span style="color:var(--muted)">(principal)</span></span>
+    <select onchange="definirDonoPrincipal(this.value)" style="font-size:12px; padding:4px">${opcoesDono(d.dono_principal)}</select>
+  </div>`);
+  for (const e of d.extras) linhas.push(`<div style="display:flex; gap:8px; align-items:center; margin:5px 0; flex-wrap:wrap">
     <span>🔔 <b>${e.nome}</b> · chat ${e.chat} · ${e.bot_proprio ? "bot próprio" : "bot da casa"}</span>
+    <select onchange="definirDonoExtra('${e.chat}', this.value)" style="font-size:12px; padding:4px">${opcoesDono(e.usuario_id)}</select>
     <span onclick="removerChatTelegram('${e.chat}')" style="cursor:pointer; color:#c62828; font-size:12px">remover</span>
+  </div>`);
+  linhas.push(`<div style="font-size:11.5px; color:var(--muted); margin-top:6px">
+    "só leads do X" = esse Telegram recebe apenas avisos dos leads daquela pessoa (decisor, reunião, pediu ligação). Avisos do sistema (chip caiu, erro) vão pra todos.
   </div>`);
   const linhaNovo = (c) => `<div style="display:flex; gap:8px; align-items:center; margin:4px 0">
     <span>💬 <b>${c.nome}</b> mandou mensagem pro bot</span>
@@ -3028,7 +3037,8 @@ async function addChatTelegram(id) {
   carregarChatsTelegram(true);
 }
 // bot PROPRIO: quem tem o proprio bot cadastra token + chat (avisos saem por ele)
-function cadastrarBotProprio() {
+async function cadastrarBotProprio() {
+  const d = await api("/api/telegram/chats").catch(() => ({ usuarios: [] }));
   modal("Cadastrar bot próprio", `
     <div style="font-size:12.5px; color:var(--muted); margin-bottom:10px">
       Pra quem tem o próprio bot do Telegram (criado no @BotFather). Os avisos saem por esse bot, sem mexer nos outros.<br>
@@ -3039,17 +3049,33 @@ function cadastrarBotProprio() {
     <label style="font-size:12.5px">Token do bot (BotFather)</label>
     <input id="tg-token" placeholder="123456789:AA..." style="width:100%; font-size:13px; padding:8px; margin-bottom:8px">
     <label style="font-size:12.5px">Chat ID</label>
-    <input id="tg-chat" placeholder="somente números" style="width:100%; font-size:13px; padding:8px">
+    <input id="tg-chat" placeholder="somente números" style="width:100%; font-size:13px; padding:8px; margin-bottom:8px">
+    <label style="font-size:12.5px">Recebe avisos de</label>
+    <select id="tg-dono" style="width:100%; font-size:13px; padding:8px"><option value="">todos os leads</option></select>
     <button class="btn" style="width:100%; margin-top:12px" onclick="salvarBotProprio()">testar e cadastrar</button>`, 430);
+  if ($("#tg-dono")) $("#tg-dono").innerHTML = `<option value="">todos os leads</option>` +
+    (d.usuarios || []).map((u) => `<option value="${u.id}">só leads do ${u.nome}</option>`).join("");
 }
 async function salvarBotProprio() {
   const nome = $("#tg-nome").value.trim(), token = $("#tg-token").value.trim(), chat = $("#tg-chat").value.trim();
+  const usuario_id = $("#tg-dono")?.value || null;
   if (!token || !chat) return alert("preenche o token e o chat ID");
   toast("testando o bot...");
-  const r = await api("/api/telegram/chats", { method: "POST", body: JSON.stringify({ chat_id: chat, token, nome }) });
+  const r = await api("/api/telegram/chats", { method: "POST", body: JSON.stringify({ chat_id: chat, token, nome, usuario_id }) });
   if (r?.erro) return alert(r.erro);
   fecharModal();
   toast(`bot @${r.bot} cadastrado — mandei uma mensagem de teste`);
+  carregarChatsTelegram();
+}
+async function definirDonoPrincipal(uid) {
+  await api("/api/telegram/principal", { method: "POST", body: JSON.stringify({ usuario_id: uid || null }) });
+  toast("destino atualizado");
+  carregarChatsTelegram();
+}
+async function definirDonoExtra(chat, uid) {
+  const r = await api("/api/telegram/dono", { method: "POST", body: JSON.stringify({ chat, usuario_id: uid || null }) });
+  if (r?.erro) return alert(r.erro);
+  toast("destino atualizado");
   carregarChatsTelegram();
 }
 async function removerChatTelegram(id) {

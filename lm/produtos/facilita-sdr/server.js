@@ -1165,7 +1165,11 @@ app.get("/api/telegram/chats", auth, async (req, res) => {
   res.json({
     principal,
     bot_principal: req.query.buscar === "1" ? await nomeDoBot(process.env.TELEGRAM_BOT_TOKEN) : null,
-    extras: extras.map((d) => ({ nome: d.nome, chat: d.chat, bot_proprio: d.token !== (process.env.TELEGRAM_BOT_TOKEN || "") })),
+    extras: extras.map((d) => ({ nome: d.nome, chat: d.chat, usuario_id: d.usuario_id || null,
+      dono: d.usuario_id ? getUsuario(d.usuario_id)?.nome || null : null,
+      bot_proprio: d.token !== (process.env.TELEGRAM_BOT_TOKEN || "") })),
+    usuarios: listarUsuarios().filter((u) => u.ativo).map((u) => ({ id: u.id, nome: u.nome })),
+    dono_principal: Number(getConfig("telegram_usuario_principal", "") || 0) || null,
     recentes,
   });
 });
@@ -1173,6 +1177,7 @@ app.post("/api/telegram/chats", auth, async (req, res) => {
   const chatId = String(req.body?.chat_id || "").trim();
   const token = String(req.body?.token || "").trim();       // bot proprio (opcional)
   const nome = String(req.body?.nome || "").trim() || "extra";
+  const usuarioId = req.body?.usuario_id ? Number(req.body.usuario_id) : null;
   if (!/^-?\d+$/.test(chatId)) return res.status(400).json({ erro: "chat_id inválido (só números)" });
   if (token && !/^\d+:[\w-]{20,}$/.test(token)) return res.status(400).json({ erro: "token do bot com formato inválido" });
   const { destinosExtras, salvarDestinos, enviarPara, nomeDoBot } = await import("./lib/telegram.js");
@@ -1187,8 +1192,23 @@ app.post("/api/telegram/chats", auth, async (req, res) => {
   if (!teste.ok) return res.status(400).json({ erro: `não consegui mandar mensagem nesse chat: ${teste.erro}. A pessoa já mandou /start pro @${bot}?` });
 
   const extras = destinosExtras().filter((d) => !(d.chat === chatId && d.token === tokenUsado));
-  salvarDestinos([...extras, { nome, token, chat: chatId }]);
+  salvarDestinos([...extras, { nome, token, chat: chatId, usuario_id: usuarioId }]);
   res.json({ ok: true, bot });
+});
+// muda de quem sao os avisos de um destino ja cadastrado
+app.post("/api/telegram/dono", auth, async (req, res) => {
+  const chat = String(req.body?.chat || "").trim();
+  const uid = req.body?.usuario_id ? Number(req.body.usuario_id) : null;
+  const { destinosExtras, salvarDestinos } = await import("./lib/telegram.js");
+  const extras = destinosExtras();
+  if (!extras.some((d) => d.chat === chat)) return res.status(404).json({ erro: "destino nao encontrado" });
+  salvarDestinos(extras.map((d) => (d.chat === chat ? { ...d, usuario_id: uid } : d)));
+  res.json({ ok: true });
+});
+app.post("/api/telegram/principal", auth, (req, res) => {
+  const uid = req.body?.usuario_id ? Number(req.body.usuario_id) : null;
+  setConfig("telegram_usuario_principal", uid ? String(uid) : "");
+  res.json({ ok: true });
 });
 app.delete("/api/telegram/chats/:chatId", auth, async (req, res) => {
   const alvo = String(req.params.chatId);
