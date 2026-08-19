@@ -25,6 +25,32 @@ const estado = {
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => [...document.querySelectorAll(sel)];
 
+/**
+ * Interpreta altura escrita de qualquer jeito e devolve em centímetros.
+ *
+ * Ninguém pensa a própria altura em centímetros — a pessoa sabe que tem
+ * "1,84". Aceitar só cm força uma conversão mental que não tem por que
+ * existir, e é justamente onde nasce o erro de digitar 1.84 e virar 1 cm.
+ *
+ * "1,84" e "1.84" -> 184     (metros)
+ * "184"           -> 184     (centímetros)
+ * "84"            -> null    (ambíguo demais pra chutar)
+ */
+function alturaEmCm(valor) {
+  const texto = String(valor ?? '').trim().replace(',', '.');
+  if (!texto) return null;
+
+  const n = Number(texto);
+  if (!Number.isFinite(n) || n <= 0) return null;
+
+  // Faixa dos metros: 1,20 a 2,50.
+  if (n >= 1.2 && n <= 2.5) return Math.round(n * 100);
+  // Faixa dos centímetros.
+  if (n >= 120 && n <= 250) return Math.round(n);
+
+  return null;
+}
+
 /** Escapa texto antes de injetar no HTML. */
 function esc(v) {
   return String(v ?? '').replace(/[&<>"']/g, (c) =>
@@ -124,9 +150,9 @@ function montarCamposConta() {
       <div class="dupla" style="margin-top:.8rem">
         <div class="campo"><label for="e-idade">Idade</label>
           <input id="e-idade" data-campo="idadeAnos" type="number" inputmode="numeric" value="${esc(rascunho.idadeAnos)}"></div>
-        <div class="campo"><label for="e-altura">Altura (cm)</label>
-          <input id="e-altura" data-campo="alturaCm" type="number" inputmode="numeric" placeholder="178" value="${esc(rascunho.alturaCm)}">
-          <small class="tenue">Em centímetros: 178, não 1,78.</small></div>
+        <div class="campo"><label for="e-altura">Altura</label>
+          <input id="e-altura" data-campo="alturaCm" type="text" inputmode="decimal" placeholder="1,84 ou 184" value="${esc(rascunho.alturaCm)}">
+          <small class="tenue" id="leitura-altura">Pode escrever 1,84 ou 184. Tanto faz.</small></div>
       </div>
       <div class="dupla">
         <div class="campo"><label for="e-peso">Peso hoje (kg)</label>
@@ -162,6 +188,25 @@ function montarCamposConta() {
       </div>`;
   }
 
+  // Retorno imediato do que foi entendido: quem escreve "1,84" vê "1,84 m =
+  // 184 cm" na hora e não precisa confiar às cegas na conversão.
+  const campoAltura = $('#e-altura');
+  if (campoAltura) {
+    const atualizarLeitura = () => {
+      const cm = alturaEmCm(campoAltura.value);
+      const leitura = $('#leitura-altura');
+      if (!campoAltura.value.trim()) {
+        leitura.textContent = 'Pode escrever 1,84 ou 184. Tanto faz.';
+      } else if (cm) {
+        leitura.textContent = `Entendi: ${(cm / 100).toFixed(2).replace('.', ',')} m = ${cm} cm`;
+      } else {
+        leitura.textContent = 'Não consegui ler essa altura.';
+      }
+    };
+    campoAltura.addEventListener('input', atualizarLeitura);
+    atualizarLeitura();
+  }
+
   $('#entrada-titulo').textContent = ETAPAS[etapa - 1].titulo;
   $('#passo-indicador').textContent = ETAPAS[etapa - 1].indicador;
   $('#passo-indicador').classList.remove('some');
@@ -186,14 +231,10 @@ function validarEtapa() {
   }
   if (etapa === 2) {
     const idade = Number(rascunho.idadeAnos);
-    const altura = Number(rascunho.alturaCm);
-    const peso = Number(rascunho.pesoKg);
+    const altura = alturaEmCm(rascunho.alturaCm);
+    const peso = Number(String(rascunho.pesoKg).replace(',', '.'));
     if (!idade || idade < 14 || idade > 100) return 'Informe uma idade entre 14 e 100.';
-    if (!altura || altura < 120 || altura > 250) {
-      return altura && altura < 3
-        ? 'A altura vai em centímetros: 178, não 1,78.'
-        : 'Informe a altura em centímetros, entre 120 e 250.';
-    }
+    if (!altura) return 'Não entendi a altura. Escreva como preferir: 1,84 ou 184.';
     if (!peso || peso < 30 || peso > 400) return 'Informe seu peso de hoje, em quilos.';
   }
   return null;
@@ -247,8 +288,8 @@ async function autenticar() {
         senha: rascunho.senha,
         sexo: rascunho.sexo,
         idadeAnos: Number(rascunho.idadeAnos),
-        alturaCm: Number(rascunho.alturaCm),
-        pesoKg: Number(rascunho.pesoKg),
+        alturaCm: alturaEmCm(rascunho.alturaCm),
+        pesoKg: Number(String(rascunho.pesoKg).replace(',', '.')),
         nivelAtividade: rascunho.nivelAtividade,
         objetivo: rascunho.objetivo,
         deficitKcal:
@@ -694,7 +735,7 @@ async function salvarPerfil() {
       method: 'PATCH',
       body: JSON.stringify({
         idadeAnos: Number($('#perfil-idade').value) || undefined,
-        alturaCm: Number($('#perfil-altura').value) || undefined,
+        alturaCm: alturaEmCm($('#perfil-altura').value) || undefined,
         sexo: $('#perfil-sexo').value,
         nivelAtividade: $('#perfil-nivel').value,
       }),
