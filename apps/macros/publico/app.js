@@ -411,10 +411,11 @@ function mostrarContaDoOnboarding(calculo) {
       </summary>
       <div style="margin-top:.8rem">
         ${calculo.passos.map((p) => `
-          <div class="passo">
-            <b>${p.ordem}. ${esc(p.titulo)}</b>
+          <div class="passo" data-passo="${p.ordem}">
+            <b>${esc(p.titulo)}</b>
             <div class="conta">${esc(p.formula)}</div>
-            <div class="conta">${esc(p.substituicao)} = ${esc(p.resultado)}</div>
+            <div class="conta">${esc(p.substituicao)}</div>
+            <div class="conta resultado">= ${esc(p.resultado)}</div>
             <div class="porque">${esc(p.porque)}</div>
           </div>`).join('')}
       </div>
@@ -450,19 +451,38 @@ function sair() {
 
 /* ---------- painel do dia ---------- */
 
+/**
+ * Uma régua de macro.
+ *
+ * Dentro da meta, a trilha inteira é a meta e o preenchimento é o consumo.
+ * Passando dela, a escala comprime: a meta recua pra 84% da trilha e o
+ * excedente ocupa o resto, hachurado. Assim "passou" continua legível na
+ * mesma largura, sem vermelho e sem alarme — é leitura, não repreensão.
+ */
 function reguaDe(classe, rotulo, atual, meta, unidade = 'g') {
-  const pct = meta > 0 ? Math.min(100, (atual / meta) * 100) : 0;
   const passou = meta > 0 && atual > meta;
-  const falta = arred(meta - atual, 1);
+  const vazio = atual === 0;
 
+  let pct = 0;
+  if (meta > 0) {
+    pct = passou
+      ? Math.min(100, (atual / meta) * 84)   // 84% da trilha = a meta
+      : (atual / meta) * 100;
+  }
+
+  const falta = arred(meta - atual, 1);
   const direita = passou
-    ? `${arred(atual, 1)} de ${arred(meta, 1)}${unidade} · passou ${arred(-falta, 1)}${unidade}`
+    ? `${arred(atual, 1)} de ${arred(meta, 1)}${unidade} · ${arred(-falta, 1)}${unidade} acima`
     : `${arred(atual, 1)} de ${arred(meta, 1)}${unidade} · faltam ${falta}${unidade}`;
+
+  const classes = ['regua', passou ? 'passou' : '', vazio ? 'vazia' : '']
+    .filter(Boolean)
+    .join(' ');
 
   return `
     <div class="macro ${classe}">
       <div class="macro-nome"><b>${esc(rotulo)}</b><span>${esc(direita)}</span></div>
-      <div class="regua ${passou ? 'passou' : ''}"><i style="width:${pct}%"></i></div>
+      <div class="${classes}"><i style="width:${pct}%"></i></div>
     </div>`;
 }
 
@@ -547,11 +567,13 @@ function desenharRefeicoes() {
     // Resumo dos macros da refeição: é o que fica visível quando recolhida.
     const resumo = tem
       ? `<div class="refeicao-resumo">
-           <span><b>${arred(t.kcal)}</b> kcal</span>
-           <span>P <b>${arred(t.proteinaG, 1)}</b></span>
-           <span>C <b>${arred(t.carboidratoG, 1)}</b></span>
-           <span>G <b>${arred(t.gorduraG, 1)}</b></span>
-           <span>F <b>${arred(t.fibraG, 1)}</b></span>
+           <div class="resumo-kcal">${arred(t.kcal)}<small>kcal</small></div>
+           <div class="resumo-macros">
+             <div class="resumo-macro p"><b>${arred(t.proteinaG, 1)}</b><span>prot</span></div>
+             <div class="resumo-macro c"><b>${arred(t.carboidratoG, 1)}</b><span>carb</span></div>
+             <div class="resumo-macro g"><b>${arred(t.gorduraG, 1)}</b><span>gord</span></div>
+             <div class="resumo-macro f"><b>${arred(t.fibraG, 1)}</b><span>fibra</span></div>
+           </div>
          </div>`
       : '';
 
@@ -1377,10 +1399,11 @@ async function calcular() {
 
   $('#passos').innerHTML = `
     ${r.passos.map((p) => `
-      <div class="passo">
-        <b>${p.ordem}. ${esc(p.titulo)}</b>
+      <div class="passo" data-passo="${p.ordem}">
+        <b>${esc(p.titulo)}</b>
         <div class="conta">${esc(p.formula)}</div>
-        <div class="conta">${esc(p.substituicao)} = ${esc(p.resultado)}</div>
+        <div class="conta">${esc(p.substituicao)}</div>
+        <div class="conta resultado">= ${esc(p.resultado)}</div>
         <div class="porque">${esc(p.porque)}</div>
       </div>`).join('')}
     ${r.avisos.map((a) => `<p class="nota">${esc(a)}</p>`).join('')}

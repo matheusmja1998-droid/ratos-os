@@ -17,6 +17,17 @@
   --tinta-fraca:  #6b6355;
   --tinta-tenue:  #9c9282;
   --linha:        #d6cdb8;
+  --linha-forte:  #b9ae95;
+
+  /* Grade de 4 px. Padding lateral da tela e interno do bloco são iguais,
+     pra o conteúdo alinhar numa única sanca vertical. */
+  --s1: 4px;   /* rótulo → valor */
+  --s2: 6px;   /* selo → nome */
+  --s3: 9px;   /* linhas de item */
+  --s4: 14px;  /* entre blocos */
+  --s5: 18px;  /* padding do bloco e da tela */
+  --s6: 26px;  /* respiro antes de título */
+  --s7: 40px;  /* topo de tela de onboarding */
 
   /* Um macro, uma cor. Tirados de comida, não de gráfico:
      tijolo (proteína), trigo (carbo), manteiga (gordura). */
@@ -35,17 +46,20 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --papel:        #1a1815;
-    --papel-fundo:  #14120f;
-    --papel-alto:   #232019;
-    --tinta:        #eee7d7;
+    /* Mesma lógica invertida: as cores de macro sobem em luminosidade e
+       descem em croma pra manter contraste sem virar neon. */
+    --papel:        #201d17;
+    --papel-fundo:  #17150f;
+    --papel-alto:   #2a261e;
+    --tinta:        #f0ebdd;
     --tinta-fraca:  #a89e8b;
-    --tinta-tenue:  #6f6757;
-    --linha:        #353026;
-    --proteina:   #e08163;
-    --carboidrato:#e0b055;
-    --gordura:    #bda671;
-    --fibra:      #8bb490;
+    --tinta-tenue:  #756c5c;
+    --linha:        #3a352b;
+    --linha-forte:  #4d4638;
+    --proteina:   #d1674a;
+    --carboidrato:#d9a441;
+    --gordura:    #a68f5c;
+    --fibra:      #6e9873;
     --sombra:     rgba(0, 0, 0, .4);
   }
 }
@@ -83,10 +97,10 @@ header.capa {
 
 .marca {
   font-family: var(--serif);
-  font-weight: 900;
-  font-size: clamp(2.4rem, 11vw, 3.6rem);
-  letter-spacing: -.045em;
-  line-height: .92;
+  font-weight: 400;
+  font-size: clamp(2rem, 9vw, 34px);
+  letter-spacing: -.01em;
+  line-height: 1.05;
   font-variation-settings: 'opsz' 120;
 }
 
@@ -100,21 +114,20 @@ header.capa {
 .secao {
   background: var(--papel);
   border: 1px solid var(--linha);
-  border-radius: 3px;
-  padding: 1.25rem;
-  margin-bottom: 1.1rem;
-  box-shadow: 0 1px 0 var(--sombra);
+  border-radius: 2px;
+  padding: var(--s5) 16px;
+  margin-bottom: var(--s4);
 }
 
 .secao > h2 {
-  font-family: var(--serif);
-  font-size: .74rem;
-  font-weight: 600;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: .19em;
+  letter-spacing: .20em;
   color: var(--tinta-fraca);
-  margin-bottom: .9rem;
-  padding-bottom: .5rem;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
   border-bottom: 1px solid var(--linha);
 }
 
@@ -133,11 +146,11 @@ header.capa {
 
 .calorias-num {
   font-family: var(--serif);
-  font-weight: 900;
-  font-size: clamp(2.7rem, 13vw, 3.9rem);
-  line-height: .88;
-  letter-spacing: -.04em;
-  font-variation-settings: 'opsz' 144;
+  font-weight: 300;
+  font-size: clamp(3rem, 15vw, 62px);
+  line-height: .86;
+  letter-spacing: -.015em;
+  font-variation-settings: 'opsz' 120;
 }
 
 .calorias-de {
@@ -148,39 +161,96 @@ header.capa {
   white-space: nowrap;
 }
 
-.macros { display: grid; gap: .95rem; }
+.macros { display: grid; gap: 13px; }
 
 .macro-nome {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  font-size: .87rem;
-  margin-bottom: .3rem;
+  gap: 8px;
+  margin-bottom: var(--s1);
 }
 .macro-nome b {
   font-family: var(--serif);
-  font-weight: 600;
-  letter-spacing: .04em;
+  font-weight: 400;
+  font-size: 15px;
+  letter-spacing: 0;
   text-transform: lowercase;
 }
-.macro-nome span { font-family: var(--mono); font-size: .81rem; color: var(--tinta-fraca); }
+.macro-nome span { font-family: var(--mono); font-size: 11.5px; color: var(--tinta-fraca); }
 
-/* Régua desenhada: fundo hachurado, preenchimento sólido. */
+/* Régua de macro: fita métrica.
+   Ticks a cada 10% dão leitura de relance sem precisar de número. Quando o
+   valor passa de 100%, a escala comprime: a meta vira um traço de tinta a 84%
+   e o excedente segue hachurado na mesma cor. Sem vermelho, sem ícone — passar
+   da meta é leitura, não alarme. */
 .regua {
-  height: 9px;
+  position: relative;
+  height: 19px;
   background: var(--papel-alto);
-  border: 1px solid var(--linha);
+  border: 1px solid var(--linha-forte);
   border-radius: 1px;
   overflow: hidden;
-  position: relative;
 }
+
+/* Ticks da fita, por cima de tudo. */
+.regua::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(35, 32, 26, .16) 0 1px,
+    transparent 1px 10%
+  );
+  mix-blend-mode: multiply;
+}
+
 .regua i {
   display: block;
   height: 100%;
   width: 0;
   transition: width .55s cubic-bezier(.22,.9,.3,1);
 }
-.regua.passou i { background-image: repeating-linear-gradient(45deg, transparent 0 4px, rgba(255,255,255,.35) 4px 8px); }
+
+/* Passou da meta: o traço marca onde ela ficou e o resto vai hachurado. */
+.regua.passou::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 84%;
+  width: 2px;
+  background: var(--tinta);
+  z-index: 2;
+}
+.regua.passou i {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0 3px,
+    rgba(244, 240, 230, .34) 3px 6px
+  );
+}
+
+/* Régua vazia: tracejada, pra o vazio ser visivelmente o mesmo objeto sem dado. */
+.regua.vazia {
+  border-style: dashed;
+  border-color: var(--linha);
+}
+.regua.vazia::after { opacity: .45; }
+
+@media (prefers-color-scheme: dark) {
+  /* Os ticks invertem pra continuar visíveis sobre a trilha escura. */
+  .regua::after {
+    background-image: repeating-linear-gradient(
+      90deg,
+      rgba(240, 235, 221, .14) 0 1px,
+      transparent 1px 10%
+    );
+    mix-blend-mode: screen;
+  }
+}
 
 .p i { background: var(--proteina); }
 .c i { background: var(--carboidrato); }
@@ -201,8 +271,9 @@ header.capa {
 }
 .refeicao-nome {
   font-family: var(--serif);
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 1.2;
 }
 .refeicao-kcal { font-family: var(--mono); font-size: .8rem; color: var(--tinta-fraca); }
 
@@ -210,27 +281,55 @@ header.capa {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: .7rem;
-  padding: .5rem 0 .5rem .9rem;
+  gap: 10px;
+  padding: var(--s3) 0 var(--s3) 12px;
   border-left: 2px solid var(--linha);
-  margin-top: .5rem;
-  font-size: .92rem;
+  margin-top: var(--s3);
+  font-family: var(--texto);
+  font-size: 16px;
 }
-.item.maravilha { border-left-color: var(--grifo); border-left-width: 3px; }
+.item.maravilha {
+  border-left-color: var(--grifo);
+  border-left-width: 3px;
+  background-image: linear-gradient(90deg, rgba(232, 201, 90, .16), transparent 62%);
+}
 .item-nome { flex: 1; }
-.item-nome small { display: block; color: var(--tinta-tenue); font-size: .77rem; font-family: var(--mono); margin-top: .1rem; }
-.item-macros { font-family: var(--mono); font-size: .77rem; color: var(--tinta-fraca); text-align: right; white-space: nowrap; }
+.item-nome small {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--tinta-tenue);
+}
+.item-macros {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--tinta-fraca);
+  text-align: right;
+  white-space: nowrap;
+}
 
+/* Fonte do dado: nota de rodapé de livro de receita, não metadado.
+   Sem pílula, sem cor, sem borda fechada — só um filete de assinatura. */
 .fonte-selo {
   display: inline-block;
   font-family: var(--mono);
-  font-size: .62rem;
-  letter-spacing: .09em;
-  padding: .08rem .32rem;
-  border: 1px solid var(--linha);
-  border-radius: 2px;
+  font-size: 9.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--tinta-tenue);
+  border-bottom: 1px solid var(--linha-forte);
+  padding-bottom: 1px;
+  margin-left: var(--s2);
+  vertical-align: 2px;
+}
+
+/* O preparo é o rótulo visível, em itálico, como quem descreve a panela. */
+.preparo {
+  font-family: var(--texto);
+  font-style: italic;
   color: var(--tinta-fraca);
-  vertical-align: 1px;
 }
 
 /* ---------- Controles ---------- */
@@ -290,8 +389,19 @@ label {
   cursor: pointer;
 }
 .resultado:hover { background: var(--papel-alto); }
-.resultado-nome { flex: 1; font-size: .93rem; }
-.resultado-nome small { display: block; color: var(--tinta-tenue); font-size: .75rem; font-family: var(--mono); }
+.resultado-nome {
+  flex: 1;
+  font-family: var(--texto);
+  font-size: 16px;
+  line-height: 1.25;
+}
+.resultado-nome small {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--tinta-tenue);
+}
 
 /* ---------- Avisos e conversa ---------- */
 
@@ -306,23 +416,72 @@ label {
 }
 .nota.seco { border-left-color: var(--tinta-tenue); }
 
+/* Memória de cálculo: página de caderno.
+   Cada passo tem margem à esquerda com o número em cinza — a margem do
+   caderno. O ritmo repetido é o que faz sete passos parecerem uma leitura
+   em vez de uma lista. */
 .passo {
-  padding: .8rem 0;
-  border-bottom: 1px dashed var(--linha);
+  position: relative;
+  padding: 14px 0 14px 46px;
+  border-bottom: 1px solid var(--linha);
 }
 .passo:last-child { border-bottom: 0; }
-.passo b { font-family: var(--serif); display: block; margin-bottom: .2rem; }
+
+.passo::before {
+  content: attr(data-passo);
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 30px;
+  text-align: right;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 21px;
+  line-height: 1;
+  color: var(--tinta-tenue);
+}
+.passo::after {
+  content: '';
+  position: absolute;
+  left: 38px;
+  top: 14px;
+  bottom: 14px;
+  width: 1px;
+  background: var(--linha);
+}
+
+.passo b {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+/* Fórmula em três linhas: símbolos, substituição, resultado. */
 .passo .conta {
   font-family: var(--mono);
-  font-size: .82rem;
+  font-size: 12.5px;
+  line-height: 1.7;
   background: var(--papel-alto);
-  padding: .4rem .55rem;
-  border-radius: 2px;
-  margin: .35rem 0;
+  padding: 8px 10px;
+  margin: 0;
   overflow-x: auto;
   white-space: nowrap;
+  color: var(--tinta-fraca);
 }
-.passo .porque { font-size: .87rem; color: var(--tinta-fraca); font-style: italic; }
+.passo .conta + .conta { border-top: 1px solid var(--linha); }
+.passo .conta.resultado { font-weight: 500; color: var(--tinta); }
+
+.passo .porque {
+  margin-top: 8px;
+  font-family: var(--texto);
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--tinta-fraca);
+}
 
 /* ---------- Navegação inferior ---------- */
 
@@ -409,17 +568,58 @@ nav.rodape button[aria-current='true'] {
 }
 .explicacao b { color: var(--tinta); font-weight: 500; }
 
-/* Resumo dos macros da refeição, visível com ela recolhida */
+/* Resumo da refeição recolhida: fita de números.
+   A caloria é a única grande. Os quatro macros viram colunas penduradas num
+   filete de 2 px na cor do macro — a cor identifica, a letra confirma, o valor
+   alinha em mono. Cinco números, uma fixação do olho, nenhuma linha de tabela. */
 .refeicao-resumo {
   display: flex;
-  flex-wrap: wrap;
-  gap: .1rem .85rem;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 8px 0 2px;
   font-family: var(--mono);
-  font-size: .76rem;
-  color: var(--tinta-fraca);
-  padding: .35rem 0 .1rem;
 }
-.refeicao-resumo b { color: var(--tinta); font-weight: 700; }
+
+.resumo-kcal {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 21px;
+  line-height: 1;
+  color: var(--tinta);
+  white-space: nowrap;
+}
+.resumo-kcal small {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--tinta-fraca);
+  margin-left: 3px;
+}
+
+.resumo-macros { display: flex; gap: 10px; }
+
+.resumo-macro {
+  min-width: 36px;
+  padding-left: 6px;
+  border-left: 2px solid var(--linha-forte);
+  line-height: 1.25;
+}
+.resumo-macro b {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--tinta);
+}
+.resumo-macro span {
+  font-size: 9.5px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--tinta-tenue);
+}
+
+.resumo-macro.p { border-left-color: var(--proteina); }
+.resumo-macro.c { border-left-color: var(--carboidrato); }
+.resumo-macro.g { border-left-color: var(--gordura); }
+.resumo-macro.f { border-left-color: var(--fibra); }
 
 /* Seta que gira ao abrir a refeição */
 .seta {
