@@ -15,14 +15,32 @@ cp .env.example .env     # opcional: preencha ANTHROPIC_API_KEY pros recursos de
 npm run start:dev
 ```
 
-Sobe em `http://localhost:3000/api`, com documentação interativa em
-`http://localhost:3000/docs`. O banco é SQLite e se cria sozinho, já populado
-com a base de alimentos.
+Abra `http://localhost:3000` no navegador — o app está lá. A API fica em
+`/api` e a documentação interativa em `/docs`. O banco é SQLite e se cria
+sozinho, já populado com a base de alimentos.
+
+**Para usar no celular**, na mesma rede: descubra seu IP com
+`ipconfig getifaddr en0` e abra `http://SEU_IP:3000` no telefone.
 
 ```bash
-npm test          # 33 testes: cálculo, planejador, busca e licença das fontes
+npm test          # 44 testes, incluindo o fluxo completo de ponta a ponta
 npm run build
 ```
+
+## O app
+
+Quatro telas, feitas pra funcionar no celular:
+
+- **Hoje** — o que já entrou, o que ainda cabe e as réguas de cada macro.
+- **Comer** — escreva "duas conchas de feijão e um filé" e a IA monta os itens,
+  ou procure na base direto. Cada resultado diz quanto ainda cabe hoje.
+- **Peso** — registra o peso e mostra a tendência por média móvel, não o número
+  cru do dia. Diagnostica platô e aplica o ajuste com um toque.
+- **A conta** — seus dados, o recálculo e os sete passos da conta abertos.
+
+O visual é de caderno de cozinha: papel, tinta e anotação à mão. Nenhum verde
+de academia, nenhuma barra vermelha de erro. Quando você passa da meta, a régua
+fica hachurada e o texto diz quanto passou. Só isso.
 
 ## O que este app faz diferente
 
@@ -108,7 +126,15 @@ Nenhuma comida é chamada de porcaria, lixo, besteira, "comida de verdade",
 suja ou limpa. Passar da meta é informação, não falha. Não há streak que zera,
 nem nota semanal rotulando a pessoa de "Off Track".
 
-A IA que comenta o dia opera sob essa regra explicitamente.
+Isso é estrutural, não cosmético: o déficit tem teto de 25% do gasto e piso na
+TMB, a gordura tem piso hormonal, não existe projeção de peso futuro e nenhuma
+tela usa vermelho de erro. A IA que comenta o dia opera sob a mesma regra.
+
+Vale registrar o motivo: a literatura associa o próprio ato de contar calorias
+a sintomas de transtorno alimentar (Simpson & Mazzeo, 2017, n=493; Levinson et
+al., onde 73% dos pacientes com TA que usavam MyFitnessPal apontaram o app como
+contribuinte). São estudos transversais, sem causalidade estabelecida — mas
+suficientes pra tratar "sem culpa" como requisito de projeto, não como tom.
 
 ## O papel da IA
 
@@ -163,6 +189,8 @@ src/
   ia/           interpretação de texto, leitura de rótulo, comentário
   auth/         JWT
   comum/        entidades e DTOs
+  app.e2e.spec  fluxo completo: conta, meta, maravilha, peso, platô
+publico/        o cliente web (um HTML, um CSS, um JS)
 ```
 
 ## Base de alimentos
@@ -215,8 +243,8 @@ do app.
   share-alike). Ainda não integrado.
 - Sete dos 649 alimentos vêm da TACO com valores de 2011; alimento
   industrializado muda de formulação, então rótulo atual sempre ganha da tabela.
-- Sem app cliente. É só a API, com o Swagger em `/docs` como interface.
 - Receita composta tem entidade modelada mas ainda não tem rota.
+- Sem instalação como app (PWA) nem uso offline: precisa do servidor no ar.
 - Sem integração com wearable, e isso é deliberado: importar caloria de
   smartwatch conta o exercício duas vezes, porque o fator de atividade já
   contabilizou o treino. Vale dizer que o MacroFactor já sustenta essa mesma

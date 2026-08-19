@@ -7,6 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import {
   Alimento, ItemRefeicao, Meta, Receita, Refeicao, RegistroPeso, Usuario,
 } from './comum/entidades';
+import { opcoesDoBanco } from './comum/banco';
 
 import { CalculoService } from './calculo/calculo.service';
 import { CalculoController } from './calculo/calculo.controller';
@@ -28,12 +29,7 @@ const ENTIDADES = [Usuario, Meta, Alimento, Refeicao, ItemRefeicao, RegistroPeso
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env', '../../.env'] }),
-    TypeOrmModule.forRoot({
-      type: 'better-sqlite3',
-      database: process.env.DB_PATH ?? 'macros.db',
-      entities: ENTIDADES,
-      synchronize: true,
-    }),
+    TypeOrmModule.forRoot(opcoesDoBanco(ENTIDADES)),
     TypeOrmModule.forFeature(ENTIDADES),
     PassportModule,
     JwtModule.register({ secret: SEGREDO_JWT, signOptions: { expiresIn: '30d' } }),

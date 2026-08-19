@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -72,6 +72,43 @@ export class MetasController {
   @ApiOperation({ summary: 'Tendência de peso por média móvel, sem o ruído do dia' })
   tendencia(@UsuarioAtual() u: { id: string }) {
     return this.progresso.tendencia(u.id);
+  }
+
+  @Post('ajustar-carboidrato')
+  @ApiOperation({
+    summary: 'Aplica o ajuste de platô: mexe só no carboidrato, proteína intacta',
+  })
+  async ajustarCarboidrato(
+    @UsuarioAtual() u: { id: string },
+    @Body() body: { carboidratoG: number },
+  ) {
+    const atual = await this.metas.findOne({
+      where: { usuarioId: u.id, ativa: true },
+      order: { criadoEm: 'DESC' },
+    });
+    if (!atual) throw new NotFoundException('Você ainda não tem metas para ajustar.');
+
+    const carboidratoG = Math.max(0, Math.round(body.carboidratoG));
+    // Proteína e gordura ficam onde estão: no platô se corta carboidrato e se
+    // aumenta o gasto, nunca o macro estrutural.
+    const calorias =
+      atual.proteinaG * 4 + carboidratoG * 4 + atual.gorduraG * 9;
+
+    await this.metas.update({ usuarioId: u.id, ativa: true }, { ativa: false });
+
+    return this.metas.save(
+      this.metas.create({
+        ...atual,
+        id: undefined,
+        carboidratoG,
+        calorias,
+        origem: 'ajuste_plato',
+        justificativa:
+          `Carboidrato de ${atual.carboidratoG} g para ${carboidratoG} g por estagnação. ` +
+          `Proteína mantida em ${atual.proteinaG} g.`,
+        ativa: true,
+      }),
+    );
   }
 
   @Get('plato')

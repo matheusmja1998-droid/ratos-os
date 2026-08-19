@@ -1,10 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
+import { PASTA_PUBLICA } from './comum/caminhos';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // O cliente web sai do próprio servidor: um HTML, um CSS e um JS.
+  // Sem build separado — abre no celular e funciona.
+  app.useStaticAssets(PASTA_PUBLICA);
 
   app.setGlobalPrefix('api');
   app.enableCors();
@@ -24,6 +30,6 @@ async function bootstrap() {
 
   const porta = process.env.PORT ?? 3000;
   await app.listen(porta);
-  console.log(`Macros rodando em http://localhost:${porta}/api — docs em /docs`);
+  console.log(`Macros em http://localhost:${porta} — API em /api, docs em /docs`);
 }
 bootstrap();

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f0e6">
+<title>Macros</title>
+<link rel="stylesheet" href="/estilo.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍚</text></svg>">
+</head>
+<body>
+
+<!-- ===== Entrada ===== -->
+<main id="tela-entrada" class="folha">
+  <header class="capa">
+    <div class="marca">Macros</div>
+    <p class="subtitulo">Aprenda a conta. Coma o que você gosta.</p>
+  </header>
+
+  <section class="secao">
+    <h2 id="entrada-titulo">Entrar</h2>
+    <div id="campos-conta" class="pilha"></div>
+    <div class="linha-flex" style="margin-top:1rem">
+      <button id="btn-entrar" class="cresce">Entrar</button>
+      <button id="btn-alternar" class="leve">Criar conta</button>
+    </div>
+    <p id="erro-conta" class="nota some"></p>
+  </section>
+</main>
+
+<!-- ===== Aplicativo ===== -->
+<div id="app" class="some">
+
+  <!-- Hoje -->
+  <main id="tela-hoje" class="folha">
+    <header class="capa">
+      <div class="marca">Hoje</div>
+      <p class="subtitulo" id="data-hoje"></p>
+    </header>
+
+    <section class="secao">
+      <h2>O dia</h2>
+      <div id="painel" class="painel"><p class="carregando">carregando…</p></div>
+    </section>
+
+    <section class="secao">
+      <h2>Refeições</h2>
+      <div id="refeicoes"></div>
+    </section>
+
+    <section class="secao" id="bloco-conversa">
+      <h2>Como foi o dia</h2>
+      <p class="tenue">Um resumo do que já entrou, sem julgamento.</p>
+      <button id="btn-comentar" class="leve" style="margin-top:.7rem">Ler o dia</button>
+      <p id="comentario-dia" class="nota some"></p>
+    </section>
+  </main>
+
+  <!-- Comer -->
+  <main id="tela-comer" class="folha some">
+    <header class="capa">
+      <div class="marca">Comer</div>
+      <p class="subtitulo">Comece pelo que você quer comer de verdade.</p>
+    </header>
+
+    <section class="secao">
+      <h2>Escrever o que comeu</h2>
+      <p class="tenue">Escreva do seu jeito: “duas conchas de feijão e um filé de frango”.</p>
+      <div class="linha-flex" style="margin-top:.7rem">
+        <input id="texto-ia" class="cresce" placeholder="o que você comeu…">
+        <button id="btn-ia">Ler</button>
+      </div>
+      <div id="saida-ia"></div>
+    </section>
+
+    <section class="secao">
+      <h2>Procurar alimento</h2>
+      <p class="tenue">Toque num resultado pra anotar no dia ou ver quanto ainda cabe. O preparo muda tudo: mandioca cozida tem 125 kcal, frita tem 300.</p>
+      <input id="busca" placeholder="mandioca frita, arroz cozido, nutella…" style="margin-top:.7rem">
+      <div id="resultados"></div>
+    </section>
+
+    <section class="secao">
+      <h2>Fechar o dia</h2>
+      <p class="tenue">O que completa a proteína que ainda falta.</p>
+      <button id="btn-fechar" class="leve" style="margin-top:.7rem">Ver sugestões</button>
+      <div id="fechamento"></div>
+    </section>
+  </main>
+
+  <!-- Peso -->
+  <main id="tela-peso" class="folha some">
+    <header class="capa">
+      <div class="marca">Peso</div>
+      <p class="subtitulo">A balança oscila com água e sal. A tendência é que conta.</p>
+    </header>
+
+    <section class="secao">
+      <h2>Registrar</h2>
+      <div class="linha-flex">
+        <input id="peso-hoje" class="cresce" type="number" step="0.1" placeholder="peso de hoje, em kg">
+        <button id="btn-peso">Anotar</button>
+      </div>
+    </section>
+
+    <section class="secao">
+      <h2>Tendência</h2>
+      <div id="tendencia"><p class="carregando">carregando…</p></div>
+    </section>
+
+    <section class="secao">
+      <h2>Estagnou?</h2>
+      <div id="plato"></div>
+    </section>
+  </main>
+
+  <!-- Conta -->
+  <main id="tela-conta" class="folha some">
+    <header class="capa">
+      <div class="marca">A conta</div>
+      <p class="subtitulo">Refaça no papel. É pra isso que ela está aqui.</p>
+    </header>
+
+    <section class="secao">
+      <h2>Suas metas</h2>
+      <div id="metas-atuais"></div>
+    </section>
+
+    <section class="secao">
+      <h2>Seus dados</h2>
+      <p class="tenue">A conta sai daqui. Se algo estiver errado, o resultado sai errado junto.</p>
+      <div class="dupla" style="margin-top:.8rem">
+        <div class="campo"><label for="perfil-idade">Idade</label>
+          <input id="perfil-idade" type="number" inputmode="numeric"></div>
+        <div class="campo"><label for="perfil-altura">Altura (cm)</label>
+          <input id="perfil-altura" type="number" inputmode="numeric"></div>
+      </div>
+      <div class="dupla">
+        <div class="campo"><label for="perfil-sexo">Sexo</label>
+          <select id="perfil-sexo">
+            <option value="masculino">Masculino</option>
+            <option value="feminino">Feminino</option>
+          </select></div>
+        <div class="campo"><label for="perfil-nivel">Atividade</label>
+          <select id="perfil-nivel"></select></div>
+      </div>
+      <button id="btn-salvar-perfil" class="leve">Salvar dados</button>
+      <p id="aviso-perfil" class="nota some"></p>
+    </section>
+
+    <section class="secao">
+      <h2>Recalcular</h2>
+      <div class="campo">
+        <label for="calc-peso">Peso atual (kg)</label>
+        <input id="calc-peso" type="number" step="0.1">
+      </div>
+      <div class="dupla">
+        <div class="campo">
+          <label for="calc-objetivo">Objetivo</label>
+          <select id="calc-objetivo">
+            <option value="emagrecer">Emagrecer</option>
+            <option value="manter">Manter</option>
+            <option value="ganhar">Ganhar</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="calc-deficit">Déficit (kcal)</label>
+          <input id="calc-deficit" type="number" step="50" value="500">
+        </div>
+      </div>
+      <div class="campo">
+        <label for="calc-atividade">Atividade</label>
+        <select id="calc-atividade"></select>
+      </div>
+      <button id="btn-calcular">Calcular e ver a conta</button>
+    </section>
+
+    <section class="secao" id="bloco-passos">
+      <h2>Passo a passo</h2>
+      <div id="passos"><p class="tenue">Calcule acima pra ver cada passo da conta.</p></div>
+    </section>
+
+    <section class="secao">
+      <h2>Sair</h2>
+      <button id="btn-sair" class="leve">Sair da conta</button>
+    </section>
+  </main>
+
+  <nav class="rodape">
+    <button data-tela="hoje"  aria-current="true">Hoje</button>
+    <button data-tela="comer">Comer</button>
+    <button data-tela="peso">Peso</button>
+    <button data-tela="conta">Conta</button>
+  </nav>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>

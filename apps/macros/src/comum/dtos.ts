@@ -83,3 +83,12 @@ export class LerRotuloDto {
   @IsString() imagemBase64: string;
   @IsOptional() @IsString() tipoMime?: string;
 }
+
+export class AtualizarPerfilDto {
+  @IsOptional() @IsString() @MinLength(2) nome?: string;
+  @IsOptional() @IsIn(SEXOS) sexo?: string;
+  @IsOptional() @IsInt() @Min(14) @Max(100) idadeAnos?: number;
+  @IsOptional() @IsNumber() @Min(120) @Max(250) alturaCm?: number;
+  @IsOptional() @IsIn(NIVEIS) nivelAtividade?: string;
+  @IsOptional() @IsIn(OBJETIVOS) objetivo?: string;
+}
