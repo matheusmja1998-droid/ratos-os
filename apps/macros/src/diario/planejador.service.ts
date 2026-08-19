@@ -26,6 +26,8 @@ export interface SugestaoPorcao {
   motivo: string;
   /** Que macro esta sugestão resolve melhor. */
   resolve: MacroAlvo;
+  /** Porções caseiras, pra sugestão poder ser anotada em unidade. */
+  porcoes: ReturnType<AlimentosService['porcoesComMacros']>;
 }
 
 /** O que ainda falta no dia e vale sugerir. */
@@ -224,6 +226,7 @@ export class PlanejadorService {
         gramasSugeridas: gramas,
         macros,
         resolve: alvo,
+        porcoes: this.alimentos.porcoesComMacros(a),
         motivo: fechaTudo
           ? `${entrega} g de ${perfil.rotulo} usando ${macros.kcal} kcal — fecha o que faltava`
           : `${entrega} g de ${perfil.rotulo} usando ${macros.kcal} kcal; ainda faltariam ${restaria} g`,

@@ -35,6 +35,12 @@ export class DiarioController {
     };
   }
 
+  @Get('frequentes')
+  @ApiOperation({ summary: 'O que você mais anota, pra registrar sem buscar' })
+  frequentes(@UsuarioAtual() u: { id: string }, @Query('limite') limite?: string) {
+    return this.diario.maisAnotados(u.id, limite ? Number(limite) : 12);
+  }
+
   @Post('refeicoes')
   @ApiOperation({ summary: 'Acrescenta uma refeição ao dia' })
   adicionarRefeicao(

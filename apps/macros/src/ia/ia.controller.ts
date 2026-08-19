@@ -37,6 +37,7 @@ export class IaController {
         ...item,
         candidatos: (await this.alimentos.buscar(item.termoBusca, 5)).map((a) => ({
           id: a.id, nome: a.nome, modoPreparo: a.modoPreparo, fonte: a.fonte,
+          porcoes: this.alimentos.porcoesComMacros(a),
           macros: this.alimentos.calcularPorGramas(a, item.gramasEstimadas),
         })),
       })),

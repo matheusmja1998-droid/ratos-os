@@ -816,11 +816,61 @@ function ligarBotoesAdicionar(escopo) {
         });
         b.textContent = 'anotado ✓';
         await carregarDia();
+        carregarFrequentes().catch(() => {});
       } catch (e) {
         b.textContent = e.message;
         b.disabled = false;
       }
     }));
+}
+
+/**
+ * Atalhos do que a pessoa mais anota.
+ *
+ * A lista só aparece quando já há histórico: num primeiro dia ela estaria
+ * vazia e só ocuparia espaço.
+ */
+async function carregarFrequentes() {
+  const caixa = $('#frequentes');
+  const secao = $('#secao-frequentes');
+  if (!caixa) return;
+
+  let lista = [];
+  try {
+    lista = await api('/diario/frequentes?limite=10');
+  } catch {
+    secao.classList.add('some');
+    return;
+  }
+
+  if (!lista.length) { secao.classList.add('some'); return; }
+  secao.classList.remove('some');
+
+  caixa.innerHTML = lista.map((a) => {
+    const p = a.porcoes?.[0];
+    const medida = p
+      ? `${Math.round((a.gramasTipicas / p.gramas) * 2) / 2} ${p.rotulo}`
+      : `${arred(a.gramasTipicas)} g`;
+    return `
+      <div>
+        <div class="resultado" data-abrir-freq="${esc(a.id)}">
+          <div class="resultado-nome">
+            ${esc(a.nome)}
+            <small>${esc(a.modoPreparo)} · ${esc(medida)} · ${arred(a.macros.kcal)} kcal</small>
+          </div>
+          <span class="mono tenue">+</span>
+        </div>
+        <div class="painel-add some" data-painel-freq="${esc(a.id)}">
+          ${blocoAdicionar(a, a.gramasTipicas)}
+        </div>
+      </div>`;
+  }).join('');
+
+  $$('[data-abrir-freq]').forEach((el) =>
+    el.addEventListener('click', () =>
+      $(`[data-painel-freq="${el.dataset.abrirFreq}"]`).classList.toggle('some')));
+
+  ligarBotoesAdicionar(caixa);
 }
 
 let temporizadorBusca;
@@ -1358,6 +1408,7 @@ function trocarTela(nome) {
   $$('nav.rodape button').forEach((b) =>
     b.setAttribute('aria-current', String(b.dataset.tela === nome)));
 
+  if (nome === 'comer') carregarFrequentes().catch(() => {});
   if (nome === 'peso') {
     carregarPeso().catch((e) => {
       $('#tendencia').innerHTML = `<p class="nota seco">${esc(e.message)}</p>`;

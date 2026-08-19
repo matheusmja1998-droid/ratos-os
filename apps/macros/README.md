@@ -166,6 +166,12 @@ resultado: `2 ovos = 100 g`. A conversão é visível e a opção de gramas cont
 lá para quem pesa.
 
 São 89 regras de porção casadas por nome, cobrindo o que se come no Brasil.
+Valem em todos os caminhos de registro: busca, foto, texto livre e sugestões.
+
+Há ainda uma lista do **que você mais anota**, no topo da tela Comer, com a
+porção típica já preenchida — quem registra todo dia come quase sempre as
+mesmas coisas, e buscar "arroz cozido" pela enésima vez é o atrito que faz
+parar de registrar.
 
 ### 6. Platô: corta carbo, nunca proteína
 

@@ -105,6 +105,57 @@ export class DiarioService {
     return this.itens.save(item);
   }
 
+  /**
+   * O que a pessoa mais anota, do mais frequente pro menos.
+   *
+   * Quem registra todo dia come quase sempre as mesmas coisas. Obrigar a
+   * buscar "arroz cozido" pela enésima vez é o atrito que faz parar de
+   * registrar — e registrar é o que sustenta o método.
+   */
+  async maisAnotados(usuarioId: string, limite = 12) {
+    const linhas: { alimentoId: string; nome: string; vezes: number; gramas: number }[] =
+      await this.itens
+        .createQueryBuilder('i')
+        .innerJoin(Refeicao, 'r', 'r.id = i.refeicaoId')
+        .select('i.alimentoId', 'alimentoId')
+        .addSelect('i.alimentoNome', 'nome')
+        .addSelect('COUNT(*)', 'vezes')
+        // A porção típica: mediana seria melhor, mas a média já acerta o
+        // suficiente pra pré-preencher o campo.
+        .addSelect('AVG(i.gramas)', 'gramas')
+        .where('r.usuarioId = :usuarioId', { usuarioId })
+        .groupBy('i.alimentoId')
+        .addGroupBy('i.alimentoNome')
+        .orderBy('vezes', 'DESC')
+        .limit(limite)
+        .getRawMany();
+
+    // Traz o alimento completo pra ter porções caseiras e macros atualizados.
+    const completos = await Promise.all(
+      linhas.map(async (l) => {
+        try {
+          const a = await this.alimentos.porId(l.alimentoId);
+          const gramas = Math.max(5, Math.round(Number(l.gramas) / 5) * 5);
+          return {
+            id: a.id,
+            nome: a.nome,
+            modoPreparo: a.modoPreparo,
+            fonte: a.fonte,
+            vezes: Number(l.vezes),
+            gramasTipicas: gramas,
+            porcoes: this.alimentos.porcoesComMacros(a),
+            macros: this.alimentos.calcularPorGramas(a, gramas),
+          };
+        } catch {
+          // Alimento removido da base: some da lista em vez de quebrar.
+          return null;
+        }
+      }),
+    );
+
+    return completos.filter((x): x is NonNullable<typeof x> => x !== null);
+  }
+
   /** Acrescenta uma refeição ao dia, no fim da lista. */
   async adicionarRefeicao(usuarioId: string, data: string, nome?: string): Promise<Refeicao> {
     const doDia = await this.refeicoes.find({ where: { usuarioId, data } });

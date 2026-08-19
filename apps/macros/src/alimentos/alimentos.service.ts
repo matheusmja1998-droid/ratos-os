@@ -261,6 +261,9 @@ export class AlimentosService implements OnModuleInit {
 
     return lista.map((p) => ({
       ...p,
+      // Bancos populados antes da padronização guardaram "1 fatia"; o rótulo
+      // é a unidade, e quem conta é o campo de quantidade ao lado.
+      rotulo: p.rotulo.replace(/^1\s+/, ''),
       macros: this.calcularPorGramas(alimento, p.gramas),
     }));
   }
