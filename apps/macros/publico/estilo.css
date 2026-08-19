@@ -765,3 +765,50 @@ nav.rodape button[aria-current='true'] {
   padding-left: .7rem;
   border-left: 2px solid var(--linha);
 }
+
+/* ---------- Prato montado ---------- */
+
+.escolha-refeicoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.prato-cabeca {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: var(--s6);
+  padding-bottom: 8px;
+}
+.prato-nome {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 21px;
+  line-height: 1.2;
+}
+
+/* Cada componente é uma linha do prato, com o papel como margem de caderno. */
+.componente {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--linha);
+}
+.componente:last-of-type { border-bottom: 0; }
+
+.componente-papel {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--tinta-tenue);
+  margin-bottom: var(--s2);
+}
+
+/* Alternativas do mesmo papel: recuadas, como variantes de uma receita. */
+.alternativas {
+  margin-top: var(--s3);
+  padding-left: 12px;
+  border-left: 2px solid var(--linha);
+}

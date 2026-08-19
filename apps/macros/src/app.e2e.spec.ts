@@ -310,6 +310,47 @@ describe('Macros (e2e)', () => {
     expect(r.body.message).toContain('Tire os itens');
   });
 
+  it('monta um prato completo pra uma refeição', async () => {
+    const auth = { Authorization: `Bearer ${token}` };
+    const dia = await req().get('/api/diario').set(auth).expect(200);
+
+    // Dá nome de refeição real pra composição fazer sentido.
+    const alvo = dia.body.refeicoes[dia.body.refeicoes.length - 1];
+    await req().patch(`/api/diario/refeicoes/${alvo.id}`)
+      .set(auth).send({ nome: 'Janta' }).expect(200);
+
+    const r = await req().get(`/api/diario/montar/${alvo.id}`).set(auth).expect(200);
+
+    expect(r.body.tipo).toBe('janta');
+    expect(r.body.componentes.length).toBeGreaterThan(0);
+
+    // Um prato de janta traz base, feijão, proteína e salada — não uma lista
+    // de ingredientes soltos por macro.
+    const papeis = r.body.componentes.map((c: { papel: string }) => c.papel);
+    expect(papeis).toContain('proteina');
+
+    // Cada componente traz alternativas do mesmo papel, pra trocar.
+    r.body.componentes.forEach((c: { alternativas: unknown[] }) => {
+      expect(Array.isArray(c.alternativas)).toBe(true);
+    });
+
+    // O total do prato é a soma dos componentes.
+    const soma = r.body.componentes.reduce(
+      (a: number, c: { macros: { kcal: number } }) => a + c.macros.kcal, 0);
+    expect(Math.abs(soma - r.body.totais.kcal)).toBeLessThanOrEqual(1);
+  });
+
+  it('lista quais refeições ainda estão vazias', async () => {
+    const auth = { Authorization: `Bearer ${token}` };
+    const r = await req().get('/api/diario/refeicoes-vazias').set(auth).expect(200);
+
+    expect(r.body.length).toBeGreaterThan(0);
+    r.body.forEach((x: { nome: string; vazia: boolean }) => {
+      expect(typeof x.nome).toBe('string');
+      expect(typeof x.vazia).toBe('boolean');
+    });
+  });
+
   it('serve o cliente web', async () => {
     await req().get('/').expect(200).expect('Content-Type', /html/);
     await req().get('/app.js').expect(200);

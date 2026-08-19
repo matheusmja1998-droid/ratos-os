@@ -1142,6 +1142,198 @@ let pularSugestoes = 0;
 /** Macro escolhido à mão; null deixa o app decidir pelo que mais falta. */
 let alvoSugestao = null;
 
+/** Refeição escolhida pra montar o prato, e o prato montado. */
+let pratoRefeicaoId = null;
+let pratoAtual = null;
+
+/**
+ * Botões pra escolher qual refeição montar.
+ *
+ * As vazias vêm primeiro e em destaque: são as que ainda faltam no dia, que é
+ * o que a pessoa quer preencher.
+ */
+async function desenharEscolhaRefeicao() {
+  const caixa = $('#escolher-refeicao');
+  if (!caixa) return;
+
+  let refeicoes = [];
+  try {
+    refeicoes = await api('/diario/refeicoes-vazias');
+  } catch {
+    caixa.innerHTML = '<p class="tenue">Não consegui carregar as refeições.</p>';
+    return;
+  }
+
+  caixa.innerHTML = `
+    <div class="escolha-refeicoes">
+      ${refeicoes.map((r) => `
+        <button class="mini ${pratoRefeicaoId === r.id ? '' : 'leve'}"
+                data-montar="${esc(r.id)}">
+          ${esc(r.nome)}${r.vazia ? '' : ` <span class="mono tenue">· ${r.itens}</span>`}
+        </button>`).join('')}
+    </div>`;
+
+  $$('[data-montar]').forEach((b) =>
+    b.addEventListener('click', () => {
+      pratoRefeicaoId = b.dataset.montar;
+      desenharEscolhaRefeicao();
+      montarPrato();
+    }));
+}
+
+/** Monta e desenha o prato inteiro da refeição escolhida. */
+async function montarPrato() {
+  const alvo = $('#prato');
+  if (!pratoRefeicaoId) { alvo.innerHTML = ''; return; }
+
+  alvo.innerHTML = '<p class="carregando">montando o prato…</p>';
+  try {
+    pratoAtual = await api(`/diario/montar/${pratoRefeicaoId}`);
+  } catch (e) {
+    alvo.innerHTML = `<p class="nota seco">${esc(e.message)}</p>`;
+    return;
+  }
+
+  if (pratoAtual.erro) {
+    alvo.innerHTML = `<p class="nota seco">${esc(pratoAtual.erro)}</p>`;
+    return;
+  }
+  if (!pratoAtual.componentes.length) {
+    alvo.innerHTML = `<p class="nota">Não sobrou espaço no dia pra montar um prato aqui.</p>`;
+    return;
+  }
+
+  desenharPrato();
+}
+
+function desenharPrato() {
+  const t = pratoAtual.totais;
+
+  $('#prato').innerHTML = `
+    <div class="prato-cabeca">
+      <span class="prato-nome">${esc(pratoAtual.refeicao.nome)}</span>
+      <span class="refeicao-kcal">${arred(t.kcal)} kcal</span>
+    </div>
+
+    <div class="refeicao-resumo" style="border-bottom:1px solid var(--linha);padding-bottom:12px">
+      <div class="resumo-macros">
+        <div class="resumo-macro p"><b>${arred(t.proteinaG, 1)}</b><span>prot</span></div>
+        <div class="resumo-macro c"><b>${arred(t.carboidratoG, 1)}</b><span>carb</span></div>
+        <div class="resumo-macro g"><b>${arred(t.gorduraG, 1)}</b><span>gord</span></div>
+        <div class="resumo-macro f"><b>${arred(t.fibraG, 1)}</b><span>fibra</span></div>
+      </div>
+    </div>
+
+    ${pratoAtual.componentes.map((c, i) => `
+      <div class="componente" data-comp="${i}">
+        <div class="componente-papel">${esc(c.rotulo)}</div>
+        <div class="linha-flex" style="align-items:flex-start">
+          <div class="resultado-nome cresce">
+            ${esc(c.nome)} <span class="fonte-selo">${esc(c.fonte)}</span>
+            <small><span class="preparo">${esc(c.modoPreparo)}</span> · ${arred(c.gramas)} g · ${arred(c.macros.kcal)} kcal</small>
+          </div>
+          <div class="refeicao-acoes">
+            <button class="mini leve" data-trocar-comp="${i}">trocar</button>
+            <button class="mini leve" data-tirar-comp="${i}" aria-label="Tirar do prato">×</button>
+          </div>
+        </div>
+        <div class="alternativas some" data-alts="${i}">
+          ${c.alternativas.map((a, j) => `
+            <div class="resultado" data-usar-alt="${i}:${j}">
+              <div class="resultado-nome">
+                ${esc(a.nome)} <span class="fonte-selo">${esc(a.fonte)}</span>
+                <small><span class="preparo">${esc(a.modoPreparo)}</span> · ${arred(a.gramas)} g · ${arred(a.macros.kcal)} kcal</small>
+              </div>
+              <span class="mono tenue">usar</span>
+            </div>`).join('')}
+        </div>
+      </div>`).join('')}
+
+    <button id="btn-anotar-prato" style="width:100%;margin-top:14px">
+      Anotar o prato em ${esc(pratoAtual.refeicao.nome)}
+    </button>
+    <button id="btn-remontar" class="mini leve" style="margin-top:8px">outro prato</button>`;
+
+  // Abrir e fechar as alternativas de cada componente.
+  $$('[data-trocar-comp]').forEach((b) =>
+    b.addEventListener('click', () =>
+      $(`[data-alts="${b.dataset.trocarComp}"]`).classList.toggle('some')));
+
+  // Trocar mantém o papel e o resto do prato de pé.
+  $$('[data-usar-alt]').forEach((el) =>
+    el.addEventListener('click', () => {
+      const [i, j] = el.dataset.usarAlt.split(':').map(Number);
+      const comp = pratoAtual.componentes[i];
+      const nova = comp.alternativas[j];
+
+      // O escolhido volta pra lista de alternativas: dá pra desfazer a troca.
+      const anterior = {
+        alimentoId: comp.alimentoId, nome: comp.nome,
+        modoPreparo: comp.modoPreparo, fonte: comp.fonte,
+        gramas: comp.gramas, macros: comp.macros, porcoes: comp.porcoes,
+      };
+      comp.alternativas = [anterior, ...comp.alternativas.filter((_, k) => k !== j)];
+      Object.assign(comp, nova);
+
+      recalcularTotaisDoPrato();
+      desenharPrato();
+    }));
+
+  $$('[data-tirar-comp]').forEach((b) =>
+    b.addEventListener('click', () => {
+      pratoAtual.componentes.splice(Number(b.dataset.tirarComp), 1);
+      recalcularTotaisDoPrato();
+      if (pratoAtual.componentes.length) desenharPrato();
+      else $('#prato').innerHTML = '<p class="tenue">Prato vazio. Escolha a refeição de novo pra montar outro.</p>';
+    }));
+
+  $('#btn-remontar').addEventListener('click', montarPrato);
+  $('#btn-anotar-prato').addEventListener('click', anotarPrato);
+}
+
+/** Soma de novo depois de trocar ou tirar um componente. */
+function recalcularTotaisDoPrato() {
+  pratoAtual.totais = pratoAtual.componentes.reduce(
+    (a, c) => ({
+      kcal: a.kcal + c.macros.kcal,
+      proteinaG: a.proteinaG + c.macros.proteinaG,
+      carboidratoG: a.carboidratoG + c.macros.carboidratoG,
+      gorduraG: a.gorduraG + c.macros.gorduraG,
+      fibraG: a.fibraG + (c.macros.fibraG || 0),
+      gorduraSaturadaG: a.gorduraSaturadaG + (c.macros.gorduraSaturadaG || 0),
+    }),
+    { kcal: 0, proteinaG: 0, carboidratoG: 0, gorduraG: 0, fibraG: 0, gorduraSaturadaG: 0 },
+  );
+}
+
+/** Registra todos os componentes de uma vez na refeição escolhida. */
+async function anotarPrato() {
+  const botao = $('#btn-anotar-prato');
+  botao.disabled = true;
+  botao.textContent = 'anotando…';
+
+  try {
+    // Em série: se um falhar, os anteriores já entraram e dá pra ver onde parou.
+    for (const c of pratoAtual.componentes) {
+      await api('/diario/itens', {
+        method: 'POST',
+        body: JSON.stringify({
+          refeicaoId: pratoRefeicaoId,
+          alimentoId: c.alimentoId,
+          gramas: c.gramas,
+        }),
+      });
+    }
+    botao.textContent = 'anotado ✓';
+    await carregarDia();
+    carregarFrequentes().catch(() => {});
+    desenharEscolhaRefeicao();
+  } catch (e) {
+    botao.textContent = e.message;
+    botao.disabled = false;
+  }
+}
+
 async function verFechamento() {
   $('#fechamento').innerHTML = '<p class="carregando">pensando…</p>';
 
@@ -1431,7 +1623,10 @@ function trocarTela(nome) {
   $$('nav.rodape button').forEach((b) =>
     b.setAttribute('aria-current', String(b.dataset.tela === nome)));
 
-  if (nome === 'comer') carregarFrequentes().catch(() => {});
+  if (nome === 'comer') {
+    carregarFrequentes().catch(() => {});
+    desenharEscolhaRefeicao().catch(() => {});
+  }
   if (nome === 'peso') {
     carregarPeso().catch((e) => {
       $('#tendencia').innerHTML = `<p class="nota seco">${esc(e.message)}</p>`;

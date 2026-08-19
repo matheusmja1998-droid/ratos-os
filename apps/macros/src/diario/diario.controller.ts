@@ -4,6 +4,8 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DiarioService } from './diario.service';
 import { MacroAlvo, PlanejadorService } from './planejador.service';
+import { MontadorService } from './montador.service';
+import { PapelPrato } from './prato';
 import { AlimentosService } from '../alimentos/alimentos.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -23,6 +25,7 @@ export class DiarioController {
     private readonly planejador: PlanejadorService,
     private readonly alimentos: AlimentosService,
     @InjectRepository(Usuario) private readonly usuarios: Repository<Usuario>,
+    private readonly montador: MontadorService,
   ) {}
 
   @Get()
@@ -134,6 +137,51 @@ export class DiarioController {
         ? `Cabem ${resultado.gramas} g. O limite aqui é ${resultado.macroLimitante}.`
         : `Hoje não cabe mais — o ${resultado.macroLimitante} já fechou. Amanhã cabe.`,
     };
+  }
+
+  @Get('montar/:refeicaoId')
+  @ApiOperation({
+    summary: 'Monta um prato completo pra esta refeição, com trocas por componente',
+  })
+  async montar(
+    @UsuarioAtual() u: { id: string },
+    @Param('refeicaoId') refeicaoId: string,
+    @Query() query: { data?: string; sem?: string },
+  ) {
+    const resumo = await this.diario.resumoDia(u.id, query.data ?? hojeSP());
+    if (!resumo.meta) return { erro: 'Defina suas metas antes de montar o prato.' };
+
+    const refeicao = resumo.refeicoes.find((r) => r.id === refeicaoId);
+    if (!refeicao) return { erro: 'Refeição não encontrada.' };
+
+    const perfil = await this.usuarios.findOne({ where: { id: u.id } });
+    const espaco = this.planejador.calcularEspaco(resumo.meta, resumo.totais);
+
+    const prato = await this.montador.montarPrato({
+      nomeRefeicao: refeicao.nome,
+      espaco,
+      restricoes: perfil?.restricoes ?? [],
+      excluir: perfil?.naoComeIds ?? [],
+      semPapeis: (query.sem ?? '').split(',').filter(Boolean) as PapelPrato[],
+    });
+
+    return { refeicao: { id: refeicao.id, nome: refeicao.nome }, espaco, ...prato };
+  }
+
+  /**
+   * Refeições que ainda não têm nada anotado — as candidatas naturais pra
+   * montar um prato e fechar o dia.
+   */
+  @Get('refeicoes-vazias')
+  @ApiOperation({ summary: 'Refeições do dia que ainda estão sem comida' })
+  async refeicoesVazias(@UsuarioAtual() u: { id: string }, @Query('data') data?: string) {
+    const resumo = await this.diario.resumoDia(u.id, data ?? hojeSP());
+    return resumo.refeicoes.map((r) => ({
+      id: r.id,
+      nome: r.nome,
+      vazia: (r.itens ?? []).length === 0,
+      itens: (r.itens ?? []).length,
+    }));
   }
 
   @Get('fechar')

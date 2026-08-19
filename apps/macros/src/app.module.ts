@@ -15,6 +15,7 @@ import { AlimentosService } from './alimentos/alimentos.service';
 import { AlimentosController } from './alimentos/alimentos.controller';
 import { DiarioService } from './diario/diario.service';
 import { PlanejadorService } from './diario/planejador.service';
+import { MontadorService } from './diario/montador.service';
 import { DiarioController } from './diario/diario.controller';
 import { ProgressoService } from './metas/progresso.service';
 import { MetasController } from './metas/metas.controller';
@@ -41,7 +42,7 @@ const ENTIDADES = [Usuario, Meta, Alimento, Refeicao, ItemRefeicao, RegistroPeso
   providers: [
     // CalculoService entra antes: o AuthService usa no onboarding.
     CalculoService, AuthService, JwtStrategy, AlimentosService,
-    DiarioService, PlanejadorService, ProgressoService, IaService,
+    DiarioService, PlanejadorService, MontadorService, ProgressoService, IaService,
   ],
 })
 export class AppModule {}

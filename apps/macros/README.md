@@ -129,9 +129,22 @@ Então o dia começa pelo que você quer comer de verdade.
 GET /api/diario/cabe/:alimentoId
   -> "Cabem 240 g. O limite aqui é gordura."
 
+GET /api/diario/montar/:refeicaoId
+  -> o prato inteiro: base, feijão, proteína e salada, com trocas por componente
+
 GET /api/diario/fechar
-  -> o que fecha a proteína que sobrou, em porções que cabem num prato
+  -> alimentos soltos pra completar um macro específico
 ```
+
+**Montar o prato** é o caminho principal, e a diferença é de modelo mental: em
+vez de devolver "150 g de proteína" e deixar a pessoa montar, o app entrega o
+prato como se pensa comida — arroz, feijão, carne e salada — e deixa trocar
+cada componente por outro do mesmo papel. Trocar o arroz por macarrão não
+desmonta o resto.
+
+A composição muda conforme a refeição: café da manhã vem com pão, ovo, fruta e
+café; almoço vem completo; ceia vem com iogurte e fruta. As porções são
+dimensionadas pelo que ainda cabe no dia.
 
 As sugestões cobrem **os quatro macros**, não só proteína: o app propõe fechar
 o maior buraco do dia, e abas deixam trocar para carboidrato, gordura ou fibra
