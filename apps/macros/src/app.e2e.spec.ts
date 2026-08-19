@@ -48,6 +48,46 @@ describe('Macros (e2e)', () => {
     expect(eu.body).toMatchObject({ idadeAnos: 33, alturaCm: 178, nivelAtividade: 'moderado' });
   });
 
+  it('onboarding entrega metas e primeiro peso já no cadastro', async () => {
+    const r = await req().post('/api/auth/registrar').send({
+      email: 'onboarding@teste.com', senha: 'senha12345', nome: 'Onboarding',
+      sexo: 'masculino', idadeAnos: 33, alturaCm: 178, nivelAtividade: 'moderado',
+      pesoKg: 95, objetivo: 'emagrecer', deficitKcal: 500,
+    }).expect(201);
+
+    // Sai do cadastro com a conta pronta, não num app vazio.
+    expect(r.body.meta).toBeTruthy();
+    expect(r.body.meta.origem).toBe('onboarding');
+    expect(r.body.calculo.passos).toHaveLength(7);
+
+    // Confere a metodologia: GET na centena, peso alvo inteiro,
+    // proteína = alvo × 2.
+    const c = r.body.calculo;
+    expect(c.get % 100).toBe(0);
+    expect(Number.isInteger(c.pesoAlvoKg)).toBe(true);
+    expect(c.macros.proteinaG).toBe(c.pesoAlvoKg * 2);
+    expect(c.macros.gorduraG).toBe(c.pesoAlvoKg);
+
+    const auth = { Authorization: `Bearer ${r.body.token}` };
+
+    // A meta já vale no diário.
+    const dia = await req().get('/api/diario').set(auth).expect(200);
+    expect(dia.body.meta.calorias).toBe(c.metaCalorica);
+
+    // O peso do cadastro virou o primeiro ponto da série.
+    const pesos = await req().get('/api/metas/peso').set(auth).expect(200);
+    expect(pesos.body[0].pesoKg).toBe(95);
+  });
+
+  it('sem peso, o cadastro não inventa meta', async () => {
+    const r = await req().post('/api/auth/registrar').send({
+      email: 'semdados@teste.com', senha: 'senha12345', nome: 'Sem Dados',
+    }).expect(201);
+
+    expect(r.body.meta).toBeNull();
+    expect(r.body.calculo).toBeNull();
+  });
+
   it('recusa senha curta e e-mail repetido', async () => {
     await req().post('/api/auth/registrar')
       .send({ email: 'x@x.com', senha: '123', nome: 'X' }).expect(400);
@@ -155,6 +195,32 @@ describe('Macros (e2e)', () => {
     expect(depois.body.carboidratoG).toBe(novoCarbo);
     expect(depois.body.proteinaG).toBe(antes.body.proteinaG); // regra central
     expect(depois.body.gorduraG).toBe(antes.body.gorduraG);
+  });
+
+  it('o ajuste de platô corta carboidrato antes de gordura', async () => {
+    const auth = { Authorization: `Bearer ${token}` };
+
+    const antes = await req().get('/api/metas').set(auth).expect(200);
+    const alvoCarbo = antes.body.carboidratoG - 20;
+
+    const r = await req().post('/api/metas/ajustar-carboidrato')
+      .set(auth).send({ carboidratoG: alvoCarbo }).expect(201);
+
+    expect(r.body.carboidratoG).toBe(alvoCarbo);
+    expect(r.body.gorduraG).toBe(antes.body.gorduraG);
+    expect(r.body.proteinaG).toBe(antes.body.proteinaG);
+  });
+
+  it('a gordura nunca desce abaixo do piso hormonal', async () => {
+    const auth = { Authorization: `Bearer ${token}` };
+    const antes = await req().get('/api/metas').set(auth).expect(200);
+
+    const r = await req().post('/api/metas/ajustar-carboidrato')
+      .set(auth).send({ carboidratoG: antes.body.carboidratoG, gorduraG: 10 })
+      .expect(201);
+
+    expect(r.body.gorduraG).toBe(40);
+    expect(r.body.proteinaG).toBe(antes.body.proteinaG); // intocada
   });
 
   it('serve o cliente web', async () => {

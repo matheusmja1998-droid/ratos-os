@@ -628,7 +628,13 @@ async function carregarPeso() {
   const p = await api('/metas/plato');
   $('#plato').innerHTML = `
     <p class="${p.emPlato ? 'nota' : 'tenue'}">${esc(p.recomendacao || '')}</p>
-    ${p.ajusteSugerido ? `<button id="btn-aplicar-plato" class="mini" style="margin-top:.6rem">Aplicar: carbo para ${arred(p.ajusteSugerido.carboidratoG)} g</button>` : ''}`;
+    ${p.ajusteSugerido && p.emPlato
+      ? `<button id="btn-aplicar-plato" class="mini" style="margin-top:.6rem">${
+          p.ajusteSugerido.gorduraG
+            ? `Aplicar: gordura para ${arred(p.ajusteSugerido.gorduraG)} g`
+            : `Aplicar: carbo para ${arred(p.ajusteSugerido.carboidratoG)} g`
+        }</button>`
+      : ''}`;
 
   const btn = $('#btn-aplicar-plato');
   if (btn) {
@@ -637,7 +643,10 @@ async function carregarPeso() {
       // O ajuste de platô mexe só no carboidrato. A proteína fica onde está.
       await api('/metas/ajustar-carboidrato', {
         method: 'POST',
-        body: JSON.stringify({ carboidratoG: p.ajusteSugerido.carboidratoG }),
+        body: JSON.stringify({
+          carboidratoG: p.ajusteSugerido.carboidratoG,
+          gorduraG: p.ajusteSugerido.gorduraG,
+        }),
       });
       btn.textContent = 'aplicado ✓';
       await carregarDia();

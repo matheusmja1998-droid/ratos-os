@@ -33,6 +33,20 @@ npm test          # 44 testes, incluindo o fluxo completo de ponta a ponta
 npm run build
 ```
 
+## Onboarding
+
+Quem cria conta responde três perguntas curtas — quem é você, seu corpo, seu
+objetivo — e sai do cadastro com as metas calculadas, o primeiro peso
+registrado e **a conta aberta passo a passo** pra conferir no papel.
+
+Nada de cair num app vazio tendo que descobrir onde configurar. E nada de
+receber um número pronto sem saber de onde veio: a memória de cálculo é parte
+da entrega, não um extra escondido.
+
+O formulário protege contra o erro mais comum (altura em metros em vez de
+centímetros) e avisa, na hora de escolher o nível de atividade, que caminhada
+leve não conta como treino — superestimar ali faz o déficit não acontecer.
+
 ## O app
 
 Quatro telas, feitas pra funcionar no celular:
@@ -68,12 +82,18 @@ a proteína na massa magra estimada pelo peso atual, então a meta *diminui*
 conforme a pessoa emagrece. Nenhum app permite escolher a base do cálculo.
 
 ```
-GET          = TMB (Mifflin-St Jeor) × fator de atividade
+TMB          = Mifflin-St Jeor        <- só passo intermediário, nunca é meta
+GET          = TMB × fator            <- arredondado na centena
+peso alvo    = base + 0,91 × (altura_cm − 152,4)   <- arredondado, inteiro
+                 base: 50 (homem) · 45,5 (mulher)
 Meta         = GET − déficit
-Proteína (g) = peso alvo × 2          <- fixa
+Proteína (g) = peso alvo × 2          <- fixa, nunca se reduz
 Gordura (g)  = peso alvo × 1          <- piso hormonal de 40 g
 Carboidrato  = (meta − prot×4 − gord×9) ÷ 4   <- absorve o resto
 ```
+
+Os arredondamentos acontecem **antes** dos cálculos seguintes: a fórmula é uma
+estimativa, e carregar decimais adiante só dá falsa precisão.
 
 ### 2. Toda meta vem com a memória de cálculo
 
@@ -122,9 +142,18 @@ não existe.
 ### 6. Platô: corta carbo, nunca proteína
 
 `GET /api/metas/plato` usa média móvel de 7 dias — o peso do dia oscila com
-água e sal, e reagir a esse ruído é o que faz gente desistir. Confirmado o
-platô, o ajuste segue a ordem do método: tira ~10% do carboidrato, soma 10
-minutos de cardio, mantém a proteína intacta.
+água e sal, e reagir a esse ruído é o que faz gente desistir.
+
+Nada é ajustado antes de **4 semanas** de registro: o cálculo é uma estimativa
+e só o tempo mostra se ela estava certa. Confirmado o platô, a ordem de corte é:
+
+1. reduzir carboidrato (~10%, com piso de 50 g)
+2. aumentar o cardio
+3. só com o carboidrato já baixo, reduzir gordura — nunca abaixo de 40 g
+
+**A proteína não entra nessa conta em nenhuma hipótese.** É o único macro que o
+método trata como inegociável, e o código impede que ela seja alterada por
+ajuste de platô.
 
 ### 7. Zero linguagem de culpa
 

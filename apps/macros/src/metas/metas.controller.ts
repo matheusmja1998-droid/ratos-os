@@ -76,11 +76,11 @@ export class MetasController {
 
   @Post('ajustar-carboidrato')
   @ApiOperation({
-    summary: 'Aplica o ajuste de platô: mexe só no carboidrato, proteína intacta',
+    summary: 'Aplica o ajuste de platô: carboidrato e, no limite, gordura — proteína nunca',
   })
   async ajustarCarboidrato(
     @UsuarioAtual() u: { id: string },
-    @Body() body: { carboidratoG: number },
+    @Body() body: { carboidratoG: number; gorduraG?: number },
   ) {
     const atual = await this.metas.findOne({
       where: { usuarioId: u.id, ativa: true },
@@ -89,10 +89,14 @@ export class MetasController {
     if (!atual) throw new NotFoundException('Você ainda não tem metas para ajustar.');
 
     const carboidratoG = Math.max(0, Math.round(body.carboidratoG));
-    // Proteína e gordura ficam onde estão: no platô se corta carboidrato e se
-    // aumenta o gasto, nunca o macro estrutural.
-    const calorias =
-      atual.proteinaG * 4 + carboidratoG * 4 + atual.gorduraG * 9;
+    // A gordura só se move quando o carboidrato já está no piso, e nunca abaixo
+    // do mínimo hormonal. A proteína não entra nessa conta em hipótese alguma.
+    const gorduraG =
+      body.gorduraG === undefined
+        ? atual.gorduraG
+        : Math.max(40, Math.round(body.gorduraG));
+
+    const calorias = atual.proteinaG * 4 + carboidratoG * 4 + gorduraG * 9;
 
     await this.metas.update({ usuarioId: u.id, ativa: true }, { ativa: false });
 
@@ -101,11 +105,15 @@ export class MetasController {
         ...atual,
         id: undefined,
         carboidratoG,
+        gorduraG,
         calorias,
         origem: 'ajuste_plato',
         justificativa:
-          `Carboidrato de ${atual.carboidratoG} g para ${carboidratoG} g por estagnação. ` +
-          `Proteína mantida em ${atual.proteinaG} g.`,
+          `Carboidrato de ${atual.carboidratoG} g para ${carboidratoG} g` +
+          (gorduraG !== atual.gorduraG
+            ? ` e gordura de ${atual.gorduraG} g para ${gorduraG} g`
+            : '') +
+          ` por estagnação. Proteína mantida em ${atual.proteinaG} g.`,
         ativa: true,
       }),
     );

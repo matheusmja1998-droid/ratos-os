@@ -17,8 +17,17 @@ export interface DiagnosticoPlato {
   emPlato: boolean;
   semanasSemProgresso: number;
   recomendacao: string | null;
-  ajusteSugerido: { carboidratoG: number; cardioMin: number } | null;
+  ajusteSugerido: {
+    carboidratoG: number;
+    gorduraG?: number;
+    cardioMin: number;
+  } | null;
 }
+
+/** Semanas de adesão real antes de mexer em qualquer número. */
+const SEMANAS_ANTES_DE_AJUSTAR = 4;
+/** Abaixo disso o carboidrato já não é a alavanca certa. */
+const CARBO_BAIXO_G = 100;
 
 @Injectable()
 export class ProgressoService {
@@ -101,18 +110,58 @@ export class ProgressoService {
       };
     }
 
-    // Corte de ~10% do carboidrato, com piso, e mais 10 min de cardio.
-    const corte = Math.max(15, Math.round(meta.carboidratoG * 0.1));
-    const novoCarbo = Math.max(50, meta.carboidratoG - corte);
+    // Nada se ajusta antes de haver adesão real por algumas semanas: o cálculo
+    // é uma estimativa, e só o tempo mostra se ela estava certa.
+    if (t.semanasDeDados < SEMANAS_ANTES_DE_AJUSTAR) {
+      const faltam = SEMANAS_ANTES_DE_AJUSTAR - t.semanasDeDados;
+      return {
+        emPlato: false,
+        semanasSemProgresso: t.semanasDeDados,
+        recomendacao:
+          `O peso está estável, mas ainda é cedo pra mexer: são ${t.semanasDeDados} ` +
+          `${t.semanasDeDados === 1 ? 'semana' : 'semanas'} de registro e o certo é esperar ` +
+          `${SEMANAS_ANTES_DE_AJUSTAR}. Falta${faltam === 1 ? '' : 'm'} ${faltam} ` +
+          `${faltam === 1 ? 'semana' : 'semanas'}. Siga o que já está valendo.`,
+        ajusteSugerido: null,
+      };
+    }
+
+    // A ordem do método: primeiro carboidrato, depois cardio, e só quando o
+    // carboidrato já está no chão é que a gordura entra. A proteína nunca.
+    const carboJaBaixo = meta.carboidratoG <= CARBO_BAIXO_G;
+
+    if (!carboJaBaixo) {
+      const corte = Math.max(15, Math.round(meta.carboidratoG * 0.1));
+      const novoCarbo = Math.max(50, meta.carboidratoG - corte);
+      return {
+        emPlato: true,
+        semanasSemProgresso: t.semanasDeDados,
+        recomendacao:
+          `Seu peso parou. O ajuste é tirar ${meta.carboidratoG - novoCarbo} g de carboidrato ` +
+          `(de ${meta.carboidratoG} g para ${novoCarbo} g) e somar 10 minutos de cardio. ` +
+          `A proteína fica em ${meta.proteinaG} g — ela não se mexe.`,
+        ajusteSugerido: { carboidratoG: novoCarbo, cardioMin: 10 },
+      };
+    }
+
+    // Carboidrato no piso: agora sim se toca na gordura, respeitando o mínimo
+    // hormonal, e o cardio vira a alavanca principal.
+    const novaGordura = Math.max(40, meta.gorduraG - 5);
+    const mexeuNaGordura = novaGordura < meta.gorduraG;
 
     return {
       emPlato: true,
-      semanasSemProgresso: 1,
-      recomendacao:
-        `Seu peso parou. O ajuste é tirar ${meta.carboidratoG - novoCarbo} g de carboidrato ` +
-        `(de ${meta.carboidratoG} g para ${novoCarbo} g) e somar 10 minutos de cardio. ` +
-        `A proteína fica em ${meta.proteinaG} g — ela não se mexe.`,
-      ajusteSugerido: { carboidratoG: novoCarbo, cardioMin: 10 },
+      semanasSemProgresso: t.semanasDeDados,
+      recomendacao: mexeuNaGordura
+        ? `Seu peso parou e o carboidrato já está baixo (${meta.carboidratoG} g). ` +
+          `Agora o corte sai da gordura: de ${meta.gorduraG} g para ${novaGordura} g, ` +
+          `mais 10 minutos de cardio. A proteína continua em ${meta.proteinaG} g.`
+        : `Seu peso parou, mas carboidrato e gordura já estão nos mínimos. ` +
+          `Daqui pra frente o caminho é aumentar o gasto — mais tempo ou mais ` +
+          `intensidade no cardio — e não cortar mais comida.`,
+      ajusteSugerido: mexeuNaGordura
+        ? { carboidratoG: meta.carboidratoG, gorduraG: novaGordura, cardioMin: 10 }
+        : { carboidratoG: meta.carboidratoG, cardioMin: 15 },
     };
   }
 
