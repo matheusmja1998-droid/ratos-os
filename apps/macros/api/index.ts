@@ -10,6 +10,12 @@
  * próximas requisições reaproveitam. Por isso não se chama `listen()`: quem
  * escuta é a plataforma.
  */
+// O TypeORM carrega o driver por require dinâmico ("pg"), que o bundler da
+// Vercel não enxerga — o pacote ficaria de fora e o boot falharia com
+// "Postgres package has not been found installed". Importar aqui força a
+// inclusão no bundle.
+import 'pg';
+
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';

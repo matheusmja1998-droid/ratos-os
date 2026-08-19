@@ -7,10 +7,6 @@
   },
   "rewrites": [
     {
-      "source": "/probe",
-      "destination": "/api/probe"
-    },
-    {
       "source": "/api/(.*)",
       "destination": "/api/index"
     },
@@ -18,5 +14,8 @@
       "source": "/docs(.*)",
       "destination": "/api/index"
     }
+  ],
+  "regions": [
+    "gru1"
   ]
 }

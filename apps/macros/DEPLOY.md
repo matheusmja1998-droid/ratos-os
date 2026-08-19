@@ -1,64 +1,82 @@
-# Deploy na Vercel
+# Deploy
 
-O projeto já está linkado (`macros` em `matheusmja1998-droids-projects`) e o
-deploy funciona. Falta só o banco.
+**No ar:** https://macros-nu.vercel.app
 
-## Por que precisa de Postgres
+## Como está montado
 
-Local, o app usa SQLite num arquivo e não exige nada. Na Vercel isso não
-funciona: cada requisição roda numa instância nova, com disco somente-leitura
-que some depois. Toda refeição registrada se perderia.
+- **Cliente web** (`publico/`) servido como estático pela CDN da Vercel
+- **API** (`api/index.ts`) numa função serverless, região `gru1` (São Paulo)
+- **Banco** Postgres no Supabase, projeto "App Macronutrientes"
 
-Por isso o código aceita os dois:
+O `vercel.json` manda só `/api/*` e `/docs` para a função; o resto sai da CDN.
 
-- `DATABASE_URL` (ou `POSTGRES_URL`) definida → Postgres
-- nenhuma delas → SQLite em arquivo, para rodar no seu computador
-
-## Passo a passo (2 minutos)
-
-1. Abra `vercel.com/dashboard` → projeto **macros** → aba **Storage**
-2. **Create Database** → **Postgres** (Neon) → região `gru1` (São Paulo, mais
-   perto) → Create
-3. A Vercel injeta `POSTGRES_URL` sozinha no projeto. Nada mais a fazer ali.
-4. Publique:
+## Publicar de novo
 
 ```bash
 cd apps/macros
 vercel deploy --prod
 ```
 
-Na primeira requisição o TypeORM cria as tabelas e a base de alimentos entra
-sozinha (as 649 entradas da TACO).
+O `nest build` roda sozinho no deploy e a função importa de `dist/`.
 
-## Se preferir usar um Postgres próprio
+## Variáveis de ambiente (já configuradas)
 
-Qualquer Postgres serve (Supabase, Neon, Railway). Basta:
+| Variável | Para quê |
+|---|---|
+| `DATABASE_URL` | Postgres do Supabase (pooler, porta 6543) |
+| `JWT_SECRET` | assina os tokens de login |
+| `ANTHROPIC_API_KEY` | recursos de IA; sem ela o resto funciona igual |
+
+Para ver ou trocar: `vercel env ls production`.
+
+## Rodar local
+
+Sem `DATABASE_URL` o app usa SQLite em arquivo e não depende de nada:
 
 ```bash
-vercel env add DATABASE_URL production
-# cole a connection string quando pedir
-vercel deploy --prod
+npm run start:dev     # http://localhost:3000
 ```
 
-## Verificar se subiu
+Para testar local contra o Postgres de produção:
 
 ```bash
-curl -s -X POST https://macros-nu.vercel.app/api/calculo \
-  -H 'Content-Type: application/json' \
-  -d '{"sexo":"masculino","idadeAnos":33,"pesoKg":95,"alturaCm":178,"nivelAtividade":"moderado"}'
+DATABASE_URL="postgresql://..." npm start
 ```
 
-Deve devolver as metas com os sete passos da conta. Se vier erro citando
-`DATABASE_URL`, o banco ainda não foi criado.
+## Armadilhas que já custaram tempo aqui
+
+Registradas porque cada uma virou meia hora de depuração:
+
+1. **`pg` precisa de import explícito.** O TypeORM carrega o driver por
+   `require` dinâmico, que o bundler da Vercel não enxerga. Sem o `import 'pg'`
+   no topo de `api/index.ts`, o boot morre com *"Postgres package has not been
+   found installed"*.
+
+2. **Nada de módulo nativo.** A Vercel não roda install scripts, então
+   `node-gyp` não compila. O `bcrypt` virou `bcryptjs` (JS puro) e o
+   `better-sqlite3` foi para `optionalDependencies` — ele só serve ao
+   desenvolvimento local.
+
+3. **`builds` no vercel.json desliga o npm install.** A chave legada `builds`
+   faz a Vercel pular a instalação de dependências. Use `functions` +
+   `rewrites`.
+
+4. **Um script `vercel-build` vazio também pula a instalação.** Deixe o `build`
+   normal (`nest build`).
+
+5. **A função precisa ficar perto do banco.** Sem `"regions": ["gru1"]` ela
+   subia em Washington e a conexão com o Supabase de São Paulo estourava o
+   tempo no boot.
+
+6. **Senha com caractere especial quebra a URL.** A senha do banco tem `#`, que
+   precisa virar `%23` na connection string.
 
 ## Custo
 
-O tier gratuito do Postgres na Vercel cobre um app de uso pessoal com folga —
-a base de alimentos ocupa poucos megabytes e o volume de escrita é de algumas
-refeições por dia.
+Tier gratuito da Vercel e do Supabase cobrem uso pessoal com folga: a base de
+alimentos ocupa poucos megabytes e o volume é de algumas refeições por dia.
 
-## Sobre a proteção de acesso
+## Acesso
 
-Deploys de preview ficam atrás do login da Vercel (redirect 302 para
-`vercel.com/sso-api`). A URL de produção, `macros-nu.vercel.app`, é pública.
-Se quiser fechar também a produção: Settings → Deployment Protection.
+A URL de produção é pública. Deploys de preview ficam atrás do login da Vercel.
+Para fechar a produção também: Settings → Deployment Protection.

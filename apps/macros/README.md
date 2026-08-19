@@ -7,7 +7,13 @@ conta em vez de receber um cardápio pronto.
 Feito pra uso próprio primeiro, mas multiusuário desde o começo — qualquer
 pessoa cria conta e o app funciona pra ela.
 
-## Rodando
+## No ar
+
+**https://macros-nu.vercel.app** — funciona no celular, é só abrir.
+
+Detalhes de infraestrutura e as armadilhas do deploy estão em `DEPLOY.md`.
+
+## Rodando local
 
 ```bash
 npm install
@@ -19,8 +25,8 @@ Abra `http://localhost:3000` no navegador — o app está lá. A API fica em
 `/api` e a documentação interativa em `/docs`. O banco é SQLite e se cria
 sozinho, já populado com a base de alimentos.
 
-**Para usar no celular**, na mesma rede: descubra seu IP com
-`ipconfig getifaddr en0` e abra `http://SEU_IP:3000` no telefone.
+Local o banco é SQLite em arquivo, sem configurar nada. Com `DATABASE_URL`
+definida, usa Postgres — é assim que roda em produção.
 
 ```bash
 npm test          # 44 testes, incluindo o fluxo completo de ponta a ponta
