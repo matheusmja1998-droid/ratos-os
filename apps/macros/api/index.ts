@@ -1,24 +1,26 @@
 /**
  * Ponto de entrada na Vercel.
  *
- * Serverless não mantém processo vivo entre requisições, então a app Nest é
- * criada uma vez e guardada em memória: enquanto a instância estiver quente,
- * as próximas requisições reaproveitam. É por isso que aqui não se chama
- * `listen()` — quem escuta é a plataforma.
+ * Importa de `dist/` (gerado pelo `nest build`, que a Vercel roda no deploy)
+ * em vez de `src/`: assim o bundler recebe JavaScript pronto e não precisa
+ * resolver TypeScript nem os decorators do Nest.
+ *
+ * Serverless não mantém processo vivo entre requisições, então a app é criada
+ * uma vez e guardada em memória — enquanto a instância estiver quente, as
+ * próximas requisições reaproveitam. Por isso não se chama `listen()`: quem
+ * escuta é a plataforma.
  */
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from '../src/app.module';
-import { PASTA_PUBLICA } from '../src/comum/caminhos';
+import { AppModule } from '../dist/app.module';
 
 let servidor: unknown;
 
 async function criar() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.useStaticAssets(PASTA_PUBLICA);
   app.setGlobalPrefix('api');
   app.enableCors();
   app.useGlobalPipes(
@@ -41,8 +43,8 @@ export default async function handler(req: unknown, res: unknown) {
   try {
     servidor ??= await criar();
   } catch (erro) {
-    // Falha na criação da app (tipicamente banco não configurado) viraria um
-    // FUNCTION_INVOCATION_FAILED opaco. Melhor devolver o motivo real.
+    // Falha no boot viraria um FUNCTION_INVOCATION_FAILED opaco.
+    // Melhor devolver o motivo real.
     const r = res as {
       statusCode: number;
       setHeader: (k: string, v: string) => void;
@@ -50,13 +52,10 @@ export default async function handler(req: unknown, res: unknown) {
     };
     r.statusCode = 503;
     r.setHeader('Content-Type', 'application/json; charset=utf-8');
-    r.end(
-      JSON.stringify({
-        erro: 'Servidor não conseguiu iniciar.',
-        motivo: (erro as Error).message,
-        pilha: (erro as Error).stack?.split('\n').slice(0, 6),
-      }),
-    );
+    r.end(JSON.stringify({
+      erro: 'Servidor não conseguiu iniciar.',
+      motivo: (erro as Error).message,
+    }));
     return;
   }
   return (servidor as (a: unknown, b: unknown) => unknown)(req, res);
