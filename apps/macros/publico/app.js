@@ -1238,14 +1238,22 @@ function desenharPrato() {
           </div>
         </div>
         <div class="alternativas some" data-alts="${i}">
-          ${c.alternativas.map((a, j) => `
+          ${c.alternativas.slice(0, 3).map((a, j) => `
             <div class="resultado" data-usar-alt="${i}:${j}">
               <div class="resultado-nome">
-                ${esc(a.nome)} <span class="fonte-selo">${esc(a.fonte)}</span>
-                <small><span class="preparo">${esc(a.modoPreparo)}</span> · ${arred(a.gramas)} g · ${arred(a.macros.kcal)} kcal</small>
+                ${esc(a.nome)}
+                <span class="preparo">· ${esc(a.modoPreparo)}</span>
+                <span class="fonte-selo">${esc(a.fonte)}</span>
+                <small>${arred(a.gramas)} g · ${arred(a.macros.kcal)} kcal</small>
               </div>
               <span class="mono tenue">usar</span>
             </div>`).join('')}
+
+          <div class="busca-papel">
+            <input class="campo-busca-papel" data-busca-papel="${i}"
+                   placeholder="procurar ${esc(c.rotulo.toLowerCase())}: carne moída, tilápia…">
+            <div class="resultados-papel" data-res-papel="${i}"></div>
+          </div>
         </div>
       </div>`).join('')}
 
@@ -1263,20 +1271,7 @@ function desenharPrato() {
   $$('[data-usar-alt]').forEach((el) =>
     el.addEventListener('click', () => {
       const [i, j] = el.dataset.usarAlt.split(':').map(Number);
-      const comp = pratoAtual.componentes[i];
-      const nova = comp.alternativas[j];
-
-      // O escolhido volta pra lista de alternativas: dá pra desfazer a troca.
-      const anterior = {
-        alimentoId: comp.alimentoId, nome: comp.nome,
-        modoPreparo: comp.modoPreparo, fonte: comp.fonte,
-        gramas: comp.gramas, macros: comp.macros, porcoes: comp.porcoes,
-      };
-      comp.alternativas = [anterior, ...comp.alternativas.filter((_, k) => k !== j)];
-      Object.assign(comp, nova);
-
-      recalcularTotaisDoPrato();
-      desenharPrato();
+      trocarComponente(i, pratoAtual.componentes[i].alternativas[j]);
     }));
 
   $$('[data-tirar-comp]').forEach((b) =>
@@ -1287,8 +1282,83 @@ function desenharPrato() {
       else $('#prato').innerHTML = '<p class="tenue">Prato vazio. Escolha a refeição de novo pra montar outro.</p>';
     }));
 
+  // Busca dentro do componente: as três alternativas nunca cobrem tudo, e
+  // quem vai comer carne moída precisa poder procurar por ela.
+  $$('[data-busca-papel]').forEach((campo) => {
+    let timer;
+    campo.addEventListener('input', () => {
+      clearTimeout(timer);
+      const i = Number(campo.dataset.buscaPapel);
+      const saida = $(`[data-res-papel="${i}"]`);
+      const termo = campo.value.trim();
+
+      if (termo.length < 2) { saida.innerHTML = ''; return; }
+
+      timer = setTimeout(async () => {
+        saida.innerHTML = '<p class="carregando">procurando…</p>';
+        try {
+          const papel = pratoAtual.componentes[i].papel;
+          const achados = await api(
+            `/diario/montar/${pratoRefeicaoId}/buscar?q=${encodeURIComponent(termo)}&papel=${papel}`,
+          );
+
+          if (!achados.length) {
+            saida.innerHTML = `<p class="tenue">Não achei “${esc(termo)}”. Tente o nome mais simples.</p>`;
+            return;
+          }
+
+          saida.innerHTML = achados.map((a, j) => `
+            <div class="resultado" data-usar-busca="${i}:${j}">
+              <div class="resultado-nome">
+                ${esc(a.nome)}
+                <span class="preparo">· ${esc(a.modoPreparo)}</span>
+                <span class="fonte-selo">${esc(a.fonte)}</span>
+                <small>${arred(a.gramas)} g · ${arred(a.macros.kcal)} kcal</small>
+              </div>
+              <span class="mono tenue">usar</span>
+            </div>`).join('');
+
+          saida.querySelectorAll('[data-usar-busca]').forEach((el) =>
+            el.addEventListener('click', () => {
+              const [ci, ai] = el.dataset.usarBusca.split(':').map(Number);
+              trocarComponente(ci, achados[ai]);
+            }));
+        } catch (e) {
+          saida.innerHTML = `<p class="nota seco">${esc(e.message)}</p>`;
+        }
+      }, 300);
+    });
+  });
+
   $('#btn-remontar').addEventListener('click', montarPrato);
   $('#btn-anotar-prato').addEventListener('click', anotarPrato);
+}
+
+/**
+ * Troca o alimento de um componente, mantendo o papel e o resto do prato.
+ * O anterior volta pro topo das alternativas, então dá pra desfazer.
+ */
+function trocarComponente(i, novo) {
+  const comp = pratoAtual.componentes[i];
+
+  const anterior = {
+    alimentoId: comp.alimentoId, nome: comp.nome,
+    modoPreparo: comp.modoPreparo, fonte: comp.fonte,
+    gramas: comp.gramas, macros: comp.macros, porcoes: comp.porcoes,
+  };
+  comp.alternativas = [
+    anterior,
+    ...comp.alternativas.filter((a) => a.alimentoId !== novo.alimentoId),
+  ];
+
+  Object.assign(comp, {
+    alimentoId: novo.alimentoId, nome: novo.nome,
+    modoPreparo: novo.modoPreparo, fonte: novo.fonte,
+    gramas: novo.gramas, macros: novo.macros, porcoes: novo.porcoes,
+  });
+
+  recalcularTotaisDoPrato();
+  desenharPrato();
 }
 
 /** Soma de novo depois de trocar ou tirar um componente. */

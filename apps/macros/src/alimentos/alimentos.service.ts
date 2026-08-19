@@ -16,6 +16,18 @@ export function normalizar(texto: string): string {
 }
 
 /**
+ * Corta a terminação de gênero e número da palavra.
+ *
+ * A TACO escreve "moído"; a pessoa digita "moída" ou "moidas". Sem isso a
+ * busca falha justamente no alimento que ela quer, e ela conclui que o app
+ * não tem carne moída.
+ */
+function radical(palavra: string): string {
+  if (palavra.length <= 4) return palavra;
+  return palavra.replace(/(oes|aes|ais|eis|is|os|as|es|s|o|a|e)$/, '');
+}
+
+/**
  * Como as pessoas chamam a comida x como ela está cadastrada.
  *
  * A base usa o nome técnico da TACO ("peito de frango sem pele"), mas ninguém
@@ -108,6 +120,35 @@ export class AlimentosService implements OnModuleInit {
       where: { nomeBusca: Like(`%${alvo}%`) },
       take: limite * 3,
     });
+
+    // Nada pelo termo inteiro: tenta pelo radical de cada palavra, que
+    // resolve a flexão ("moída" -> "moid" -> acha "moído").
+    if (achados.length === 0) {
+      const radicais = alvo
+        .split(/\s+/)
+        .filter((p) => p.length >= 4)
+        .map(radical)
+        .filter((p) => p.length >= 3);
+
+      if (radicais.length > 0) {
+        const contagem = new Map<string, { a: Alimento; hits: number }>();
+        for (const r of radicais) {
+          const parciais = await this.repo.find({
+            where: { nomeBusca: Like(`%${r}%`) },
+            take: limite * 5,
+          });
+          for (const a of parciais) {
+            const reg = contagem.get(a.id);
+            if (reg) reg.hits += 1;
+            else contagem.set(a.id, { a, hits: 1 });
+          }
+        }
+        const maxHits = Math.max(0, ...[...contagem.values()].map((v) => v.hits));
+        achados = [...contagem.values()]
+          .filter((v) => v.hits === maxHits)
+          .map((v) => v.a);
+      }
+    }
 
     // "mandioca cozida" não casa literalmente com "mandioca|cozido": a ordem
     // das palavras e a flexão diferem. Tenta então casar cada palavra do termo,

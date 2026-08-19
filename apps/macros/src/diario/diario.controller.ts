@@ -5,7 +5,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DiarioService } from './diario.service';
 import { MacroAlvo, PlanejadorService } from './planejador.service';
 import { MontadorService } from './montador.service';
-import { PapelPrato } from './prato';
+import { MODELOS_REFEICAO, PapelPrato, tipoDaRefeicao } from './prato';
 import { AlimentosService } from '../alimentos/alimentos.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -166,6 +166,37 @@ export class DiarioController {
     });
 
     return { refeicao: { id: refeicao.id, nome: refeicao.nome }, espaco, ...prato };
+  }
+
+  @Get('montar/:refeicaoId/buscar')
+  @ApiOperation({
+    summary: 'Procura um alimento pra ocupar um papel do prato (proteína, base…)',
+  })
+  async buscarParaPapel(
+    @UsuarioAtual() u: { id: string },
+    @Param('refeicaoId') refeicaoId: string,
+    @Query() query: { q?: string; papel?: string; data?: string },
+  ) {
+    if (!query.q || query.q.trim().length < 2) return [];
+
+    const resumo = await this.diario.resumoDia(u.id, query.data ?? hojeSP());
+    if (!resumo.meta) return { erro: 'Defina suas metas antes de montar o prato.' };
+
+    const refeicao = resumo.refeicoes.find((r) => r.id === refeicaoId);
+    if (!refeicao) return { erro: 'Refeição não encontrada.' };
+
+    const perfil = await this.usuarios.findOne({ where: { id: u.id } });
+    const espaco = this.planejador.calcularEspaco(resumo.meta, resumo.totais);
+    const tipo = tipoDaRefeicao(refeicao.nome);
+
+    return this.montador.buscarParaPapel({
+      termo: query.q,
+      papel: (query.papel ?? 'proteina') as PapelPrato,
+      espaco,
+      quantosPapeis: MODELOS_REFEICAO[tipo].length,
+      restricoes: perfil?.restricoes ?? [],
+      excluir: perfil?.naoComeIds ?? [],
+    });
   }
 
   /**

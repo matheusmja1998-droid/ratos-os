@@ -148,6 +148,73 @@ export class MontadorService {
   }
 
   /**
+   * Busca um alimento pra ocupar um papel do prato.
+   *
+   * As alternativas fixas nunca cobrem tudo — quem vai comer carne moída
+   * precisa procurar por ela. A busca aqui já devolve a porção dimensionada
+   * pelo espaço do dia, pra o resultado entrar no prato pronto pra usar.
+   *
+   * O filtro por papel é uma preferência, não uma trava: se a pessoa procura
+   * "carne moída" no lugar da proteína, o que casa com o papel sobe, mas nada
+   * é escondido — a busca dela manda.
+   */
+  async buscarParaPapel(params: {
+    termo: string;
+    papel: PapelPrato;
+    espaco: EspacoRestante;
+    quantosPapeis: number;
+    restricoes?: string[];
+    excluir?: string[];
+    limite?: number;
+  }) {
+    const achados = await this.alimentos.buscar(params.termo, (params.limite ?? 6) * 4);
+    const excluir = new Set(params.excluir ?? []);
+    const def = PAPEIS.find((p) => p.papel === params.papel);
+    const fatia = this.fatiaDoEspaco(params.quantosPapeis);
+
+    return achados
+      .filter((a) => !excluir.has(a.id))
+      .filter((a) => !violaRestricao(a.nome, params.restricoes))
+      .filter((a) => !this.ehIngrediente(a.nome))
+      // Quem cumpre o papel procurado vem primeiro; o resto continua acessível.
+      .sort((x, y) => {
+        const px = papelDoAlimento(x.nome) === params.papel ? 1 : 0;
+        const py = papelDoAlimento(y.nome) === params.papel ? 1 : 0;
+        if (px !== py) return py - px;
+
+        // Cru quase nunca é o que se come: desce na lista, sem sumir — carne
+        // crua pesada antes de cozinhar é caso legítimo.
+        const cx = x.modoPreparo === 'cru' ? 1 : 0;
+        const cy = y.modoPreparo === 'cru' ? 1 : 0;
+        if (cx !== cy) return cx - cy;
+
+        return (
+          notaDePreferencia(params.papel, y.nome) -
+          notaDePreferencia(params.papel, x.nome)
+        );
+      })
+      .slice(0, params.limite ?? 6)
+      .map((a) => {
+        const gramas = this.dimensionar(
+          a,
+          def?.gramasTipicas ?? 100,
+          params.espaco,
+          fatia,
+        );
+        return {
+          alimentoId: a.id,
+          nome: a.nome,
+          modoPreparo: a.modoPreparo,
+          fonte: a.fonte,
+          gramas: Math.max(15, gramas),
+          macros: this.alimentos.calcularPorGramas(a, Math.max(15, gramas)),
+          porcoes: this.alimentos.porcoesComMacros(a),
+          cumpreOPapel: papelDoAlimento(a.nome) === params.papel,
+        };
+      });
+  }
+
+  /**
    * Fração do espaço restante que um prato pode ocupar.
    *
    * Prato com mais componentes tende a ser a refeição principal e leva mais.

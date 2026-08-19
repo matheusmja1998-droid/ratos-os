@@ -69,6 +69,16 @@ describe('AlimentosService — busca', () => {
     expect(['TACO', 'TBCA']).toContain(r[0].fonte);
   });
 
+  it('tolera flexão de gênero e número', async () => {
+    // A TACO escreve "moído"; ninguém digita assim.
+    const moida = await service.buscar('moida');
+    expect(moida.length).toBeGreaterThan(0);
+    expect(moida[0].nome.toLowerCase()).toContain('moíd');
+
+    const moidas = await service.buscar('moidas');
+    expect(moidas.length).toBeGreaterThan(0);
+  });
+
   it('devolve vazio pra busca vazia', async () => {
     expect(await service.buscar('')).toEqual([]);
   });

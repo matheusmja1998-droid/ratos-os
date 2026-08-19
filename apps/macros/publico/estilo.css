@@ -812,3 +812,8 @@ nav.rodape button[aria-current='true'] {
   padding-left: 12px;
   border-left: 2px solid var(--linha);
 }
+
+/* Busca dentro do componente do prato */
+.busca-papel { margin-top: var(--s3); }
+.campo-busca-papel { font-size: 15px; }
+.resultados-papel:not(:empty) { margin-top: var(--s2); }

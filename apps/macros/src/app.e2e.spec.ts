@@ -340,6 +340,50 @@ describe('Macros (e2e)', () => {
     expect(Math.abs(soma - r.body.totais.kcal)).toBeLessThanOrEqual(1);
   });
 
+  it('busca um alimento pra ocupar um papel do prato', async () => {
+    const auth = { Authorization: `Bearer ${token}` };
+    const dia = await req().get('/api/diario').set(auth).expect(200);
+    const alvo = dia.body.refeicoes[dia.body.refeicoes.length - 1];
+
+    // As alternativas fixas não cobrem tudo: quem vai comer carne moída
+    // precisa poder procurar por ela.
+    const r = await req()
+      .get(`/api/diario/montar/${alvo.id}/buscar?q=carne%20moida&papel=proteina`)
+      .set(auth)
+      .expect(200);
+
+    expect(r.body.length).toBeGreaterThan(0);
+    expect(r.body[0].nome.toLowerCase()).toContain('carne');
+    // Vem com a porção já dimensionada pelo espaço do dia.
+    expect(r.body[0].gramas).toBeGreaterThan(0);
+    expect(r.body[0].macros.kcal).toBeGreaterThan(0);
+  });
+
+  it('a busca do prato tolera flexão de gênero', async () => {
+    const auth = { Authorization: `Bearer ${token}` };
+    const dia = await req().get('/api/diario').set(auth).expect(200);
+    const alvo = dia.body.refeicoes[dia.body.refeicoes.length - 1];
+
+    // A TACO escreve "moído"; a pessoa digita "moída".
+    const r = await req()
+      .get(`/api/diario/montar/${alvo.id}/buscar?q=moida&papel=proteina`)
+      .set(auth)
+      .expect(200);
+    expect(r.body.length).toBeGreaterThan(0);
+  });
+
+  it('busca curta demais não devolve nada', async () => {
+    const auth = { Authorization: `Bearer ${token}` };
+    const dia = await req().get('/api/diario').set(auth).expect(200);
+    const alvo = dia.body.refeicoes[0];
+
+    const r = await req()
+      .get(`/api/diario/montar/${alvo.id}/buscar?q=a&papel=proteina`)
+      .set(auth)
+      .expect(200);
+    expect(r.body).toEqual([]);
+  });
+
   it('lista quais refeições ainda estão vazias', async () => {
     const auth = { Authorization: `Bearer ${token}` };
     const r = await req().get('/api/diario/refeicoes-vazias').set(auth).expect(200);
