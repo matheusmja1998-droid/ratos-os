@@ -194,19 +194,19 @@ export default function ExamesView({
       {!carregando && daIA.length > 0 && (
         <div style={{ marginBottom: 18 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8, flexWrap: "wrap" }}>
-            <div style={{ fontSize: 15, fontWeight: 700 }}>Marcados pela IA</div>
+            <div style={{ fontSize: 15, fontWeight: 800, color: "#dc2626" }}>⚠ Marcados pela IA</div>
             <span
               style={{
-                fontSize: 12,
-                fontWeight: 700,
-                color: "#a16207",
-                background: "rgba(202,138,4,0.14)",
-                border: "1px solid rgba(202,138,4,0.35)",
-                padding: "3px 10px",
+                fontSize: 12.5,
+                fontWeight: 800,
+                color: "#fff",
+                background: "#dc2626",
+                padding: "4px 12px",
                 borderRadius: 999,
+                letterSpacing: 0.2,
               }}
             >
-              {daIA.length} pra lançar no sistema
+              {daIA.length} PRA LANÇAR NO SISTEMA
             </span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -218,16 +218,17 @@ export default function ExamesView({
                   alignItems: "center",
                   gap: 14,
                   padding: "12px 16px",
-                  border: "1px solid rgba(202,138,4,0.45)",
+                  border: "1.5px solid #dc2626",
+                  borderLeft: "6px solid #dc2626",
                   borderRadius: 10,
-                  background: "rgba(202,138,4,0.06)",
+                  background: "rgba(220,38,38,0.07)",
                 }}
               >
-                <div style={{ fontSize: 18, fontWeight: 700, minWidth: 58, fontVariantNumeric: "tabular-nums" }}>
+                <div style={{ fontSize: 18, fontWeight: 800, minWidth: 58, fontVariantNumeric: "tabular-nums", color: "#dc2626" }}>
                   {e.inicio.slice(11, 16)}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 600, fontSize: 14 }}>
+                  <div style={{ fontWeight: 700, fontSize: 14 }}>
                     {e.pacienteNome || e.pacienteTelefone || "(sem nome)"}
                   </div>
                   <div style={{ color: "var(--muted)", fontSize: 12.5, marginTop: 2 }}>
