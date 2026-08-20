@@ -348,6 +348,24 @@ function horarioInventado(texto: string, oferta: OfertaValida): string | null {
   return invalidos.join(", ");
 }
 
+// CORRIGE dia da semana errado citado junto de uma data ("terça 27/08" quando
+// 27/08 e quinta). O modelo erra dia da semana de cabeca com frequencia — a
+// data vem certa da ferramenta e ele escreve o dia errado do lado (caso real
+// 20/08, com cliente assistindo). Aqui a data manda: o nome do dia e
+// recalculado pelo calendario.
+const NOMES_DIA_SEM = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
+export function corrigirDiaDaSemana(texto: string, anoRef: number): string {
+  // pega "<dia-da-semana> <opcional 'feira'> <DD/MM>" com ou sem virgula
+  const re = /\b(domingo|segunda|ter[çc]a|quarta|quinta|sexta|s[áa]bado)(?:-?\s*feira)?(,?\s+)(\d{1,2})\/(\d{1,2})\b/gi;
+  return texto.replace(re, (todo, _dia, sep, dd, mm) => {
+    const d = Number(dd);
+    const m = Number(mm);
+    if (!d || !m || m > 12 || d > 31) return todo;
+    const certo = NOMES_DIA_SEM[new Date(Date.UTC(anoRef, m - 1, d)).getUTCDay()];
+    return `${certo}${sep}${dd}/${mm}`;
+  });
+}
+
 export async function aplicarEstilo(clinicaId: string, texto: string): Promise<string> {
   // normaliza o separador de mensagens: espacos/linhas em volta do "|||" saem,
   // e um "|||" solto no fim (modelo esquecendo de completar) e removido
@@ -1142,11 +1160,21 @@ export async function responder(params: {
           if (block.name === "ver_horarios" || block.name === "ver_horarios_exame") {
             ofertaValida.houveConsulta = true;
             for (const h of horariosCitados(resultado)) ofertaValida.horarios.add(h);
-            // marca as datas efetivamente consultadas (a pedida + as que o
-            // retorno mencionar), pra validar negativas depois
+            // Marca SO as datas cujos HORARIOS a ferramenta realmente devolveu.
+            // NAO vale a lista de "datas alternativas" do retorno: elas dizem
+            // que existe vaga, mas nao QUAIS horarios — e foi exatamente isso
+            // que deixou a IA negar o dia 27 achando que ja tinha consultado
+            // (caso real 20/08). Registramos: a data pedida no input e, quando
+            // nao veio data, o dia do bloco "Horarios do exame em ..." /
+            // "Proxima disponibilidade".
             const pedida = (block.input as any)?.data;
-            if (typeof pedida === "string" && /^\d{4}-\d{2}-\d{2}$/.test(pedida)) datasConsultadas.add(pedida);
-            for (const d of String(resultado).match(/\d{4}-\d{2}-\d{2}/g) || []) datasConsultadas.add(d);
+            if (typeof pedida === "string" && /^\d{4}-\d{2}-\d{2}$/.test(pedida)) {
+              datasConsultadas.add(pedida);
+            } else {
+              // sem data no input: a ferramenta devolveu o PRIMEIRO dia com vaga
+              const primeira = String(resultado).match(/(?:Horarios do exame em|Proxima disponibilidade[^:]*:)[^\d]*(\d{4}-\d{2}-\d{2})/);
+              if (primeira) datasConsultadas.add(primeira[1]);
+            }
           }
           toolResults.push({
             type: "tool_result",
@@ -1323,6 +1351,8 @@ export async function responder(params: {
 
     // ENFORCEMENT DE ESTILO: tom/tamanho configurados pela clinica valem de
     // verdade (strip de emoji, sem linha em branca, compressao se estourou)
+    // dia da semana citado com data: o calendario manda (o modelo erra de cabeca)
+    textoResposta = corrigirDiaDaSemana(textoResposta, new Date().getFullYear());
     textoResposta = await aplicarEstilo(clinicaId, textoResposta);
 
     await salvarMensagem({
