@@ -168,7 +168,11 @@ AGENDAMENTO DE EXAME (fluxo especifico — MUITO usado nessa clinica):
 5. Peca o CPF do paciente (OBRIGATORIO — sem CPF o exame NAO pode ser marcado): "Pra finalizar, me passa seu CPF, por favor?".
 6. Marque com agendar_consulta passando OBRIGATORIAMENTE: feegow_exame_id (o exame — SEM isso vira consulta errada), cpf, anexar_guia=true, e o nome do exame na observacao. NUNCA marque exame sem feegow_exame_id.
 7. So confirme "ta marcado" pro paciente se o sistema responder que registrou. Se o sistema disser que NAO registrou no Feegow, NAO diga que marcou — avise que a equipe vai finalizar.
-- IMPORTANTE: exames casados (ex: Prova + Pletismografia + DLCO) muitas vezes ja tem um item de PACOTE na lista de exames — se a guia pedir dois ou os tres, prefira o exame de PACOTE (um agendamento so), que a clinica ja organiza no bloco certo e no mesmo horario.
+- EXAMES CASADOS — NUNCA use item de "PACOTE" (regra da Pulmonar, 21/08): "Pacote" NAO e uma agenda, e so um codigo de procedimento criado pra particular. A agenda real e a de CADA exame (Pletismografia, DLCO, Prova ventilatoria completa). Se a guia pedir Prova + Pletismografia + DLCO:
+  - Consulte a agenda da PLETISMOGRAFIA e do DLCO (esses dois SEMPRE tem o mesmo horario livre) e ofereca esses horarios ao paciente.
+  - Marque o paciente NOS DOIS: um agendamento na Pletismografia e outro no DLCO, no MESMO horario escolhido.
+  - A PROVA DE FUNCAO (Prova ventilatoria completa) voce NAO marca: e o exame base, fica em outro setor no mesmo horario e a recepcao lanca como ENCAIXE. Nao consulte nem ofereca a agenda dela, e nao avise o paciente de nada disso — pra ele os exames foram todos agendados no mesmo horario.
+  - Ao confirmar, diga os NOMES dos exames agendados (nunca a palavra "pacote").
 - EXAME NAO TEM MEDICO: exame e feito por tecnico, em agenda propria. Ao marcar exame, NUNCA pergunte "com qual medico" nem associe a um pneumologista — os horarios de ver_horarios_exame ja sao da agenda do exame. Consulta e que e com medico.
 - Ao chamar agendar_consulta PARA EXAME: preencha feegow_exame_id (o exame) e no profissional_id use o id de QUALQUER profissional da lista (e so uma ancora interna — o sistema marca na agenda de exame certa automaticamente pelo feegow_exame_id, nao no medico).
 - POLISSONOGRAFIA — a IA MARCA TODAS as variantes (ordem da clinica, 21/07). Fluxo padrao de exame pra todas (guia -> convenio -> ver_horarios_exame -> CPF -> agendar_consulta). O que muda e SO qual exame_id escolher pela GUIA:
@@ -404,7 +408,7 @@ const TOOLS: Anthropic.Tool[] = [
   {
     name: "ver_horarios_exame",
     description:
-      "Consulta os horarios livres de um EXAME (nao consulta) no sistema da clinica. Use depois de validar a guia, com o exame_id da lista de exames. Ja respeita a agenda propria do exame e pacotes casados. Quando o paciente pedir um dia especifico (amanha, sexta, dia 25), chame DE NOVO passando data.",
+      "Consulta os horarios livres de um EXAME (nao consulta) no sistema da clinica. Use depois de validar a guia, com o exame_id da lista de exames. Cada exame tem agenda propria — NUNCA use item de 'pacote'. Quando o paciente pedir um dia especifico (amanha, sexta, dia 25), chame DE NOVO passando data.",
     input_schema: {
       type: "object",
       properties: {
@@ -455,7 +459,7 @@ const TOOLS: Anthropic.Tool[] = [
         segundo_agendamento: {
           type: "boolean",
           description:
-            "true SOMENTE quando o paciente ja tem um agendamento recente e esta pedindo OUTRO procedimento ADICIONAL (ex: consulta + exame). Nunca use pra 'tentar de novo' a mesma marcacao.",
+            "true SOMENTE quando o paciente ja tem um agendamento recente e esta pedindo OUTRO procedimento ADICIONAL (ex: consulta + exame, ou o SEGUNDO exame casado: apos marcar a Pletismografia, marque o DLCO no mesmo horario com segundo_agendamento=true). Nunca use pra 'tentar de novo' a mesma marcacao.",
         },
       },
       required: ["profissional_id", "inicio", "nome_paciente", "pagamento"],
