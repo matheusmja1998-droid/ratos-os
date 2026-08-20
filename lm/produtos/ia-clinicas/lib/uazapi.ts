@@ -472,15 +472,21 @@ export function parseWebhook(body: any): {
     msg.messageType || msg.type || Object.keys(msg.message || {})[0] || ""
   ).toLowerCase();
   let tipo: "texto" | "audio" | "imagem" | "figurinha" | "outro" = "texto";
-  if (!texto) {
-    // figurinha (sticker) e expressao, nao pergunta — o webhook IGNORA em
-    // silencio (antes caia no leitor de midia, falhava e respondia "nao
-    // consegui abrir o arquivo", o que soava robo e irritava o paciente)
-    if (rawTipo.includes("sticker")) tipo = "figurinha";
-    else if (rawTipo.includes("audio") || rawTipo.includes("ptt")) tipo = "audio";
-    else if (rawTipo.includes("image") || rawTipo.includes("imagem")) tipo = "imagem";
-    else tipo = "outro";
-  }
+  // O TIPO vem SEMPRE do messageType — nunca da presenca de texto. Antes, so
+  // detectavamos midia quando texto era vazio; documento com LEGENDA (o
+  // WhatsApp poe o nome do arquivo como caption, ex: "PEDIDO.pdf") era
+  // classificado como texto puro e a guia NUNCA chegava no leitor de PDF (a IA
+  // respondia "nao consegui abrir o arquivo" — caso real 20/08, Pulmonar).
+  // figurinha (sticker) e expressao, nao pergunta — o webhook ignora em silencio.
+  if (rawTipo.includes("sticker")) tipo = "figurinha";
+  else if (rawTipo.includes("audio") || rawTipo.includes("ptt")) tipo = "audio";
+  else if (rawTipo.includes("image") || rawTipo.includes("imagem")) tipo = "imagem";
+  else if (
+    rawTipo.includes("document") ||
+    rawTipo.includes("video") ||
+    (!texto && !rawTipo.includes("conversation") && !rawTipo.includes("text"))
+  ) tipo = "outro"; // documento/PDF/video -> leitor de midia (texto vira legenda)
+  else if (!texto) tipo = "outro";
 
   // numero da instancia que RECEBEU a mensagem (a clinica), pra rotear certo
   // em multi-tenant. A uazapi expoe isso como owner/me/instanceOwner.
