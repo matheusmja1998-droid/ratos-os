@@ -287,6 +287,43 @@ function tirarMarcasDeIA(texto: string): string {
     .trim();
 }
 
+// ---------- TRAVA ANTI-HORARIO-INVENTADO ----------
+// O prompt manda "so ofereca os horarios que a ferramenta retornou" desde
+// sempre, e mesmo assim o modelo inventa (caso real 20/08: a ferramenta
+// devolveu SO "20:30" e ela ofereceu "10h, 11h ou 12h" — horarios que nem
+// existiam e ja tinham passado). Instrucao nao segura; conferencia mecanica
+// segura. Guardamos o que CADA ferramenta de horario devolveu no turno e,
+// antes de enviar, conferimos os horarios citados na resposta.
+type OfertaValida = { horarios: Set<string>; houveConsulta: boolean };
+
+// extrai "HH:MM" e formatos falados ("10h", "10h30", "as 9") do texto
+function horariosCitados(texto: string): string[] {
+  const achados: string[] = [];
+  const re = /(\d{1,2})\s*(?::|h)\s*(\d{2})?/gi;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(texto))) {
+    const h = Number(m[1]);
+    const min = m[2] ? Number(m[2]) : 0;
+    if (h > 23 || min > 59) continue;
+    // ignora numeros que claramente nao sao hora (ex: "30 minutos antes")
+    const antes = texto.slice(Math.max(0, m.index - 12), m.index).toLowerCase();
+    if (/dia |dias |minuto|R\$|\d\/$/.test(antes)) continue;
+    achados.push(`${String(h).padStart(2, "0")}:${String(min).padStart(2, "0")}`);
+  }
+  return [...new Set(achados)];
+}
+
+// Devolve null se a resposta esta OK; ou a lista real quando ela citou horario
+// que a ferramenta NAO devolveu (ai o chamador manda o modelo refazer).
+function horarioInventado(texto: string, oferta: OfertaValida): string | null {
+  if (!oferta.houveConsulta) return null; // nao consultou nada: nada a conferir
+  const citados = horariosCitados(texto);
+  if (citados.length === 0) return null;
+  const invalidos = citados.filter((h) => !oferta.horarios.has(h));
+  if (invalidos.length === 0) return null;
+  return invalidos.join(", ");
+}
+
 export async function aplicarEstilo(clinicaId: string, texto: string): Promise<string> {
   try {
     const c = await getClinica(clinicaId);
@@ -927,6 +964,10 @@ export async function responder(params: {
   let dataMarcadaTurno = ""; // inicio ISO do agendamento real (guard de data trocada)
   let houveCancelamentoReal = false; // cancelar com sucesso nesse turno
   let jaCorrigiuFantasma = false; // guard anti-fantasma corrige no maximo 1x
+  // guard anti-horario-inventado: junta os horarios que as ferramentas de
+  // agenda REALMENTE devolveram nesse turno (o modelo so pode citar esses)
+  const ofertaValida: OfertaValida = { horarios: new Set<string>(), houveConsulta: false };
+  let jaCorrigiuHorario = false;
 
   // acumula o uso de tokens de TODAS as iteracoes dessa conversa (pra custo)
   const uso = { input: 0, output: 0, cacheWrite: 0, cacheRead: 0, chamadas: 0 };
@@ -973,6 +1014,12 @@ export async function responder(params: {
           }
           if (block.name === "cancelar_consulta" && /cancelada/i.test(resultado)) {
             houveCancelamentoReal = true;
+          }
+          // TRAVA ANTI-INVENCAO: guarda os horarios que a ferramenta devolveu.
+          // Tudo que o modelo citar depois tem que estar aqui dentro.
+          if (block.name === "ver_horarios" || block.name === "ver_horarios_exame") {
+            ofertaValida.houveConsulta = true;
+            for (const h of horariosCitados(resultado)) ofertaValida.horarios.add(h);
           }
           toolResults.push({
             type: "tool_result",
@@ -1085,6 +1132,27 @@ export async function responder(params: {
         });
         continue;
       }
+    }
+
+    // GUARD ANTI-HORARIO-INVENTADO (deterministico): a instrucao "so ofereca o
+    // que a ferramenta retornou" existe no prompt desde sempre e MESMO ASSIM o
+    // modelo inventou horario pro paciente (20/08: ferramenta devolveu so
+    // "20:30", ela ofereceu "10h, 11h ou 12h" — inexistentes e ja passados).
+    // Aqui a resposta so passa se TODO horario citado veio da ferramenta.
+    const inventados = horarioInventado(textoResposta, ofertaValida);
+    if (inventados && !jaCorrigiuHorario) {
+      jaCorrigiuHorario = true;
+      const reais = [...ofertaValida.horarios].sort();
+      messages.push({ role: "assistant", content: textoResposta });
+      messages.push({
+        role: "user",
+        content:
+          `[SISTEMA — o paciente NAO viu sua ultima mensagem] Voce ofereceu ${inventados}, que NAO existe na agenda. ` +
+          (reais.length
+            ? `Os UNICOS horarios livres que a ferramenta devolveu sao: ${reais.join(", ")}. Refaca a resposta oferecendo SO esses, exatamente como estao.`
+            : `A ferramenta NAO devolveu nenhum horario livre. NAO ofereca horario nenhum: diga que nao tem vaga nesse dia e pergunte outra data/turno, ou chame ver_horarios/ver_horarios_exame com a data que o paciente pedir.`),
+      });
+      continue;
     }
 
     // ENFORCEMENT DE ESTILO: tom/tamanho configurados pela clinica valem de
