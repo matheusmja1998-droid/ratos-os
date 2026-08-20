@@ -92,7 +92,7 @@ export class MontadorService {
       const def = PAPEIS.find((p) => p.papel === papel)!;
       const opcoes = (porPapel.get(papel) ?? [])
         .map((a) => {
-          const gramas = this.dimensionar(a, def.gramasTipicas, params.espaco, fatia);
+          const gramas = this.dimensionar(a, def.gramasTipicas, params.espaco, fatia, papel);
           return { a, gramas, macros: this.alimentos.calcularPorGramas(a, gramas) };
         })
         .filter((o) => o.gramas >= 15)
@@ -200,6 +200,7 @@ export class MontadorService {
           def?.gramasTipicas ?? 100,
           params.espaco,
           fatia,
+          params.papel,
         );
         return {
           alimentoId: a.id,
@@ -226,31 +227,62 @@ export class MontadorService {
   }
 
   /**
-   * Ajusta a porção pelo que ainda cabe.
+   * Dimensiona a porção pelo que falta e pelo que cabe.
    *
-   * Parte da porção típica e encolhe se o macro dominante do alimento já
-   * estiver apertado. Nunca some por completo: melhor pouco arroz do que
-   * nenhum, porque a pessoa vê o prato inteiro e ajusta.
+   * Duas forças, nesta ordem:
+   *
+   *  1. O alimento **puxa pra cima** o macro que ele resolve. Uma proteína
+   *     entra na quantidade que fecha a proteína que falta, não na porção
+   *     genérica — senão 55 g de carne moída entregam 22 g de proteína quando
+   *     faltavam 45, e a pessoa fica sem como completar.
+   *  2. Os outros macros **limitam pra baixo**, pra a porção não estourar o
+   *     dia. O teto de calorias vale sempre.
+   *
+   * Nunca zera: melhor pouco arroz do que nenhum, porque a pessoa vê o prato
+   * inteiro e ajusta o que quiser.
    */
   private dimensionar(
     a: Alimento,
     tipicas: number,
     espaco: EspacoRestante,
     fatia: number,
+    papel?: PapelPrato,
   ): number {
-    const limites: number[] = [tipicas];
+    // Quanto seria preciso deste alimento pra fechar o macro que ele resolve.
+    const gramasPara = (falta: number, por100g: number) =>
+      por100g > 0 ? (Math.max(0, falta) / por100g) * 100 : 0;
 
-    const cabe = (disponivel: number, por100g: number) => {
+    // Só a proteína puxa a porção pra cima, e ainda assim com limite: é o
+    // macro que não se recupera depois. Base e feijão ficam na porção típica —
+    // 400 g de arroz num prato não é refeição, é balde.
+    let alvo = tipicas;
+    if (papel === 'proteina') {
+      const paraFechar = gramasPara(espaco.proteinaG, a.proteina100g);
+      // No máximo o dobro da porção típica: se ainda faltar proteína, a pessoa
+      // completa na próxima refeição ou aumenta o número no campo.
+      alvo = Math.min(Math.max(tipicas, paraFechar), tipicas * 2);
+    }
+
+    // Tetos: nenhum macro pode estourar o que ainda cabe no dia.
+    const tetos: number[] = [];
+    const teto = (disponivel: number, por100g: number, comFatia = true) => {
       if (por100g <= 0) return;
-      limites.push(Math.max(0, (disponivel * fatia) / por100g) * 100);
+      const margem = comFatia ? disponivel * fatia : disponivel;
+      tetos.push((Math.max(0, margem) / por100g) * 100);
     };
 
-    cabe(Math.max(0, espaco.kcal), a.kcal100g);
-    cabe(Math.max(0, espaco.carboidratoG), a.carboidrato100g);
-    cabe(Math.max(0, espaco.gorduraG), a.gordura100g);
+    // A caloria é o teto duro do dia inteiro, sem fatia: a porção pode até
+    // ocupar o que sobrou, mas não pode passar dele.
+    teto(espaco.kcal, a.kcal100g, false);
+    teto(espaco.carboidratoG, a.carboidrato100g);
+    teto(espaco.gorduraG, a.gordura100g);
 
-    const bruto = Math.min(...limites);
-    return Math.round(bruto / 5) * 5;
+    const bruto = Math.min(alvo, ...tetos);
+
+    // Teto de bom senso por tipo de alimento.
+    const limitePratico = papel === 'proteina' ? 300 : Math.round(tipicas * 1.6);
+
+    return Math.round(Math.min(bruto, limitePratico) / 5) * 5;
   }
 
   /** Fermento, tempero e afins não compõem prato. */

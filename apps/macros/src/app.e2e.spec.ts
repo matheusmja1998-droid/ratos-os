@@ -359,6 +359,85 @@ describe('Macros (e2e)', () => {
     expect(r.body[0].macros.kcal).toBeGreaterThan(0);
   });
 
+  it('a porção da proteína mira o que falta, não a porção genérica', async () => {
+    // Conta própria: os testes anteriores já consumiram o dia do usuário
+    // principal, e aqui o que importa é o dia ainda em aberto.
+    const conta = await req().post('/api/auth/registrar').send({
+      email: 'porcao@teste.com', senha: 'senha12345', nome: 'Porção',
+      sexo: 'masculino', idadeAnos: 28, alturaCm: 184,
+      nivelAtividade: 'moderado', pesoKg: 95,
+    }).expect(201);
+
+    const auth = { Authorization: `Bearer ${conta.body.token}` };
+    const dia = await req().get('/api/diario').set(auth).expect(200);
+    const alvo = dia.body.refeicoes[dia.body.refeicoes.length - 1];
+
+    const espaco = await req().get('/api/diario/espaco').set(auth).expect(200);
+    const faltaProteina = espaco.body.proteinaG;
+
+    const r = await req()
+      .get(`/api/diario/montar/${alvo.id}/buscar?q=carne%20moida&papel=proteina`)
+      .set(auth)
+      .expect(200);
+
+    expect(r.body.length).toBeGreaterThan(0);
+    const escolha = r.body[0];
+
+    // O bug que isso trava: a carne vinha em 55 g (22 g de proteína) porque o
+    // teto de caloria cortava antes de olhar a proteína que faltava.
+    //
+    // Não se exige que uma refeição só feche o dia inteiro — 158 g de proteína
+    // numa janta seria absurdo. O que se exige é que a porção seja uma parcela
+    // séria do que falta, e não a migalha de antes.
+    if (faltaProteina > 20) {
+      expect(escolha.macros.proteinaG).toBeGreaterThan(
+        Math.min(faltaProteina * 0.4, 45),
+      );
+    }
+
+    // E sem virar porção absurda.
+    expect(escolha.gramas).toBeLessThanOrEqual(300);
+  });
+
+  it('base e feijão ficam na porção típica, não incham pra fechar macro', async () => {
+    const conta = await req().post('/api/auth/registrar').send({
+      email: 'porcoes2@teste.com', senha: 'senha12345', nome: 'Porções',
+      sexo: 'masculino', idadeAnos: 28, alturaCm: 184,
+      nivelAtividade: 'moderado', pesoKg: 95,
+    }).expect(201);
+
+    const auth = { Authorization: `Bearer ${conta.body.token}` };
+    const dia = await req().get('/api/diario').set(auth).expect(200);
+    const alvo = dia.body.refeicoes[1];
+    await req().patch(`/api/diario/refeicoes/${alvo.id}`)
+      .set(auth).send({ nome: 'Almoço' }).expect(200);
+
+    const r = await req().get(`/api/diario/montar/${alvo.id}`).set(auth).expect(200);
+
+    // 400 g de arroz num prato é balde, não refeição.
+    const base = r.body.componentes.find((c: { papel: string }) => c.papel === 'base');
+    if (base) expect(base.gramas).toBeLessThanOrEqual(200);
+
+    const feijao = r.body.componentes.find((c: { papel: string }) => c.papel === 'leguminosa');
+    if (feijao) expect(feijao.gramas).toBeLessThanOrEqual(150);
+  });
+
+  it('a porção nunca estoura as calorias que restam', async () => {
+    const auth = { Authorization: `Bearer ${token}` };
+    const dia = await req().get('/api/diario').set(auth).expect(200);
+    const alvo = dia.body.refeicoes[dia.body.refeicoes.length - 1];
+
+    const espaco = await req().get('/api/diario/espaco').set(auth).expect(200);
+    const r = await req()
+      .get(`/api/diario/montar/${alvo.id}/buscar?q=frango&papel=proteina`)
+      .set(auth)
+      .expect(200);
+
+    r.body.forEach((a: { macros: { kcal: number } }) => {
+      expect(a.macros.kcal).toBeLessThanOrEqual(Math.max(0, espaco.body.kcal) + 60);
+    });
+  });
+
   it('a busca do prato tolera flexão de gênero', async () => {
     const auth = { Authorization: `Bearer ${token}` };
     const dia = await req().get('/api/diario').set(auth).expect(200);
