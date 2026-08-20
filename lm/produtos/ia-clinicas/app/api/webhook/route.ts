@@ -58,6 +58,26 @@ const MARGEM_SEGURANCA_MS = 4000;
 const DELAY_MIN = Number(process.env.HUMANIZAR_DELAY_MIN) || 3;
 const DELAY_MAX = Number(process.env.HUMANIZAR_DELAY_MAX) || 6;
 
+// NUMEROS DE TESTE (sem delay): responder na hora, sem humanizacao nem espera
+// de rajada. So pra QUEM TESTA o sistema — paciente real precisa do delay (ele
+// da tempo da pessoa terminar de digitar e evita resposta "robotica na hora").
+// env TELEFONES_SEM_DELAY: numeros separados por virgula, em qualquer formato
+// (a comparacao usa so os digitos, entao "+55 31 8331-7347" == "553183317347").
+const SEM_DELAY = new Set(
+  String(process.env.TELEFONES_SEM_DELAY || "")
+    .split(",")
+    .map((t) => t.replace(/\D/g, ""))
+    .filter(Boolean)
+);
+function semDelay(telefone: string): boolean {
+  const d = String(telefone || "").replace(/\D/g, "");
+  if (!d || SEM_DELAY.size === 0) return false;
+  // compara pelos ultimos 8 digitos: cobre variacao de DDI/DDD e do 9o digito
+  const curto = d.slice(-8);
+  for (const n of SEM_DELAY) if (n.slice(-8) === curto) return true;
+  return false;
+}
+
 // A mensagem fromMe recebida bate com uma resposta que a IA acabou de enviar?
 // (o WhatsApp ecoa toda saida do numero — inclusive as respostas da propria IA)
 // Compara com as ultimas mensagens 'assistant' do historico. Normaliza espacos
@@ -99,7 +119,8 @@ async function aguardarLockConversa(
 // HUMANIZAR_DELAY_MIN/MAX) desde o RECEBIMENTO — e o tempo que damos pra
 // pessoa terminar de digitar as mensagens dela. Reserva ~20s do teto pro
 // processamento da IA que vem depois (tools, integracoes).
-async function esperarRajada(inicioRequestMs: number) {
+async function esperarRajada(inicioRequestMs: number, telefone?: string) {
+  if (telefone && semDelay(telefone)) return; // numero de teste: responde na hora
   const alvoS = DELAY_MIN + Math.floor(Math.random() * Math.max(0, DELAY_MAX - DELAY_MIN + 1));
   const jaGastoMs = Date.now() - inicioRequestMs;
   const tetoMs = maxDuration * 1000 - MARGEM_SEGURANCA_MS - 20_000 - jaGastoMs;
@@ -130,6 +151,8 @@ async function enviarHumanizado(
   inicioRequestMs: number
 ): Promise<{ ok: boolean; erro?: string }> {
   if (!texto) return { ok: true };
+  // numero de teste: envia direto, sem "digitando" nem espera
+  if (semDelay(telefone)) return await enviarTexto(token, telefone, texto);
   // alvo TOTAL desde o recebimento da mensagem: desconta o que a IA ja gastou
   // processando. Clampa pelo orcamento restante da funcao (nunca estoura o teto).
   const alvoTotalS = DELAY_MIN + Math.floor(Math.random() * Math.max(0, DELAY_MAX - DELAY_MIN + 1));
@@ -336,7 +359,7 @@ export async function POST(req: NextRequest) {
         conteudo: msg.texto,
       });
       msgSalvaId = salva?.id || null;
-      await esperarRajada(inicioRequestMs);
+      await esperarRajada(inicioRequestMs, msg.telefone);
       if (msgSalvaId) {
         const ultima = await ultimaMensagemUsuario(instancia.clinica_id, msg.telefone);
         if (ultima && ultima.id !== msgSalvaId) {
