@@ -97,11 +97,15 @@ export async function configurarWebhook(instanceToken: string): Promise<boolean>
         url: nossaUrlWebhook(),
         enabled: true,
         events: ["messages"],
-        // liga o download automatico de midia: assim o webhook de audio ja chega
-        // com a URL do arquivo baixavel (senao a transcricao depende do
-        // /message/download, que nem sempre resolve). Nomes variam entre versoes
-        // da uazapi — mandamos todos os aliases conhecidos (os ignorados sao no-op).
-        addUrlTypesMedia: ["audio", "image", "video", "document", "ptt"],
+        // liga o download automatico de midia: assim audio/PDF/imagem ja chegam
+        // no webhook com a URL do arquivo baixavel (senao dependemos do
+        // /message/download, que nem sempre resolve).
+        // ATENCAO (descoberto 20/08): o campo certo e `addUrlTypesMessages` e
+        // ele e BOOLEAN. Antes mandavamos `addUrlTypesMedia` como ARRAY — a
+        // uazapi respondia 200 e IGNORAVA, entao guia em PDF chegava sem URL e
+        // a IA nao conseguia ler ("nao consegui abrir o arquivo").
+        addUrlTypesMessages: true,
+        addUrlEvents: true,
         excludeMessages: [],
       }),
       signal: AbortSignal.timeout(8_000),

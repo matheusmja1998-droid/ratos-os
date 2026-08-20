@@ -447,7 +447,21 @@ export async function POST(req: NextRequest) {
           // manual (a IA perguntando "qual exame?" e o paciente digitando).
           // Caso real 20/08: PDF de Ergoespirometria chegou como "PEDIDO.pdf"
           // e a IA nao viu exame nem convenio.
-          console.warn("[webhook] midia NAO lida:", msg.tipo, "arquivo:", msg.texto || "(sem nome)");
+          // DIAGNOSTICO: loga as chaves e os campos de midia do payload cru —
+          // sem isso nao da pra saber SE o download falhou, se o host foi
+          // recusado, ou se a uazapi mandou o arquivo em outro campo.
+          try {
+            const cru: any = (body as any)?.message || (body as any)?.data?.message || body || {};
+            console.warn("[webhook] midia NAO lida — diagnostico:", JSON.stringify({
+              tipo: msg.tipo,
+              chaves: Object.keys(cru).slice(0, 40),
+              file: typeof cru.file === "string" ? cru.file.slice(0, 120) : cru.file,
+              fileURL: typeof cru.fileURL === "string" ? cru.fileURL.slice(0, 120) : cru.fileURL,
+              mediaUrl: typeof cru.mediaUrl === "string" ? cru.mediaUrl.slice(0, 120) : cru.mediaUrl,
+              mimetype: cru.mimetype || cru.mediaType || cru.messageType,
+              id: cru.id || cru.messageid,
+            }).slice(0, 900));
+          } catch {}
           await enviarAlerta(
             `📎 Arquivo de ${msg.telefone} NAO foi lido pela IA (${msg.texto || msg.tipo}). ` +
               `A IA vai pedir os dados por texto — confira a conversa se for guia de exame.`
