@@ -16,7 +16,11 @@ const MAX_BYTES = 25 * 1024 * 1024;
 // maxDuration=30): audio de WhatsApp e curto, entao um timeout de 60s pro Whisper
 // sozinho ja estourava o teto da funcao. 8s download + 12s Whisper deixa folga
 // pro delay humanizado minimo e pro proprio round-trip da IA.
-const TIMEOUT_DOWNLOAD_MS = 8_000;
+// 20s: o /message/download da uazapi BAIXA E DESCRIPTOGRAFA o arquivo do
+// WhatsApp na 1a vez — PDF real levou mais de 8s e o timeout antigo matava a
+// leitura da guia (caso real 20/08: "nao consegui abrir o arquivo"). Na 2a
+// chamada a uazapi responde do cache em <1s — por isso tambem ha RETRY abaixo.
+const TIMEOUT_DOWNLOAD_MS = 20_000;
 const TIMEOUT_WHISPER_MS = 12_000;
 
 export const whisperConfigurado = () => Boolean(OPENAI_API_KEY);
@@ -106,37 +110,42 @@ async function baixarAudio(body: any, instanceToken: string): Promise<Buffer | n
   const id = acharMessageId(body);
   if (!id) return null;
 
-  try {
-    const res = await fetch(`${UAZAPI_URL}/message/download`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", token: instanceToken },
-      body: JSON.stringify({ id }),
-      signal: AbortSignal.timeout(TIMEOUT_DOWNLOAD_MS),
-    });
-    if (!res.ok) {
-      console.warn(`[transcrever] uazapi download HTTP ${res.status}`);
-      return null;
-    }
-    const raw: any = await res.json().catch(() => null);
-    if (!raw) return null;
+  // ate 2 tentativas: se a 1a estourar o tempo (uazapi baixando/descriptografando
+  // do WhatsApp), a 2a acerta o cache dela e volta instantaneo
+  for (let tentativa = 1; tentativa <= 2; tentativa++) {
+    try {
+      const res = await fetch(`${UAZAPI_URL}/message/download`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", token: instanceToken },
+        body: JSON.stringify({ id }),
+        signal: AbortSignal.timeout(TIMEOUT_DOWNLOAD_MS),
+      });
+      if (!res.ok) {
+        console.warn(`[transcrever] uazapi download HTTP ${res.status} (tentativa ${tentativa})`, (await res.text().catch(() => "")).slice(0, 200));
+        continue;
+      }
+      const raw: any = await res.json().catch(() => null);
+      if (!raw) continue;
 
-    // a uazapi pode devolver uma URL do arquivo ou o conteudo em base64
-    const fileURL = raw.fileURL || raw.fileUrl || raw.file || raw.url;
-    if (typeof fileURL === "string" && /^https?:\/\//i.test(fileURL)) {
-      return baixarUrl(fileURL);
+      // a uazapi pode devolver uma URL do arquivo ou o conteudo em base64
+      const fileURL = raw.fileURL || raw.fileUrl || raw.file || raw.url;
+      if (typeof fileURL === "string" && /^https?:\/\//i.test(fileURL)) {
+        const buf = await baixarUrl(fileURL);
+        if (buf) return buf;
+        continue;
+      }
+      const b64 = raw.base64 || raw.data;
+      if (typeof b64 === "string" && b64.length > 100) {
+        // pode vir como data URI ("data:audio/ogg;base64,....")
+        const puro = b64.includes(",") ? b64.split(",").pop()! : b64;
+        const buf = Buffer.from(puro, "base64");
+        if (buf.length > 0 && buf.length <= MAX_BYTES) return buf;
+      }
+    } catch (e: any) {
+      console.warn(`[transcrever] erro no download uazapi (tentativa ${tentativa}):`, e.message);
     }
-    const b64 = raw.base64 || raw.data;
-    if (typeof b64 === "string" && b64.length > 100) {
-      // pode vir como data URI ("data:audio/ogg;base64,....")
-      const puro = b64.includes(",") ? b64.split(",").pop()! : b64;
-      const buf = Buffer.from(puro, "base64");
-      return buf.length > 0 && buf.length <= MAX_BYTES ? buf : null;
-    }
-    return null;
-  } catch (e: any) {
-    console.warn("[transcrever] erro no download uazapi:", e.message);
-    return null;
   }
+  return null;
 }
 
 async function baixarUrl(url: string): Promise<Buffer | null> {

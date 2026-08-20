@@ -97,15 +97,11 @@ export async function configurarWebhook(instanceToken: string): Promise<boolean>
         url: nossaUrlWebhook(),
         enabled: true,
         events: ["messages"],
-        // liga o download automatico de midia: assim audio/PDF/imagem ja chegam
-        // no webhook com a URL do arquivo baixavel (senao dependemos do
-        // /message/download, que nem sempre resolve).
-        // ATENCAO (descoberto 20/08): o campo certo e `addUrlTypesMessages` e
-        // ele e BOOLEAN. Antes mandavamos `addUrlTypesMedia` como ARRAY — a
-        // uazapi respondia 200 e IGNORAVA, entao guia em PDF chegava sem URL e
-        // a IA nao conseguia ler ("nao consegui abrir o arquivo").
-        addUrlTypesMessages: true,
-        addUrlEvents: true,
+        // NAO ligar addUrlTypesMessages/addUrlEvents aqui: testado 20/08 em
+        // producao e a ENTREGA dos webhooks PAROU (mensagem nenhuma chegava;
+        // atendimento da Pulmonar ficou mudo ate reverter). A midia e baixada
+        // pelo /message/download com retry (lib/transcrever.ts) — o payload
+        // padrao ja traz o message id, que e o que precisamos.
         excludeMessages: [],
       }),
       signal: AbortSignal.timeout(8_000),
