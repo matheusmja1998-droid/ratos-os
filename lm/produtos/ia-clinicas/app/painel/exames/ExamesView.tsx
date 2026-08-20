@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import BloqueiosExame from "./BloqueiosExame";
 
 type Exame = {
   agendamentoId: string;
@@ -211,6 +212,8 @@ export default function ExamesView({
           </span>
         )}
       </div>
+
+      <BloqueiosExame clinicaId={clinicaId} catalogo={catalogo} dia={dia} />
 
       {/* MARCADOS PELA IA — a recepcao lanca esses no sistema da clinica.
           Ficam NO TOPO e destacados porque sao a fila de trabalho dela. */}

@@ -574,6 +574,14 @@ const _gradeCache = new Map<string, { slotsMin: number[]; diasSemana: Set<number
 // 08:45/09:15/11:15/15:10 (encaixes) e a IA oferecia horario que nao existe
 // (caso real 20/08). Aqui a regra da clinica manda.
 // Formato: { [procedimentoId]: { [diaSemana 0=dom..6=sab]: ["HH:MM", ...] } }
+// Helper: gera ["08:00","08:15",...] de `ini` ate `fim` de `passo` em `passo` min.
+function blocoHorarios(ini: string, fim: string, passo: number): string[] {
+  const min = (h: string) => Number(h.slice(0, 2)) * 60 + Number(h.slice(3, 5));
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const out: string[] = [];
+  for (let m = min(ini); m <= min(fim); m += passo) out.push(`${pad(Math.floor(m / 60))}:${pad(m % 60)}`);
+  return out;
+}
 const GRADES_OFICIAIS: Record<string, Record<number, string[]>> = {
   // Ergoespirometria (Cibele, 20/08): segunda 09:00-10:00 de 15 em 15;
   // terca a sexta manha 10:45 e 11:00, tarde 14:50, 15:00 e 15:15.
@@ -584,6 +592,24 @@ const GRADES_OFICIAIS: Record<string, Record<number, string[]>> = {
     4: ["10:45", "11:00", "14:50", "15:00", "15:15"],
     5: ["10:45", "11:00", "14:50", "15:00", "15:15"],
   },
+  // Prova ventilatoria completa (Cibele, 21/08): 08:00-08:45, 10:00-12:30 e
+  // 14:00-18:00, de 15 em 15 minutos. Seg-sex.
+  "10": (() => {
+    const dia = [
+      ...blocoHorarios("08:00", "08:45", 15),
+      ...blocoHorarios("10:00", "12:30", 15),
+      ...blocoHorarios("14:00", "18:00", 15),
+    ];
+    return { 1: dia, 2: dia, 3: dia, 4: dia, 5: dia };
+  })(),
+  // Teste de broncoprovocacao (Cibele, 21/08): 09:00 e 09:30 (intervalo 30min).
+  "11": { 1: ["09:00", "09:30"], 2: ["09:00", "09:30"], 3: ["09:00", "09:30"], 4: ["09:00", "09:30"], 5: ["09:00", "09:30"] },
+  // Teste de caminhada 6 minutos (Cibele, 21/08): 09:00 e 12:30.
+  "15": { 1: ["09:00", "12:30"], 2: ["09:00", "12:30"], 3: ["09:00", "12:30"], 4: ["09:00", "12:30"], 5: ["09:00", "12:30"] },
+  // Teste de Latencias Multiplas do Sono (Cibele, 21/08): 07:00, sempre no dia
+  // SEGUINTE a polissonografia (o paciente dorme aqui e o MSLT comeca as 07:00).
+  // Ver material "Exames especiais e regras": nunca e marcado sozinho.
+  "18": { 1: ["07:00"], 2: ["07:00"], 3: ["07:00"], 4: ["07:00"], 5: ["07:00"] },
 };
 
 function gradeOficial(procedimentoId: string): { slotsMin: number[]; diasSemana: Set<number>; porDia: Record<number, number[]> } | null {
