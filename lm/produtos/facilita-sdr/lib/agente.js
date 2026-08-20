@@ -125,6 +125,20 @@ function montarPrompt(lead, thread = null) {
 
   const { data, hora, diaSemana } = agoraSP();
 
+  // NOTAS escritas pela equipe: contexto que so o humano sabe (o que ele
+  // descobriu no telefone, combinados, nome de quem atendeu...). A IA le pra
+  // nao repetir pergunta ja respondida fora do WhatsApp.
+  const notas = db.prepare("SELECT texto, criado_em FROM notas WHERE lead_id = ? ORDER BY id DESC LIMIT 8").all(lead.id);
+  const blocoNotas = notas.length
+    ? `\n## NOTAS DA EQUIPE (contexto interno, NUNCA cite que existe uma anotacao)\n` +
+      notas.reverse().map((n) => `- [${String(n.criado_em).slice(5, 16)}] ${String(n.texto).replace(/\s+/g, " ").slice(0, 300)}`).join("\n") + "\n"
+    : "";
+  // telefones cadastrados no card (empresa, decisor, outros)
+  const tels = db.prepare("SELECT numero, tipo, rotulo FROM telefones WHERE lead_id = ? ORDER BY principal DESC, id").all(lead.id);
+  const blocoTels = tels.length
+    ? `- Telefones do card: ${tels.map((t) => `${t.numero} (${t.tipo}${t.rotulo ? ": " + t.rotulo : ""})`).join(" · ")}`
+    : "";
+
   return `${PROMPT_SDR}
 ${blocoTreinamento()}
 
@@ -144,10 +158,11 @@ Data/hora em São Paulo: ${data} ${hora} (${DIAS_PT[diaSemana]})
 - Áudio oficial já enviado? ${lead.audio_enviado ? "SIM (não envie de novo)" : (audioDoLead(lead) ? "não (disponível pra enviar)" : "INDISPONÍVEL: áudio não configurado — NUNCA mencione áudio, conduza tudo por texto")}
 - Dor mapeada: ${lead.dor || "nenhuma ainda"}
 - Status: ${lead.status}
+${blocoTels}
 - LINK_APRESENTACAO: ${getConfig("link_apresentacao", "") || "(não configurado — NUNCA mencione link de apresentação)"}
 - LINK_SITE: ${getConfig("link_site", "https://facilitaai-lp.lovable.app") || "(não configurado — se pedirem site/Instagram, ofereça mandar o material por aqui)"}
 
-## HORARIOS_DISPONIVEIS
+${blocoNotas}## HORARIOS_DISPONIVEIS
 ${horarios}
 
 ${thread ? `## CANAL ATUAL: CONVERSA DIRETA COM O DECISOR

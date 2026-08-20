@@ -480,6 +480,20 @@ app.delete("/api/lead/:id", auth, (req, res) => {
   res.json({ ok: true });
 });
 
+// FOLLOW MANUAL: o botao "follow N" do card. Cada clique conta um follow feito
+// por telefone/humano, registra evento e nota, e avanca o contador da regua.
+app.post("/api/lead/:id/follow", auth, exige("conversar"), (req, res) => {
+  const lead = getLead(req.params.id);
+  if (!lead) return res.status(404).json({ erro: "lead nao existe" });
+  const obs = String(req.body?.obs || "").trim();
+  const n = (lead.follows_feitos || 0) + 1;
+  db.prepare("UPDATE leads SET follows_feitos = ?, ultimo_follow_em = datetime('now') WHERE id = ?").run(n, lead.id);
+  registrarEvento(lead.id, "followup", `follow ${n} manual${obs ? " · " + obs : ""}`);
+  db.prepare("INSERT INTO notas (lead_id, texto, usuario_id) VALUES (?,?,?)")
+    .run(lead.id, `📞 Follow ${n} feito${obs ? ": " + obs : ""}`, req.usuario?.id || null);
+  res.json({ ok: true, follows: n });
+});
+
 // exclusao em massa por SELECAO (checkboxes do Kanban): apaga os leads e tudo
 // que pendura neles — mensagens, threads, telefones, notas, tarefas, eventos
 app.post("/api/leads/excluir", auth, (req, res) => {
@@ -1329,6 +1343,14 @@ app.get("/api/nota-anexo/:arquivo", (req, res) => {
   const caminho = join(DADOS_DIR, "anexos", nome);
   if (!fsExiste(caminho)) return res.status(404).end();
   res.sendFile(caminho);
+});
+app.patch("/api/nota/:id", auth, (req, res) => {
+  const texto = String(req.body?.texto || "").trim();
+  if (!texto) return res.status(400).json({ erro: "nota vazia" });
+  const n = db.prepare("SELECT id FROM notas WHERE id = ?").get(req.params.id);
+  if (!n) return res.status(404).json({ erro: "nota nao existe" });
+  db.prepare("UPDATE notas SET texto = ? WHERE id = ?").run(texto, req.params.id);
+  res.json({ ok: true });
 });
 app.delete("/api/nota/:id", auth, (req, res) => {
   const n = db.prepare("SELECT anexo FROM notas WHERE id = ?").get(req.params.id);

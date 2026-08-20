@@ -12,17 +12,28 @@
   }
   /* TEMA ESCURO: só troca os tokens, o resto do CSS segue igual */
   html[data-tema="dark"] {
-    --bg:#111614; --surface:#1a221e; --border:#2c3833; --text:#e6efe9; --muted:#93a69c;
-    --verde:#22c55e; --verde-esc:#4ade80; --verde-soft:#17301f; --vermelho:#f87171; --amarelo:#fbbf24;
+    --bg:#000000; --surface:#0e0e0e; --border:#262626; --text:#ececec; --muted:#9a9a9a;
+    --verde:#22c55e; --verde-esc:#4ade80; --verde-soft:#132a1c; --vermelho:#f87171; --amarelo:#fbbf24;
+    --card:#0e0e0e;
     color-scheme:dark;
   }
+  /* PRETO REAL: superficies e blocos claros fixos do painel */
+  html[data-tema="dark"] body { background:#000; }
+  html[data-tema="dark"] .card, html[data-tema="dark"] .coluna,
+  html[data-tema="dark"] .lead-card, html[data-tema="dark"] .menu-ctx,
+  html[data-tema="dark"] #barra-selecao, html[data-tema="dark"] .alerta-tarefa { background:#0e0e0e; }
+  html[data-tema="dark"] .coluna-body { background:transparent; }
+  html[data-tema="dark"] input, html[data-tema="dark"] select, html[data-tema="dark"] textarea {
+    background:#141414 !important; border-color:#2e2e2e !important; color:#ececec !important; }
+  html[data-tema="dark"] .conv-item.on { background:#161616; }
+  html[data-tema="dark"] .conv-item:hover { background:#131313; }
   /* no escuro, os blocos claros fixos do painel precisam de contraste */
   html[data-tema="dark"] .lead-card.atrasado { background:#3a1f1f; border-color:#7f3a3a; }
   html[data-tema="dark"] .lead-card.atrasado .nome { color:#ffb4ab; }
   /* CONVERSA no escuro: as bolhas têm cor fixa (verde/cinza claro), então o
      texto sumia. Aqui elas ganham fundo escuro e texto claro. */
-  html[data-tema="dark"] .bolha.user { background:#26302b; color:#e6efe9; }
-  html[data-tema="dark"] .bolha.assistant { background:#1d4032; color:#e8f7ee; }
+  html[data-tema="dark"] .bolha.user { background:#1c1c1c; color:#ececec; }
+  html[data-tema="dark"] .bolha.assistant { background:#0f3324; color:#e8f7ee; }
   html[data-tema="dark"] .bolha.sistema { background:#3a3320; color:#f5d78a; }
   html[data-tema="dark"] .bolha .hora { color:#9fb3a8; }
   html[data-tema="dark"] .chat-topo, html[data-tema="dark"] .chat-envio { background:var(--surface); }
@@ -243,7 +254,7 @@
   .pn-tarefa-dest.venceu > span:last-child { color:#fff !important; }
   .pn-tarefa-dest .tag-atrasada { display:inline-block; background:#fff; color:#c62828; font-size:10.5px;
     font-weight:800; padding:1px 7px; border-radius:3px; margin-right:6px; letter-spacing:.4px; }
-  html[data-tema="dark"] .pn-tarefa-dest { background:#332b18; border-left-color:#d99a00; }
+  html[data-tema="dark"] .pn-tarefa-dest { background:#241d0d; border-left-color:#d99a00; }
   html[data-tema="dark"] .pn-tarefa-dest.venceu { background:#c62828; border-left-color:#8e1c1c; color:#fff; }
   /* notificacao de tarefa vencendo (canto esquerdo de baixo, some em 5s) */
   #alertas-tarefa { position:fixed; left:14px; bottom:14px; z-index:1300; display:flex; flex-direction:column; gap:8px; }
@@ -252,14 +263,19 @@
     max-width:300px; font-size:13px; line-height:1.4; animation:al-in .22s ease-out; }
   .alerta-tarefa b { display:block; font-size:13.5px; }
   .alerta-tarefa .at-tarefa { color:#c62828; font-weight:700; }
-  html[data-tema="dark"] .alerta-tarefa { background:#232e28; }
+  html[data-tema="dark"] .alerta-tarefa { background:#0e0e0e; }
   @keyframes al-in { from { transform:translateY(12px); opacity:0 } to { transform:none; opacity:1 } }
-  .pn-nota { display:flex; gap:9px; align-items:flex-start; padding:11px 14px; font-size:14px;
-    line-height:1.5; background:#fbf8ec; border-bottom:1px solid var(--border); }
-  html[data-tema="dark"] .pn-nota { background:#26251c; }
+  /* nota = balaozinho de mensagem (sombra + canto), clicavel pra editar */
+  .pn-nota { display:flex; gap:9px; align-items:flex-start; padding:11px 13px; font-size:14px;
+    line-height:1.5; background:#fbf8ec; border:1px solid #ece3c9; border-radius:12px 12px 12px 4px;
+    box-shadow:0 2px 6px rgba(0,0,0,.10); margin:8px 12px; cursor:text; transition:box-shadow .12s; }
+  .pn-nota:hover { box-shadow:0 3px 10px rgba(0,0,0,.16); }
+  .pn-nota a { color:var(--verde); font-weight:600; }
+  html[data-tema="dark"] .pn-nota { border-color:#2a2519; }
+  html[data-tema="dark"] .pn-nota { background:#141310; }
   /* modo selecao do Kanban (apagar varios de uma vez) */
   .lead-card.selecionado { outline:2px solid #c62828; outline-offset:-2px; background:#fdf2f2; }
-  html[data-tema="dark"] .lead-card.selecionado { background:#31201f; }
+  html[data-tema="dark"] .lead-card.selecionado { background:#1e1010; }
   .sel-caixa { position:absolute; top:8px; left:8px; width:18px; height:18px; border:2px solid #c62828;
     border-radius:4px; background:#fff; color:#c62828; font-size:13px; font-weight:800; line-height:14px;
     text-align:center; z-index:2; }
@@ -269,7 +285,7 @@
     background:var(--card, #fff); border:1px solid var(--border); border-radius:12px; padding:10px 14px;
     display:flex; gap:8px; align-items:center; box-shadow:0 8px 28px rgba(0,0,0,.22); font-size:13px; }
   #barra-selecao .btn[disabled] { opacity:.5; }
-  html[data-tema="dark"] #barra-selecao { background:#232e28; }
+  html[data-tema="dark"] #barra-selecao { background:#0e0e0e; }
   /* switch assumir/devolver (estilo "Atendida pela IA") */
   .ia-switch { display:inline-flex; align-items:center; gap:7px; cursor:pointer; user-select:none; }
   .ia-switch .ia-pill { font-size:12px; font-weight:700; padding:4px 10px; border-radius:99px; border:1px solid var(--border); }
@@ -280,19 +296,31 @@
   .ia-bolinha { position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:#fff; transition:left .15s; box-shadow:0 1px 3px rgba(0,0,0,.25); }
   .ia-switch.on .ia-bolinha { left:18px; }
   .ia-rot { font-size:12px; color:var(--muted); font-weight:600; white-space:nowrap; }
-  html[data-tema="dark"] .ia-switch.on .ia-pill { background:#1c2e26; }
-  html[data-tema="dark"] .ia-switch.off .ia-pill { background:#232b3d; }
+  html[data-tema="dark"] .ia-switch.on .ia-pill { background:#10231a; }
+  html[data-tema="dark"] .ia-switch.off .ia-pill { background:#151a26; }
+  /* MODO "notas como chat": dados a esquerda, notas em coluna propria a direita */
+  #painel-notas.notas-chat .pn-corpo { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:0; align-items:start; }
+  #painel-notas.notas-chat .pn-dados { min-width:0; border-right:1px solid var(--border); order:1; }
+  #painel-notas.notas-chat .pn-notas-col { min-width:0; background:rgba(0,0,0,.02); align-self:stretch; padding-bottom:8px; order:2; }
+  html[data-tema="dark"] #painel-notas.notas-chat .pn-notas-col { background:#080808; }
+  #painel-notas.notas-chat .pn-notas-col .pn-nota { margin:8px 10px; }
+  @media (max-width:1180px){ #painel-notas.notas-chat .pn-corpo { grid-template-columns:1fr; } }
+  /* separador de DIA no chat (estilo WhatsApp) */
+  .dia-sep { display:flex; justify-content:center; margin:12px 0 8px; }
+  .dia-sep span { background:rgba(0,0,0,.06); color:var(--muted); font-size:11px; font-weight:700;
+    letter-spacing:.5px; padding:3px 12px; border-radius:99px; }
+  html[data-tema="dark"] .dia-sep span { background:#191919; color:#9a9a9a; }
   /* "IA digitando": 3 pontinhos pulando no fim do chat (so o painel ve) */
   .dots { display:inline-flex; gap:4px; padding:2px 2px; }
   .dots i { width:7px; height:7px; border-radius:50%; background:var(--muted); animation:dotp 1.2s infinite; }
   .dots i:nth-child(2) { animation-delay:.2s; }
   .dots i:nth-child(3) { animation-delay:.4s; }
   @keyframes dotp { 0%,60%,100% { transform:none; opacity:.35 } 30% { transform:translateY(-4px); opacity:1 } }
-  html[data-tema="dark"] #resumo-ia { background:#1c2620 !important; color:#cfe0d6 !important; }
+  html[data-tema="dark"] #resumo-ia { background:#121212 !important; color:#d5d5d5 !important; }
   html[data-tema="dark"] #dash-corpo [style*="background:#eef6ff"],
   html[data-tema="dark"] #dash-corpo [style*="background:#fdeaea"],
   html[data-tema="dark"] #dash-corpo [style*="background:#fff8e1"] { background:#232b27 !important; color:#d6e2db !important; }
-  html[data-tema="dark"] .pn-secao { background:#121815; color:#8ba295; }
+  html[data-tema="dark"] .pn-secao { background:#0a0a0a; color:#8f8f8f; }
   .conv-item.pendente .conv-nome { font-weight:800; }
   .conv-item.pendente { background:#fffdf5; }
   .conv-item { padding:10px 12px; border-radius:10px; cursor:pointer; border:1px solid transparent; }
@@ -435,7 +463,7 @@
       <span id="busca-pipe-contador" style="font-size:13px; color:var(--muted)"></span>
     </div>
     <div class="dica-scroll">segura e arrasta um card pra mudar de etapa · card vermelho = tarefa atrasada</div>
-    <div class="kanban" id="kanban"></div>
+    <div class="kanban" id="kanban" onmousedown="iniciarArrasteKanban(event)"></div>
   </div>
 
   <div id="aba-conversas" style="display:none">
@@ -1087,6 +1115,25 @@ function renderKanban() {
   if ($("#pipe-valor")) $("#pipe-valor").textContent = money(valorVis);
 }
 
+// ARRASTAR O KANBAN com o mouse (segurar no fundo e puxar pro lado).
+// Ignora clique em card/botao/select pra nao atrapalhar drag de card nem cliques.
+function iniciarArrasteKanban(ev) {
+  const alvo = ev.target;
+  if (alvo.closest(".lead-card, button, select, input, a, .limpar")) return;
+  const box = $("#kanban");
+  if (!box) return;
+  const x0 = ev.pageX, scroll0 = box.scrollLeft;
+  box.style.cursor = "grabbing";
+  const mover = (e) => { box.scrollLeft = scroll0 - (e.pageX - x0); };
+  const soltar = () => {
+    box.style.cursor = "";
+    document.removeEventListener("mousemove", mover);
+    document.removeEventListener("mouseup", soltar);
+  };
+  document.addEventListener("mousemove", mover);
+  document.addEventListener("mouseup", soltar);
+}
+
 // ---- MODO SELECAO: marcar varios cards e apagar de uma vez ----
 let modoSelecao = false;
 let selecionados = new Set();
@@ -1697,6 +1744,15 @@ async function soltarCard(ev, etapaId) {
 async function moverParaPipeline(leadId, etapaId) {
   const r = await api("/api/lead/" + leadId + "/mover", { method: "POST", body: JSON.stringify({ etapa_id: Number(etapaId) }) });
   if (r?.erro) return alert(r.erro);
+  // foi pra PERDIDO com tarefa em aberto? oferece concluir (senao vira atrasada)
+  const etapa = (pipelines || []).flatMap((p) => p.etapas || []).find((e) => e.id === Number(etapaId));
+  if (etapa && (etapa.e_perdido || etapa.chave === "perdido")) {
+    const abertas = (painelTarefas || []).filter((t) => !t.feita);
+    if (abertas.length && confirm(`Esse lead tem ${abertas.length} tarefa(s) em aberto.\nMarcar como concluída(s)? (evita virar tarefa atrasada)`)) {
+      for (const t of abertas) await api("/api/tarefa/" + t.id, { method: "PATCH", body: JSON.stringify({ feita: 1 }) });
+      toast("tarefas concluídas");
+    }
+  }
   await carregarKanban();
   if (convAberta === leadId) abrirConversa(leadId);
   atualizar();
@@ -1825,6 +1881,11 @@ async function abrirConversa(id, auto) {
   const rascunho = mesmoLead ? ($("#chat-texto")?.value || "") : "";
   const rascunhoNota = mesmoLead ? ($("#nota-input")?.value || "") : "";
   const rascunhoComp = mesmoLead ? ($("#comp-texto")?.value || "") : "";
+  // AUTO-REFRESH SEM "PULO": guarda onde a pessoa estava lendo (chat e notas)
+  const boxAntes = $("#chat-msgs");
+  const scrollChat = mesmoLead && boxAntes ? boxAntes.scrollTop : null;
+  const chatNoFim = boxAntes ? (boxAntes.scrollHeight - boxAntes.scrollTop - boxAntes.clientHeight) < 60 : true;
+  const scrollNotas = mesmoLead ? ($("#painel-notas")?.querySelector(".pn-corpo")?.scrollTop ?? null) : null;
   // thread: se o usuario escolheu uma conversa paralela (decisor), busca só ela
   const d = await api("/api/lead/" + id + (threadAberta ? "?thread=" + threadAberta : ""));
   const thAtual = threadAberta ? (d.threads || []).find((t) => t.id === threadAberta) : null;
@@ -1839,7 +1900,7 @@ async function abrirConversa(id, auto) {
     <div class="chat-topo">
       <b>${l.nome_clinica}</b> <span style="color:var(--muted); font-size:13px">${fmtTel(l.telefone)}${l.cidade ? " · " + l.cidade : ""}</span>
       <span class="ia-switch ${iaPausadaConv ? "off" : "on"}" onclick="toggleIA(${l.id}, ${iaPausadaConv ? 0 : 1})" title="${iaPausadaConv ? "clica pra DEVOLVER o atendimento pra IA" : "clica pra ASSUMIR o atendimento (IA para na hora)"}">
-        <span class="ia-pill">${iaPausadaConv ? "🧑 Atendida por você" : "🤖 Atendida pela IA"}</span>
+        <span class="ia-pill">${ic(iaPausadaConv ? "agente" : "robo")} ${iaPausadaConv ? "Atendida por você" : "Atendida pela IA"}</span>
         <span class="ia-trilho"><span class="ia-bolinha"></span></span>
         <span class="ia-rot">${iaPausadaConv ? "você no comando" : "IA atendendo"}</span>
       </span>
@@ -1857,10 +1918,17 @@ async function abrirConversa(id, auto) {
     </div>
     ${(d.threads || []).length > 1 ? `<div style="padding:6px 14px; border-bottom:1px solid var(--border); display:flex; gap:6px; align-items:center; flex-wrap:wrap; background:#fafbfa">
       <span style="font-size:11.5px; color:var(--muted)">conversas:</span>
-      ${d.threads.map((t) => `<button class="btn mini ${threadAberta === t.id ? "" : "sec"}" style="font-size:11.5px" onclick="abrirThread(${l.id}, ${t.id})">${t.rotulo || t.telefone}${t.nao_lida ? " " : ""}</button>`).join("")}
+      ${d.threads.map((t) => `<button class="btn mini ${threadAberta === t.id ? "" : "sec"}" style="font-size:11.5px" onclick="abrirThread(${l.id}, ${t.id})">${t.rotulo || "Conversa"} ${fmtTel(t.telefone)}${t.nao_lida ? " •" : ""}</button>`).join("")}
     </div>` : ""}
-    <div class="chat-msgs" id="chat-msgs">${d.mensagens.map((m) => `
-      <div class="bolha ${m.role}">${m.texto}<span class="hora">${horaSP(m.criado_em)}</span></div>`).join("")}${d.ia_digitando ? `
+    <div class="chat-msgs" id="chat-msgs">${(() => {
+      let ultimoDia = null;
+      return d.mensagens.map((m) => {
+        const dia = diaSP(m.criado_em);
+        const sep = dia !== ultimoDia ? `<div class="dia-sep"><span>${rotuloDia(m.criado_em)}</span></div>` : "";
+        ultimoDia = dia;
+        return sep + `<div class="bolha ${m.role}">${m.texto}<span class="hora">${horaSP(m.criado_em)}</span></div>`;
+      }).join("");
+    })()}${d.ia_digitando ? `
       <div class="bolha assistant" title="a IA está preparando uma resposta"><span class="dots"><i></i><i></i><i></i></span></div>` : ""}</div>
     <div class="chat-envio">
       <textarea id="chat-texto" rows="2" placeholder="responder como humano (pausa a IA)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMsg(${l.id})}"></textarea>
@@ -1875,7 +1943,12 @@ async function abrirConversa(id, auto) {
   if (rascunho) $("#chat-texto").value = rascunho; // devolve o texto que estava sendo digitado
   if (rascunhoNota && $("#nota-input")) { $("#nota-input").value = rascunhoNota; mostrarAcoesComposer(); } // idem pra nota
   if (rascunhoComp && $("#comp-texto")) { $("#comp-texto").value = rascunhoComp; mostrarAcoesComposer(); } // idem pra tarefa digitada
-  const box = $("#chat-msgs"); box.scrollTop = box.scrollHeight;
+  // so vai pro fim se a pessoa JA estava no fim (ou trocou de lead); senao mantem
+  // exatamente onde ela estava lendo — era isso que "jogava pra cima" no refresh
+  const box = $("#chat-msgs");
+  if (box) box.scrollTop = (auto && !chatNoFim && scrollChat !== null) ? scrollChat : box.scrollHeight;
+  const corpoNotas = $("#painel-notas")?.querySelector(".pn-corpo");
+  if (corpoNotas && scrollNotas !== null) corpoNotas.scrollTop = scrollNotas;
   renderListaConv();
   // resumo IA sob demanda (cacheado no servidor; atualiza o bloco quando chegar)
   api("/api/lead/" + id + "/resumo").then((r) => {
@@ -1913,6 +1986,10 @@ const ICONES = {
   tarefa: `<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>`,
   lixeira: `<path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/>`,
   lapis: `<path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>`,
+  robo: `<rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1.4" fill="currentColor" stroke="none"/><circle cx="9" cy="13.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="15" cy="13.5" r="1.2" fill="currentColor" stroke="none"/><path d="M9.5 17h5"/>`,
+  agente: `<circle cx="12" cy="8" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/>`,
+  arrastar: `<circle cx="9" cy="6" r="1.4" fill="currentColor" stroke="none"/><circle cx="15" cy="6" r="1.4" fill="currentColor" stroke="none"/><circle cx="9" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="9" cy="18" r="1.4" fill="currentColor" stroke="none"/><circle cx="15" cy="18" r="1.4" fill="currentColor" stroke="none"/>`,
+  colunas: `<rect x="3" y="4" width="7" height="16" rx="1.5"/><rect x="14" y="4" width="7" height="16" rx="1.5"/>`,
   mais: `<path d="M12 5v14M5 12h14"/>`,
   pontos: `<circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/>`,
   relogio: `<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 1.9"/>`,
@@ -2018,6 +2095,7 @@ function linhaTelefone(l, t) {
 function renderPainelNotas(d) {
   const el = $("#painel-notas");
   if (!el) return;
+  el.classList.toggle("notas-chat", notasEmChat);
   document.querySelector(".conversas-wrap")?.classList.toggle("com-notas", notasAbertas);
   document.body.classList.toggle("conv-full", notasAbertas);
   if (!notasAbertas) { el.innerHTML = ""; return; }
@@ -2035,6 +2113,7 @@ function renderPainelNotas(d) {
     <div class="pn-topo">
       <div style="display:flex; align-items:flex-start; gap:8px">
         <div class="pn-nome" style="flex:1">${l.nome_clinica}</div>
+        <span onclick="alternarLayoutNotas()" title="alternar visualização: notas como chat ao lado dos dados" style="cursor:pointer; color:${notasEmChat ? "var(--verde)" : "var(--muted)"}; padding:2px 4px" data-ic="colunas"></span>
         <span onclick="menuLead(event, ${l.id})" title="mais opções" style="cursor:pointer; color:var(--muted); padding:2px 4px" data-ic="pontos"></span>
       </div>
       <div style="display:flex; gap:10px; align-items:center; margin-top:5px; font-size:12px; color:var(--muted); flex-wrap:wrap">
@@ -2059,20 +2138,25 @@ function renderPainelNotas(d) {
             <span onclick="event.stopPropagation(); excluirTarefa(${t.id}, ${l.id})" style="cursor:pointer; color:var(--muted)">✕</span>
           </div>`;
         }).join("")}` : ""}
-      ${(d.notas || []).length ? `<div class="pn-secao">Notas</div>
-        ${d.notas.map((n) => `<div class="pn-nota">
-          <span style="flex:1">${n.texto}
+      </div><div class="pn-notas-col">
+      ${(d.notas || []).length ? `<div class="pn-secao" data-bloco="notas">Notas</div>
+        ${d.notas.map((n) => `<div class="pn-nota" onclick="editarNota(${n.id}, ${l.id}, event)">
+          <span style="flex:1">${linkificar(n.texto)}
             ${n.anexo ? `<div style="margin-top:6px"><img src="${API}/api/nota-anexo/${n.anexo}?t=${encodeURIComponent(SENHA)}" onclick="window.open(this.src,'_blank')" style="max-width:100%; max-height:170px; border-radius:8px; border:1px solid var(--border); cursor:zoom-in; display:block"></div>` : ""}
             <div style="color:var(--muted); font-size:11.5px; margin-top:3px">${dataHoraSP(n.criado_em)}${n.usuario_nome ? " · " + n.usuario_nome : ""}</div>
           </span>
           <span onclick="excluirNota(${n.id}, ${l.id})" style="cursor:pointer; color:var(--muted); font-size:15px">✕</span>
         </div>`).join("")}` : ""}
+      </div><div class="pn-dados">
       <div class="pn-secao">Situação</div>
       ${linha("Etapa", `<select onchange="moverParaPipeline(${l.id}, this.value)">
         ${pipes.map((p) => `<optgroup label="${p.nome}">
           ${p.etapas.map((e) => `<option value="${e.id}" ${e.id === l.etapa_id ? "selected" : ""}>${e.nome}</option>`).join("")}
         </optgroup>`).join("")}
-      </select>`)}
+      </select>
+      <div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:6px">
+        ${(pipeAtual?.etapas || []).map((e) => `<button class="btn mini ${e.id === l.etapa_id ? "" : "sec"}" style="font-size:10.5px; padding:4px 7px" onclick="moverParaPipeline(${l.id}, ${e.id})">${e.nome}</button>`).join("")}
+      </div>`)}
       ${linha("Responsável", `<select onchange="editarCampo(${l.id}, 'usuario_id', this.value)">
         <option value="">— ninguém —</option>
         ${(d.usuarios || []).map((u) => `<option value="${u.id}" ${u.id === l.usuario_id ? "selected" : ""}>${u.nome}</option>`).join("")}
@@ -2108,10 +2192,11 @@ function renderPainelNotas(d) {
       <div style="padding:9px 14px; display:flex; gap:5px; flex-wrap:wrap">
         ${[["nao_atendeu", "não atendeu"], ["conectou", "atendeu"], ["decisor", "falei c/ decisor"], ["reuniao", "marquei reunião"], ["recusou", "recusou"]]
           .map(([v, r]) => `<button class="btn mini ${d.ultima_ligacao === v ? "" : "sec"}" style="font-size:11px" onclick="registrarLigacao(${l.id}, '${v}')">${r}</button>`).join("")}
-        <button class="btn mini" style="font-size:11px; background:#1e5aa8; border-color:#1e5aa8" title="conta a ligação nas métricas E manda o lead pra fila de disparo da IA" onclick="registrarLigacao(${l.id}, 'nao_atendeu', true)">não atendeu · IA dispara 🤖</button>
+        <button class="btn mini" style="font-size:11px; background:#1e5aa8; border-color:#1e5aa8" title="conta a ligação nas métricas E manda o lead pra fila de disparo da IA" onclick="registrarLigacao(${l.id}, 'nao_atendeu', true)">não atendeu · IA dispara</button>
+        <button class="btn mini" style="font-size:11px; background:#6b4ba8; border-color:#6b4ba8" title="marca que você fez mais um follow-up (avança o contador)" onclick="marcarFollow(${l.id})">follow ${(l.follows_feitos || 0) + 1}</button>
       </div>
 
-    </div>
+    </div></div>
 
     <!-- RODAPE FIXO: composer compacto (Nota / Tarefa / Agendamento no mesmo lugar) -->
     <div class="pn-rodape">
@@ -2146,15 +2231,26 @@ function confirmarPendenciasPainel() {
     sujos.forEach((c) => c.dispatchEvent(new Event("change")));
 }
 
+// visualizacao das notas: normal (empilhado) ou "chat" (dados | notas lado a lado).
+// A escolha vale pra TODOS os leads da conta (fica salva no navegador).
+let notasEmChat = localStorage.getItem("notas_em_chat") === "1";
+function alternarLayoutNotas() {
+  notasEmChat = !notasEmChat;
+  localStorage.setItem("notas_em_chat", notasEmChat ? "1" : "0");
+  toast(notasEmChat ? "notas em coluna (modo chat)" : "visualização padrão");
+  if (convAberta) abrirConversa(convAberta);
+}
+
 // ---- COMPOSER do rodape: Nota / Tarefa / Agendamento no mesmo espaco compacto ----
 const MODOS_COMPOSER = { nota: "Nota", tarefa: "Tarefa", agendamento: "Agendamento" };
 let modoComposer = "nota";
 function htmlComposer(leadId) {
   if (modoComposer === "nota")
-    return `<textarea id="nota-input" rows="1" placeholder="escrever nota..." style="width:100%; font-size:13.5px; padding:7px 10px; line-height:1.45; resize:vertical" oninput="mostrarAcoesComposer()" onfocus="mostrarAcoesComposer()" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();salvarComposer(${leadId})}"></textarea>
+    return `<textarea id="nota-input" rows="1" placeholder="escrever nota..." style="width:100%; font-size:13.5px; padding:7px 10px; line-height:1.45; resize:vertical" oninput="mostrarAcoesComposer()" onfocus="mostrarAcoesComposer()" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();salvarComposer(${leadId})}" onpaste="colarNaNota(event)"></textarea>
       <input type="file" id="nota-foto" accept="image/*" style="display:none" onchange="mostrarFotoNota()">
       <div style="display:flex; gap:8px; align-items:center; margin-top:4px">
-        <span onclick="$('#nota-foto').click()" style="cursor:pointer; font-size:12px; color:var(--verde); font-weight:600">📎 anexar foto</span>
+        <span onclick="$('#nota-foto').click()" style="cursor:pointer; font-size:12px; color:var(--verde); font-weight:600">anexar foto</span>
+        <span style="font-size:11px; color:var(--muted)">ou cola o print aqui (Ctrl+V)</span>
         <span id="nota-foto-nome" style="font-size:11.5px; color:var(--muted)"></span>
       </div>`;
   const rotQuem = modoComposer === "agendamento" ? "com" : "para";
@@ -2387,6 +2483,16 @@ function atrasoTxt(quando) {
 }
 
 const hojeISO = () => new Date().toLocaleDateString("sv-SE", { timeZone: "America/Sao_Paulo" });
+// dia (AAAA-MM-DD em SP) de um criado_em UTC do banco
+const diaSP = (iso) => new Date(String(iso).replace(" ", "T") + "Z").toLocaleDateString("sv-SE", { timeZone: "America/Sao_Paulo" });
+// rotulo estilo WhatsApp: HOJE / ONTEM / 18/08/2026
+function rotuloDia(iso) {
+  const d = diaSP(iso), hoje = hojeISO();
+  const ontem = new Date(Date.now() - 86400000).toLocaleDateString("sv-SE", { timeZone: "America/Sao_Paulo" });
+  if (d === hoje) return "HOJE";
+  if (d === ontem) return "ONTEM";
+  return d.split("-").reverse().join("/");
+}
 const tarefaAtrasada = (t) => !!(t.quando && !t.feita && t.quando < hojeISO());
 
 // registra o resultado da ligação: vira evento (dashboard) e move o card
@@ -2485,6 +2591,18 @@ async function abrirThread(leadId, threadId) {
   abrirConversa(leadId);
 }
 
+// colar print (Ctrl+V) no campo de nota: pega a imagem da area de transferencia
+function colarNaNota(ev) {
+  const item = [...(ev.clipboardData?.items || [])].find((i) => i.type.startsWith("image/"));
+  if (!item) return; // texto normal: deixa colar
+  const arq = item.getAsFile();
+  if (!arq) return;
+  ev.preventDefault();
+  const dt = new DataTransfer();
+  dt.items.add(new File([arq], `print-${Date.now()}.png`, { type: arq.type }));
+  if ($("#nota-foto")) { $("#nota-foto").files = dt.files; mostrarFotoNota(); }
+  toast("print colado na nota");
+}
 function mostrarFotoNota() {
   const f = $("#nota-foto")?.files?.[0];
   if ($("#nota-foto-nome")) $("#nota-foto-nome").textContent = f ? f.name.slice(0, 34) : "";
@@ -2510,6 +2628,42 @@ async function addNota(id) {
   if ($("#nota-foto")) $("#nota-foto").value = "";
   toast(foto ? "nota com foto salva" : "nota salva");
   abrirConversa(id); atualizar();
+}
+// transforma URL em link clicavel dentro da nota
+function linkificar(txt) {
+  return String(txt || "").replace(/(https?:\/\/[^\s<]+)/g,
+    '<a href="$1" target="_blank" rel="noopener" onclick="event.stopPropagation()">$1</a>');
+}
+// clicar na nota abre edicao inline (nao dispara ao clicar em link ou no ✕)
+function editarNota(notaId, leadId, ev) {
+  if (ev?.target?.closest?.("a") || ev?.target?.dataset?.acao === "excluir") return;
+  const box = ev.currentTarget;
+  if (box.querySelector("textarea")) return; // ja editando
+  const texto = box.querySelector("span")?.innerText?.replace(/\n[\d/]{5},.*$/, "").trim() || "";
+  box.innerHTML = `<div style="flex:1">
+      <textarea id="ed-nota" rows="3" style="width:100%; font-size:13.5px; padding:8px; resize:vertical">${texto}</textarea>
+      <div style="display:flex; gap:6px; margin-top:6px; justify-content:flex-end">
+        <button class="btn sec mini" onclick="event.stopPropagation(); abrirConversa(${leadId})">cancelar</button>
+        <button class="btn mini" onclick="event.stopPropagation(); salvarEdicaoNota(${notaId}, ${leadId})">salvar</button>
+      </div></div>`;
+  box.querySelector("textarea").focus();
+}
+async function salvarEdicaoNota(notaId, leadId) {
+  const t = $("#ed-nota")?.value.trim();
+  if (!t) return toast("a nota não pode ficar vazia");
+  const r = await api("/api/nota/" + notaId, { method: "PATCH", body: JSON.stringify({ texto: t }) });
+  if (r?.erro) return alert(r.erro);
+  toast("nota atualizada");
+  abrirConversa(leadId);
+}
+// FOLLOW manual: cada clique conta o proximo follow (follow 1 -> 2 -> 3...)
+async function marcarFollow(leadId) {
+  const obs = prompt("Como foi esse follow? (opcional)") ?? null;
+  if (obs === null) return; // cancelou
+  const r = await api("/api/lead/" + leadId + "/follow", { method: "POST", body: JSON.stringify({ obs }) });
+  if (r?.erro) return alert(r.erro);
+  toast(`follow ${r.follows} registrado`);
+  abrirConversa(leadId); atualizar(); carregarKanban();
 }
 async function excluirNota(notaId, leadId) {
   await api("/api/nota/" + notaId, { method: "DELETE" });
