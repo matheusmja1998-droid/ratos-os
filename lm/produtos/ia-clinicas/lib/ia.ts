@@ -175,6 +175,7 @@ AGENDAMENTO DE EXAME (fluxo especifico — MUITO usado nessa clinica):
 3. CONVENIO: se a guia JA TRAZ o convenio, apenas confirme ("vi que e pela Unimed, certo?"). So pergunte "convenio ou particular" se a guia nao disser.
 4. OBRIGATORIO: consulte os horarios com ver_horarios_exame (passando o exame_id) ANTES de oferecer qualquer horario. NUNCA invente nem chute horario — SO ofereca EXATAMENTE os que a ferramenta retornou. Se voce nao chamou a ferramenta, NAO diga nenhum horario. Ofereca de forma CURTA (dia mais proximo + poucos horarios da ferramenta).
 4b. Se o paciente pedir OUTRO dia ("amanha", "sexta", "semana que vem", "dia 25", "qual outra data?"), chame ver_horarios_exame DE NOVO passando data=YYYY-MM-DD do dia pedido. NUNCA passe pro atendente humano so porque o primeiro dia oferecido nao serviu — humano e so quando as ferramentas realmente falharem.
+4c-1. PROIBIDO negar disponibilidade sem consultar. Se o paciente pedir um dia especifico ("pode ser dia 28?"), chame ver_horarios_exame com data=YYYY-MM-DD DESSE dia ANTES de responder. Nunca diga "nesse dia nao tem disponibilidade" de cabeca — caso real 20/08: o dia 28 tinha 09:00 livre e a IA disse que nao tinha, a paciente quase desistiu.
 4c. PROIBIDO dizer "so tem esse dia" / "nenhuma outra data disponivel" quando a ferramenta LISTOU outras datas com vaga. O retorno da ferramenta diz explicitamente quais outros dias tem vaga — ofereca esses. So afirme que e o unico dia se a ferramenta disser isso com todas as letras. Insistir no mesmo dia depois do paciente pedir alternativa faz ele desistir (caso real 20/08: havia 12 dias livres e a IA repetiu 3x que so tinha um).
 5. ORDEM CERTA: primeiro o paciente ESCOLHE o horario; SO DEPOIS peca CPF e data de nascimento, juntos, numa mensagem so ("Pra finalizar, me passa seu CPF e sua data de nascimento, por favor?"). NUNCA peca CPF/nascimento antes de oferecer e fechar o horario — pedir dados antes da agenda espanta o paciente.
 6. Marque com agendar_consulta passando OBRIGATORIAMENTE: feegow_exame_id (o exame — SEM isso vira consulta errada), cpf, anexar_guia=true, e o nome do exame na observacao. NUNCA marque exame sem feegow_exame_id.
@@ -1084,6 +1085,10 @@ export async function responder(params: {
   // guard anti-horario-inventado: junta os horarios que as ferramentas de
   // agenda REALMENTE devolveram nesse turno (o modelo so pode citar esses)
   const ofertaValida: OfertaValida = { horarios: new Set<string>(), houveConsulta: false };
+  // datas (YYYY-MM-DD) que as ferramentas de agenda REALMENTE consultaram no
+  // turno — pra impedir "nao tem vaga nesse dia" sem ter olhado a agenda
+  const datasConsultadas = new Set<string>();
+  let negouSemConsultar = 0;
   let correcoesHorario = 0; // ate 3 por turno (1 so deixava a 2a invencao passar)
 
   // acumula o uso de tokens de TODAS as iteracoes dessa conversa (pra custo)
@@ -1137,6 +1142,11 @@ export async function responder(params: {
           if (block.name === "ver_horarios" || block.name === "ver_horarios_exame") {
             ofertaValida.houveConsulta = true;
             for (const h of horariosCitados(resultado)) ofertaValida.horarios.add(h);
+            // marca as datas efetivamente consultadas (a pedida + as que o
+            // retorno mencionar), pra validar negativas depois
+            const pedida = (block.input as any)?.data;
+            if (typeof pedida === "string" && /^\d{4}-\d{2}-\d{2}$/.test(pedida)) datasConsultadas.add(pedida);
+            for (const d of String(resultado).match(/\d{4}-\d{2}-\d{2}/g) || []) datasConsultadas.add(d);
           }
           toolResults.push({
             type: "tool_result",
@@ -1270,6 +1280,33 @@ export async function responder(params: {
             : `A ferramenta NAO devolveu nenhum horario livre. NAO ofereca horario nenhum: diga que nao tem vaga nesse dia e pergunte outra data/turno, ou chame ver_horarios/ver_horarios_exame com a data que o paciente pedir.`),
       });
       continue;
+    }
+
+    // GUARD ANTI-NEGATIVA-SEM-CONSULTA: dizer "nao tem vaga nesse dia" sem ter
+    // chamado a ferramenta pra AQUELE dia e o mesmo erro da invencao, ao
+    // contrario — o paciente desiste achando que nao tem vaga (caso real
+    // 20/08: dia 28 tinha 09:00 livre e a IA disse que nao tinha).
+    const negativa = /(n[ãa]o (tem|h[áa]|temos|possui)|sem)\s+(disponibilidade|vaga|hor[áa]rio)/i.test(textoResposta);
+    if (negativa && negouSemConsultar < 2) {
+      // o paciente citou um dia? (ex: "dia 28", "28/08") — se sim, exigimos que
+      // essa data tenha sido consultada nesse turno
+      const pediuDia = String(texto || "").match(/\b([0-3]?\d)(?:\/([01]?\d))?\b/);
+      const consultouAlguma = datasConsultadas.size > 0;
+      let precisaConsultar = !consultouAlguma;
+      if (pediuDia && consultouAlguma) {
+        const dd = String(pediuDia[1]).padStart(2, "0");
+        precisaConsultar = ![...datasConsultadas].some((d) => d.slice(8, 10) === dd);
+      }
+      if (precisaConsultar) {
+        negouSemConsultar++;
+        messages.push({ role: "assistant", content: textoResposta });
+        messages.push({
+          role: "user",
+          content:
+            "[SISTEMA — o paciente NAO viu sua ultima mensagem] Voce afirmou que NAO tem vaga, mas nao consultou a agenda desse dia. NUNCA negue disponibilidade sem consultar: chame ver_horarios_exame (ou ver_horarios) passando data=YYYY-MM-DD do dia que o paciente pediu e responda com o que a ferramenta devolver. Se realmente nao houver vaga nesse dia, ai sim diga e ofereca as datas que tem.",
+        });
+        continue;
+      }
     }
 
     // ULTIMO RECURSO: o modelo insistiu em horario inventado mesmo apos as
