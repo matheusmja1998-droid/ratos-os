@@ -6,6 +6,7 @@ import { ALIMENTOS_TACO } from './taco.seed';
 import { porcoesDe } from './porcoes';
 import { ALIMENTOS_TACO_COMPLETO } from './taco.completo';
 import { ALIMENTOS_COMUNS } from './comuns.seed';
+import { ALIMENTOS_MARCA } from './marcas.seed';
 
 /** Remove acentos e normaliza pra busca: "pão" e "pao" acham a mesma coisa. */
 export function normalizar(texto: string): string {
@@ -86,11 +87,14 @@ export class AlimentosService implements OnModuleInit {
     const curados = [...ALIMENTOS_TACO, ...ALIMENTOS_COMUNS];
     const jaTem = new Set(curados.map((a) => chave(a.nome, a.modoPreparo)));
 
+    // Produto de marca entra por último: é valor de rótulo, não de laboratório,
+    // e não deve deslocar o que a TACO já cobre.
     const seed = [
       ...curados,
       ...ALIMENTOS_TACO_COMPLETO.filter(
         (a) => !jaTem.has(chave(a.nome, a.modoPreparo)),
       ),
+      ...ALIMENTOS_MARCA.filter((a) => !jaTem.has(chave(a.nome, a.modoPreparo))),
     ];
 
     // Só entra o que ainda não existe: nada é apagado nem sobrescrito, então
@@ -111,6 +115,7 @@ export class AlimentosService implements OnModuleInit {
         fonte: a.fonte as Alimento['fonte'],
         codigoFonte: a.codigoFonte,
         marca: a.marca,
+        codigoBarras: a.codigoBarras,
         kcal100g: a.kcal100g,
         proteina100g: a.proteina100g,
         carboidrato100g: a.carboidrato100g,

@@ -57,8 +57,10 @@ describe('AlimentosService — busca', () => {
   });
 
   it('entende como as pessoas falam', async () => {
+    // Com produtos de marca na base, "nutella" acha a Nutella mesmo; sem
+    // eles, cai no equivalente genérico da TACO. Os dois servem.
     const nutella = await service.buscar('nutella');
-    expect(nutella[0].nome.toLowerCase()).toContain('avelã');
+    expect(nutella[0].nome.toLowerCase()).toMatch(/nutella|avelã/);
 
     const file = await service.buscar('file de frango');
     expect(file[0].nome.toLowerCase()).toContain('frango');

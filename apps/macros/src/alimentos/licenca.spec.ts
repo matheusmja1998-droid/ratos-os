@@ -1,6 +1,7 @@
 import { ALIMENTOS_TACO } from './taco.seed';
 import { ALIMENTOS_TACO_COMPLETO } from './taco.completo';
 import { ALIMENTOS_COMUNS } from './comuns.seed';
+import { ALIMENTOS_MARCA } from './marcas.seed';
 
 /**
  * Guarda de licença.
@@ -15,7 +16,10 @@ import { ALIMENTOS_COMUNS } from './comuns.seed';
  * substituídos por equivalente TACO ou de rótulo.
  */
 describe('licença das fontes de dados', () => {
-  const todos = [...ALIMENTOS_TACO, ...ALIMENTOS_COMUNS, ...ALIMENTOS_TACO_COMPLETO];
+  const todos = [
+    ...ALIMENTOS_TACO, ...ALIMENTOS_COMUNS,
+    ...ALIMENTOS_TACO_COMPLETO, ...ALIMENTOS_MARCA,
+  ];
 
   it('só usa fontes conhecidas', () => {
     const permitidas = new Set(['TACO', 'TBCA', 'USDA', 'ROTULO', 'USUARIO']);
@@ -44,6 +48,13 @@ describe('licença das fontes de dados', () => {
     // virar equivalente TACO/rótulo.
     expect(tbca).toHaveLength(22);
     expect(todos.filter((a) => a.fonte === 'TACO').length).toBeGreaterThan(580);
+  });
+
+  it('produto de marca entra sempre como rótulo', () => {
+    // Dado do Open Food Facts é valor declarado pelo fabricante, não medição
+    // de laboratório: entra como ROTULO e fica abaixo de TACO/TBCA na busca.
+    const forasteiros = ALIMENTOS_MARCA.filter((a) => a.fonte !== 'ROTULO');
+    expect(forasteiros).toHaveLength(0);
   });
 
   it('os macros de cada alimento fecham com as calorias declaradas', () => {

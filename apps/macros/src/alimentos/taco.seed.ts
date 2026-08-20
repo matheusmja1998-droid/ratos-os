@@ -29,6 +29,8 @@ export interface SeedAlimento {
   fonte: string;
   codigoFonte?: string;
   marca?: string;
+  /** Código de barras (EAN), pra achar o produto pela embalagem. */
+  codigoBarras?: string;
   kcal100g: number;
   proteina100g: number;
   carboidrato100g: number;
