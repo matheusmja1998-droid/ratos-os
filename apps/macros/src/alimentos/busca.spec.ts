@@ -39,7 +39,7 @@ describe('AlimentosService — busca', () => {
 
   it('carrega a base completa', async () => {
     const repo = (service as unknown as { repo: Repository<Alimento> }).repo;
-    expect(await repo.count()).toBeGreaterThan(600);
+    expect(await repo.count()).toBeGreaterThan(680);
   });
 
   it('acha alimento mesmo digitado sem acento', async () => {
@@ -77,6 +77,36 @@ describe('AlimentosService — busca', () => {
 
     const moidas = await service.buscar('moidas');
     expect(moidas.length).toBeGreaterThan(0);
+  });
+
+  it('acha a comida do dia a dia que a TACO não tem', async () => {
+    // Casos reais que falhavam: a TACO é de 2011 e trabalha com o alimento em
+    // estado básico, sem preparo caseiro nem produto de marca.
+    const casos: [string, string][] = [
+      ['pao de forma', 'pão de forma'],
+      ['frango desfiado', 'frango desfiado'],
+      ['iogurte grego', 'iogurte grego'],
+      ['peito de peru', 'peru'],
+      ['ovo mexido', 'ovo mexido'],
+      ['crepioca', 'crepioca'],
+      ['cottage', 'cottage'],
+    ];
+
+    for (const [busca, esperado] of casos) {
+      const r = await service.buscar(busca, 3);
+      expect(r.length).toBeGreaterThan(0);
+      expect(r[0].nome.toLowerCase()).toContain(esperado);
+    }
+  });
+
+  it('o substantivo manda sobre o adjetivo', async () => {
+    // "pão integral" é um pão — não pode devolver "Arroz integral" só porque
+    // o adjetivo casou.
+    const pao = await service.buscar('pao integral', 2);
+    expect(pao[0].nome.toLowerCase()).toContain('pão');
+
+    const queijo = await service.buscar('queijo branco', 2);
+    expect(queijo[0].nome.toLowerCase()).toContain('queijo');
   });
 
   it('devolve vazio pra busca vazia', async () => {

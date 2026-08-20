@@ -5,6 +5,7 @@ import { Alimento } from '../comum/entidades';
 import { ALIMENTOS_TACO } from './taco.seed';
 import { porcoesDe } from './porcoes';
 import { ALIMENTOS_TACO_COMPLETO } from './taco.completo';
+import { ALIMENTOS_COMUNS } from './comuns.seed';
 
 /** Remove acentos e normaliza pra busca: "pão" e "pao" acham a mesma coisa. */
 export function normalizar(texto: string): string {
@@ -65,28 +66,44 @@ export class AlimentosService implements OnModuleInit {
     @InjectRepository(Alimento) private readonly repo: Repository<Alimento>,
   ) {}
 
-  /** Popula a base na primeira execução. */
+  /**
+   * Popula a base e, nas execuções seguintes, insere só o que faltar.
+   *
+   * A checagem antiga era "se tem algo, não faz nada" — o que congelava a base
+   * do jeito que ela subiu da primeira vez. Alimento novo no seed nunca
+   * chegava a quem já tinha banco populado.
+   */
   async onModuleInit() {
-    const total = await this.repo.count();
-    if (total > 0) return;
-
     // A TACO completa é a espinha dorsal. Por cima dela vêm os itens curados
     // à mão, que trazem o que a TACO não tem: porções caseiras ("1 fatia",
     // "1 concha"), produtos de rótulo e comida de padaria e boteco.
     // O curado tem prioridade quando o par nome+preparo coincide.
     const chave = (nome: string, preparo: string) =>
       normalizar(`${nome}|${preparo}`);
-    const curados = new Set(
-      ALIMENTOS_TACO.map((a) => chave(a.nome, a.modoPreparo)),
-    );
+    // Ordem de prioridade: curado à mão > comum do dia a dia > TACO completa.
+    // Os dois primeiros trazem porção caseira e preparo real; a TACO entra
+    // pra cobrir o resto sem duplicar o que já existe.
+    const curados = [...ALIMENTOS_TACO, ...ALIMENTOS_COMUNS];
+    const jaTem = new Set(curados.map((a) => chave(a.nome, a.modoPreparo)));
+
     const seed = [
-      ...ALIMENTOS_TACO,
+      ...curados,
       ...ALIMENTOS_TACO_COMPLETO.filter(
-        (a) => !curados.has(chave(a.nome, a.modoPreparo)),
+        (a) => !jaTem.has(chave(a.nome, a.modoPreparo)),
       ),
     ];
 
-    const registros = seed.map((a) =>
+    // Só entra o que ainda não existe: nada é apagado nem sobrescrito, então
+    // alimento cadastrado pelo usuário e histórico ficam intactos.
+    const existentes = new Set(
+      (await this.repo.find({ select: { nome: true, modoPreparo: true } })).map((a) =>
+        chave(a.nome, a.modoPreparo),
+      ),
+    );
+    const faltando = seed.filter((a) => !existentes.has(chave(a.nome, a.modoPreparo)));
+    if (faltando.length === 0) return;
+
+    const registros = faltando.map((a) =>
       this.repo.create({
         nome: a.nome,
         nomeBusca: normalizar(`${a.nome} ${a.modoPreparo}`),
@@ -124,10 +141,13 @@ export class AlimentosService implements OnModuleInit {
     // Nada pelo termo inteiro: tenta pelo radical de cada palavra, que
     // resolve a flexão ("moída" -> "moid" -> acha "moído").
     if (achados.length === 0) {
+      // Palavras curtas como "pão" e "ovo" carregam sentido: entram como
+      // estão, sem passar pelo corte de terminação.
+      const vazias = new Set(['de', 'da', 'do', 'com', 'sem', 'ao', 'em', 'no', 'na']);
       const radicais = alvo
         .split(/\s+/)
-        .filter((p) => p.length >= 4)
-        .map(radical)
+        .filter((p) => p.length >= 3 && !vazias.has(p))
+        .map((p) => (p.length >= 5 ? radical(p) : p))
         .filter((p) => p.length >= 3);
 
       if (radicais.length > 0) {
@@ -143,10 +163,16 @@ export class AlimentosService implements OnModuleInit {
             else contagem.set(a.id, { a, hits: 1 });
           }
         }
-        const maxHits = Math.max(0, ...[...contagem.values()].map((v) => v.hits));
-        achados = [...contagem.values()]
-          .filter((v) => v.hits === maxHits)
-          .map((v) => v.a);
+        // A primeira palavra é o substantivo e manda: em "pão integral" o
+        // alimento é um pão, e "Arroz integral" casaria só pelo adjetivo.
+        const principal = radicais[0];
+        const comPrincipal = [...contagem.values()].filter((v) =>
+          v.a.nomeBusca.includes(principal),
+        );
+        const universo = comPrincipal.length > 0 ? comPrincipal : [...contagem.values()];
+
+        const maxHits = Math.max(0, ...universo.map((v) => v.hits));
+        achados = universo.filter((v) => v.hits === maxHits).map((v) => v.a);
       }
     }
 
@@ -186,8 +212,16 @@ export class AlimentosService implements OnModuleInit {
           }
         }
 
-        const maxHits = Math.max(0, ...[...contagem.values()].map((v) => v.hits));
-        const melhores = [...contagem.values()]
+        // A primeira palavra é o substantivo e manda: em "pão integral" o
+        // alimento é um pão, e "Arroz integral" não serve por casar o adjetivo.
+        const principal = palavras[0];
+        const comPrincipal = [...contagem.values()].filter((v) =>
+          v.a.nomeBusca.includes(principal),
+        );
+        const universo = comPrincipal.length > 0 ? comPrincipal : [...contagem.values()];
+
+        const maxHits = Math.max(0, ...universo.map((v) => v.hits));
+        const melhores = universo
           .filter((v) => v.hits === maxHits)
           .map((v) => v.a);
 

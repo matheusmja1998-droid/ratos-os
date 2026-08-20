@@ -1,5 +1,6 @@
 import { ALIMENTOS_TACO } from './taco.seed';
 import { ALIMENTOS_TACO_COMPLETO } from './taco.completo';
+import { ALIMENTOS_COMUNS } from './comuns.seed';
 
 /**
  * Guarda de licença.
@@ -14,7 +15,7 @@ import { ALIMENTOS_TACO_COMPLETO } from './taco.completo';
  * substituídos por equivalente TACO ou de rótulo.
  */
 describe('licença das fontes de dados', () => {
-  const todos = [...ALIMENTOS_TACO, ...ALIMENTOS_TACO_COMPLETO];
+  const todos = [...ALIMENTOS_TACO, ...ALIMENTOS_COMUNS, ...ALIMENTOS_TACO_COMPLETO];
 
   it('só usa fontes conhecidas', () => {
     const permitidas = new Set(['TACO', 'TBCA', 'USDA', 'ROTULO', 'USUARIO']);
@@ -39,7 +40,9 @@ describe('licença das fontes de dados', () => {
     // Uso pessoal: tudo certo. Uso comercial: estes itens precisam sair.
     const tbca = todos.filter((a) => a.fonte === 'TBCA').map((a) => a.nome);
     // Se este número subir, alguém adicionou dado de licença não-comercial.
-    expect(tbca).toHaveLength(9);
+    // Uso pessoal: tudo certo. Uso comercial: estes itens precisam sair ou
+    // virar equivalente TACO/rótulo.
+    expect(tbca).toHaveLength(22);
     expect(todos.filter((a) => a.fonte === 'TACO').length).toBeGreaterThan(580);
   });
 

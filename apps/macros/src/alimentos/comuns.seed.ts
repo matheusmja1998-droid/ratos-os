@@ -1,0 +1,190 @@
+/**
+ * Alimentos do dia a dia que a TACO não cobre.
+ *
+ * A TACO é de 2011 e trabalha com o alimento em estado básico: tem "Frango,
+ * peito, cozido", não tem "frango desfiado"; tem pão de forma integral, não
+ * tem o branco. Também não tem produto de marca nem preparo caseiro comum.
+ *
+ * Isso deixa buracos justamente no que se come mais — e a pessoa conclui que
+ * o app não tem a comida dela.
+ *
+ * FONTES:
+ *   ROTULO — tabela nutricional declarada pelo fabricante. Fato comercial
+ *            publicado, sem restrição de uso.
+ *   TBCA   — Tabela Brasileira de Composição de Alimentos (USP/FoRC).
+ *            Licença CC BY-NC-ND: NÃO pode ir pra versão comercial.
+ *
+ * Valores por 100 g. Quando derivados de um item TACO por mudança de preparo
+ * (desfiar, grelhar), a nota explica de onde saiu.
+ */
+import { SeedAlimento } from './taco.seed';
+
+export const ALIMENTOS_COMUNS: SeedAlimento[] = [
+  // ---- Pães e panificados ----
+  { nome: 'Pão de forma branco', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 269, proteina100g: 8.5, carboidrato100g: 49.5, gordura100g: 3.4,
+    fibra100g: 2.4, gorduraSaturada100g: 0.8,
+    porcoes: [{ rotulo: 'fatia', gramas: 25 }] },
+  { nome: 'Pão de forma integral', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 253, proteina100g: 9.4, carboidrato100g: 43.9, gordura100g: 3.4,
+    fibra100g: 6.9, gorduraSaturada100g: 0.7,
+    porcoes: [{ rotulo: 'fatia', gramas: 25 }] },
+  { nome: 'Pão de forma sem casca', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 278, proteina100g: 8.0, carboidrato100g: 51.0, gordura100g: 4.0,
+    fibra100g: 2.0, gorduraSaturada100g: 1.0,
+    porcoes: [{ rotulo: 'fatia', gramas: 23 }] },
+  { nome: 'Pão sírio', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 275, proteina100g: 9.0, carboidrato100g: 55.0, gordura100g: 1.5, fibra100g: 2.5,
+    porcoes: [{ rotulo: 'unidade', gramas: 60 }] },
+  { nome: 'Pão de hambúrguer', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 290, proteina100g: 8.5, carboidrato100g: 52.0, gordura100g: 5.0, fibra100g: 2.0,
+    porcoes: [{ rotulo: 'unidade', gramas: 50 }] },
+  { nome: 'Pão de queijo', modoPreparo: 'assado', fonte: 'TBCA',
+    kcal100g: 363, proteina100g: 5.2, carboidrato100g: 39.0, gordura100g: 20.0,
+    fibra100g: 1.0, gorduraSaturada100g: 7.5,
+    porcoes: [{ rotulo: 'unidade pequena', gramas: 20 }, { rotulo: 'unidade média', gramas: 35 }] },
+  { nome: 'Wrap integral', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 297, proteina100g: 9.0, carboidrato100g: 48.0, gordura100g: 7.0, fibra100g: 5.0,
+    porcoes: [{ rotulo: 'unidade', gramas: 45 }] },
+
+  // ---- Frango em preparos do dia a dia ----
+  // Derivados do peito de frango cozido da TACO (163 kcal/100 g). Desfiar não
+  // muda a composição, só a forma — o valor é o mesmo do cozido.
+  { nome: 'Frango desfiado', modoPreparo: 'cozido', fonte: 'TACO', codigoFonte: 'M0020',
+    kcal100g: 163, proteina100g: 31.5, carboidrato100g: 0, gordura100g: 3.2,
+    gorduraSaturada100g: 0.9,
+    porcoes: [{ rotulo: 'colher de servir', gramas: 40 }, { rotulo: 'xícara', gramas: 120 }] },
+  { nome: 'Frango desfiado com requeijão', modoPreparo: 'cozido', fonte: 'ROTULO',
+    kcal100g: 195, proteina100g: 24.0, carboidrato100g: 3.0, gordura100g: 9.5,
+    gorduraSaturada100g: 4.0,
+    porcoes: [{ rotulo: 'colher de sopa', gramas: 30 }] },
+  { nome: 'Peito de frango em cubos', modoPreparo: 'grelhado', fonte: 'TACO', codigoFonte: 'M0021',
+    kcal100g: 159, proteina100g: 32.0, carboidrato100g: 0, gordura100g: 2.5,
+    gorduraSaturada100g: 0.7,
+    porcoes: [{ rotulo: 'porção', gramas: 120 }] },
+  { nome: 'Frango à passarinho', modoPreparo: 'frito', fonte: 'TBCA',
+    kcal100g: 268, proteina100g: 25.0, carboidrato100g: 4.0, gordura100g: 17.0,
+    gorduraSaturada100g: 4.5 },
+  { nome: 'Filé de frango à milanesa', modoPreparo: 'frito', fonte: 'TBCA',
+    kcal100g: 245, proteina100g: 22.0, carboidrato100g: 14.0, gordura100g: 11.0,
+    fibra100g: 0.8, gorduraSaturada100g: 2.6 },
+  { nome: 'Strogonoff de frango', modoPreparo: 'cozido', fonte: 'TBCA',
+    kcal100g: 145, proteina100g: 12.0, carboidrato100g: 5.0, gordura100g: 8.5,
+    gorduraSaturada100g: 4.2,
+    porcoes: [{ rotulo: 'colher de servir', gramas: 60 }] },
+
+  // ---- Carnes em preparo comum ----
+  { nome: 'Carne moída refogada', modoPreparo: 'refogado', fonte: 'TACO', codigoFonte: 'M0004',
+    kcal100g: 212, proteina100g: 26.7, carboidrato100g: 0, gordura100g: 11.0,
+    gorduraSaturada100g: 4.6,
+    porcoes: [{ rotulo: 'colher de servir', gramas: 45 }] },
+  { nome: 'Bife acebolado', modoPreparo: 'grelhado', fonte: 'TBCA',
+    kcal100g: 220, proteina100g: 28.0, carboidrato100g: 2.0, gordura100g: 11.0,
+    gorduraSaturada100g: 4.0,
+    porcoes: [{ rotulo: 'bife médio', gramas: 100 }] },
+  { nome: 'Strogonoff de carne', modoPreparo: 'cozido', fonte: 'TBCA',
+    kcal100g: 165, proteina100g: 11.0, carboidrato100g: 5.0, gordura100g: 11.0,
+    gorduraSaturada100g: 5.5,
+    porcoes: [{ rotulo: 'colher de servir', gramas: 60 }] },
+  { nome: 'Peito de peru defumado', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 100, proteina100g: 17.0, carboidrato100g: 2.5, gordura100g: 2.0,
+    gorduraSaturada100g: 0.7,
+    porcoes: [{ rotulo: 'fatia', gramas: 15 }] },
+  { nome: 'Atum ralado em óleo', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 190, proteina100g: 24.0, carboidrato100g: 0, gordura100g: 10.0,
+    gorduraSaturada100g: 2.0,
+    porcoes: [{ rotulo: 'lata drenada', gramas: 120 }] },
+
+  // ---- Laticínios de marca ----
+  { nome: 'Iogurte grego natural', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 97, proteina100g: 9.0, carboidrato100g: 4.0, gordura100g: 5.0,
+    gorduraSaturada100g: 3.2,
+    porcoes: [{ rotulo: 'pote', gramas: 100 }] },
+  { nome: 'Iogurte natural desnatado', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 41, proteina100g: 4.3, carboidrato100g: 5.8, gordura100g: 0.2,
+    porcoes: [{ rotulo: 'pote', gramas: 170 }] },
+  { nome: 'Iogurte proteico', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 60, proteina100g: 10.0, carboidrato100g: 4.5, gordura100g: 0.3,
+    porcoes: [{ rotulo: 'garrafa', gramas: 250 }] },
+  { nome: 'Queijo cottage', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 98, proteina100g: 12.0, carboidrato100g: 3.4, gordura100g: 4.3,
+    gorduraSaturada100g: 2.7,
+    porcoes: [{ rotulo: 'colher de sopa', gramas: 30 }] },
+  { nome: 'Queijo prato', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 360, proteina100g: 25.0, carboidrato100g: 2.0, gordura100g: 28.0,
+    gorduraSaturada100g: 18.0,
+    porcoes: [{ rotulo: 'fatia', gramas: 20 }] },
+  { nome: 'Queijo coalho', modoPreparo: 'grelhado', fonte: 'ROTULO',
+    kcal100g: 330, proteina100g: 24.0, carboidrato100g: 2.0, gordura100g: 25.0,
+    gorduraSaturada100g: 16.0,
+    porcoes: [{ rotulo: 'espeto', gramas: 60 }] },
+  { nome: 'Cream cheese', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 253, proteina100g: 6.0, carboidrato100g: 5.0, gordura100g: 23.0,
+    gorduraSaturada100g: 15.0,
+    porcoes: [{ rotulo: 'colher de sopa', gramas: 30 }] },
+  { nome: 'Leite semidesnatado', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 46, proteina100g: 3.2, carboidrato100g: 4.7, gordura100g: 1.5,
+    gorduraSaturada100g: 1.0,
+    porcoes: [{ rotulo: 'copo (200 ml)', gramas: 200 }] },
+
+  // ---- Suplementos ----
+  { nome: 'Whey protein isolado', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 373, proteina100g: 86.7, carboidrato100g: 3.3, gordura100g: 1.7,
+    porcoes: [{ rotulo: 'scoop', gramas: 30 }] },
+  { nome: 'Albumina', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 375, proteina100g: 80.0, carboidrato100g: 8.0, gordura100g: 2.0,
+    porcoes: [{ rotulo: 'colher de sopa', gramas: 15 }] },
+  { nome: 'Creatina', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 0, proteina100g: 0, carboidrato100g: 0, gordura100g: 0,
+    porcoes: [{ rotulo: 'scoop', gramas: 3 }] },
+
+  // ---- Preparos caseiros comuns ----
+  { nome: 'Ovo mexido', modoPreparo: 'refogado', fonte: 'TBCA',
+    kcal100g: 165, proteina100g: 12.0, carboidrato100g: 1.5, gordura100g: 12.0,
+    gorduraSaturada100g: 3.5,
+    porcoes: [{ rotulo: 'porção (2 ovos)', gramas: 110 }] },
+  { nome: 'Ovo frito', modoPreparo: 'frito', fonte: 'TACO',
+    kcal100g: 240, proteina100g: 15.6, carboidrato100g: 1.2, gordura100g: 18.9,
+    gorduraSaturada100g: 4.5,
+    porcoes: [{ rotulo: 'unidade', gramas: 50 }] },
+  { nome: 'Omelete simples', modoPreparo: 'frito', fonte: 'TBCA',
+    kcal100g: 155, proteina100g: 11.0, carboidrato100g: 1.0, gordura100g: 12.0,
+    gorduraSaturada100g: 3.4,
+    porcoes: [{ rotulo: 'unidade (2 ovos)', gramas: 120 }] },
+  { nome: 'Crepioca', modoPreparo: 'frito', fonte: 'TBCA',
+    kcal100g: 190, proteina100g: 9.0, carboidrato100g: 25.0, gordura100g: 6.0, fibra100g: 0.6,
+    porcoes: [{ rotulo: 'unidade', gramas: 90 }] },
+  { nome: 'Tapioca com queijo', modoPreparo: 'frito', fonte: 'TBCA',
+    kcal100g: 250, proteina100g: 7.0, carboidrato100g: 42.0, gordura100g: 6.5,
+    gorduraSaturada100g: 3.5,
+    porcoes: [{ rotulo: 'unidade', gramas: 120 }] },
+  { nome: 'Arroz à grega', modoPreparo: 'cozido', fonte: 'TBCA',
+    kcal100g: 145, proteina100g: 3.0, carboidrato100g: 27.0, gordura100g: 2.8, fibra100g: 1.4 },
+  { nome: 'Batata frita', modoPreparo: 'frito', fonte: 'TACO',
+    kcal100g: 267, proteina100g: 4.5, carboidrato100g: 35.6, gordura100g: 12.4,
+    fibra100g: 3.2, gorduraSaturada100g: 2.9,
+    porcoes: [{ rotulo: 'porção pequena', gramas: 100 }] },
+  { nome: 'Salada de alface e tomate', modoPreparo: 'cru', fonte: 'TBCA',
+    kcal100g: 15, proteina100g: 1.0, carboidrato100g: 2.6, gordura100g: 0.2, fibra100g: 1.4,
+    porcoes: [{ rotulo: 'prato de sobremesa', gramas: 80 }] },
+  { nome: 'Legumes cozidos no vapor', modoPreparo: 'cozido', fonte: 'TBCA',
+    kcal100g: 38, proteina100g: 2.0, carboidrato100g: 7.0, gordura100g: 0.3, fibra100g: 3.0,
+    porcoes: [{ rotulo: 'colher de servir', gramas: 60 }] },
+
+  // ---- Frutas e lanches que faltavam ----
+  { nome: 'Banana nanica', modoPreparo: 'cru', fonte: 'TACO',
+    kcal100g: 92, proteina100g: 1.4, carboidrato100g: 23.8, gordura100g: 0.1, fibra100g: 1.9,
+    porcoes: [{ rotulo: 'unidade média', gramas: 90 }] },
+  { nome: 'Pasta de amendoim com whey', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 550, proteina100g: 32.0, carboidrato100g: 18.0, gordura100g: 40.0,
+    fibra100g: 7.0, gorduraSaturada100g: 6.5,
+    porcoes: [{ rotulo: 'colher de sopa', gramas: 20 }] },
+  { nome: 'Barra de proteína', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 350, proteina100g: 30.0, carboidrato100g: 35.0, gordura100g: 9.0,
+    fibra100g: 6.0, gorduraSaturada100g: 4.0,
+    porcoes: [{ rotulo: 'unidade', gramas: 40 }] },
+  { nome: 'Granola', modoPreparo: 'industrializado', fonte: 'ROTULO',
+    kcal100g: 420, proteina100g: 9.0, carboidrato100g: 65.0, gordura100g: 13.0,
+    fibra100g: 8.0, gorduraSaturada100g: 2.5,
+    porcoes: [{ rotulo: 'colher de sopa', gramas: 15 }] },
+];
