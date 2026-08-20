@@ -2259,6 +2259,7 @@ function renderPainelNotas(d) {
       </div>
     </div>`;
   pintarIcones(el);
+  renderColunaNotas(d); // modo dividido: notas na coluna da direita
   // marca o valor inicial de cada campo pra detectar alteracao nao salva ao sair
   el.querySelectorAll(".pn-corpo input, .pn-corpo select").forEach((c) => {
     c.dataset.ini = c.value;
