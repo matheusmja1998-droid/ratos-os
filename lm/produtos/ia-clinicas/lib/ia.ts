@@ -722,7 +722,7 @@ export async function executarTool(
           // possivel era o primeiro e dizia "nenhuma outra data disponivel"
           // mesmo com 12 dias livres (caso real 20/08, broncoprovocacao).
           (dias.length > 1
-            ? `SE o paciente pedir OUTRO dia, tem vaga tambem em: ${dias.slice(1, 7).map((d) => dataComDia(d.data)).join(" · ")}${dias.length > 7 ? " (e mais adiante)" : ""} — NUNCA diga que so existe um dia. Pra oferecer os horarios de um desses dias, chame de novo com data=YYYY-MM-DD.`
+            ? `SE o paciente pedir OUTRO dia, tem vaga tambem em: ${dias.slice(1, 7).map((d) => dataComDia(d.data)).join(" · ")}${dias.length > 7 ? " (e mais adiante)" : ""} — NUNCA diga que so existe um dia. ATENCAO: voce ainda NAO sabe os horarios desses outros dias; quando o paciente escolher um deles, chame ver_horarios_exame DE NOVO com data=YYYY-MM-DD e ofereca SO o que voltar. NUNCA cite horario de um dia que voce nao consultou.`
             : `Esse e o UNICO dia com vaga nas proximas semanas.`) +
           ` (marque com agendar_consulta passando feegow_exame_id=${input.exame_id})`,
       };
@@ -1084,7 +1084,7 @@ export async function responder(params: {
   // guard anti-horario-inventado: junta os horarios que as ferramentas de
   // agenda REALMENTE devolveram nesse turno (o modelo so pode citar esses)
   const ofertaValida: OfertaValida = { horarios: new Set<string>(), houveConsulta: false };
-  let jaCorrigiuHorario = false;
+  let correcoesHorario = 0; // ate 3 por turno (1 so deixava a 2a invencao passar)
 
   // acumula o uso de tokens de TODAS as iteracoes dessa conversa (pra custo)
   const uso = { input: 0, output: 0, cacheWrite: 0, cacheRead: 0, chamadas: 0 };
@@ -1257,8 +1257,8 @@ export async function responder(params: {
     // "20:30", ela ofereceu "10h, 11h ou 12h" — inexistentes e ja passados).
     // Aqui a resposta so passa se TODO horario citado veio da ferramenta.
     const inventados = horarioInventado(textoResposta, ofertaValida);
-    if (inventados && !jaCorrigiuHorario) {
-      jaCorrigiuHorario = true;
+    if (inventados && correcoesHorario < 3) {
+      correcoesHorario++;
       const reais = [...ofertaValida.horarios].sort();
       messages.push({ role: "assistant", content: textoResposta });
       messages.push({
@@ -1270,6 +1270,18 @@ export async function responder(params: {
             : `A ferramenta NAO devolveu nenhum horario livre. NAO ofereca horario nenhum: diga que nao tem vaga nesse dia e pergunte outra data/turno, ou chame ver_horarios/ver_horarios_exame com a data que o paciente pedir.`),
       });
       continue;
+    }
+
+    // ULTIMO RECURSO: o modelo insistiu em horario inventado mesmo apos as
+    // correcoes. NAO mandamos horario falso pro paciente — trocamos por uma
+    // resposta segura que devolve a bola pra ele escolher o dia.
+    const aindaInventado = horarioInventado(textoResposta, ofertaValida);
+    if (aindaInventado) {
+      const reais = [...ofertaValida.horarios].sort();
+      console.warn("[ia] horario inventado persistiu:", aindaInventado, "| reais:", reais.join(", "));
+      textoResposta = reais.length
+        ? `Nesse dia tenho ${reais.join(" ou ")}. Qual fica melhor pra você?`
+        : "Deixa eu confirmar a agenda certinho e já te falo os horários, tá bom?";
     }
 
     // ENFORCEMENT DE ESTILO: tom/tamanho configurados pela clinica valem de
