@@ -195,6 +195,21 @@
   /* com notas: lista continua (mais estreita, encostada na esquerda), conversa
      centralizada no meio, notas na direita */
   .conversas-wrap.com-notas { grid-template-columns:250px 1fr 6px var(--notas-w, 372px); }
+  /* MODO DIVIDIDO: notas viram COLUNA PROPRIA na direita (o painel fica so com
+     os dados do lead). A largura de cada coluna e arrastavel e fica salva. */
+  .conversas-wrap.com-notas.notas-divididas {
+    grid-template-columns:210px minmax(0,1fr) 6px var(--notas-w, 372px) 6px var(--notasCol-w, 330px); }
+  .coluna-notas { display:none; min-height:0; padding:0; border-radius:0; overflow:hidden;
+    grid-template-rows:auto 1fr auto; }
+  .conversas-wrap.notas-divididas .coluna-notas { display:grid; }
+  .conversas-wrap:not(.notas-divididas) #divisor-notas2 { display:none; }
+  .cn-topo { padding:10px 13px; border-bottom:2px solid var(--border); font-size:11px; font-weight:800;
+    letter-spacing:.5px; text-transform:uppercase; color:var(--muted); background:var(--surface); }
+  .cn-corpo { overflow-y:auto; min-height:0; padding:4px 0 8px; background:rgba(0,0,0,.02); }
+  html[data-tema="dark"] .cn-corpo { background:#070707; }
+  .cn-rodape { border-top:1px solid var(--border); padding:9px 12px; background:var(--surface); }
+  @media (max-width:1500px){ .conversas-wrap.com-notas.notas-divididas { grid-template-columns:0 minmax(0,1fr) 6px var(--notas-w, 340px) 6px var(--notasCol-w, 300px); }
+    .conversas-wrap.com-notas.notas-divididas .lista-conv { display:none; } }
   /* divisoria arrastavel entre a conversa e as notas */
   .divisor { cursor:col-resize; border-radius:4px; background:transparent; position:relative; transition:background .12s; }
   .conversas-wrap:not(.com-notas) .divisor { display:none; }
@@ -298,13 +313,6 @@
   .ia-rot { font-size:12px; color:var(--muted); font-weight:600; white-space:nowrap; }
   html[data-tema="dark"] .ia-switch.on .ia-pill { background:#10231a; }
   html[data-tema="dark"] .ia-switch.off .ia-pill { background:#151a26; }
-  /* MODO "notas como chat": dados a esquerda, notas em coluna propria a direita */
-  #painel-notas.notas-chat .pn-corpo { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:0; align-items:start; }
-  #painel-notas.notas-chat .pn-dados { min-width:0; border-right:1px solid var(--border); order:1; }
-  #painel-notas.notas-chat .pn-notas-col { min-width:0; background:rgba(0,0,0,.02); align-self:stretch; padding-bottom:8px; order:2; }
-  html[data-tema="dark"] #painel-notas.notas-chat .pn-notas-col { background:#080808; }
-  #painel-notas.notas-chat .pn-notas-col .pn-nota { margin:8px 10px; }
-  @media (max-width:1180px){ #painel-notas.notas-chat .pn-corpo { grid-template-columns:1fr; } }
   /* separador de DIA no chat (estilo WhatsApp) */
   .dia-sep { display:flex; justify-content:center; margin:12px 0 8px; }
   .dia-sep span { background:rgba(0,0,0,.06); color:var(--muted); font-size:11px; font-weight:700;
@@ -481,6 +489,8 @@
       <div class="card chat" id="chat"><div style="margin:auto; color:var(--muted)">escolhe uma conversa aí do lado</div></div>
       <div class="divisor" id="divisor-notas" title="arrasta pra esquerda ou direita pra mudar o tamanho" onmousedown="iniciarResize(event)" ondblclick="resetResize()"></div>
       <div class="card painel-notas" id="painel-notas"></div>
+      <div class="divisor" id="divisor-notas2" title="arrasta pra mudar a largura da coluna de notas" onmousedown="iniciarResizeNotas(event)" ondblclick="resetResizeNotas()"></div>
+      <div class="card coluna-notas" id="coluna-notas"></div>
     </div>
   </div>
 
@@ -1886,6 +1896,10 @@ async function abrirConversa(id, auto) {
   const scrollChat = mesmoLead && boxAntes ? boxAntes.scrollTop : null;
   const chatNoFim = boxAntes ? (boxAntes.scrollHeight - boxAntes.scrollTop - boxAntes.clientHeight) < 60 : true;
   const scrollNotas = mesmoLead ? ($("#painel-notas")?.querySelector(".pn-corpo")?.scrollTop ?? null) : null;
+  const cnAntes = $("#cn-corpo");
+  const scrollColNotas = mesmoLead && cnAntes ? cnAntes.scrollTop : null;
+  const colNoFim = cnAntes ? (cnAntes.scrollHeight - cnAntes.scrollTop - cnAntes.clientHeight) < 60 : true;
+  const rascunhoColNota = mesmoLead ? ($("#cn-nota-input")?.value || "") : "";
   // thread: se o usuario escolheu uma conversa paralela (decisor), busca só ela
   const d = await api("/api/lead/" + id + (threadAberta ? "?thread=" + threadAberta : ""));
   const thAtual = threadAberta ? (d.threads || []).find((t) => t.id === threadAberta) : null;
@@ -1949,6 +1963,9 @@ async function abrirConversa(id, auto) {
   if (box) box.scrollTop = (auto && !chatNoFim && scrollChat !== null) ? scrollChat : box.scrollHeight;
   const corpoNotas = $("#painel-notas")?.querySelector(".pn-corpo");
   if (corpoNotas && scrollNotas !== null) corpoNotas.scrollTop = scrollNotas;
+  const cn = $("#cn-corpo");
+  if (cn && auto && !colNoFim && scrollColNotas !== null) cn.scrollTop = scrollColNotas;
+  if (rascunhoColNota && $("#cn-nota-input")) $("#cn-nota-input").value = rascunhoColNota;
   renderListaConv();
   // resumo IA sob demanda (cacheado no servidor; atualiza o bloco quando chegar)
   api("/api/lead/" + id + "/resumo").then((r) => {
@@ -2065,6 +2082,34 @@ function iniciarResize(ev) {
   document.addEventListener("mouseup", soltar);
 }
 function resetResize() { aplicarLarguraNotas(NOTAS_PADRAO); }
+
+// ---- largura da COLUNA DE NOTAS (modo dividido) ----
+const NCOL_MIN = 240, NCOL_MAX = 640, NCOL_PADRAO = 330;
+function aplicarLarguraColunaNotas(px) {
+  const w = Math.round(Math.min(NCOL_MAX, Math.max(NCOL_MIN, px)));
+  document.documentElement.style.setProperty("--notasCol-w", w + "px");
+  localStorage.setItem("notas_col_w", w);
+  return w;
+}
+function iniciarResizeNotas(ev) {
+  ev.preventDefault();
+  const wrap = document.querySelector(".conversas-wrap");
+  if (!wrap) return;
+  const div = $("#divisor-notas2");
+  div?.classList.add("arrastando");
+  document.body.classList.add("redimensionando");
+  const mover = (e) => aplicarLarguraColunaNotas(wrap.getBoundingClientRect().right - e.clientX);
+  const soltar = () => {
+    document.removeEventListener("mousemove", mover);
+    document.removeEventListener("mouseup", soltar);
+    div?.classList.remove("arrastando");
+    document.body.classList.remove("redimensionando");
+  };
+  document.addEventListener("mousemove", mover);
+  document.addEventListener("mouseup", soltar);
+}
+function resetResizeNotas() { aplicarLarguraColunaNotas(NCOL_PADRAO); }
+aplicarLarguraColunaNotas(Number(localStorage.getItem("notas_col_w")) || NCOL_PADRAO);
 // restaura a largura escolhida no boot
 aplicarLarguraNotas(Number(localStorage.getItem("notas_w")) || NOTAS_PADRAO);
 
@@ -2095,7 +2140,7 @@ function linhaTelefone(l, t) {
 function renderPainelNotas(d) {
   const el = $("#painel-notas");
   if (!el) return;
-  el.classList.toggle("notas-chat", notasEmChat);
+  document.querySelector(".conversas-wrap")?.classList.toggle("notas-divididas", notasEmChat && notasAbertas);
   document.querySelector(".conversas-wrap")?.classList.toggle("com-notas", notasAbertas);
   document.body.classList.toggle("conv-full", notasAbertas);
   if (!notasAbertas) { el.innerHTML = ""; return; }
@@ -2138,8 +2183,7 @@ function renderPainelNotas(d) {
             <span onclick="event.stopPropagation(); excluirTarefa(${t.id}, ${l.id})" style="cursor:pointer; color:var(--muted)">✕</span>
           </div>`;
         }).join("")}` : ""}
-      </div><div class="pn-notas-col">
-      ${(d.notas || []).length ? `<div class="pn-secao" data-bloco="notas">Notas</div>
+      ${!notasEmChat && (d.notas || []).length ? `<div class="pn-secao" data-bloco="notas">Notas</div>
         ${d.notas.map((n) => `<div class="pn-nota" onclick="editarNota(${n.id}, ${l.id}, event)">
           <span style="flex:1">${linkificar(n.texto)}
             ${n.anexo ? `<div style="margin-top:6px"><img src="${API}/api/nota-anexo/${n.anexo}?t=${encodeURIComponent(SENHA)}" onclick="window.open(this.src,'_blank')" style="max-width:100%; max-height:170px; border-radius:8px; border:1px solid var(--border); cursor:zoom-in; display:block"></div>` : ""}
@@ -2147,7 +2191,6 @@ function renderPainelNotas(d) {
           </span>
           <span onclick="excluirNota(${n.id}, ${l.id})" style="cursor:pointer; color:var(--muted); font-size:15px">✕</span>
         </div>`).join("")}` : ""}
-      </div><div class="pn-dados">
       <div class="pn-secao">Situação</div>
       ${linha("Etapa", `<select onchange="moverParaPipeline(${l.id}, this.value)">
         ${pipes.map((p) => `<optgroup label="${p.nome}">
@@ -2196,7 +2239,7 @@ function renderPainelNotas(d) {
         <button class="btn mini" style="font-size:11px; background:#6b4ba8; border-color:#6b4ba8" title="marca que você fez mais um follow-up (avança o contador)" onclick="marcarFollow(${l.id})">follow ${(l.follows_feitos || 0) + 1}</button>
       </div>
 
-    </div></div>
+    </div>
 
     <!-- RODAPE FIXO: composer compacto (Nota / Tarefa / Agendamento no mesmo lugar) -->
     <div class="pn-rodape">
@@ -2219,6 +2262,72 @@ function renderPainelNotas(d) {
   });
 }
 
+// COLUNA DE NOTAS (modo dividido): notas como chat na direita da tela
+function renderColunaNotas(d) {
+  const col = $("#coluna-notas");
+  if (!col) return;
+  if (!notasEmChat || !notasAbertas) { col.innerHTML = ""; return; }
+  const l = d.lead;
+  col.innerHTML = `
+    <div class="cn-topo">Notas · ${(d.notas || []).length}</div>
+    <div class="cn-corpo" id="cn-corpo">
+      ${(d.notas || []).length
+        ? d.notas.map((n) => `<div class="pn-nota" onclick="editarNota(${n.id}, ${l.id}, event)">
+            <span style="flex:1">${linkificar(n.texto)}
+              ${n.anexo ? `<div style="margin-top:6px"><img src="${API}/api/nota-anexo/${n.anexo}?t=${encodeURIComponent(SENHA)}" onclick="event.stopPropagation(); window.open(this.src,'_blank')" style="max-width:100%; max-height:170px; border-radius:8px; border:1px solid var(--border); cursor:zoom-in; display:block"></div>` : ""}
+              <div style="color:var(--muted); font-size:11.5px; margin-top:3px">${dataHoraSP(n.criado_em)}${n.usuario_nome ? " · " + n.usuario_nome : ""}</div>
+            </span>
+            <span data-acao="excluir" onclick="event.stopPropagation(); excluirNota(${n.id}, ${l.id})" style="cursor:pointer; color:var(--muted); font-size:15px">✕</span>
+          </div>`).join("")
+        : `<div style="color:var(--muted); font-size:13px; padding:14px">nenhuma nota ainda. Escreve embaixo (dá pra colar print com Ctrl+V).</div>`}
+    </div>
+    <div class="cn-rodape">
+      <textarea id="cn-nota-input" rows="2" placeholder="escrever nota..." style="width:100%; font-size:13.5px; padding:8px 10px; resize:vertical" onpaste="colarNaColunaNotas(event)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();salvarNotaColuna(${l.id})}"></textarea>
+      <input type="file" id="cn-nota-foto" accept="image/*" style="display:none" onchange="mostrarFotoColuna()">
+      <div style="display:flex; gap:8px; align-items:center; margin-top:5px">
+        <span onclick="$('#cn-nota-foto').click()" style="cursor:pointer; font-size:12px; color:var(--verde); font-weight:600">anexar foto</span>
+        <span id="cn-foto-nome" style="font-size:11px; color:var(--muted)"></span>
+        <button class="btn mini" style="margin-left:auto" onclick="salvarNotaColuna(${l.id})">salvar</button>
+      </div>
+    </div>`;
+  const c = $("#cn-corpo"); if (c) c.scrollTop = c.scrollHeight;
+}
+function mostrarFotoColuna() {
+  const f = $("#cn-nota-foto")?.files?.[0];
+  if ($("#cn-foto-nome")) $("#cn-foto-nome").textContent = f ? f.name.slice(0, 28) : "";
+}
+function colarNaColunaNotas(ev) {
+  const item = [...(ev.clipboardData?.items || [])].find((i) => i.type.startsWith("image/"));
+  if (!item) return;
+  const arq = item.getAsFile();
+  if (!arq) return;
+  ev.preventDefault();
+  const dt = new DataTransfer();
+  dt.items.add(new File([arq], `print-${Date.now()}.png`, { type: arq.type }));
+  if ($("#cn-nota-foto")) { $("#cn-nota-foto").files = dt.files; mostrarFotoColuna(); }
+  toast("print colado na nota");
+}
+async function salvarNotaColuna(leadId) {
+  const campo = $("#cn-nota-input");
+  const t = campo?.value.trim();
+  const foto = $("#cn-nota-foto")?.files?.[0] || null;
+  if (!t && !foto) return toast("escreve a nota ou cola um print");
+  let r;
+  if (foto) {
+    const fd = new FormData();
+    fd.append("texto", t || "");
+    fd.append("foto", foto);
+    r = await api("/api/lead/" + leadId + "/notas", { method: "POST", body: fd });
+  } else {
+    r = await api("/api/lead/" + leadId + "/notas", { method: "POST", body: JSON.stringify({ texto: t }) });
+  }
+  if (r?.erro) return alert("erro ao salvar: " + r.erro);
+  if (campo) campo.value = "";
+  if ($("#cn-nota-foto")) $("#cn-nota-foto").value = "";
+  toast("nota salva");
+  abrirConversa(leadId); atualizar();
+}
+
 // campos do painel alterados e ainda nao salvos (valor mudou sem disparar o change)
 function camposSujosPainel() {
   return [...document.querySelectorAll("#painel-notas .pn-corpo input, #painel-notas .pn-corpo select")]
@@ -2237,7 +2346,8 @@ let notasEmChat = localStorage.getItem("notas_em_chat") === "1";
 function alternarLayoutNotas() {
   notasEmChat = !notasEmChat;
   localStorage.setItem("notas_em_chat", notasEmChat ? "1" : "0");
-  toast(notasEmChat ? "notas em coluna (modo chat)" : "visualização padrão");
+  toast(notasEmChat ? "notas na coluna da direita" : "notas dentro do card");
+  if (!notasEmChat) document.querySelector(".conversas-wrap")?.classList.remove("notas-divididas");
   if (convAberta) abrirConversa(convAberta);
 }
 
