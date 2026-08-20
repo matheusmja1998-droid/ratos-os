@@ -61,9 +61,16 @@ async function montarSystemPrompt(clinicaId: string, canal?: string): Promise<st
   if (materiais.length > 0) {
     let total = 0;
     const partes: string[] = [];
+    // TETO: 14k chars (~3.5k tokens). Era 9k e estava DESCARTANDO material
+    // operacional em silencio (caso real Pulmonar 21/08: "Regras de atendimento"
+    // e a tabela de precos nunca entravam no prompt). O system prompt fixo ja
+    // tem ~21k chars e o Haiku tem 200k de contexto — 14k cabe com folga, e o
+    // prompt caching (cache_control ephemeral) segura o custo.
+    // NAO usar `break`: um material grande no meio da fila derrubava TODOS os
+    // seguintes. Agora pula so o que nao cabe e continua tentando os proximos.
     for (const m of materiais) {
       const trecho = String(m.conteudo || "").slice(0, 3000);
-      if (total + trecho.length > 9000) break;
+      if (total + trecho.length > 14000) continue;
       total += trecho.length;
       partes.push(`--- ${m.nome} ---\n${trecho}`);
     }
