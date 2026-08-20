@@ -12,6 +12,22 @@ type Exame = {
   status: number;
 };
 
+// exame marcado PELA IA (mora so no nosso banco — a recepcao lanca manual no
+// sistema da clinica). Vem separado dos exames que ja estao na Feegow.
+type ExameIA = {
+  id: string;
+  inicio: string;
+  fim: string;
+  status: string;
+  observacao: string;
+  guiaUrl: string | null;
+  pacienteNome: string;
+  pacienteTelefone: string;
+  pagamento: string | null;
+  convenioNome: string | null;
+  feegowAgendamentoId: string | null;
+};
+
 // soma dias a "YYYY-MM-DD" sem fuso (wall-clock)
 function somaDias(dia: string, n: number): string {
   const [y, m, d] = dia.split("-").map(Number);
@@ -40,6 +56,7 @@ export default function ExamesView({
   const [dia, setDia] = useState(hoje);
   const [exameFiltro, setExameFiltro] = useState<string>("todos");
   const [exames, setExames] = useState<Exame[]>([]);
+  const [daIA, setDaIA] = useState<ExameIA[]>([]);
   const [catalogo, setCatalogo] = useState<{ id: string; nome: string }[]>([]);
   const [nomes, setNomes] = useState<Record<string, string>>({});
   const [carregando, setCarregando] = useState(true);
@@ -57,6 +74,7 @@ export default function ExamesView({
         if (!vivo) return;
         if (j.erro) setErro(j.erro);
         setExames(j.exames || []);
+        setDaIA(j.daIA || []);
         if (j.catalogo?.length) setCatalogo(j.catalogo);
       })
       .catch(() => vivo && setErro("não consegui carregar"))
@@ -171,13 +189,82 @@ export default function ExamesView({
         )}
       </div>
 
+      {/* MARCADOS PELA IA — a recepcao lanca esses no sistema da clinica.
+          Ficam NO TOPO e destacados porque sao a fila de trabalho dela. */}
+      {!carregando && daIA.length > 0 && (
+        <div style={{ marginBottom: 18 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8, flexWrap: "wrap" }}>
+            <div style={{ fontSize: 15, fontWeight: 700 }}>Marcados pela IA</div>
+            <span
+              style={{
+                fontSize: 12,
+                fontWeight: 700,
+                color: "#a16207",
+                background: "rgba(202,138,4,0.14)",
+                border: "1px solid rgba(202,138,4,0.35)",
+                padding: "3px 10px",
+                borderRadius: 999,
+              }}
+            >
+              {daIA.length} pra lançar no sistema
+            </span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {daIA.map((e) => (
+              <div
+                key={e.id}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 14,
+                  padding: "12px 16px",
+                  border: "1px solid rgba(202,138,4,0.45)",
+                  borderRadius: 10,
+                  background: "rgba(202,138,4,0.06)",
+                }}
+              >
+                <div style={{ fontSize: 18, fontWeight: 700, minWidth: 58, fontVariantNumeric: "tabular-nums" }}>
+                  {e.inicio.slice(11, 16)}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 600, fontSize: 14 }}>
+                    {e.pacienteNome || e.pacienteTelefone || "(sem nome)"}
+                  </div>
+                  <div style={{ color: "var(--muted)", fontSize: 12.5, marginTop: 2 }}>
+                    {e.observacao || "exame"}
+                  </div>
+                  <div style={{ color: "var(--muted)", fontSize: 12, marginTop: 2 }}>
+                    {e.pacienteTelefone}
+                    {e.convenioNome ? ` · ${e.convenioNome}` : e.pagamento === "particular" ? " · Particular" : ""}
+                    {` · ${e.inicio.slice(8, 10)}/${e.inicio.slice(5, 7)}`}
+                  </div>
+                </div>
+                {e.guiaUrl && (
+                  <a
+                    href={e.guiaUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn-fantasma"
+                    style={{ padding: "6px 12px", fontSize: 12.5, whiteSpace: "nowrap", textDecoration: "none" }}
+                  >
+                    ver guia
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {carregando ? (
         <div style={{ color: "var(--muted)", padding: 20 }}>carregando exames do Feegow…</div>
       ) : erro ? (
         <div style={{ color: "#c0392b", padding: 20 }}>Erro: {erro}. Tenta de novo em instantes.</div>
       ) : filtrados.length === 0 ? (
         <div style={{ color: "var(--muted)", padding: 30, textAlign: "center", border: "1px dashed var(--border-forte)", borderRadius: 12 }}>
-          Nenhum exame {exameFiltro !== "todos" ? "desse tipo " : ""}agendado nesse dia.
+          {daIA.length > 0
+            ? "Nenhum exame lançado no sistema da clínica nesse dia (os marcados pela IA estão acima)."
+            : `Nenhum exame ${exameFiltro !== "todos" ? "desse tipo " : ""}agendado nesse dia.`}
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>

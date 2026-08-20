@@ -2321,3 +2321,39 @@ export async function conversaCompleta(clinicaId: string, telefone: string) {
     origem: m.origem || null,
   }));
 }
+
+// EXAMES marcados pela IA no nosso banco (a "agenda de exames do Facilita").
+// A Pulmonar NAO tem espelho de exame na Feegow (desligado 22/07 — agendamento
+// criado por API fica invisivel na Agenda de Equipamentos deles). Entao esses
+// exames vivem SO aqui e a recepcao lanca manualmente na Feegow. Sem isso a
+// aba "Agenda de exames" so mostrava o que ja estava na Feegow e o exame
+// marcado pela IA sumia (reclamacao real da Cibele, 21/08).
+// Exame = consulta com guia_url ou observacao de exame; nunca cancelada.
+export async function examesMarcadosPelaIA(clinicaId: string, deISO: string, ateISO: string) {
+  const consultas = await driver().query("consultas", {
+    eq: { clinica_id: clinicaId },
+    gte: { inicio: deISO },
+    lte: { inicio: ateISO },
+  });
+  const validas = consultas.filter((c: any) => c.status !== "cancelada");
+  if (validas.length === 0) return [];
+  // nome/telefone do paciente pra recepcao conseguir lancar na Feegow
+  const pacientes = await driver().selectMany("pacientes", { clinica_id: clinicaId });
+  const porId = new Map(pacientes.map((p: any) => [p.id, p]));
+  return validas.map((c: any) => {
+    const p: any = porId.get(c.paciente_id);
+    return {
+      id: c.id,
+      inicio: c.inicio,
+      fim: c.fim,
+      status: c.status,
+      observacao: c.observacao || "",
+      guiaUrl: c.guia_url || null,
+      pacienteNome: p?.nome || p?.wa_nome || "",
+      pacienteTelefone: p?.telefone || "",
+      pagamento: c.pagamento || null,
+      convenioNome: c.convenio_nome || null,
+      feegowAgendamentoId: c.feegow_agendamento_id || null,
+    };
+  });
+}

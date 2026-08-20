@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getClinica } from "@/lib/db";
+import { getClinica, examesMarcadosPelaIA } from "@/lib/db";
 import { feegowConectada, agendaExamesFeegow, listarExamesFeegow, nomesPacientesFeegow } from "@/lib/feegow";
 import { clinicaPermitida } from "@/lib/sessao";
 
@@ -13,8 +13,17 @@ export async function GET(req: NextRequest) {
   if (!clinicaId) return NextResponse.json({ erro: "acesso negado" }, { status: 403 });
 
   const clinica = await getClinica(clinicaId);
+  const hojeBase = new Date().toISOString().slice(0, 10);
+  const deBase = req.nextUrl.searchParams.get("de") || hojeBase;
+  const ateBase = req.nextUrl.searchParams.get("ate") || deBase;
+
+  // Exames marcados PELA IA (moram so no nosso banco). A recepcao lanca esses
+  // manualmente no sistema da clinica — por isso eles PRECISAM aparecer aqui.
+  const daIA = await examesMarcadosPelaIA(clinicaId, `${deBase}T00:00:00`, `${ateBase}T23:59:59`).catch(() => []);
+
   if (!feegowConectada(clinica)) {
-    return NextResponse.json({ conectado: false, exames: [], catalogo: [] });
+    // sem integracao a aba continua util: mostra o que a IA marcou
+    return NextResponse.json({ conectado: false, exames: [], catalogo: [], daIA });
   }
 
   // modo 2: resolver nomes de pacientes (segundo passo, sob demanda)
@@ -29,9 +38,8 @@ export async function GET(req: NextRequest) {
   }
 
   // modo 1: agenda do dia — retorna rapido (so 2 chamadas: search + procedures)
-  const hoje = new Date().toISOString().slice(0, 10);
-  const de = req.nextUrl.searchParams.get("de") || hoje;
-  const ate = req.nextUrl.searchParams.get("ate") || de;
+  const de = deBase;
+  const ate = ateBase;
   try {
     const [exames, catalogo] = await Promise.all([
       // filtra pela UNIDADE configurada (feegow_local_id) — BH agora, Betim depois
@@ -42,10 +50,11 @@ export async function GET(req: NextRequest) {
       conectado: true,
       exames,
       catalogo,
+      daIA,
       unidadeNome: clinica.feegow_unidade_nome || "",
     });
   } catch (e: any) {
     console.warn("[api/exames] falhou:", e.message);
-    return NextResponse.json({ conectado: true, exames: [], catalogo: [], erro: "falha ao ler o Feegow" });
+    return NextResponse.json({ conectado: true, exames: [], catalogo: [], daIA, erro: "falha ao ler o Feegow" });
   }
 }
