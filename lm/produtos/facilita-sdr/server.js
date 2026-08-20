@@ -462,8 +462,19 @@ app.get("/api/lead/:id/resumo", auth, async (req, res) => {
 });
 
 app.patch("/api/lead/:id", auth, (req, res) => {
-  atualizarLead(req.params.id, req.body || {});
-  res.json({ ok: true, lead: getLead(req.params.id) });
+  const campos = req.body || {};
+  const antes = getLead(req.params.id);
+  if (!antes) return res.status(404).json({ erro: "lead nao existe" });
+  atualizarLead(req.params.id, campos);
+  const depois = getLead(req.params.id);
+  // CONFIRMA que gravou: campo fora da whitelist sumia em silencio e a pessoa
+  // achava que tinha salvado. Agora o painel recebe o erro e avisa.
+  const ignorados = Object.keys(campos).filter((k) => {
+    const novo = campos[k] === "" ? null : campos[k];
+    return String(depois[k] ?? "") !== String(novo ?? "");
+  });
+  if (ignorados.length) return res.status(400).json({ erro: `campo(s) não salvos: ${ignorados.join(", ")}`, lead: depois });
+  res.json({ ok: true, lead: depois });
 });
 
 app.delete("/api/lead/:id", auth, (req, res) => {

@@ -313,6 +313,8 @@
   .ia-rot { font-size:12px; color:var(--muted); font-weight:600; white-space:nowrap; }
   html[data-tema="dark"] .ia-switch.on .ia-pill { background:#10231a; }
   html[data-tema="dark"] .ia-switch.off .ia-pill { background:#151a26; }
+  /* piscada verde confirmando que o campo foi salvo */
+  .campo-salvo { outline:2px solid var(--verde) !important; transition:outline .2s; }
   /* separador de DIA no chat (estilo WhatsApp) */
   .dia-sep { display:flex; justify-content:center; margin:12px 0 8px; }
   .dia-sep span { background:rgba(0,0,0,.06); color:var(--muted); font-size:11px; font-weight:700;
@@ -1879,8 +1881,10 @@ async function abrirConversa(id, auto) {
     const digitando = (el) => el && (document.activeElement === el || el.value.trim());
     // digitando em QUALQUER campo do painel do lead (atendente, decisor, telefone...):
     // nao redesenha, senao o texto some no meio da digitacao
-    const focoPainel = document.activeElement?.closest?.("#painel-notas");
-    if (convAberta === id && (digitando(cx) || digitando(nt) || focoPainel)) return;
+    const focoPainel = document.activeElement?.closest?.("#painel-notas, #coluna-notas");
+    // campo alterado e ainda nao salvo? segura o refresh (senao o valor colado some)
+    const pendente = convAberta === id && camposSujosPainel().length > 0;
+    if (convAberta === id && (digitando(cx) || digitando(nt) || focoPainel || pendente)) return;
   }
   // trocando de lead com alteracao nao salva no painel: pergunta antes de descartar
   if (!auto && convAberta && convAberta !== id) confirmarPendenciasPainel();
@@ -2200,11 +2204,11 @@ function renderPainelNotas(d) {
       <div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:6px">
         ${(pipeAtual?.etapas || []).map((e) => `<button class="btn mini ${e.id === l.etapa_id ? "" : "sec"}" style="font-size:10.5px; padding:4px 7px" onclick="moverParaPipeline(${l.id}, ${e.id})">${e.nome}</button>`).join("")}
       </div>`)}
-      ${linha("Responsável", `<select onchange="editarCampo(${l.id}, 'usuario_id', this.value)">
+      ${linha("Responsável", `<select onchange="editarCampo(${l.id}, 'usuario_id', this.value, this)">
         <option value="">— ninguém —</option>
         ${(d.usuarios || []).map((u) => `<option value="${u.id}" ${u.id === l.usuario_id ? "selected" : ""}>${u.nome}</option>`).join("")}
       </select>`)}
-      ${linha("Valor", `<input type="number" value="${l.valor_venda || ""}" placeholder="0,00" onchange="editarCampo(${l.id}, 'valor_venda', this.value)">`)}
+      ${linha("Valor", `<input type="number" value="${l.valor_venda || ""}" placeholder="0,00" onchange="editarCampo(${l.id}, 'valor_venda', this.value, this)" oninput="autoSalvarCampo(${l.id}, 'valor_venda', this)">`)}
       ${linha("Tag", `<span style="font-size:12.5px">${l.tag_importacao || l.origem_lista || "<i style='color:var(--muted)'>sem tag</i>"}</span>`)}
 
       <div class="pn-secao">Contato</div>
@@ -2214,8 +2218,8 @@ function renderPainelNotas(d) {
           ${t.rotulo ? `<span style="color:var(--muted); font-size:11px">${t.rotulo}</span>` : ""}
         </div>`).join("") + `
         <input id="novo-tel" placeholder="+ adicionar telefone (Enter salva)" style="font-size:12px; margin-top:2px" onkeydown="if(event.key==='Enter')addTelefone(${l.id})" onchange="addTelefone(${l.id})">`)}
-      ${linha("Atendente", `<input value="${l.nome_atendente || l.nome_contato || ""}" placeholder="quem atendeu" onchange="editarCampo(${l.id}, 'nome_atendente', this.value)">`)}
-      ${linha("Decisor", `<input value="${l.nome_decisor || ""}" placeholder="nome do decisor" onchange="editarCampo(${l.id}, 'nome_decisor', this.value)">`)}
+      ${linha("Atendente", `<input value="${l.nome_atendente || l.nome_contato || ""}" placeholder="quem atendeu" onchange="editarCampo(${l.id}, 'nome_atendente', this.value, this)" oninput="autoSalvarCampo(${l.id}, 'nome_atendente', this)">`)}
+      ${linha("Decisor", `<input value="${l.nome_decisor || ""}" placeholder="nome do decisor" onchange="editarCampo(${l.id}, 'nome_decisor', this.value, this)" oninput="autoSalvarCampo(${l.id}, 'nome_decisor', this)">`)}
       ${linha("Tel. decisor", tels.filter((t) => t.tipo === "decisor").map((t) => `
         <div style="display:flex; gap:6px; align-items:center">
           <span class="num-clicavel" onclick="menuTelefone(event, '${t.numero}', ${l.id}, ${t.id}, 'Decisor')">${fmtTel(t.numero)}</span>
@@ -2223,13 +2227,13 @@ function renderPainelNotas(d) {
         </div>`).join("") || `<input id="novo-tel-decisor" placeholder="telefone do decisor (Enter salva)" style="font-size:12px" onkeydown="if(event.key==='Enter')addTelefoneDecisor(${l.id})" onchange="addTelefoneDecisor(${l.id})">`)}
 
       <div class="pn-secao">Empresa</div>
-      ${linha("Nicho", `<input value="${l.nicho || ""}" placeholder="ex: Odontologia" onchange="editarCampo(${l.id}, 'nicho', this.value)">`)}
+      ${linha("Nicho", `<input value="${l.nicho || ""}" placeholder="ex: Odontologia" onchange="editarCampo(${l.id}, 'nicho', this.value, this)" oninput="autoSalvarCampo(${l.id}, 'nicho', this)">`)}
       ${linha("Site", l.site
         ? `<span class="num-clicavel" onclick="menuLink(event, '${(l.site || "").replace(/'/g, "")}')">${(l.site || "").replace(/^https?:\/\//, "").slice(0, 32)}</span>`
-        : `<input value="" placeholder="site da empresa" onchange="editarCampo(${l.id}, 'site', this.value)">`)}
+        : `<input value="" placeholder="site da empresa" onchange="editarCampo(${l.id}, 'site', this.value, this)" oninput="autoSalvarCampo(${l.id}, 'site', this)">`)}
       ${linha("Google", l.google_negocio
         ? `<span class="num-clicavel" onclick="menuLink(event, '${(l.google_negocio || "").replace(/'/g, "")}')">abrir perfil</span>`
-        : `<input value="" placeholder="link do Google Meu Negócio" onchange="editarCampo(${l.id}, 'google_negocio', this.value)">`)}
+        : `<input value="" placeholder="link do Google Meu Negócio" onchange="editarCampo(${l.id}, 'google_negocio', this.value, this)" oninput="autoSalvarCampo(${l.id}, 'google_negocio', this)">`)}
 
       <div class="pn-secao">Registrar ligação</div>
       <div style="padding:9px 14px; display:flex; gap:5px; flex-wrap:wrap">
@@ -2333,11 +2337,13 @@ function camposSujosPainel() {
   return [...document.querySelectorAll("#painel-notas .pn-corpo input, #painel-notas .pn-corpo select")]
     .filter((c) => c.dataset.ini !== undefined && c.value !== c.dataset.ini);
 }
+// saindo do lead com campo alterado: SALVA na hora (nao pergunta, nao descarta —
+// perder o que a pessoa colou e pior que salvar sem confirmar)
 function confirmarPendenciasPainel() {
   const sujos = camposSujosPainel();
   if (!sujos.length) return;
-  if (confirm("Você alterou dados desse lead e não salvou. Salvar as alterações?"))
-    sujos.forEach((c) => c.dispatchEvent(new Event("change")));
+  sujos.forEach((c) => c.dispatchEvent(new Event("change")));
+  toast(`${sujos.length} alteração(ões) salva(s)`);
 }
 
 // visualizacao das notas: normal (empilhado) ou "chat" (dados | notas lado a lado).
@@ -2620,9 +2626,30 @@ async function registrarLigacao(id, resultado, disparar = false) {
   abrirConversa(id); carregarKanban(); atualizar();
 }
 
-async function editarCampo(id, campo, valor) {
-  await api("/api/lead/" + id, { method: "PATCH", body: JSON.stringify({ [campo]: valor === "" ? null : valor }) });
+async function editarCampo(id, campo, valor, el = null) {
+  const alvo = el || (window.event?.target ?? null);
+  const r = await api("/api/lead/" + id, { method: "PATCH", body: JSON.stringify({ [campo]: valor === "" ? null : valor }) })
+    .catch(() => ({ erro: "falha de rede" }));
+  if (r?.erro) { alert("não salvou: " + r.erro); return; }
+  if (alvo) {
+    alvo.dataset.ini = alvo.value;               // marca como salvo (guard de saida)
+    alvo.classList.add("campo-salvo");
+    setTimeout(() => alvo.classList.remove("campo-salvo"), 900);
+  }
   await carregarKanban(); atualizar();
+}
+
+// AUTOSAVE dos campos do card: salva ~1.2s depois de parar de digitar OU colar,
+// sem depender de sair do campo (colar com o mouse e trocar de tela perdia o dado).
+const _timersCampo = new Map();
+function autoSalvarCampo(id, campo, el) {
+  const chave = `${id}:${campo}`;
+  clearTimeout(_timersCampo.get(chave));
+  _timersCampo.set(chave, setTimeout(() => {
+    _timersCampo.delete(chave);
+    if (el.value === el.dataset.ini) return;     // nada mudou de fato
+    editarCampo(id, campo, el.value, el);
+  }, 1200));
 }
 async function addTelefone(id) {
   const el = $("#novo-tel");
@@ -3941,6 +3968,9 @@ function iniciar() {
   atualizar();
   carregarExtras();
   clearInterval(pollTimer);
+  window.addEventListener("beforeunload", (e) => {
+    if (camposSujosPainel().length) { e.preventDefault(); e.returnValue = ""; }
+  });
   pollTimer = setInterval(() => { atualizar(); if (convAberta && $("#aba-conversas").style.display !== "none") abrirConversa(convAberta, true); }, 12000);
 }
 SENHA ? iniciar() : mostrarLogin();
