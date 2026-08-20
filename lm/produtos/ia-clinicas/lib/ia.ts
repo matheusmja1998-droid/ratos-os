@@ -169,7 +169,7 @@ AGENDAMENTO DE EXAME (fluxo especifico — MUITO usado nessa clinica):
 6. Marque com agendar_consulta passando OBRIGATORIAMENTE: feegow_exame_id (o exame — SEM isso vira consulta errada), cpf, anexar_guia=true, e o nome do exame na observacao. NUNCA marque exame sem feegow_exame_id.
 7. So confirme "ta marcado" pro paciente se o sistema responder que registrou. Se o sistema disser que NAO registrou no Feegow, NAO diga que marcou — avise que a equipe vai finalizar.
 - EXAMES CASADOS — NUNCA use item de "PACOTE" (regra da Pulmonar, 21/08): "Pacote" NAO e uma agenda, e so um codigo de procedimento criado pra particular. A agenda real e a de CADA exame (Pletismografia, DLCO, Prova ventilatoria completa). Se a guia pedir Prova + Pletismografia + DLCO:
-  - Consulte a agenda da PLETISMOGRAFIA e do DLCO (esses dois SEMPRE tem o mesmo horario livre) e ofereca esses horarios ao paciente.
+  - Consulte UMA VEZ SO com ver_horarios_exame passando exame_id=<Pletismografia> e exames_casados=[<DLCO>]. O sistema cruza as duas agendas e devolve so os horarios livres NAS DUAS. NUNCA consulte uma agenda so e assuma que a outra tem o mesmo horario: pode ter paciente marcado so no DLCO e voce ofereceria um horario impossivel.
   - Marque o paciente NOS DOIS: um agendamento na Pletismografia e outro no DLCO, no MESMO horario escolhido.
   - A PROVA DE FUNCAO (Prova ventilatoria completa) voce NAO marca: e o exame base, fica em outro setor no mesmo horario e a recepcao lanca como ENCAIXE. Nao consulte nem ofereca a agenda dela, e nao avise o paciente de nada disso — pra ele os exames foram todos agendados no mesmo horario.
   - Ao confirmar, diga os NOMES dos exames agendados (nunca a palavra "pacote").
@@ -413,6 +413,12 @@ const TOOLS: Anthropic.Tool[] = [
       type: "object",
       properties: {
         exame_id: { type: "string", description: "exame_id da lista EXAMES QUE A CLINICA REALIZA" },
+        exames_casados: {
+          type: "array",
+          items: { type: "string" },
+          description:
+            "OS OUTROS exame_id que precisam do MESMO horario (ex: pedindo Pletismografia + DLCO, passe exame_id da Pletismografia e exames_casados=[id do DLCO]). O sistema cruza as agendas e devolve SO os horarios livres em TODAS — sem isso voce pode oferecer um horario que ja esta ocupado em uma delas.",
+        },
         data: {
           type: "string",
           description: "data YYYY-MM-DD quando o paciente pede um dia especifico (ex: amanha = data de hoje + 1)",
@@ -605,14 +611,41 @@ export async function executarTool(
       const [y, mo, d] = inicioBusca.split("-").map(Number);
       const ate = new Date(Date.UTC(y, mo - 1, d + 21));
       const ateStr = `${ate.getUTCFullYear()}-${String(ate.getUTCMonth() + 1).padStart(2, "0")}-${String(ate.getUTCDate()).padStart(2, "0")}`;
+      // EXAMES CASADOS (ex: Pletismografia + DLCO): o paciente precisa do MESMO
+      // horario livre em TODAS as agendas envolvidas. Nao da pra assumir que
+      // elas coincidem — pode ter alguem marcado so no DLCO e o horario
+      // aparecer livre na Pletismografia (caso real levantado pela Cibele,
+      // 21/08). Aqui cruzamos as agendas e so sobra o que serve pros dois.
+      const idsCasados = [String(input.exame_id), ...(Array.isArray(input.exames_casados) ? input.exames_casados.map(String) : [])]
+        .map((x) => x.trim())
+        .filter((x, i, arr) => x && arr.indexOf(x) === i);
+
       // filtra pela UNIDADE da clinica (BH) — nao oferece horario de outra unidade
-      const dias = await horariosExameFeegow(clin.feegow_token, String(input.exame_id), inicioBusca, ateStr, clin.feegow_local_id);
-      if (dias.length === 0) return { resultado: "Sem horarios livres pra esse exame nas proximas semanas. Ofereca a lista de espera ou passe pra um atendente." };
+      const agendas = await Promise.all(
+        idsCasados.map((id) => horariosExameFeegow(clin.feegow_token, id, inicioBusca, ateStr, clin.feegow_local_id))
+      );
+      // interseccao por dia: horario so entra se estiver livre em TODAS
+      const dias = agendas[0]
+        .map((d) => {
+          const horarios = d.horarios.filter((h) =>
+            agendas.every((ag) => (ag.find((x) => x.data === d.data)?.horarios || []).includes(h))
+          );
+          return { data: d.data, horarios };
+        })
+        .filter((d) => d.horarios.length > 0);
+      const rotuloCasado = idsCasados.length > 1 ? ` (horarios livres nas ${idsCasados.length} agendas)` : "";
+      if (dias.length === 0)
+        return {
+          resultado:
+            idsCasados.length > 1
+              ? "Nao ha NENHUM horario livre em todas as agendas desses exames casados nas proximas semanas. NAO ofereca horario: avise que precisa checar com a equipe e passe pra um atendente."
+              : "Sem horarios livres pra esse exame nas proximas semanas. Ofereca a lista de espera ou passe pra um atendente.",
+        };
       if (dataPedida) {
         const doDia = dias.find((dd) => dd.data === dataPedida);
         if (doDia) {
           return {
-            resultado: `Horarios do exame em ${dataComDia(doDia.data)}: ${doDia.horarios.slice(0, 3).join(", ")}${doDia.horarios.length > 3 ? " (tem mais, se pedir)" : ""}. (marque com agendar_consulta passando feegow_exame_id=${input.exame_id})`,
+            resultado: `Horarios do exame em ${dataComDia(doDia.data)}${rotuloCasado}: ${doDia.horarios.slice(0, 3).join(", ")}${doDia.horarios.length > 3 ? " (tem mais, se pedir)" : ""}. (marque com agendar_consulta passando feegow_exame_id=${input.exame_id})`,
           };
         }
         const prox = dias[0];
@@ -622,7 +655,7 @@ export async function executarTool(
       }
       const primeiro = dias[0];
       return {
-        resultado: `Proxima disponibilidade do exame: ${dataComDia(primeiro.data)}, horarios ${primeiro.horarios.slice(0, 3).join(", ")}. Ofereca SO esses; se nenhum servir, pergunte a preferencia do paciente (dia/turno) e chame de novo com data. (marque com agendar_consulta passando feegow_exame_id=${input.exame_id})`,
+        resultado: `Proxima disponibilidade do exame${rotuloCasado}: ${dataComDia(primeiro.data)}, horarios ${primeiro.horarios.slice(0, 3).join(", ")}. Ofereca SO esses; se nenhum servir, pergunte a preferencia do paciente (dia/turno) e chame de novo com data. (marque com agendar_consulta passando feegow_exame_id=${input.exame_id})`,
       };
     }
     case "agendar_consulta": {
