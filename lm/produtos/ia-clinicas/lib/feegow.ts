@@ -548,7 +548,11 @@ export async function horariosExameFeegowDetalhado(
     const dow = dt.getUTCDay(); // 0=dom..6=sab
     if (!grade.diasSemana.has(dow)) continue; // exame nao roda nesse dia da semana
     const contDia = ocup.get(dia) || new Map<string, string>();
-    for (const min of grade.slotsMin) {
+    // grade oficial tem horarios DIFERENTES por dia da semana (ex: Ergo tem
+    // segunda 9h-10h e terca-sexta 10:45/11:00/14:50/15:00/15:15)
+    const oficialDia = gradeOficial(procedimentoId);
+    const slotsDoDia = oficialDia ? oficialDia.porDia[dow] || [] : grade.slotsMin;
+    for (const min of slotsDoDia) {
       const porProc = contDia.get(String(min)) || "";
       if (exameOcupado(procedimentoId, porProc)) continue; // recurso lotado
       geradas.push({ data: dia, hora: `${pad(Math.floor(min / 60))}:${pad(min % 60)}`, feegowProfId: feegowProf, localId: feegowLocal });
@@ -565,7 +569,40 @@ export async function horariosExameFeegowDetalhado(
 const EXAME_HORA_MIN = 8 * 60; // 08:00
 const EXAME_HORA_MAX = 17 * 60; // 17:00
 const _gradeCache = new Map<string, { slotsMin: number[]; diasSemana: Set<number> } | null>();
+// GRADES OFICIAIS ditadas pela clinica (vencem o historico). O historico traz
+// ENCAIXE como se fosse grade — a Ergoespirometria, por exemplo, aparecia com
+// 08:45/09:15/11:15/15:10 (encaixes) e a IA oferecia horario que nao existe
+// (caso real 20/08). Aqui a regra da clinica manda.
+// Formato: { [procedimentoId]: { [diaSemana 0=dom..6=sab]: ["HH:MM", ...] } }
+const GRADES_OFICIAIS: Record<string, Record<number, string[]>> = {
+  // Ergoespirometria (Cibele, 20/08): segunda 09:00-10:00 de 15 em 15;
+  // terca a sexta manha 10:45 e 11:00, tarde 14:50, 15:00 e 15:15.
+  "8": {
+    1: ["09:00", "09:15", "09:30", "09:45", "10:00"],
+    2: ["10:45", "11:00", "14:50", "15:00", "15:15"],
+    3: ["10:45", "11:00", "14:50", "15:00", "15:15"],
+    4: ["10:45", "11:00", "14:50", "15:00", "15:15"],
+    5: ["10:45", "11:00", "14:50", "15:00", "15:15"],
+  },
+};
+
+function gradeOficial(procedimentoId: string): { slotsMin: number[]; diasSemana: Set<number>; porDia: Record<number, number[]> } | null {
+  const g = GRADES_OFICIAIS[String(procedimentoId)];
+  if (!g) return null;
+  const paraMin = (h: string) => Number(h.slice(0, 2)) * 60 + Number(h.slice(3, 5));
+  const porDia: Record<number, number[]> = {};
+  const todos = new Set<number>();
+  for (const [dia, horas] of Object.entries(g)) {
+    porDia[Number(dia)] = horas.map(paraMin).sort((a, b) => a - b);
+    porDia[Number(dia)].forEach((m) => todos.add(m));
+  }
+  return { slotsMin: [...todos].sort((a, b) => a - b), diasSemana: new Set(Object.keys(g).map(Number)), porDia };
+}
+
 async function gradeDoExame(token: string, procedimentoId: string): Promise<{ slotsMin: number[]; diasSemana: Set<number> } | null> {
+  // grade ditada pela clinica vence o historico (que mistura encaixe)
+  const oficial = gradeOficial(procedimentoId);
+  if (oficial) return { slotsMin: oficial.slotsMin, diasSemana: oficial.diasSemana };
   const cacheKey = String(procedimentoId);
   if (_gradeCache.has(cacheKey)) return _gradeCache.get(cacheKey)!;
   // janela de historico: ultimos ~90 dias a partir de "hoje" — mas sem Date.now

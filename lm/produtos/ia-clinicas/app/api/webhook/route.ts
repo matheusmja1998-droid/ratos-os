@@ -442,6 +442,17 @@ export async function POST(req: NextRequest) {
         // conteudo com a IA e segue a conversa normal — antes respondia
         // "consigo te ajudar melhor por texto" e matava o fluxo da guia.
         const { texto: extraido, url } = await lerMidia(body, instancia.uazapi_token);
+        if (!extraido) {
+          // NAO deixa em silencio: guia que nao foi lida vira atendimento
+          // manual (a IA perguntando "qual exame?" e o paciente digitando).
+          // Caso real 20/08: PDF de Ergoespirometria chegou como "PEDIDO.pdf"
+          // e a IA nao viu exame nem convenio.
+          console.warn("[webhook] midia NAO lida:", msg.tipo, "arquivo:", msg.texto || "(sem nome)");
+          await enviarAlerta(
+            `📎 Arquivo de ${msg.telefone} NAO foi lido pela IA (${msg.texto || msg.tipo}). ` +
+              `A IA vai pedir os dados por texto — confira a conversa se for guia de exame.`
+          ).catch(() => {});
+        }
         if (extraido) {
           // guarda a midia recente: se a IA agendar exame agora, ela anexa
           // essa guia na consulta (aparece no card da agenda)
@@ -463,7 +474,7 @@ export async function POST(req: NextRequest) {
       const aviso =
         msg.tipo === "audio"
           ? "Oi! Nao consegui ouvir teu audio agora 😅 Pode me escrever por texto o que precisa?"
-          : "Opa! Nao consegui abrir o arquivo que voce mandou 😅 Pode enviar de novo (foto ou PDF) ou me escrever o que precisa?";
+          : "Opa, nao consegui abrir o arquivo aqui. Pode mandar de novo (de preferencia uma FOTO da guia) ou me dizer por texto qual exame o medico pediu e qual seu convenio?";
       await enviarTexto(instancia.uazapi_token, msg.telefone, aviso);
       return NextResponse.json({ ok: true, midia: msg.tipo });
     }
