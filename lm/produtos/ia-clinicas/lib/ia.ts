@@ -168,6 +168,7 @@ AGENDAMENTO DE EXAME (fluxo especifico — MUITO usado nessa clinica):
 5. Peca o CPF do paciente (OBRIGATORIO — sem CPF o exame NAO pode ser marcado): "Pra finalizar, me passa seu CPF, por favor?".
 6. Marque com agendar_consulta passando OBRIGATORIAMENTE: feegow_exame_id (o exame — SEM isso vira consulta errada), cpf, anexar_guia=true, e o nome do exame na observacao. NUNCA marque exame sem feegow_exame_id.
 7. So confirme "ta marcado" pro paciente se o sistema responder que registrou. Se o sistema disser que NAO registrou no Feegow, NAO diga que marcou — avise que a equipe vai finalizar.
+- TESTE DE LATENCIA (MSLT): nunca e feito sozinho nem em horario avulso. E o complemento da polissonografia: o paciente dorme na clinica (entrada 20:30), o exame da noite encerra 06:00 e a latencia comeca 07:00 do dia seguinte, ate ~17:00. A guia PRECISA ter os dois exames; se so pedir a latencia, avise que a clinica nao faz separado e passe pra um atendente. Explique que ele passa a noite e fica ate o fim da tarde do dia seguinte.
 - EXAMES CASADOS — NUNCA use item de "PACOTE" (regra da Pulmonar, 21/08): "Pacote" NAO e uma agenda, e so um codigo de procedimento criado pra particular. A agenda real e a de CADA exame (Pletismografia, DLCO, Prova ventilatoria completa). Se a guia pedir Prova + Pletismografia + DLCO:
   - Consulte UMA VEZ SO com ver_horarios_exame passando exame_id=<Pletismografia> e exames_casados=[<DLCO>]. O sistema cruza as duas agendas e devolve so os horarios livres NAS DUAS. NUNCA consulte uma agenda so e assuma que a outra tem o mesmo horario: pode ter paciente marcado so no DLCO e voce ofereceria um horario impossivel.
   - Marque o paciente NOS DOIS: um agendamento na Pletismografia e outro no DLCO, no MESMO horario escolhido.
@@ -611,6 +612,31 @@ export async function executarTool(
       const [y, mo, d] = inicioBusca.split("-").map(Number);
       const ate = new Date(Date.UTC(y, mo - 1, d + 21));
       const ateStr = `${ate.getUTCFullYear()}-${String(ate.getUTCMonth() + 1).padStart(2, "0")}-${String(ate.getUTCDate()).padStart(2, "0")}`;
+      // TESTE DE LATENCIA (18) / Pacote Poli+Latencia (19): NAO existe horario
+      // avulso. O paciente dorme na clinica (polissonografia 20:30), o exame da
+      // noite encerra 06:00 e a latencia comeca 07:00 do dia SEGUINTE, indo ate
+      // ~17:00 (regra da Cibele, 21/08). A agenda da latencia devolve horarios
+      // soltos (11h, 14h...) que NAO valem pra esse fluxo — oferecer eles seria
+      // marcar errado. Aqui a oferta vira a NOITE da polissonografia.
+      if (String(input.exame_id) === "18" || String(input.exame_id) === "19") {
+        const noites = await horariosExameFeegow(clin.feegow_token, "16", hojeSP(), (() => {
+          const [yy, mm, dd] = hojeSP().split("-").map(Number);
+          const f = new Date(Date.UTC(yy, mm - 1, dd + 21));
+          return `${f.getUTCFullYear()}-${String(f.getUTCMonth() + 1).padStart(2, "0")}-${String(f.getUTCDate()).padStart(2, "0")}`;
+        })(), clin.feegow_local_id).catch(() => []);
+        if (noites.length === 0) {
+          return { resultado: "Sem noite livre pra polissonografia nas proximas semanas — o teste de latencia depende dela. Passe pra um atendente." };
+        }
+        const n = noites[0];
+        return {
+          resultado:
+            `O teste de latencia SO acontece junto com a polissonografia (o paciente dorme aqui e faz a latencia no dia seguinte das 07:00 ate ~17:00). ` +
+            `Proxima NOITE livre: ${dataComDia(n.data)} as ${n.horarios[0] || "20:30"} (entrada). ` +
+            `Confirme com o paciente que a guia tem os DOIS exames (polissonografia + latencia) e explique que ele passa a noite e fica ate o fim da tarde do dia seguinte. ` +
+            `Pra marcar, use agendar_consulta com feegow_exame_id=16 (a noite) e cite os dois exames na observacao.`,
+        };
+      }
+
       // EXAMES CASADOS (ex: Pletismografia + DLCO): o paciente precisa do MESMO
       // horario livre em TODAS as agendas envolvidas. Nao da pra assumir que
       // elas coincidem — pode ter alguem marcado so no DLCO e o horario
