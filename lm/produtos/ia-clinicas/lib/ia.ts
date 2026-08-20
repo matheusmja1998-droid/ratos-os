@@ -1106,6 +1106,9 @@ export async function responder(params: {
   // datas (YYYY-MM-DD) que as ferramentas de agenda REALMENTE consultaram no
   // turno — pra impedir "nao tem vaga nesse dia" sem ter olhado a agenda
   const datasConsultadas = new Set<string>();
+  // horarios que a ferramenta devolveu POR data ("2026-08-27" -> ["09:00"]) —
+  // pra reescrever deterministicamente quando o modelo nega dia COM vaga
+  const horariosPorData = new Map<string, string[]>();
   let negouSemConsultar = 0;
   let correcoesHorario = 0; // ate 3 por turno (1 so deixava a 2a invencao passar)
 
@@ -1168,12 +1171,20 @@ export async function responder(params: {
             // nao veio data, o dia do bloco "Horarios do exame em ..." /
             // "Proxima disponibilidade".
             const pedida = (block.input as any)?.data;
+            let dataDoRetorno: string | null = null;
             if (typeof pedida === "string" && /^\d{4}-\d{2}-\d{2}$/.test(pedida)) {
               datasConsultadas.add(pedida);
+              dataDoRetorno = pedida;
             } else {
               // sem data no input: a ferramenta devolveu o PRIMEIRO dia com vaga
               const primeira = String(resultado).match(/(?:Horarios do exame em|Proxima disponibilidade[^:]*:)[^\d]*(\d{4}-\d{2}-\d{2})/);
-              if (primeira) datasConsultadas.add(primeira[1]);
+              if (primeira) { datasConsultadas.add(primeira[1]); dataDoRetorno = primeira[1]; }
+            }
+            // guarda OS HORARIOS desse dia (se a ferramenta devolveu algum):
+            // e a prova concreta de que o dia TEM vaga
+            if (dataDoRetorno && /[Hh]orarios/.test(resultado)) {
+              const hs = horariosCitados(String(resultado).split("SE o paciente")[0]);
+              if (hs.length) horariosPorData.set(dataDoRetorno, hs);
             }
           }
           toolResults.push({
@@ -1325,7 +1336,20 @@ export async function responder(params: {
         const dd = String(pediuDia[1]).padStart(2, "0");
         precisaConsultar = ![...datasConsultadas].some((d) => d.slice(8, 10) === dd);
       }
-      if (precisaConsultar) {
+      // NEGOU um dia que a ferramenta PROVOU ter vaga? Nao volta pro modelo
+      // (ele ja ignorou o retorno 2x hoje): REESCREVEMOS a resposta com os
+      // horarios reais, deterministico, e segue o jogo.
+      if (pediuDia) {
+        const dd = String(pediuDia[1]).padStart(2, "0");
+        const entrada = [...horariosPorData.entries()].find(([d]) => d.slice(8, 10) === dd);
+        if (entrada && entrada[1].length > 0) {
+          const [dataOk, hs] = entrada;
+          console.warn("[ia] negou dia COM vaga — resposta reescrita:", dataOk, hs.join(","));
+          textoResposta = `Tenho sim! ${dataComDia(dataOk)} tenho ${hs.slice(0, 3).join(" ou ")}. Qual fica melhor pra você?`;
+        }
+      }
+      const negativaAposReescrita = /(n[ãa]o (tem|h[áa]|temos|possui)|sem)\s+(disponibilidade|vaga|hor[áa]rio)/i.test(textoResposta);
+      if (negativaAposReescrita && precisaConsultar) {
         negouSemConsultar++;
         messages.push({ role: "assistant", content: textoResposta });
         messages.push({
