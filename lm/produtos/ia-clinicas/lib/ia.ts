@@ -174,7 +174,8 @@ AGENDAMENTO DE EXAME (fluxo especifico — MUITO usado nessa clinica):
 2. Quando chegar "[O paciente enviou um arquivo" com o conteudo da guia: identifique o(s) exame(s) pedidos e CONFIRA na lista "EXAMES QUE A CLINICA REALIZA" acima. Se o exame NAO estiver na lista, avise com educacao que a clinica nao realiza e NAO marque. Se estiver, anote o exame_id correspondente. Ao confirmar o recebimento, cite SO O NOME do exame ("Recebi a guia da Ergoespirometria!") — NUNCA explique o que o exame e nem o que ele mede (o medico ja pediu; dar aula soa robotico e nao ajuda).
 3. CONVENIO: se a guia JA TRAZ o convenio, apenas confirme ("vi que e pela Unimed, certo?"). So pergunte "convenio ou particular" se a guia nao disser.
 4. OBRIGATORIO: consulte os horarios com ver_horarios_exame (passando o exame_id) ANTES de oferecer qualquer horario. NUNCA invente nem chute horario — SO ofereca EXATAMENTE os que a ferramenta retornou. Se voce nao chamou a ferramenta, NAO diga nenhum horario. Ofereca de forma CURTA (dia mais proximo + poucos horarios da ferramenta).
-4b. Se o paciente pedir OUTRO dia ("amanha", "sexta", "semana que vem", "dia 25"), chame ver_horarios_exame DE NOVO passando data=YYYY-MM-DD do dia pedido. NUNCA passe pro atendente humano so porque o primeiro dia oferecido nao serviu — humano e so quando as ferramentas realmente falharem.
+4b. Se o paciente pedir OUTRO dia ("amanha", "sexta", "semana que vem", "dia 25", "qual outra data?"), chame ver_horarios_exame DE NOVO passando data=YYYY-MM-DD do dia pedido. NUNCA passe pro atendente humano so porque o primeiro dia oferecido nao serviu — humano e so quando as ferramentas realmente falharem.
+4c. PROIBIDO dizer "so tem esse dia" / "nenhuma outra data disponivel" quando a ferramenta LISTOU outras datas com vaga. O retorno da ferramenta diz explicitamente quais outros dias tem vaga — ofereca esses. So afirme que e o unico dia se a ferramenta disser isso com todas as letras. Insistir no mesmo dia depois do paciente pedir alternativa faz ele desistir (caso real 20/08: havia 12 dias livres e a IA repetiu 3x que so tinha um).
 5. ORDEM CERTA: primeiro o paciente ESCOLHE o horario; SO DEPOIS peca CPF e data de nascimento, juntos, numa mensagem so ("Pra finalizar, me passa seu CPF e sua data de nascimento, por favor?"). NUNCA peca CPF/nascimento antes de oferecer e fechar o horario — pedir dados antes da agenda espanta o paciente.
 6. Marque com agendar_consulta passando OBRIGATORIAMENTE: feegow_exame_id (o exame — SEM isso vira consulta errada), cpf, anexar_guia=true, e o nome do exame na observacao. NUNCA marque exame sem feegow_exame_id.
 7. So confirme "ta marcado" pro paciente se o sistema responder que registrou. Se o sistema disser que NAO registrou no Feegow, NAO diga que marcou — avise que a equipe vai finalizar.
@@ -714,7 +715,16 @@ export async function executarTool(
       }
       const primeiro = dias[0];
       return {
-        resultado: `Proxima disponibilidade do exame${rotuloCasado}: ${dataComDia(primeiro.data)}, horarios ${primeiro.horarios.slice(0, 3).join(", ")}. Ofereca SO esses; se nenhum servir, pergunte a preferencia do paciente (dia/turno) e chame de novo com data. (marque com agendar_consulta passando feegow_exame_id=${input.exame_id})`,
+        resultado:
+          `Proxima disponibilidade do exame${rotuloCasado}: ${dataComDia(primeiro.data)}, horarios ${primeiro.horarios.slice(0, 3).join(", ")}. ` +
+          `Ofereca SO esses horarios desse dia. ` +
+          // LISTA as outras datas: sem isso o modelo achava que o unico dia
+          // possivel era o primeiro e dizia "nenhuma outra data disponivel"
+          // mesmo com 12 dias livres (caso real 20/08, broncoprovocacao).
+          (dias.length > 1
+            ? `SE o paciente pedir OUTRO dia, tem vaga tambem em: ${dias.slice(1, 7).map((d) => dataComDia(d.data)).join(" · ")}${dias.length > 7 ? " (e mais adiante)" : ""} — NUNCA diga que so existe um dia. Pra oferecer os horarios de um desses dias, chame de novo com data=YYYY-MM-DD.`
+            : `Esse e o UNICO dia com vaga nas proximas semanas.`) +
+          ` (marque com agendar_consulta passando feegow_exame_id=${input.exame_id})`,
       };
     }
     case "agendar_consulta": {
