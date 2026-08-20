@@ -1262,3 +1262,16 @@ export async function cancelarAgendamentoFeegow(
     return false;
   }
 }
+
+// O paciente JA TEM ficha no Feegow? (busca por CPF — o unico criterio que o
+// /patient/search aceita). A recepcao usa isso pra saber se precisa CADASTRAR
+// antes de lancar o exame. null = nao deu pra checar (nao afirma nada).
+export async function pacienteExisteFeegow(token: string, cpf: string): Promise<boolean | null> {
+  const so = String(cpf || "").replace(/\D/g, "").slice(0, 11);
+  if (so.length !== 11) return null;
+  const r = await fg(token, "/patient/search", { query: { paciente_cpf: so } });
+  if (!r.ok) return null;
+  const lista = conteudo(r.data);
+  const arr = Array.isArray(lista) ? lista : lista ? [lista] : [];
+  return arr.some((p: any) => p?.paciente_id ?? p?.id);
+}

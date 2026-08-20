@@ -124,6 +124,8 @@ CREATE TABLE IF NOT EXISTS pacientes (
   clinica_id  TEXT NOT NULL REFERENCES clinicas(id),
   nome        TEXT,
   telefone    TEXT NOT NULL,          -- E.164, chave de conversa
+  cpf         TEXT,                   -- pra recepcao cadastrar/achar no sistema da clinica
+  nascimento  TEXT,                   -- YYYY-MM-DD (exigido no cadastro de paciente novo)
   ia_pausada  INTEGER DEFAULT 0,      -- 1 quando o atendente humano assumiu (IA calada)
   resumo      TEXT,                   -- resumo da conversa gerado pela IA (cache)
   resumo_atualizado_em TEXT,          -- quando o resumo foi gerado (staleness check)

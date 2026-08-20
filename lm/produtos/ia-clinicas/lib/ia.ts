@@ -14,6 +14,7 @@ import {
   registrarLog,
   criarDuvida,
   duvidasRespondidasRecentes,
+  salvarCadastroPaciente,
 } from "./db";
 import {
   slotsDisponiveis,
@@ -168,6 +169,8 @@ AGENDAMENTO DE EXAME (fluxo especifico — MUITO usado nessa clinica):
 5. Peca o CPF do paciente (OBRIGATORIO — sem CPF o exame NAO pode ser marcado): "Pra finalizar, me passa seu CPF, por favor?".
 6. Marque com agendar_consulta passando OBRIGATORIAMENTE: feegow_exame_id (o exame — SEM isso vira consulta errada), cpf, anexar_guia=true, e o nome do exame na observacao. NUNCA marque exame sem feegow_exame_id.
 7. So confirme "ta marcado" pro paciente se o sistema responder que registrou. Se o sistema disser que NAO registrou no Feegow, NAO diga que marcou — avise que a equipe vai finalizar.
+- AO CONFIRMAR EXAME: envie SEMPRE o ENDERECO da clinica (com "chegue 10 minutos antes") E o PREPARO daquele exame (jejum, suspender medicacao, roupa etc — esta nos materiais). Se nao houver preparo, diga que nao precisa de preparo. Nunca confirme so data e hora.
+- CADASTRO DO PACIENTE: ao marcar EXAME, peca CPF **e data de nascimento** na mesma mensagem ("me passa seu CPF e data de nascimento, por favor"). A recepcao precisa dos dois pra cadastrar quem ainda nao tem ficha no sistema da clinica. Passe os dois em agendar_consulta (cpf e nascimento).
 - TESTE DE LATENCIA (MSLT): e SOMENTE PARTICULAR (nao atende convenio pra esse exame) e nunca e feito sozinho nem em horario avulso. E o complemento da polissonografia: o paciente dorme na clinica (entrada 20:30), o exame da noite encerra 06:00 e a latencia comeca 07:00 do dia seguinte, ate ~17:00. A guia PRECISA ter os dois exames; se so pedir a latencia, avise que a clinica nao faz separado e passe pra um atendente. Explique que ele passa a noite e fica ate o fim da tarde do dia seguinte.
 - EXAMES CASADOS — NUNCA use item de "PACOTE" (regra da Pulmonar, 21/08): "Pacote" NAO e uma agenda, e so um codigo de procedimento criado pra particular. A agenda real e a de CADA exame (Pletismografia, DLCO, Prova ventilatoria completa). Se a guia pedir Prova + Pletismografia + DLCO:
   - Consulte UMA VEZ SO com ver_horarios_exame passando exame_id=<Pletismografia> e exames_casados=[<DLCO>]. O sistema cruza as duas agendas e devolve so os horarios livres NAS DUAS. NUNCA consulte uma agenda so e assuma que a outra tem o mesmo horario: pode ter paciente marcado so no DLCO e voce ofereceria um horario impossivel.
@@ -458,6 +461,11 @@ const TOOLS: Anthropic.Tool[] = [
           type: "string",
           description: "CPF do paciente (so digitos) — necessario pra registrar no sistema da clinica",
         },
+        nascimento: {
+          type: "string",
+          description:
+            "data de nascimento do paciente em YYYY-MM-DD. Peca junto com o CPF: a recepcao precisa dela pra cadastrar quem ainda nao tem ficha no sistema da clinica.",
+        },
         feegow_exame_id: {
           type: "string",
           description: "quando for EXAME: o exame_id da lista de exames (define o procedimento certo no sistema)",
@@ -705,6 +713,14 @@ export async function executarTool(
       const clin = await getClinica(clinicaId);
       const ehExame = Boolean(input.feegow_exame_id);
       const cpf = input.cpf ? String(input.cpf).replace(/\D/g, "") : "";
+      // guarda CPF/nascimento no cadastro local: e o que a recepcao usa pra
+      // cadastrar o paciente no sistema da clinica quando ele ainda nao existe la
+      if (cpf || input.nascimento) {
+        await salvarCadastroPaciente(clinicaId, telefone, {
+          cpf: cpf || undefined,
+          nascimento: input.nascimento ? String(input.nascimento).slice(0, 10) : undefined,
+        }).catch(() => {});
+      }
 
       // REGRA CRITICA (exame): so marca se (a) tem o exame_id, (b) tem CPF, e
       // (c) o horario esta REALMENTE livre no Feegow AGORA (nao confia no que a

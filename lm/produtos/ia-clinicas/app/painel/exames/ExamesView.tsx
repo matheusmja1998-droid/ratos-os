@@ -26,7 +26,29 @@ type ExameIA = {
   pagamento: string | null;
   convenioNome: string | null;
   feegowAgendamentoId: string | null;
+  pacienteCpf?: string;
+  pacienteNascimento?: string;
+  jaCadastrado?: boolean | null;
 };
+
+function formatarCpf(c: string): string {
+  const d = String(c).replace(/\D/g, "");
+  return d.length === 11 ? `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6, 9)}-${d.slice(9)}` : c;
+}
+function formatarData(iso: string): string {
+  const m = String(iso).match(/(\d{4})-(\d{2})-(\d{2})/);
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : iso;
+}
+function Campo({ rotulo, valor }: { rotulo: string; valor: string }) {
+  return (
+    <div>
+      <div style={{ fontSize: 10.5, fontWeight: 700, textTransform: "uppercase", color: "var(--muted)", letterSpacing: 0.3 }}>
+        {rotulo}
+      </div>
+      <div style={{ fontWeight: 600, marginTop: 1 }}>{valor}</div>
+    </div>
+  );
+}
 
 // soma dias a "YYYY-MM-DD" sem fuso (wall-clock)
 function somaDias(dia: string, n: number): string {
@@ -57,6 +79,7 @@ export default function ExamesView({
   const [exameFiltro, setExameFiltro] = useState<string>("todos");
   const [exames, setExames] = useState<Exame[]>([]);
   const [daIA, setDaIA] = useState<ExameIA[]>([]);
+  const [aberto, setAberto] = useState<string | null>(null); // card expandido
   const [catalogo, setCatalogo] = useState<{ id: string; nome: string }[]>([]);
   const [nomes, setNomes] = useState<Record<string, string>>({});
   const [carregando, setCarregando] = useState(true);
@@ -213,6 +236,8 @@ export default function ExamesView({
             {daIA.map((e) => (
               <div
                 key={e.id}
+                onClick={() => setAberto(aberto === e.id ? null : e.id)}
+                title="clique pra ver todos os dados do agendamento"
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -222,6 +247,8 @@ export default function ExamesView({
                   borderLeft: "6px solid #dc2626",
                   borderRadius: 10,
                   background: "rgba(220,38,38,0.07)",
+                  cursor: "pointer",
+                  flexWrap: "wrap",
                 }}
               >
                 <div style={{ fontSize: 18, fontWeight: 800, minWidth: 58, fontVariantNumeric: "tabular-nums", color: "#dc2626" }}>
@@ -240,16 +267,75 @@ export default function ExamesView({
                     {` · ${e.inicio.slice(8, 10)}/${e.inicio.slice(5, 7)}`}
                   </div>
                 </div>
+                {e.jaCadastrado === false && (
+                  <span
+                    title="Esse CPF não tem ficha no sistema da clínica — cadastre o paciente antes de lançar o exame"
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 800,
+                      color: "#fff",
+                      background: "#b45309",
+                      padding: "3px 9px",
+                      borderRadius: 999,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    CADASTRAR PACIENTE
+                  </span>
+                )}
+                {e.jaCadastrado === true && (
+                  <span
+                    title="Paciente já tem ficha no sistema da clínica"
+                    style={{ fontSize: 11, fontWeight: 700, color: "var(--ok)", whiteSpace: "nowrap" }}
+                  >
+                    ✓ já cadastrado
+                  </span>
+                )}
                 {e.guiaUrl && (
                   <a
                     href={e.guiaUrl}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={(ev) => ev.stopPropagation()}
                     className="btn-fantasma"
                     style={{ padding: "6px 12px", fontSize: 12.5, whiteSpace: "nowrap", textDecoration: "none" }}
                   >
                     ver guia
                   </a>
+                )}
+                <span style={{ color: "#dc2626", fontSize: 13, fontWeight: 700 }}>{aberto === e.id ? "▲" : "▼"}</span>
+
+                {/* DETALHE: tudo que a recepcao precisa pra lancar no sistema */}
+                {aberto === e.id && (
+                  <div
+                    style={{
+                      flexBasis: "100%",
+                      marginTop: 10,
+                      paddingTop: 10,
+                      borderTop: "1px dashed rgba(220,38,38,0.4)",
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))",
+                      gap: 10,
+                      fontSize: 13,
+                    }}
+                  >
+                    <Campo rotulo="Paciente" valor={e.pacienteNome || "—"} />
+                    <Campo rotulo="CPF" valor={e.pacienteCpf ? formatarCpf(e.pacienteCpf) : "não informado"} />
+                    <Campo rotulo="Nascimento" valor={e.pacienteNascimento ? formatarData(e.pacienteNascimento) : "não informado"} />
+                    <Campo rotulo="Telefone" valor={e.pacienteTelefone || "—"} />
+                    <Campo rotulo="Convênio" valor={e.convenioNome || (e.pagamento === "particular" ? "Particular" : "—")} />
+                    <Campo rotulo="Data e hora" valor={`${e.inicio.slice(8, 10)}/${e.inicio.slice(5, 7)} às ${e.inicio.slice(11, 16)}`} />
+                    <div style={{ gridColumn: "1 / -1" }}>
+                      <Campo rotulo="Exame" valor={e.observacao || "—"} />
+                    </div>
+                    <div style={{ gridColumn: "1 / -1", color: "var(--muted)", fontSize: 12 }}>
+                      {e.jaCadastrado === false
+                        ? "Paciente SEM ficha no sistema: cadastre com os dados acima antes de lançar o exame."
+                        : e.jaCadastrado === true
+                        ? "Paciente já cadastrado: é só lançar o exame na agenda."
+                        : "Não consegui conferir o cadastro no sistema da clínica."}
+                    </div>
+                  </div>
                 )}
               </div>
             ))}

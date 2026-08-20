@@ -174,6 +174,8 @@ function criarDriverSqlite(): Driver {
     "ALTER TABLE consultas ADD COLUMN klingo_voucher_id TEXT",
     "ALTER TABLE clinicas ADD COLUMN trial_inicio TEXT",
     "ALTER TABLE mensagens ADD COLUMN origem TEXT",
+    "ALTER TABLE pacientes ADD COLUMN cpf TEXT",
+    "ALTER TABLE pacientes ADD COLUMN nascimento TEXT",
   ];
   for (const sql of colunasNovas) {
     try {
@@ -2351,9 +2353,29 @@ export async function examesMarcadosPelaIA(clinicaId: string, deISO: string, ate
       guiaUrl: c.guia_url || null,
       pacienteNome: p?.nome || p?.wa_nome || "",
       pacienteTelefone: p?.telefone || "",
+      pacienteCpf: p?.cpf || "",
+      pacienteNascimento: p?.nascimento || "",
       pagamento: c.pagamento || null,
       convenioNome: c.convenio_nome || null,
       feegowAgendamentoId: c.feegow_agendamento_id || null,
     };
   });
+}
+
+
+// Guarda CPF/nascimento do paciente (a recepcao precisa disso pra cadastrar no
+// sistema da clinica quando o paciente ainda nao existe la). Update cirurgico:
+// so grava o que veio, nunca apaga o que ja estava.
+export async function salvarCadastroPaciente(
+  clinicaId: string,
+  telefone: string,
+  dados: { cpf?: string; nascimento?: string }
+) {
+  const p = await getPacientePorTelefone(clinicaId, telefone);
+  if (!p) return null;
+  const campos: any = {};
+  if (dados.cpf) campos.cpf = String(dados.cpf).replace(/\D/g, "").slice(0, 11);
+  if (dados.nascimento) campos.nascimento = String(dados.nascimento).slice(0, 10);
+  if (Object.keys(campos).length === 0) return p;
+  return driver().update("pacientes", p.id, campos);
 }

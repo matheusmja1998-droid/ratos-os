@@ -189,6 +189,13 @@ export default async function Agenda({
   // Google FALHOU (nao respondeu), OU consulta interna que o Google nao trouxe
   // (medico conectado que respondeu mas o espelho tinha falhado — fallback visivel).
   const internasVisiveis = agendaInterna.filter((c: any) => {
+    // EXAME nao entra na agenda de MEDICOS: ele mora na aba "Agenda de exames".
+    // O profissional na consulta de exame e so uma ancora interna (exame nao
+    // tem medico) — mostrar aqui poluia a agenda do pneumologista com exame
+    // que nao e dele (reclamacao real da Cibele, 21/08).
+    if (c.guia_url || /exame|pletismografia|dlco|polissonografia|espirometria|prova (ventilatoria|de funcao)|latencia|caminhada|feno|ergoespirometria|broncoprovocacao|pemax|pimax/i.test(String(c.observacao || ""))) {
+      return false;
+    }
     if (!respondeuGoogle.has(c.profissional_id)) return true; // nao conectado ou Google falhou
     return !chaveGoogle.has(`${c.profissional_id}|${(c.inicio || "").slice(0, 16)}`);
   });

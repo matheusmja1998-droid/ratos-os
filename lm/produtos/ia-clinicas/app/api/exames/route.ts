@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getClinica, examesMarcadosPelaIA } from "@/lib/db";
-import { feegowConectada, agendaExamesFeegow, listarExamesFeegow, nomesPacientesFeegow } from "@/lib/feegow";
+import { feegowConectada, agendaExamesFeegow, listarExamesFeegow, nomesPacientesFeegow, pacienteExisteFeegow } from "@/lib/feegow";
 import { clinicaPermitida } from "@/lib/sessao";
 
 // GET /api/exames?clinica=ID&de=YYYY-MM-DD&ate=YYYY-MM-DD
@@ -19,7 +19,25 @@ export async function GET(req: NextRequest) {
 
   // Exames marcados PELA IA (moram so no nosso banco). A recepcao lanca esses
   // manualmente no sistema da clinica — por isso eles PRECISAM aparecer aqui.
-  const daIA = await examesMarcadosPelaIA(clinicaId, `${deBase}T00:00:00`, `${ateBase}T23:59:59`).catch(() => []);
+  let daIA = await examesMarcadosPelaIA(clinicaId, `${deBase}T00:00:00`, `${ateBase}T23:59:59`).catch(() => []);
+
+  // JA TEM FICHA no sistema da clinica? A recepcao precisa saber se vai so
+  // lancar o exame ou se tambem tem que CADASTRAR o paciente antes.
+  if (daIA.length > 0 && feegowConectada(clinica)) {
+    const cpfs = [...new Set(daIA.map((e: any) => String(e.pacienteCpf || "")).filter((c) => c.length === 11))];
+    const achados = new Map<string, boolean>();
+    await Promise.all(
+      cpfs.map(async (cpf) => {
+        const existe = await pacienteExisteFeegow(clinica.feegow_token, cpf).catch(() => null);
+        if (existe !== null) achados.set(cpf, existe);
+      })
+    );
+    daIA = daIA.map((e: any) => ({
+      ...e,
+      // true = ja cadastrado | false = precisa cadastrar | null = nao deu pra checar
+      jaCadastrado: e.pacienteCpf ? achados.get(String(e.pacienteCpf)) ?? null : null,
+    }));
+  }
 
   if (!feegowConectada(clinica)) {
     // sem integracao a aba continua util: mostra o que a IA marcou
