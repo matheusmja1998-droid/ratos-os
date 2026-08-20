@@ -448,7 +448,9 @@ async function ConversaDetalhe({
                       {doAtendente ? "atendente" : "IA"}
                     </div>
                   )}
-                  <div className="chat-texto">{m.conteudo}</div>
+                  {/* "|||" separa mensagens enviadas: no painel vira quebra
+                      de linha (o paciente recebeu como mensagens diferentes) */}
+                  <div className="chat-texto">{String(m.conteudo).split("|||").join("\n")}</div>
                   <div className="chat-hora">{quandoCurto(m.quando)}</div>
                 </div>
               </div>

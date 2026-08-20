@@ -144,6 +144,25 @@ async function assumidaDurante(clinicaId: string, telefone: string): Promise<boo
 // pelo tempo que sobra ate o teto (maxDuration - margem) — se audio/tools ja
 // gastaram 20s, nao insiste em mais 9s de delay e estoura a funcao (que mata
 // a resposta no meio: paciente fica sem nada e ainda sofre reenvio da uazapi).
+// A IA separa mensagens com "|||" (confirmacao / endereco / preparo). Aqui
+// viram MENSAGENS DIFERENTES no WhatsApp, como uma pessoa manda — em vez de um
+// paredao unico. Pausa curta entre elas pra ordem chegar certa.
+async function enviarPartes(
+  token: string,
+  telefone: string,
+  texto: string
+): Promise<{ ok: boolean; erro?: string }> {
+  const partes = texto.split("|||").map((t) => t.trim()).filter(Boolean);
+  if (partes.length <= 1) return await enviarTexto(token, telefone, texto);
+  let ultimo: { ok: boolean; erro?: string } = { ok: true };
+  for (let i = 0; i < partes.length; i++) {
+    ultimo = await enviarTexto(token, telefone, partes[i]);
+    if (!ultimo.ok) return ultimo;
+    if (i < partes.length - 1) await new Promise((r) => setTimeout(r, 1200));
+  }
+  return ultimo;
+}
+
 async function enviarHumanizado(
   token: string,
   telefone: string,
@@ -152,7 +171,7 @@ async function enviarHumanizado(
 ): Promise<{ ok: boolean; erro?: string }> {
   if (!texto) return { ok: true };
   // numero de teste: envia direto, sem "digitando" nem espera
-  if (semDelay(telefone)) return await enviarTexto(token, telefone, texto);
+  if (semDelay(telefone)) return await enviarPartes(token, telefone, texto);
   // alvo TOTAL desde o recebimento da mensagem: desconta o que a IA ja gastou
   // processando. Clampa pelo orcamento restante da funcao (nunca estoura o teto).
   const alvoTotalS = DELAY_MIN + Math.floor(Math.random() * Math.max(0, DELAY_MAX - DELAY_MIN + 1));
@@ -168,7 +187,7 @@ async function enviarHumanizado(
     await new Promise((r) => setTimeout(r, Math.min(8000, resta)));
     if (Date.now() < fim) await mostrarDigitando(token, telefone); // renova o "digitando"
   }
-  const r = await enviarTexto(token, telefone, texto);
+  const r = await enviarPartes(token, telefone, texto);
   // NAO deixa a falha em silencio: se o WhatsApp caiu/instancia desconectou,
   // o paciente nao recebe nada e a resposta ja foi salva no historico (a IA
   // "acha" que respondeu) — alerta pra alguem seguir manualmente.

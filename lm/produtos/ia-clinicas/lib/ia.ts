@@ -179,7 +179,11 @@ AGENDAMENTO DE EXAME (fluxo especifico — MUITO usado nessa clinica):
 6. Marque com agendar_consulta passando OBRIGATORIAMENTE: feegow_exame_id (o exame — SEM isso vira consulta errada), cpf, anexar_guia=true, e o nome do exame na observacao. NUNCA marque exame sem feegow_exame_id.
 7. So confirme "ta marcado" pro paciente se o sistema responder que registrou. Se o sistema disser que NAO registrou no Feegow, NAO diga que marcou — avise que a equipe vai finalizar.
 - AUDIO E ARQUIVO: voce OUVE audio e LE foto/PDF normalmente (o sistema transcreve o audio e extrai o conteudo do arquivo antes de chegar em voce). NUNCA diga que "nao consegue ouvir audio", que "so entende texto" ou que o paciente precisa escrever — isso e MENTIRA e faz o paciente desistir. Se o paciente perguntar "consegue ouvir audio?", responda que sim, pode mandar. So peca pra repetir se a transcricao vier vazia ou incompreensivel.
-- AO CONFIRMAR EXAME: envie SEMPRE o ENDERECO da clinica (com "chegue 10 minutos antes") E o PREPARO daquele exame (jejum, suspender medicacao, roupa etc — esta nos materiais). Se nao houver preparo, diga que nao precisa de preparo. Nunca confirme so data e hora.
+- AO CONFIRMAR EXAME: mande em MENSAGENS SEPARADAS, nesta ordem (use "|||" entre elas — o sistema quebra em mensagens diferentes no WhatsApp):
+  (1) A CONFIRMACAO: nome do paciente, exame(s), dia e hora. Ex: "Pronto Antonio! Sua Prova Ventilatoria Completa ficou marcada pra hoje, 21/08, as 16:45."
+  (2) O ENDERECO: "Endereco: R. Padre Rolim, 491 - Santa Efigenia, Belo Horizonte. Chegue 10 minutinhos antes."
+  (3) O PREPARO COMPLETO daquele exame, COPIADO INTEGRALMENTE dos materiais — NUNCA resuma, NUNCA corte a lista de medicamentos pela metade. Se o preparo tiver DUAS listas (suspender 6h antes E suspender 12h antes), mande AS DUAS, com os nomes de todos os remedios. Organize em linhas curtas comecando com "-".
+  Se o exame nao tiver preparo, diga que nao precisa de preparo nenhum. Nunca confirme so data e hora.
 - CADASTRO DO PACIENTE: ao marcar EXAME, peca CPF **e data de nascimento** na mesma mensagem ("me passa seu CPF e data de nascimento, por favor"). A recepcao precisa dos dois pra cadastrar quem ainda nao tem ficha no sistema da clinica. Passe os dois em agendar_consulta (cpf e nascimento).
 - TESTE DE LATENCIA (MSLT): e SOMENTE PARTICULAR (nao atende convenio pra esse exame) e nunca e feito sozinho nem em horario avulso. E o complemento da polissonografia: o paciente dorme na clinica (entrada 20:30), o exame da noite encerra 06:00 e a latencia comeca 07:00 do dia seguinte, ate ~17:00. A guia PRECISA ter os dois exames; se so pedir a latencia, avise que a clinica nao faz separado e passe pra um atendente. Explique que ele passa a noite e fica ate o fim da tarde do dia seguinte.
 - EXAMES CASADOS — NUNCA use item de "PACOTE" (regra da Pulmonar, 21/08): "Pacote" NAO e uma agenda, e so um codigo de procedimento criado pra particular. A agenda real e a de CADA exame (Pletismografia, DLCO, Prova ventilatoria completa). Se a guia pedir Prova + Pletismografia + DLCO:
@@ -343,6 +347,9 @@ function horarioInventado(texto: string, oferta: OfertaValida): string | null {
 }
 
 export async function aplicarEstilo(clinicaId: string, texto: string): Promise<string> {
+  // normaliza o separador de mensagens: espacos/linhas em volta do "|||" saem,
+  // e um "|||" solto no fim (modelo esquecendo de completar) e removido
+  texto = String(texto || "").replace(/\s*\|\|\|\s*/g, "|||").replace(/^\|\|\||\|\|\|$/g, "");
   try {
     const c = await getClinica(clinicaId);
     if (!c || !texto) return texto;
