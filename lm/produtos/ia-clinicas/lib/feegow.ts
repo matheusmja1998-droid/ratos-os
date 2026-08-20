@@ -665,9 +665,14 @@ function exameOcupado(procedimentoId: string, contProcs: string): boolean {
   }
   const p = String(procedimentoId);
   if (p === "12" || p === "13") {
+    // PLETISMOGRAFO: 1 paciente por horario, seja Pletis ou DLCO. A regra
+    // antiga ("2 DLCO por hora") ofereceu horario ja ocupado pro paciente
+    // (caso real 20/08: 14h/15h/16h tinham 1 DLCO cada e a IA ofereceu os
+    // tres). O historico de 90d confirma 1 por horario: 307 horarios com 1
+    // DLCO contra 2 casos isolados de 2+ (encaixe manual da recepcao).
     const pletis = cont.get("12") || 0;
     const dlco = cont.get("13") || 0;
-    return pletis >= 1 || dlco >= 2; // equipamento pletismografo cheio
+    return pletis >= 1 || dlco >= 1; // equipamento ocupado
   }
   return (cont.get(p) || 0) >= 1; // exame independente: 1 por horario
 }
