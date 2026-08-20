@@ -316,3 +316,16 @@ CREATE TABLE IF NOT EXISTS duvidas (
   respondida_em     TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_duvidas_pendentes ON duvidas(clinica_id, status, criado_em);
+
+-- Bloqueios manuais de horario de EXAME (a API da Feegow nao expoe os
+-- bloqueios da Agenda de Equipamentos — ver db/migration-026).
+CREATE TABLE IF NOT EXISTS bloqueios_exame (
+  id          TEXT PRIMARY KEY,
+  clinica_id  TEXT NOT NULL,
+  exame_id    TEXT,
+  data        TEXT NOT NULL,
+  hora_inicio TEXT NOT NULL,
+  hora_fim    TEXT NOT NULL,
+  motivo      TEXT,
+  criado_em   TEXT DEFAULT (datetime('now'))
+);

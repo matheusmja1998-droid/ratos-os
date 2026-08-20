@@ -2379,3 +2379,58 @@ export async function salvarCadastroPaciente(
   if (Object.keys(campos).length === 0) return p;
   return driver().update("pacientes", p.id, campos);
 }
+
+
+// ---------- Bloqueios manuais de horario de EXAME ----------
+// A API publica da Feegow NAO devolve os bloqueios da Agenda de Equipamentos
+// (testado 20/08). Sem isso a IA oferecia horario bloqueado pela recepcao.
+// A clinica cadastra o bloqueio aqui e a oferta de horarios passa a respeitar.
+export async function listBloqueiosExame(clinicaId: string, deISO?: string, ateISO?: string) {
+  const todos = await driver().selectMany("bloqueios_exame", { clinica_id: clinicaId });
+  if (!deISO && !ateISO) return todos;
+  const de = (deISO || "").slice(0, 10);
+  const ate = (ateISO || "9999-12-31").slice(0, 10);
+  return todos.filter((b: any) => String(b.data) >= de && String(b.data) <= ate);
+}
+
+export async function criarBloqueioExame(b: {
+  clinica_id: string;
+  exame_id?: string | null;
+  data: string;
+  hora_inicio: string;
+  hora_fim: string;
+  motivo?: string;
+}) {
+  return driver().insert("bloqueios_exame", {
+    id: uid(),
+    clinica_id: b.clinica_id,
+    exame_id: b.exame_id || null,
+    data: b.data.slice(0, 10),
+    hora_inicio: b.hora_inicio.slice(0, 5),
+    hora_fim: b.hora_fim.slice(0, 5),
+    motivo: b.motivo || null,
+  });
+}
+
+export async function removerBloqueioExame(id: string) {
+  const raw = driver().raw;
+  if (IS_PG) {
+    await raw.from("bloqueios_exame").delete().eq("id", id);
+  } else {
+    raw.prepare("DELETE FROM bloqueios_exame WHERE id = ?").run(id);
+  }
+}
+
+// O horario esta bloqueado? (exame_id null no bloqueio = vale pra todo exame)
+export function horarioBloqueadoExame(
+  bloqueios: any[],
+  exameId: string,
+  dia: string,
+  hora: string
+): boolean {
+  return bloqueios.some((b: any) => {
+    if (String(b.data).slice(0, 10) !== dia) return false;
+    if (b.exame_id && String(b.exame_id) !== String(exameId)) return false;
+    return hora >= String(b.hora_inicio).slice(0, 5) && hora < String(b.hora_fim).slice(0, 5);
+  });
+}

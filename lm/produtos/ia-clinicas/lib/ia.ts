@@ -15,6 +15,8 @@ import {
   criarDuvida,
   duvidasRespondidasRecentes,
   salvarCadastroPaciente,
+  listBloqueiosExame,
+  horarioBloqueadoExame,
 } from "./db";
 import {
   slotsDisponiveis,
@@ -660,10 +662,17 @@ export async function executarTool(
         idsCasados.map((id) => horariosExameFeegow(clin.feegow_token, id, inicioBusca, ateStr, clin.feegow_local_id))
       );
       // interseccao por dia: horario so entra se estiver livre em TODAS
+      // BLOQUEIOS manuais da clinica: a API da Feegow nao devolve os bloqueios
+      // da Agenda de Equipamentos, entao horario bloqueado aparecia livre e a
+      // IA oferecia (caso real 26/08: Ergo 10:45 bloqueada). A clinica cadastra
+      // o bloqueio no painel e ele e aplicado aqui.
+      const bloqs = await listBloqueiosExame(clinicaId, inicioBusca, ateStr).catch(() => []);
       const dias = agendas[0]
         .map((d) => {
-          const horarios = d.horarios.filter((h) =>
-            agendas.every((ag) => (ag.find((x) => x.data === d.data)?.horarios || []).includes(h))
+          const horarios = d.horarios.filter(
+            (h) =>
+              agendas.every((ag) => (ag.find((x) => x.data === d.data)?.horarios || []).includes(h)) &&
+              !idsCasados.some((id) => horarioBloqueadoExame(bloqs, id, d.data, h))
           );
           return { data: d.data, horarios };
         })
@@ -735,7 +744,10 @@ export async function executarTool(
         const hhmm = input.inicio.slice(11, 16);
         const dispon = await horariosExameFeegow(clin.feegow_token, String(input.feegow_exame_id), dia, dia, clin.feegow_local_id);
         const doDia = dispon.find((d) => d.data === dia);
-        const livre = doDia?.horarios.includes(hhmm);
+        // bloqueio manual da clinica tambem impede a marcacao (nao so a oferta)
+        const bloqsAg = await listBloqueiosExame(clinicaId, dia, dia).catch(() => []);
+        const bloqueado = horarioBloqueadoExame(bloqsAg, String(input.feegow_exame_id), dia, hhmm);
+        const livre = doDia?.horarios.includes(hhmm) && !bloqueado;
         if (!livre) {
           const ops = doDia?.horarios.slice(0, 4).join(", ") || "nenhum nesse dia";
           return { resultado: `O horario ${hhmm} de ${dia} NAO esta disponivel pra esse exame. Horarios REALMENTE livres nesse dia: ${ops}. Ofereca SO esses (nunca invente horario). Chame ver_horarios_exame se precisar de outra data.` };
