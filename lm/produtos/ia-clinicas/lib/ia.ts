@@ -186,6 +186,7 @@ AGENDAMENTO DE EXAME (fluxo especifico — MUITO usado nessa clinica):
   (1) A CONFIRMACAO: nome do paciente, exame(s), dia e hora. Ex: "Pronto Antônio! Sua Prova Ventilatória Completa ficou marcada pra hoje, 21/08, às 16:45."
   (2) O ENDERECO: "Endereco: R. Padre Rolim, 491 - Santa Efigenia, Belo Horizonte. Chegue 10 minutinhos antes."
   (3) O PREPARO COMPLETO daquele exame, COPIADO INTEGRALMENTE dos materiais — NUNCA resuma, NUNCA corte a lista de medicamentos pela metade. Se o preparo tiver DUAS listas (suspender 6h antes E suspender 12h antes), mande AS DUAS, com os nomes de todos os remedios. Organize em linhas curtas comecando com "-".
+  POLI + LATENCIA — a confirmacao (1) tem que deixar CLARO que sao DOIS exames, cada um com seu dia e hora: a polissonografia na noite marcada e o teste de latencia NO DIA SEGUINTE as 07:00 (indo ate ~17h). Modelo: "Pronto Emily, ficaram marcados os dois exames: Polissonografia na quarta, 30/09, às 20:31 (você dorme aqui) e Teste de Latências na quinta, 01/10, às 07:00, logo na sequência, até por volta das 17h." NUNCA resuma num so "marcados pra quarta 20h31" — o paciente precisa saber que fica até o dia seguinte.
   EXCECAO — POLISSONOGRAFIA (todas as variantes, com ou sem latencia): NAO mande preparo nem lista de itens pra levar. A equipe da clinica liga 3 DIAS ANTES pra confirmar o exame e passar todas as orientacoes. Entao a mensagem (3) da poli e so isso, curta: "Tres dias antes do exame nossa equipe entra em contato pra confirmar e passar todas as orientacoes." Nao invente pijama, roupa confortavel, nem o que falar na recepcao.
   Se o exame nao tiver preparo, diga que nao precisa de preparo nenhum. Nunca confirme so data e hora.
   FORMATO OBRIGATORIO da confirmacao (nao vale encurtar nem juntar):
@@ -936,6 +937,52 @@ export async function executarTool(
           return { resultado: `Esse horario NAO esta mais disponivel (${r.erro}) e nao ha vaga nos proximos 14 dias com esse profissional. NAO confirme a marcacao — ofereca a lista de espera (entrar_lista_espera).` };
         }
         return { resultado: `Nao consegui agendar: ${r.erro}. Ofereca outro horario.` };
+      }
+
+      // POLI + LATENCIA = DOIS agendamentos na agenda de exames (Matheus,
+      // 21/08): a polissonografia na noite escolhida E o teste de latencia no
+      // DIA SEGUINTE as 07:00 (particular). Antes nascia so a noite, com a
+      // latencia citada na observacao — a recepcao nao tinha o segundo
+      // agendamento pra lancar e o paciente nao via os dois na confirmacao.
+      // Feito aqui, mecanico, pra nao depender da IA chamar a tool 2x.
+      const eraPoliComLatencia = String(input.feegow_exame_id) === "18" || String(input.feegow_exame_id) === "19";
+      if (eraPoliComLatencia && r.ok) {
+        const [py, pm, pd] = input.inicio.slice(0, 10).split("-").map(Number);
+        const seg = new Date(Date.UTC(py, pm - 1, pd + 1));
+        const diaSeg = `${seg.getUTCFullYear()}-${String(seg.getUTCMonth() + 1).padStart(2, "0")}-${String(seg.getUTCDate()).padStart(2, "0")}`;
+        const inicioLat = `${diaSeg}T07:00:00`;
+        const r2 = await agendar({
+          clinicaId,
+          profissionalId: input.profissional_id,
+          telefone,
+          nomePaciente: input.nome_paciente,
+          inicioISO: inicioLat,
+          observacao: "Teste de Latências Múltiplas do Sono (TLMS) — dia seguinte à polissonografia",
+          pagamento: "particular",
+          guiaUrl: guiaUrl ?? undefined,
+          cpf: cpf || undefined,
+          feegowProcedimentoId: "18",
+        }).catch((e: any) => ({ ok: false, erro: e?.message || "erro" } as any));
+        await registrarLog(
+          clinicaId,
+          "sistema",
+          `⏱️ Latencia (2o agendamento) ${r2.ok ? "OK" : "FALHOU: " + (r2.erro || "?")} — ${diaSeg} 07:00`
+        ).catch(() => {});
+        const poliTxt = `${dataComDia(input.inicio.slice(0, 10))} às ${input.inicio.slice(11, 16)}`;
+        const latTxt = `${dataComDia(diaSeg)} às 07:00`;
+        if (!r2.ok) {
+          await alertarHumano({
+            clinicaId,
+            telefone,
+            motivo: `Polissonografia marcada (${poliTxt}) mas o Teste de Latencia do dia seguinte (${latTxt}) NAO entrou: ${r2.erro}. Lancar a latencia manualmente.`,
+          }).catch(() => {});
+        }
+        return {
+          resultado:
+            `DOIS exames agendados com sucesso: (1) Polissonografia em ${poliTxt} (o paciente dorme na clinica) e (2) Teste de Latencias em ${latTxt}, na sequencia, ate por volta das 17h` +
+            (r2.ok ? "" : " [a latencia sera lancada pela equipe — confirme os dois normalmente ao paciente]") +
+            `. A recepcao ja recebeu os dados. Na confirmacao, cite OS DOIS exames, cada um com seu dia e hora.`,
+        };
       }
 
       // EXAME: o espelho automatico via API esta DESLIGADO (22/07 — marcacao
