@@ -2155,6 +2155,7 @@ function renderPainelNotas(d) {
   const abertas = (d.tarefas || []).filter((t) => !t.feita);
   painelTarefas = d.tarefas || [];
   painelUsuarios = d.usuarios || [];
+  painelLeadAtual = d.lead;
   const linha = (rot, conteudo) => `<div class="nota-linha"><span>${rot}</span><span>${conteudo}</span></div>`;
 
   el.innerHTML = `
@@ -2432,7 +2433,7 @@ async function salvarComposer(leadId) {
 }
 
 // ---- MODAL DE TAREFA (criar e editar) — estilo Kommo: atalhos de prazo na lateral ----
-let painelTarefas = [], painelUsuarios = [];
+let painelTarefas = [], painelUsuarios = [], painelLeadAtual = null;
 function dataMaisDias(n) {
   const dt = new Date();
   dt.setDate(dt.getDate() + n);
@@ -2795,11 +2796,29 @@ async function salvarEdicaoNota(notaId, leadId) {
   abrirConversa(leadId);
 }
 // FOLLOW manual: cada clique conta o proximo follow (follow 1 -> 2 -> 3...)
-async function marcarFollow(leadId) {
-  const obs = prompt("Como foi esse follow? (opcional)") ?? null;
-  if (obs === null) return; // cancelou
-  const r = await api("/api/lead/" + leadId + "/follow", { method: "POST", body: JSON.stringify({ obs }) });
+// FOLLOW manual: registra a tentativa E o resultado (entra no funil de ligações
+// do dashboard igual aos botões de Registrar Ligação)
+function marcarFollow(leadId) {
+  const prox = ((painelLeadAtual?.follows_feitos) || 0) + 1;
+  modal(`Registrar follow ${prox}`, `
+    <div style="font-size:12.5px; color:var(--muted); margin-bottom:10px">Como foi essa tentativa? Isso conta no dashboard de ligações.</div>
+    <select id="fw-resultado" style="width:100%; font-size:13.5px; padding:9px; margin-bottom:8px">
+      <option value="nao_atendeu">não atendeu</option>
+      <option value="conectou">atendeu</option>
+      <option value="decisor">falei c/ decisor</option>
+      <option value="reuniao">marquei reunião</option>
+      <option value="recusou">recusou</option>
+    </select>
+    <input id="fw-obs" placeholder="observação (opcional)" style="width:100%; font-size:13.5px; padding:9px">
+    <button class="btn" style="width:100%; margin-top:12px" onclick="salvarFollow(${leadId})">registrar follow ${prox}</button>`, 400);
+  $("#fw-obs")?.focus();
+}
+async function salvarFollow(leadId) {
+  const resultado = $("#fw-resultado")?.value || "nao_atendeu";
+  const obs = $("#fw-obs")?.value.trim() || "";
+  const r = await api("/api/lead/" + leadId + "/follow", { method: "POST", body: JSON.stringify({ obs, resultado }) });
   if (r?.erro) return alert(r.erro);
+  fecharModal();
   toast(`follow ${r.follows} registrado`);
   abrirConversa(leadId); atualizar(); carregarKanban();
 }

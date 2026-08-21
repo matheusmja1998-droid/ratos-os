@@ -477,10 +477,29 @@ export async function horariosExameFeegowDetalhado(
   const variantePoli = poliVariante(procedimentoId);
   if (variantePoli) {
     const noites = await noitesPoliLivres(token, deISO, ateISO, variantePoli);
-    const hora =
+    const horaPadrao =
       variantePoli === "cpap" ? CPAP_HORA : variantePoli === "infantil" ? POLI_INFANTIL_HORA : POLI_HORA_PADRAO;
+    // MINUTO REAL DA CAMA (pedido do Matheus, 21/08): o minuto e a senha do
+    // quarto (20:30, 20:31, 20:37...). Antes a oferta dizia sempre "20:30" e o
+    // minuto verdadeiro so nascia na hora de marcar — o paciente ouvia um
+    // horario e ficava outro na agenda. Agora a oferta ja calcula o primeiro
+    // minuto livre de cada noite, o mesmo que a marcacao vai usar.
+    // CPAP tem minuto fixo (20:46, uma por noite), entao nao varre.
+    const noitesComMinuto = await Promise.all(
+      noites.slice(0, 8).map(async (n) => {
+        if (variantePoli === "cpap") return { ...n, hora: horaPadrao };
+        const livre = await minutoLivrePoliNoite(
+          token,
+          n.data,
+          variantePoli === "infantil"
+            ? { inicio: POLI_INFANTIL_HORA, reservados: MINUTOS_RESERVADOS_INFANTIL }
+            : { inicio: POLI_HORA_PADRAO, reservados: MINUTOS_RESERVADOS_COMUM }
+        ).catch(() => null);
+        return { ...n, hora: livre || horaPadrao };
+      })
+    );
     return semHorarioPassado(
-      noites.map((n) => ({ data: n.data, hora, feegowProfId: "0", localId: n.localId }))
+      noitesComMinuto.map((n: any) => ({ data: n.data, hora: n.hora, feegowProfId: "0", localId: n.localId }))
     );
   }
 

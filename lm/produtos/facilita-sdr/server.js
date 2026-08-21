@@ -504,16 +504,21 @@ app.delete("/api/lead/:id", auth, (req, res) => {
 
 // FOLLOW MANUAL: o botao "follow N" do card. Cada clique conta um follow feito
 // por telefone/humano, registra evento e nota, e avanca o contador da regua.
+const RESULTADOS_LIGACAO = ["nao_atendeu", "conectou", "decisor", "reuniao", "recusou"];
 app.post("/api/lead/:id/follow", auth, exige("conversar"), (req, res) => {
   const lead = getLead(req.params.id);
   if (!lead) return res.status(404).json({ erro: "lead nao existe" });
   const obs = String(req.body?.obs || "").trim();
   const n = (lead.follows_feitos || 0) + 1;
+  // resultado do follow: conta no funil de ligacoes do dashboard igual aos
+  // botoes de Registrar Ligacao (o dashboard le eventos tipo 'ligacao' e
+  // classifica pelo prefixo do detalhe)
+  const resultado = RESULTADOS_LIGACAO.includes(req.body?.resultado) ? req.body.resultado : "nao_atendeu";
   db.prepare("UPDATE leads SET follows_feitos = ?, ultimo_follow_em = datetime('now') WHERE id = ?").run(n, lead.id);
-  registrarEvento(lead.id, "followup", `follow ${n} manual${obs ? " · " + obs : ""}`);
+  registrarEvento(lead.id, "ligacao", `${resultado} · follow ${n}${obs ? " · " + obs : ""}`);
   db.prepare("INSERT INTO notas (lead_id, texto, usuario_id) VALUES (?,?,?)")
     .run(lead.id, `📞 Follow ${n} feito${obs ? ": " + obs : ""}`, req.usuario?.id || null);
-  res.json({ ok: true, follows: n });
+  res.json({ ok: true, follows: n, resultado });
 });
 
 // exclusao em massa por SELECAO (checkboxes do Kanban): apaga os leads e tudo
@@ -1924,7 +1929,6 @@ app.get("/api/dashboard", auth, (req, res) => {
 // LIGACOES (prospeccao manual) — o SDR registra o resultado de cada ligacao.
 // E o que alimenta o funil topo/meio/fundo do dashboard de prospeccao.
 // ============================================================
-const RESULTADOS_LIGACAO = ["nao_atendeu", "conectou", "decisor", "reuniao", "recusou"];
 app.post("/api/lead/:id/ligacao", auth, exige("conversar"), (req, res) => {
   const leadId = Number(req.params.id);
   const lead = getLead(leadId);
