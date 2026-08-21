@@ -586,6 +586,16 @@ app.post("/api/thread/:id/ia", auth, (req, res) => {
   registrarEvento(th.lead_id, "handoff",
     pausar ? `humano assumiu a conversa "${th.rotulo || th.telefone}"` : `IA retomou a conversa "${th.rotulo || th.telefone}"`);
   res.json({ ok: true });
+
+  // devolveu a THREAD pra IA: ela retoma ali mesmo (nao espera nova mensagem)
+  if (!pausar) {
+    const lead = getLead(th.lead_id);
+    if (lead && !lead.ia_pausada) {
+      const tok = instanciaDoLead(lead, th.instancia_id)?.uazapi_token || "SIMULADO";
+      responderLead(lead.id, tok, { threadId: th.id })
+        .catch((e) => console.error("[retomar thread] erro:", e.message));
+    }
+  }
 });
 
 app.post("/api/lead/:id/ia", auth, async (req, res) => {
@@ -605,11 +615,16 @@ app.post("/api/lead/:id/ia", auth, async (req, res) => {
   // DEVOLVEU pra IA -> ela RETOMA a conversa na hora (nao espera o lead responder).
   // Le todo o historico, inclusive o que o humano escreveu no meio, e da sequencia.
   if (!pausar) {
-    const ultima = db.prepare("SELECT role FROM mensagens WHERE lead_id = ? ORDER BY id DESC LIMIT 1").get(lead.id);
-    // se a ultima foi do lead (esperando resposta) OU foi do humano fechando um gap, a IA continua.
-    // se nao ha nada a dizer, o proprio agente devolve acoes vazias e nada e enviado.
-    const tokRetomar = instanciaDoLead(lead)?.uazapi_token || "SIMULADO";
-    responderLead(lead.id, tokRetomar).catch((e) => console.error("[retomar IA] erro:", e.message));
+    // RETOMA NO CANAL CERTO: se a ultima mensagem do lead veio numa thread (o
+    // decisor, por ex.), a IA responde NELA — antes respondia sempre na conversa
+    // principal e a resposta ia pro numero da empresa, nao pra quem perguntou.
+    const ult = db.prepare(`SELECT thread_id FROM mensagens WHERE lead_id = ? AND role = 'user'
+      ORDER BY id DESC LIMIT 1`).get(lead.id);
+    const th = ult?.thread_id ? getThread(ult.thread_id) : null;
+    const alvoThread = th && th.lead_id === lead.id && !th.ia_pausada ? th : null;
+    const tokRetomar = instanciaDoLead(lead, alvoThread?.instancia_id || null)?.uazapi_token || "SIMULADO";
+    responderLead(lead.id, tokRetomar, alvoThread ? { threadId: alvoThread.id } : {})
+      .catch((e) => console.error("[retomar IA] erro:", e.message));
   }
 });
 
