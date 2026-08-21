@@ -837,7 +837,15 @@ async function api(caminho, opts = {}) {
     headers: { "Authorization": "Bearer " + SENHA, ...(opts.body && !(opts.body instanceof FormData) ? { "Content-Type": "application/json" } : {}), ...(opts.headers || {}) },
   });
   if (r.status === 401) { mostrarLogin("senha inválida"); throw new Error("401"); }
-  return r.json();
+  // resposta sem JSON (erro cru do servidor/proxy) nao pode virar "HTTP 500" seco:
+  // devolve {erro} legivel pra quem chamou mostrar algo util
+  const txt = await r.text();
+  try {
+    return txt ? JSON.parse(txt) : (r.ok ? {} : { erro: `falha ${r.status}` });
+  } catch {
+    console.error("[api] resposta nao-JSON", r.status, caminho, txt.slice(0, 300));
+    return { erro: r.ok ? "resposta inesperada do servidor" : `erro ${r.status} em ${caminho.split("?")[0]} — avisa o Matheus` };
+  }
 }
 
 function mostrarLogin(erro) {
