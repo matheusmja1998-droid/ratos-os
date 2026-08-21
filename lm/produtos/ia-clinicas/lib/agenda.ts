@@ -205,10 +205,16 @@ export function horaDoSlot(iso: string): string {
 // (Date.UTC de data pura, sem fuso), nunca do modelo — LLM erra dia da semana
 // de cabeca (ja chamou segunda 20/07 de "domingo" com paciente real).
 const NOMES_DIAS = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
+// Data por extenso pro modelo. Formato DD/MM/AAAA (nunca AAAA-MM-DD): o ISO
+// colado dos horarios fazia o modelo ler pedaco da DATA como HORA — caso real
+// 21/08: "quarta, 2026-09-16, horarios 09:00, 09:30" virou oferta de "16:09"
+// (o 16 do dia + o 09 do mes). Com DD/MM/AAAA e a palavra "dia" na frente, nao
+// ha numero no formato HH:MM pra confundir.
 export function dataComDia(dataISO: string): string {
   const [y, m, d] = dataISO.slice(0, 10).split("-").map(Number);
   if (!y || !m || !d) return dataISO;
-  return `${NOMES_DIAS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()]}, ${dataISO.slice(0, 10)}`;
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${NOMES_DIAS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()]} dia ${pad(d)}/${pad(m)}/${y}`;
 }
 
 // Agenda de fato. Valida se o slot ainda esta livre (evita corrida).

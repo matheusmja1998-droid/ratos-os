@@ -186,6 +186,12 @@ AGENDAMENTO DE EXAME (fluxo especifico — MUITO usado nessa clinica):
   (2) O ENDERECO: "Endereco: R. Padre Rolim, 491 - Santa Efigenia, Belo Horizonte. Chegue 10 minutinhos antes."
   (3) O PREPARO COMPLETO daquele exame, COPIADO INTEGRALMENTE dos materiais — NUNCA resuma, NUNCA corte a lista de medicamentos pela metade. Se o preparo tiver DUAS listas (suspender 6h antes E suspender 12h antes), mande AS DUAS, com os nomes de todos os remedios. Organize em linhas curtas comecando com "-".
   Se o exame nao tiver preparo, diga que nao precisa de preparo nenhum. Nunca confirme so data e hora.
+  FORMATO OBRIGATORIO da confirmacao (nao vale encurtar nem juntar):
+  - Sao SEMPRE 3 mensagens separadas por "|||". NUNCA mande tudo num paragrafo corrido.
+  - A regra de mensagem curta NAO vale aqui: a confirmacao pode e deve ser longa.
+  - HORA se escreve HH:MM (14:50). NUNCA "14h50", "qua 26/08 14h50" nem hora colada na data.
+  - DIA da semana por extenso: "quarta, 26/08" (nunca "qua").
+  - O preparo vai em LINHAS, uma por item, cada uma comecando com "- ". Nunca em linha corrida separada por virgula.
 - CADASTRO DO PACIENTE: ao marcar EXAME, peca CPF **e data de nascimento** na mesma mensagem ("me passa seu CPF e data de nascimento, por favor"). A recepcao precisa dos dois pra cadastrar quem ainda nao tem ficha no sistema da clinica. Passe os dois em agendar_consulta (cpf e nascimento).
 - TESTE DE LATENCIA (MSLT): e SOMENTE PARTICULAR (nao atende convenio pra esse exame) e nunca e feito sozinho nem em horario avulso. E o complemento da polissonografia: o paciente dorme na clinica (entrada 20:30), o exame da noite encerra 06:00 e a latencia comeca 07:00 do dia seguinte, ate ~17:00. A guia PRECISA ter os dois exames; se so pedir a latencia, avise que a clinica nao faz separado e passe pra um atendente. Explique que ele passa a noite e fica ate o fim da tarde do dia seguinte.
 - EXAMES CASADOS — NUNCA use item de "PACOTE" (regra da Pulmonar, 21/08): "Pacote" NAO e uma agenda, e so um codigo de procedimento criado pra particular. A agenda real e a de CADA exame (Pletismografia, DLCO, Prova ventilatoria completa). Se a guia pedir Prova + Pletismografia + DLCO:
@@ -389,8 +395,18 @@ export async function aplicarEstilo(clinicaId: string, texto: string): Promise<s
     // 2) espacamento: niveis 1-3 nao usam linha em branco (parece robo)
     if (nivel <= 3) t = t.replace(/\n{2,}/g, "\n");
 
+    // CONFIRMACAO DE AGENDAMENTO fica FORA do aperto de tamanho.
+    // Ela e obrigada por regra a levar confirmacao + endereco + preparo COMPLETO
+    // (lista de medicacoes inclusive), entao estoura qualquer limite de estilo.
+    // Caso real 21/08 (Pulmonar, nivel 1 = 120 chars): a confirmacao de Ergo
+    // tinha 296 chars, o compressor achatou tudo numa mensagem so e destruiu a
+    // formatacao — virou um paragrafo corrido com "qua 26/08 14h50".
+    // Detecta pelo separador "|||" (so a confirmacao usa) ou pela palavra
+    // Preparo/Endereco. O tom e o "sem emoji" acima continuam valendo.
+    const ehConfirmacao = t.includes("|||") || /\bpreparo\b/i.test(t) || /R\. Padre Rolim/i.test(t);
+
     // 3) tamanho: estourou MUITO o limite do nivel? UMA reescrita mais curta.
-    const limite = LIMITES_ESTILO[nivel] || 0;
+    const limite = ehConfirmacao ? 0 : LIMITES_ESTILO[nivel] || 0;
     if (limite > 0 && t.length > limite * 1.5) {
       try {
         const resp = await anthropic.messages.create({
@@ -724,19 +740,24 @@ export async function executarTool(
         const doDia = dias.find((dd) => dd.data === dataPedida);
         if (doDia) {
           return {
-            resultado: `Horarios do exame em ${dataComDia(doDia.data)}${rotuloCasado}: ${doDia.horarios.slice(0, 3).join(", ")}${doDia.horarios.length > 3 ? " (tem mais, se pedir)" : ""}. (marque com agendar_consulta passando feegow_exame_id=${input.exame_id})`,
+            resultado: `Horarios do exame em ${dataComDia(doDia.data)}${rotuloCasado}. HORARIOS DISPONIVEIS NESSE DIA: [${doDia.horarios.slice(0, 3).join("] [")}]${doDia.horarios.length > 3 ? " (tem mais, se pedir)" : ""}. Ofereca EXATAMENTE os horarios entre colchetes — nunca monte horario com numeros da data. (marque com agendar_consulta passando feegow_exame_id=${input.exame_id})`,
           };
         }
         const prox = dias[0];
         return {
-          resultado: `Sem horarios pra esse exame em ${dataComDia(dataPedida)}. Alternativa mais proxima: ${dataComDia(prox.data)}, horarios ${prox.horarios.slice(0, 3).join(", ")}. Ofereca essa alternativa com jeito.`,
+          resultado: `Sem horarios pra esse exame em ${dataComDia(dataPedida)}. Alternativa mais proxima: ${dataComDia(prox.data)}. HORARIOS DISPONIVEIS NESSE DIA: [${prox.horarios.slice(0, 3).join("] [")}]. Ofereca essa alternativa com jeito, citando EXATAMENTE os horarios entre colchetes.`,
         };
       }
       const primeiro = dias[0];
       return {
         resultado:
-          `Proxima disponibilidade do exame${rotuloCasado}: ${dataComDia(primeiro.data)}, horarios ${primeiro.horarios.slice(0, 3).join(", ")}. ` +
-          `Ofereca SO esses horarios desse dia. ` +
+          `Proxima disponibilidade do exame${rotuloCasado}: ${dataComDia(primeiro.data)}. ` +
+          // A lista de horarios vem ISOLADA entre [ ] e depois da data, e a
+          // instrucao repete que so vale o que esta ali dentro. Sem isso o
+          // modelo montava hora a partir de numeros da DATA (caso real 21/08:
+          // ofereceu "16:09" lendo o dia 16 e o mes 09).
+          `HORARIOS DISPONIVEIS NESSE DIA: [${primeiro.horarios.slice(0, 3).join("] [")}]. ` +
+          `Ofereca EXATAMENTE os horarios que estao entre colchetes, nada alem deles. NUNCA monte um horario com numeros da data. ` +
           // LISTA as outras datas: sem isso o modelo achava que o unico dia
           // possivel era o primeiro e dizia "nenhuma outra data disponivel"
           // mesmo com 12 dias livres (caso real 20/08, broncoprovocacao).
@@ -798,6 +819,18 @@ export async function executarTool(
         }
       }
 
+      // RASTRO da marcacao (some no log do painel, tipo "sistema").
+      // Existe porque em 21/08 a funcao morreu NO MEIO desta tool: o cadastro
+      // do paciente foi salvo mas a consulta nunca nasceu e nada explicava o
+      // que aconteceu (o log da Vercel e dificil de achar). Com estas duas
+      // marcas da pra ver onde parou e quanto tempo levou, direto no painel.
+      const tMarcacao = Date.now();
+      await registrarLog(
+        clinicaId,
+        "sistema",
+        `⏱️ Marcacao iniciada (${telefone}) — ${input.observacao || "exame"} ${String(input.inicio).slice(0, 16)}`
+      ).catch(() => {});
+
       // guia do exame: se a IA sinalizou e o paciente mandou arquivo ha pouco,
       // anexa a URL na consulta (aparece como 📎 no card da agenda)
       let guiaUrl: string | null = null;
@@ -817,6 +850,11 @@ export async function executarTool(
         cpf: cpf || undefined,
         feegowProcedimentoId: input.feegow_exame_id ? String(input.feegow_exame_id) : undefined,
       });
+      await registrarLog(
+        clinicaId,
+        "sistema",
+        `⏱️ Marcacao terminou em ${((Date.now() - tMarcacao) / 1000).toFixed(1)}s — ${r.ok ? "OK" : "FALHOU: " + (r.erro || "?")}`
+      ).catch(() => {});
       if (!r.ok) {
         // Horario recusado (ex: bloqueio no Clinicorp que a IA nao via, corrida
         // com outra marcacao): em vez de devolver so o erro e deixar o modelo
