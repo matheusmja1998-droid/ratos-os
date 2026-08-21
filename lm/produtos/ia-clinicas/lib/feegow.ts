@@ -332,6 +332,13 @@ const POLI_CAPACIDADE_NOITE = 15;
 const LOCAIS_FORA_DAS_18 = new Set(["18", "19", "20", "21", "22", "23", "24"]);
 // Betim: unidade (2) + quartos que a recepcao de Betim usa (Q-01..Q-05)
 const LOCAIS_BETIM = new Set(["2", "27", "4", "5", "6", "7"]);
+// So a UNIDADE Betim (local 2). Os quartos Q-01..Q-05 (27/4/5/6/7) sao camas
+// FISICAS que contam na lotacao da noite: em 21/08 (sexta) os 12 quartos
+// exclusivos de BH + os 5 compartilhados estavam todos ocupados e o codigo,
+// por excluir os compartilhados, contou 13 < 15 e ofereceu "hoje 20:31" numa
+// noite sem quarto nenhum. Ja a recepcao de Betim lanca no local 2 (visto em
+// 27/08: 5 polis em local 2), e essas NAO ocupam cama de BH.
+const LOCAL_UNIDADE_BETIM = new Set(["2"]);
 
 function capacidadePoliNoite(_diaISO: string): number {
   return POLI_CAPACIDADE_NOITE;
@@ -376,7 +383,7 @@ async function noitesPoliLivres(
     if (
       hhmm >= "20:15" &&
       !LOCAIS_FORA_DAS_18.has(local) &&
-      !LOCAIS_BETIM.has(local) &&
+      !LOCAL_UNIDADE_BETIM.has(local) &&
       String(a.procedimento_id) !== CPAP_PROC
     ) {
       camasNaNoite.set(dia, (camasNaNoite.get(dia) || 0) + 1);
@@ -441,7 +448,7 @@ async function minutoLivrePoliNoite(
     // tratou esses minutos como tomados — pulou pra 20:47, uma cama que nao
     // existe, enquanto a agenda POLISSONOGRAFIA BH (a que a recepcao usa, e
     // que nao enxerga Betim) tinha 20:34 livre.
-    if (LOCAIS_BETIM.has(String(a.local_id))) continue;
+    if (LOCAL_UNIDADE_BETIM.has(String(a.local_id))) continue;
     const h = String(a.horario ?? "").slice(0, 5);
     if (h >= "19:00") tomados.add(h);
   }
@@ -1017,7 +1024,7 @@ async function capacidadeExameOcupada(
         ATIVOS.has(Number(a.status_id)) &&
         String(a.horario ?? "").slice(0, 5) >= "20:15" &&
         !LOCAIS_FORA_DAS_18.has(String(a.local_id)) &&
-        !LOCAIS_BETIM.has(String(a.local_id)) &&
+        !LOCAL_UNIDADE_BETIM.has(String(a.local_id)) && // mesma regra da oferta
         String(a.procedimento_id) !== CPAP_PROC
     ).length;
     const cap = capacidadePoliNoite(dataISOAlvo);
