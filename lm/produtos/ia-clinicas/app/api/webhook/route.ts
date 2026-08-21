@@ -44,6 +44,8 @@ function comandoControle(texto: string): "pausar" | "retomar" | null {
 // folga pro delay humanizado de ~30s + o processamento da IA (que roda em
 // PARALELO com o delay, ver enviarHumanizado). No Pro da pra ir ate 300s.
 export const maxDuration = 60;
+// throttle do alerta "IA fora do ar" (modulo vive entre invocacoes quentes)
+let ultimoAlertaApiMs = 0;
 // margem de seguranca antes do teto (pra request terminar e responder 200
 // antes da Vercel matar a funcao — sem isso, "quase estourar" ainda derruba)
 const MARGEM_SEGURANCA_MS = 4000;
@@ -538,6 +540,20 @@ export async function POST(req: NextRequest) {
     }
   } catch (e: any) {
     console.error("[webhook] erro:", e.message);
+    // IA FORA DO AR por causa da API (credito acabou, rate limit, overload):
+    // antes morria em silencio — 500 no log da Vercel e o paciente sem
+    // resposta (caso real 21/08 14:22: "credit balance is too low", todas as
+    // clinicas paradas e ninguem avisado). Alerta no Telegram, 1x a cada 10min.
+    const msgErro = String(e?.message || "");
+    if (/credit balance|billing|overloaded|rate limit|\b(429|529)\b/i.test(msgErro)) {
+      const agora = Date.now();
+      if (agora - ultimoAlertaApiMs > 10 * 60_000) {
+        ultimoAlertaApiMs = agora;
+        await enviarAlerta(
+          `🚨 IA FORA DO AR (todas as clinicas): a API da Anthropic recusou a chamada.\nMotivo: ${msgErro.slice(0, 200)}\nSe for credito: console.anthropic.com → Plans & Billing.`
+        ).catch(() => {});
+      }
+    }
     await alertarErro("webhook", e);
     return NextResponse.json({ ok: false, erro: e.message }, { status: 500 });
   }
