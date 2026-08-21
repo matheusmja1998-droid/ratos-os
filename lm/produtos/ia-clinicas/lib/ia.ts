@@ -854,11 +854,23 @@ export async function executarTool(
         // valida o horario contra a disponibilidade real do exame
         const dia = input.inicio.slice(0, 10);
         const hhmm = input.inicio.slice(11, 16);
-        const dispon = await horariosExameFeegow(clin.feegow_token, String(input.feegow_exame_id), dia, dia, clin.feegow_local_id);
+        // TROCA MECANICA 18/19 -> 16: o teste de latencia (18) e o pacote
+        // poli+latencia (19) NAO tem agenda propria — o que se marca e a NOITE
+        // da polissonografia (16) e a latencia acontece no dia seguinte. A IA
+        // as vezes manda feegow_exame_id=18 aqui (o prompt usa 18 pra
+        // CONSULTAR e 16 pra MARCAR) e a validacao ia olhar a agenda errada:
+        // caso real 21/08, ofereceu a noite 20:47, mandou 18 na marcacao, a
+        // validacao leu a agenda da latencia e respondeu "20:47 preenchido,
+        // tenho 07:00" — 07:00 e horario de latencia, nao de poli.
+        const exameIdValidacao =
+          String(input.feegow_exame_id) === "18" || String(input.feegow_exame_id) === "19"
+            ? "16"
+            : String(input.feegow_exame_id);
+        const dispon = await horariosExameFeegow(clin.feegow_token, exameIdValidacao, dia, dia, clin.feegow_local_id);
         const doDia = dispon.find((d) => d.data === dia);
         // bloqueio manual da clinica tambem impede a marcacao (nao so a oferta)
         const bloqsAg = await listBloqueiosExame(clinicaId, dia, dia).catch(() => []);
-        const bloqueado = horarioBloqueadoExame(bloqsAg, String(input.feegow_exame_id), dia, hhmm);
+        const bloqueado = horarioBloqueadoExame(bloqsAg, exameIdValidacao, dia, hhmm);
         const livre = doDia?.horarios.includes(hhmm) && !bloqueado;
         if (!livre) {
           const ops = doDia?.horarios.slice(0, 4).join(", ") || "nenhum nesse dia";
@@ -895,7 +907,13 @@ export async function executarTool(
         convenioNome: input.convenio_nome,
         guiaUrl: guiaUrl ?? undefined,
         cpf: cpf || undefined,
-        feegowProcedimentoId: input.feegow_exame_id ? String(input.feegow_exame_id) : undefined,
+        // mesma normalizacao da validacao: latencia(18)/pacote(19) espelham na
+        // agenda da POLI (16), que e a noite realmente marcada.
+        feegowProcedimentoId: input.feegow_exame_id
+          ? String(input.feegow_exame_id) === "18" || String(input.feegow_exame_id) === "19"
+            ? "16"
+            : String(input.feegow_exame_id)
+          : undefined,
       });
       await registrarLog(
         clinicaId,
