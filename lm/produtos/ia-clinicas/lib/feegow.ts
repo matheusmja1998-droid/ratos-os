@@ -435,12 +435,23 @@ async function minutoLivrePoliNoite(
   for (const a of lista) {
     if (Number(a.profissional_id) !== 0) continue;
     if (!ATIVOS.has(Number(a.status_id))) continue;
+    // BETIM NAO CONTA (bug real 21/08): Betim tem 5 camas proprias (local 2 +
+    // quartos Q-01..Q-05) e numera os minutos a partir de 20:30 igual BH. Na
+    // noite de 27/08 Betim estava lotado (20:30..20:34, local 2) e o codigo
+    // tratou esses minutos como tomados — pulou pra 20:47, uma cama que nao
+    // existe, enquanto a agenda POLISSONOGRAFIA BH (a que a recepcao usa, e
+    // que nao enxerga Betim) tinha 20:34 livre.
+    if (LOCAIS_BETIM.has(String(a.local_id))) continue;
     const h = String(a.horario ?? "").slice(0, 5);
     if (h >= "19:00") tomados.add(h);
   }
   const partida = hhmmParaMin(opts?.inicio || POLI_HORA_PADRAO);
   const reservados = opts?.reservados || MINUTOS_RESERVADOS_COMUM;
-  for (let min = partida; min <= 21 * 60 + 15; min++) {
+  // GRID REAL DE BH: 17 quartos = minutos 20:30..20:46 (20:45 infantil, 20:46
+  // CPAP). Minuto depois disso e cama que nao existe — antes a varredura ia
+  // ate 21:15 e oferecia 20:47. Se nao sobrar minuto no grid, a noite esta
+  // cheia de verdade (retorna null -> alerta pra recepcao conferir).
+  for (let min = partida; min <= 20 * 60 + 46; min++) {
     const h = `${String(Math.floor(min / 60)).padStart(2, "0")}:${String(min % 60).padStart(2, "0")}`;
     if (reservados.has(h)) continue; // minuto-senha de outro quarto
     if (!tomados.has(h)) return h;
