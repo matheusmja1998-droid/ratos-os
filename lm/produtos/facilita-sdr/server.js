@@ -46,6 +46,17 @@ mkdirSync(DADOS_DIR, { recursive: true });
 
 const app = express();
 app.use(express.json({ limit: "8mb" }));
+
+// ASYNC-SAFE: Express 4 nao captura rejeicao de handler async — sem isso o erro
+// vira 500 mudo (foi o caso do "HTTP 500" sem nada no log, 21/08). Aqui todo
+// handler registrado passa a encaminhar a rejeicao pro tratador de erro.
+for (const metodo of ["get", "post", "patch", "put", "delete"]) {
+  const orig = app[metodo].bind(app);
+  app[metodo] = (rota, ...fns) => orig(rota, ...fns.map((fn) =>
+    typeof fn === "function" && fn.length <= 3
+      ? function (req, res, next) { return Promise.resolve(fn(req, res, next)).catch(next); }
+      : fn));
+}
 const upload = multer({ dest: join(DADOS_DIR, "tmp"), limits: { fileSize: 20 * 1024 * 1024 } });
 
 // ---------- CORS (painel na Vercel consome essa API) ----------
@@ -2290,6 +2301,44 @@ app.get("/", (req, res) => {
 });
 
 app.get("/health", (req, res) => res.json({ ok: true, agora: agoraSP() }));
+
+// ---------- DIAGNOSTICO DE ERRO 500 ----------
+// Qualquer excecao nao tratada numa rota cai aqui: log completo no journal E
+// registro no banco (tabela erros_api), pra achar a causa sem depender de repro.
+db.exec(`CREATE TABLE IF NOT EXISTS erros_api (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  rota TEXT, metodo TEXT, usuario TEXT, corpo TEXT,
+  mensagem TEXT, stack TEXT,
+  criado_em TEXT DEFAULT (datetime('now'))
+)`);
+app.use((err, req, res, _next) => {
+  const dado = {
+    rota: req.originalUrl, metodo: req.method,
+    usuario: req.usuario?.nome || "?",
+    corpo: JSON.stringify(req.body || {}).slice(0, 500),
+    mensagem: String(err?.message || err).slice(0, 500),
+    stack: String(err?.stack || "").slice(0, 2000),
+  };
+  console.error(`[500] ${dado.metodo} ${dado.rota} (${dado.usuario}): ${dado.mensagem}\n${dado.stack}`);
+  try {
+    db.prepare(`INSERT INTO erros_api (rota, metodo, usuario, corpo, mensagem, stack)
+      VALUES (@rota, @metodo, @usuario, @corpo, @mensagem, @stack)`).run(dado);
+  } catch { /* nunca deixa o log derrubar a resposta */ }
+  if (!res.headersSent) res.status(500).json({ erro: dado.mensagem });
+});
+// promessa rejeitada sem catch (async solto) tambem vai pro log
+process.on("unhandledRejection", (e) => {
+  console.error("[unhandledRejection]", e?.stack || e);
+  try {
+    db.prepare("INSERT INTO erros_api (rota, metodo, mensagem, stack) VALUES ('(async)','-',?,?)")
+      .run(String(e?.message || e).slice(0, 500), String(e?.stack || "").slice(0, 2000));
+  } catch {}
+});
+// ultimos erros pra eu consultar do painel/curl: /api/erros?t=<senha>
+app.get("/api/erros", (req, res) => {
+  if (!tokenQueryValido(String(req.query.t || ""))) return res.status(401).end();
+  res.json(db.prepare("SELECT * FROM erros_api ORDER BY id DESC LIMIT 30").all());
+});
 
 // na VPS direto: 127.0.0.1 (Caddy local). Em container: BIND_HOST=0.0.0.0
 app.listen(PORT, process.env.BIND_HOST || "127.0.0.1", () => {

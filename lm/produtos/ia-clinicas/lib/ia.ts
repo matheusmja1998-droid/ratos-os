@@ -8,6 +8,7 @@ import {
   salvarMensagem,
   registrarUsoTokens,
   proximaConsultaDoPaciente,
+  consultasDoPacientePorTelefone,
   atualizarStatusConsulta,
   entrarListaEspera,
   getUltimaMidiaRecente,
@@ -822,14 +823,31 @@ export async function executarTool(
       // vaga e ele ofereceu outro domingo pro paciente). Consulta futura criada
       // ha poucos minutos = essa marcacao JA foi feita.
       if (!input.segundo_agendamento) {
-        const jaTem = await proximaConsultaDoPaciente(clinicaId, telefone);
-        if (jaTem?.criado_em) {
+        // ANTI-DUPLICATA, mas so pra DUPLICATA DE VERDADE: mesma data OU mesmo
+        // exame criado ha menos de 30 min. Antes barrava QUALQUER marcacao se
+        // existisse QUALQUER consulta ativa recente — paciente com uma bronco
+        // marcada ha 10 min nao conseguia marcar a poli (caso real 21/08: a IA
+        // parou no CPF e perguntou "quer manter a bronco de 16/09?").
+        const ativas = (await consultasDoPacientePorTelefone(clinicaId, telefone, 12).catch(() => [])).filter(
+          (c: any) => c.status === "agendada" || c.status === "confirmada"
+        );
+        const diaPedido = String(input.inicio || "").slice(0, 10);
+        const obsPedida = String(input.observacao || "").toLowerCase();
+        const palavraChave = (t: string) => (t.match(/[a-zà-ú]{5,}/gi) || [])[0] || "";
+        const jaTem = ativas.find((c: any) => {
+          if (!c.criado_em) return false;
+          const idadeMin = (Date.now() - new Date(c.criado_em).getTime()) / 60000;
+          if (idadeMin < 0 || idadeMin >= 30) return false;
+          const mesmoDia = String(c.inicio).slice(0, 10) === diaPedido;
+          const chave = palavraChave(obsPedida);
+          const mesmoExame = chave.length >= 5 && String(c.observacao || "").toLowerCase().includes(chave);
+          return mesmoDia || mesmoExame;
+        });
+        if (jaTem) {
           const idadeMin = (Date.now() - new Date(jaTem.criado_em).getTime()) / 60000;
-          if (idadeMin >= 0 && idadeMin < 30) {
-            return {
-              resultado: `JA ESTA MARCADO — nao marque de novo! Este paciente ja tem "${jaTem.observacao || "um agendamento"}" criado ha ${Math.max(1, Math.round(idadeMin))} min para ${dataComDia(String(jaTem.inicio).slice(0, 10))} as ${String(jaTem.inicio).slice(11, 16)}. Confirme pro paciente EXATAMENTE essa data e hora (a vaga ja e dele). So se o paciente estiver pedindo um SEGUNDO procedimento DIFERENTE, chame de novo com segundo_agendamento=true.`,
-            };
-          }
+          return {
+            resultado: `JA ESTA MARCADO — nao marque de novo! Este paciente ja tem "${jaTem.observacao || "um agendamento"}" criado ha ${Math.max(1, Math.round(idadeMin))} min para ${dataComDia(String(jaTem.inicio).slice(0, 10))} as ${String(jaTem.inicio).slice(11, 16)}. Confirme pro paciente EXATAMENTE essa data e hora (a vaga ja e dele). So se o paciente estiver pedindo um SEGUNDO procedimento DIFERENTE, chame de novo com segundo_agendamento=true.`,
+          };
         }
       }
       const clin = await getClinica(clinicaId);
@@ -1327,8 +1345,12 @@ export async function responder(params: {
               dataDoRetorno = pedida;
             } else {
               // sem data no input: a ferramenta devolveu o PRIMEIRO dia com vaga
-              const primeira = String(resultado).match(/(?:Horarios do exame em|Proxima disponibilidade[^:]*:)[^\d]*(\d{4}-\d{2}-\d{2})/);
-              if (primeira) { datasConsultadas.add(primeira[1]); dataDoRetorno = primeira[1]; }
+              // dataComDia agora devolve "quarta dia 16/09/2026" (nao mais ISO),
+              // entao aceita os dois formatos e normaliza pra ISO
+              const mIso = String(resultado).match(/(?:Horarios do exame em|Proxima disponibilidade[^:]*:)[^\d]*(\d{4}-\d{2}-\d{2})/);
+              const mBr = String(resultado).match(/(?:Horarios do exame em|Proxima disponibilidade[^:]*:)[^\d]*?(\d{2})\/(\d{2})\/(\d{4})/);
+              const primeira = mIso ? mIso[1] : mBr ? `${mBr[3]}-${mBr[2]}-${mBr[1]}` : null;
+              if (primeira) { datasConsultadas.add(primeira); dataDoRetorno = primeira; }
             }
             // guarda OS HORARIOS desse dia (se a ferramenta devolveu algum):
             // e a prova concreta de que o dia TEM vaga
@@ -1367,10 +1389,24 @@ export async function responder(params: {
     // agendar/remarcar rodou com sucesso nesse turno E o paciente nao tem
     // consulta futura no banco, a resposta e MENTIRA. Devolve pro modelo com
     // ordem de chamar a ferramenta de verdade (1 correcao por mensagem).
-    const alegouMarcado = /\b(marcad[ao]|agendad[ao]|reagendad[ao])\b/i.test(textoResposta);
+    const alegouMarcado = /\b(marcad[ao]s?|agendad[ao]s?|reagendad[ao]s?)\b/i.test(textoResposta);
     if (alegouMarcado && !houveAgendamentoReal && !jaCorrigiuFantasma) {
-      const futura = await proximaConsultaDoPaciente(clinicaId, telefone);
-      if (!futura) {
+      // A DATA que a resposta alega tem que existir como consulta ATIVA do
+      // paciente. Antes bastava "ter alguma consulta futura" — numero com
+      // historico (teste, paciente antigo) passava: caso real 21/08, a IA
+      // disse "marcados para domingo 23/08" sem chamar agendar_consulta e o
+      // guard deixou porque havia OUTRAS consultas futuras do mesmo numero.
+      const normDM = (d: string) => d.split("/").map((x) => x.padStart(2, "0")).join("/");
+      const datasAlegadas = (textoResposta.match(/\b\d{1,2}\/\d{1,2}\b/g) || []).map(normDM);
+      const ativas = (await consultasDoPacientePorTelefone(clinicaId, telefone, 12).catch(() => [])).filter(
+        (c: any) => c.status === "agendada" || c.status === "confirmada"
+      );
+      const datasReais = new Set(ativas.map((c: any) => `${String(c.inicio).slice(8, 10)}/${String(c.inicio).slice(5, 7)}`));
+      const bateComReal =
+        datasAlegadas.length > 0
+          ? datasAlegadas.some((d) => datasReais.has(d))
+          : ativas.length > 0; // sem data na frase: vale ter consulta ativa
+      if (!bateComReal) {
         jaCorrigiuFantasma = true;
         messages.push({ role: "assistant", content: textoResposta });
         messages.push({
