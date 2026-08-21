@@ -85,6 +85,29 @@ export default function ExamesView({
   const [nomes, setNomes] = useState<Record<string, string>>({});
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
+  const [excluindo, setExcluindo] = useState<string | null>(null);
+
+  // EXCLUIR agendamento marcado pela IA (pedido do Matheus, 21/08): some da
+  // agenda e do banco. Nao e "cancelar" — e pra marcacao errada/teste.
+  async function excluir(e: ExameIA) {
+    const quando = `${e.inicio.slice(8, 10)}/${e.inicio.slice(5, 7)} às ${e.inicio.slice(11, 16)}`;
+    if (!confirm(`Excluir de vez o agendamento de ${e.pacienteNome || e.pacienteTelefone || "paciente"} (${quando})?\n\nSome da agenda e do histórico. Não tem volta.`)) return;
+    setExcluindo(e.id);
+    try {
+      const r = await fetch("/api/consultas", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: e.id }),
+      });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(j?.erro || "não deu certo");
+      setDaIA((l) => l.filter((x) => x.id !== e.id));
+    } catch (err: any) {
+      alert(err?.message || "erro ao excluir");
+    } finally {
+      setExcluindo(null);
+    }
+  }
 
   // PASSO 1: agenda do dia — rapido (aparece na hora, sem esperar nomes)
   useEffect(() => {
@@ -306,6 +329,18 @@ export default function ExamesView({
                     ver guia
                   </a>
                 )}
+                <button
+                  onClick={(ev) => {
+                    ev.stopPropagation();
+                    excluir(e);
+                  }}
+                  disabled={excluindo === e.id}
+                  className="btn-fantasma"
+                  title="Excluir esse agendamento de vez (some da agenda)"
+                  style={{ padding: "6px 12px", fontSize: 12.5, whiteSpace: "nowrap", color: "var(--danger)", borderColor: "var(--danger)" }}
+                >
+                  {excluindo === e.id ? "..." : "excluir"}
+                </button>
                 <span style={{ color: "#dc2626", fontSize: 13, fontWeight: 700 }}>{aberto === e.id ? "▲" : "▼"}</span>
 
                 {/* DETALHE: tudo que a recepcao precisa pra lancar no sistema */}

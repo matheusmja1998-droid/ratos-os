@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { agendaDaClinica, getConsulta, atualizarObservacaoConsulta, registrarLog } from "@/lib/db";
+import { agendaDaClinica, getConsulta, atualizarObservacaoConsulta, registrarLog, excluirConsulta } from "@/lib/db";
 import { agendar, cancelar, remarcar, hojeSP } from "@/lib/agenda";
 import { clinicaPermitida } from "@/lib/sessao";
 
@@ -99,4 +99,23 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
   return NextResponse.json({ erro: "acao invalida (cancelar|remarcar|observacao)" }, { status: 400 });
+}
+
+// DELETE /api/consultas {id} -> EXCLUI de vez (nao e cancelar: some do banco).
+// ISOLAMENTO: so agendamento da propria clinica.
+export async function DELETE(req: NextRequest) {
+  const body = await req.json().catch(() => ({}));
+  const consulta = await getConsulta(String(body.id || ""));
+  if (!consulta) return NextResponse.json({ erro: "consulta nao encontrada" }, { status: 404 });
+  const permitida = await clinicaPermitida(consulta.clinica_id);
+  if (!permitida || permitida !== consulta.clinica_id) {
+    return NextResponse.json({ erro: "acesso negado" }, { status: 403 });
+  }
+  await excluirConsulta(consulta.id);
+  await registrarLog(
+    consulta.clinica_id,
+    "consulta",
+    `🗑️ Agendamento EXCLUIDO pela recepcao: ${consulta.observacao || "consulta"} — ${String(consulta.inicio).slice(8, 10)}/${String(consulta.inicio).slice(5, 7)} as ${String(consulta.inicio).slice(11, 16)}`
+  ).catch(() => {});
+  return NextResponse.json({ ok: true });
 }

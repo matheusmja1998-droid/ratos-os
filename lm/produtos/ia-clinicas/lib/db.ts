@@ -1179,6 +1179,15 @@ export async function criarConsulta(c: any) {
     ...(c.guia_url ? { guia_url: c.guia_url } : {}),
   });
 }
+// EXCLUSAO DEFINITIVA de um agendamento (botao "excluir" da agenda). Diferente
+// de cancelar(): some do banco, nao vira falta nem entra em metrica. Uso:
+// marcacao errada ou de teste que a recepcao nao quer no historico.
+export async function excluirConsulta(id: string): Promise<void> {
+  const raw = driver().raw;
+  if (IS_PG) await raw.from("consultas").delete().eq("id", id);
+  else raw.prepare("DELETE FROM consultas WHERE id = ?").run(id);
+}
+
 export async function getConsulta(id: string) {
   return driver().selectOne("consultas", { id });
 }
