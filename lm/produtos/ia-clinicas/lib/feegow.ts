@@ -629,6 +629,11 @@ const GRADES_OFICIAIS: Record<string, Record<number, string[]>> = {
   // SEGUINTE a polissonografia (o paciente dorme aqui e o MSLT comeca as 07:00).
   // Ver material "Exames especiais e regras": nunca e marcado sozinho.
   "18": { 1: ["07:00"], 2: ["07:00"], 3: ["07:00"], 4: ["07:00"], 5: ["07:00"] },
+  // FeNO (210): 12:30, seg-sex. Confirmado na agenda REAL (prof 0, local 1):
+  // os 4 FeNO de 2026 (24/07, 07/08, 13/08, 17/08) sao TODOS 12:30 — sex, sex,
+  // qui e seg, ou seja, sem dia fixo. Sem grade propria o exame herdava a grade
+  // de OUTRO exame (caiu na da caminhada) e a IA oferecia dias errados.
+  "210": { 1: ["12:30"], 2: ["12:30"], 3: ["12:30"], 4: ["12:30"], 5: ["12:30"] },
 };
 
 function gradeOficial(procedimentoId: string): { slotsMin: number[]; diasSemana: Set<number>; porDia: Record<number, number[]> } | null {
