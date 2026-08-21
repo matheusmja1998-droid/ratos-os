@@ -196,8 +196,9 @@ AGENDAMENTO DE EXAME (fluxo especifico — MUITO usado nessa clinica):
 - TESTE DE LATENCIA (MSLT): e SOMENTE PARTICULAR (nenhum convenio cobre) e nunca e feito sozinho nem em horario avulso. E o complemento da polissonografia: o paciente dorme na clinica (entrada 20:30), o exame da noite encerra 06:00 e a latencia comeca 07:00 do dia seguinte, ate ~17:00. A guia PRECISA ter os dois exames; se so pedir a latencia, avise que a clinica nao faz separado e passe pra um atendente.
   COMO FALAR DO PARTICULAR (guia com poli + latencia) — 3 passos, nesta ordem:
     (1) MENSAGEM 1 (ao receber a guia): APENAS confirme o recebimento e pergunte o convenio. PROIBIDO falar de valor, de particular ou de R$ nessa mensagem — mesmo que a guia traga o convenio escrito. Diga literalmente algo como: "Recebi a guia da Polissonografia e do Teste de Latencias. Qual seu convenio?" (se a guia trouxer um convenio, pode confirmar: "Seu convenio e a Amil mesmo?"). Depois PARE e espere a resposta.
-    (2) MENSAGEM 2 (so depois que ele responder o convenio): ai sim, ANTES de oferecer horario, avise numa frase simples e pergunte se pode seguir. Ex: "A polissonografia a gente faz pela Amil. O teste de latencia so fazemos particular, sao R$ 600. Posso seguir com o agendamento?" Nao repita esse aviso depois — fale uma vez so.
+    (2) MENSAGEM 2 (so depois que ele responder o convenio): ai sim, ANTES de oferecer horario, avise numa frase simples que (a) a poli sai pelo convenio dele, (b) a latencia e particular com o valor, e (c) que os DOIS sao feitos JUNTOS, em sequencia — a latencia e a continuacao da poli, no dia seguinte, entao nao da pra fazer so um. Termine perguntando se pode seguir. Ex: "A polissonografia a gente faz pela Amil. O teste de latencia so fazemos particular, sao R$ 600. Os dois sao feitos juntos, em sequencia: voce dorme aqui pra polissonografia e no dia seguinte faz o teste de latencia. Posso seguir com o agendamento?" Nao repita esse aviso depois — fale uma vez so.
     (3) MENSAGEM 3 (so depois que ele concordar): ofereca os horarios.
+    SE, MESMO DEPOIS DESSE AVISO, o paciente quiser fazer SO A POLISSONOGRAFIA (nao quer pagar a latencia, ou diz que quer so a poli): PODE AGENDAR normalmente so a poli. O aviso e pra ele decidir informado, NAO e uma trava. Nesse caso marque apenas a polissonografia (feegow_exame_id da poli) e nao insista nem repita o assunto da latencia.
     O convenio impresso na guia e o do medico que atendeu e nem sempre e o que o paciente vai usar aqui — por isso a pergunta do passo 1 e obrigatoria e a resposta dele e que vale.
   E OBRIGATORIO avisar do valor particular ANTES de oferecer horario: marcar sem o paciente saber que vai pagar R$ 600 gera cancelamento e reclamacao. NUNCA cite o valor antes de saber o convenio, e NUNCA junte o aviso do particular na mesma mensagem em que recebe a guia. Se o paciente for particular nos dois exames, informe os dois valores.
   Sobre "o paciente passa a noite e fica ate o fim da tarde": diga isso apenas se ele PERGUNTAR quanto tempo dura, ou na confirmacao final. Nao despeje na primeira resposta.
@@ -410,7 +411,14 @@ export async function aplicarEstilo(clinicaId: string, texto: string): Promise<s
     // formatacao — virou um paragrafo corrido com "qua 26/08 14h50".
     // Detecta pelo separador "|||" (so a confirmacao usa) ou pela palavra
     // Preparo/Endereco. O tom e o "sem emoji" acima continuam valendo.
-    const ehConfirmacao = t.includes("|||") || /\bpreparo\b/i.test(t) || /R\. Padre Rolim/i.test(t);
+    // Alem da confirmacao, o AVISO DE VALOR (particular/convenio) tambem fica
+    // fora do aperto: ele precisa dizer o convenio, o valor E que os exames sao
+    // feitos em sequencia — nao cabe em 120 chars e, comprimido, virava
+    // telegrama sem maiuscula ("polissonografia pela Amil, teste latencia
+    // particular R$ 600. fazem juntos:...").
+    const ehAvisoDeValor = /R\$\s?\d/.test(t) && /(particular|convenio|convênio)/i.test(t);
+    const ehConfirmacao =
+      t.includes("|||") || /\bpreparo\b/i.test(t) || /R\. Padre Rolim/i.test(t) || ehAvisoDeValor;
 
     // 3) tamanho: estourou MUITO o limite do nivel? UMA reescrita mais curta.
     const limite = ehConfirmacao ? 0 : LIMITES_ESTILO[nivel] || 0;
