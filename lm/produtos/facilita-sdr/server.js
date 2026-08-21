@@ -303,11 +303,22 @@ app.post("/webhook", async (req, res) => {
     // RECUSA clara ("não tenho interesse"): move pra PERDIDO na hora, uma resposta
     // educada de porta aberta, e a IA para (nao fica insistindo). Nao bloqueia.
     if (RECUSA.test(m.texto || "")) {
-      atualizarLead(lead.id, { status: "perdido", ia_pausada: 1, motivo_perda: `recusou: "${m.texto.slice(0, 60)}"` });
-      registrarEvento(lead.id, "perdido", "recusa mecanica");
+      // A recusa da RECEPCAO nao mata o lead quando ja existe conversa aberta com
+      // o DECISOR: quem decide e ele. Nesse caso so encerra o canal da empresa e
+      // a IA segue com o decisor na thread dele (caso Kewvy/Recupera+, 20/08).
+      const decisorAtivo = db.prepare(`SELECT COUNT(*) c FROM threads t
+        WHERE t.lead_id = ? AND t.telefone <> ? AND t.ia_pausada = 0
+          AND EXISTS (SELECT 1 FROM mensagens m2 WHERE m2.thread_id = t.id AND m2.role = 'user')`)
+        .get(lead.id, lead.telefone).c > 0;
       const desc = "Tranquilo! Qualquer coisa no futuro, é só chamar. Abraço!";
       const r = await enviarTexto(tokenResposta, m.telefone, desc);
       if (r.ok) salvarMensagem(lead.id, "assistant", desc);
+      if (decisorAtivo) {
+        registrarEvento(lead.id, "recusa_recepcao", "recepção recusou, mas o decisor está em conversa — lead segue vivo");
+      } else {
+        atualizarLead(lead.id, { status: "perdido", ia_pausada: 1, motivo_perda: `recusou: "${m.texto.slice(0, 60)}"` });
+        registrarEvento(lead.id, "perdido", "recusa mecanica");
+      }
       return;
     }
 
