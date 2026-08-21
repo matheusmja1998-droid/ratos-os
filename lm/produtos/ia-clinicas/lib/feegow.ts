@@ -366,6 +366,11 @@ async function noitesPoliLivres(
   // quartos ocupados por noite (qualquer agendamento noturno ativo no quarto)
   const ocupados = new Map<string, Set<string>>();
   const noitesComCpap = new Set<string>();
+  // noites com o MINUTO 20:46 tomado por qualquer coisa (fora unidade Betim):
+  // 20:46 e a senha do quarto CPAP. Em 27 e 28/08 a recepcao lancou no 20:46
+  // como proc 16 no balde (local 1) e o codigo, olhando so proc 17/quarto 18,
+  // ofereceu CPAP numa noite sem vaga (caso real 21/08).
+  const noitesCom2046 = new Set<string>();
   const camasNaNoite = new Map<string, number>(); // dia -> camas comuns tomadas
   for (const a of lista) {
     if (!ATIVOS.has(Number(a.status_id))) continue;
@@ -377,6 +382,7 @@ async function noitesPoliLivres(
     s.add(local);
     ocupados.set(dia, s);
     if (String(a.procedimento_id) === CPAP_PROC) noitesComCpap.add(dia);
+    if (hhmm === CPAP_HORA && !LOCAL_UNIDADE_BETIM.has(local)) noitesCom2046.add(dia);
     // cama comum de BH tomada: entrada da escadinha (20:15+), fora dos
     // quartos especiais, fora de BETIM e sem ser a CPAP (mesmo quando
     // lancada no balde local 1)
@@ -399,7 +405,7 @@ async function noitesPoliLivres(
     const occ = ocupados.get(dia) || new Set();
     if (variante === "cpap") {
       // 1 CPAP/noite + quarto CPAP livre
-      if (noitesComCpap.has(dia) || occ.has(CPAP_QUARTO)) continue;
+      if (noitesComCpap.has(dia) || occ.has(CPAP_QUARTO) || noitesCom2046.has(dia)) continue;
       out.push({ data: dia, localId: CPAP_QUARTO });
     } else if (variante === "infantil") {
       // 1 infantil/noite (gestora 22/07: "1 quarto infantil") — qualquer
@@ -1013,6 +1019,15 @@ async function capacidadeExameOcupada(
         String(a.horario ?? "").slice(0, 2) >= "19"
     ).length;
     if (cpapNaNoite >= 1) return `ja existe poli CPAP/Split nessa noite (limite: 1 por noite)`;
+    // mesma regra da oferta: o MINUTO 20:46 e a senha do quarto CPAP — tomado
+    // por qualquer lancamento (fora unidade Betim), a noite nao tem CPAP
+    const minutoCpapTomado = lista.some(
+      (a: any) =>
+        ATIVOS.has(Number(a.status_id)) &&
+        String(a.horario ?? "").slice(0, 5) === CPAP_HORA &&
+        !LOCAL_UNIDADE_BETIM.has(String(a.local_id))
+    );
+    if (minutoCpapTomado) return `o horario do CPAP (${CPAP_HORA}) ja esta tomado nessa noite`;
     return null;
   }
 
