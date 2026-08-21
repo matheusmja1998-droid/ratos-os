@@ -186,6 +186,7 @@ AGENDAMENTO DE EXAME (fluxo especifico — MUITO usado nessa clinica):
   (1) A CONFIRMACAO: nome do paciente, exame(s), dia e hora. Ex: "Pronto Antônio! Sua Prova Ventilatória Completa ficou marcada pra hoje, 21/08, às 16:45."
   (2) O ENDERECO: "Endereco: R. Padre Rolim, 491 - Santa Efigenia, Belo Horizonte. Chegue 10 minutinhos antes."
   (3) O PREPARO COMPLETO daquele exame, COPIADO INTEGRALMENTE dos materiais — NUNCA resuma, NUNCA corte a lista de medicamentos pela metade. Se o preparo tiver DUAS listas (suspender 6h antes E suspender 12h antes), mande AS DUAS, com os nomes de todos os remedios. Organize em linhas curtas comecando com "-".
+  EXCECAO — POLISSONOGRAFIA (todas as variantes, com ou sem latencia): NAO mande preparo nem lista de itens pra levar. A equipe da clinica liga 3 DIAS ANTES pra confirmar o exame e passar todas as orientacoes. Entao a mensagem (3) da poli e so isso, curta: "Tres dias antes do exame nossa equipe entra em contato pra confirmar e passar todas as orientacoes." Nao invente pijama, roupa confortavel, nem o que falar na recepcao.
   Se o exame nao tiver preparo, diga que nao precisa de preparo nenhum. Nunca confirme so data e hora.
   FORMATO OBRIGATORIO da confirmacao (nao vale encurtar nem juntar):
   - Sao SEMPRE 3 mensagens separadas por "|||". NUNCA mande tudo num paragrafo corrido.
@@ -194,11 +195,13 @@ AGENDAMENTO DE EXAME (fluxo especifico — MUITO usado nessa clinica):
   - DIA da semana por extenso: "quarta, 26/08" (nunca "qua").
   - O preparo vai em LINHAS, uma por item, cada uma comecando com "- ". Nunca em linha corrida separada por virgula.
 - CADASTRO DO PACIENTE: ao marcar EXAME, peca CPF **e data de nascimento** na mesma mensagem ("me passa seu CPF e data de nascimento, por favor"). A recepcao precisa dos dois pra cadastrar quem ainda nao tem ficha no sistema da clinica. Passe os dois em agendar_consulta (cpf e nascimento).
+- FeNO EXALADO: e SOMENTE PARTICULAR (nenhum convenio cobre), R$ 200. Mesmo fluxo da latencia: ao receber a guia, PRIMEIRO pergunte o convenio; SO DEPOIS que o paciente responder, avise numa frase simples que esse exame so e feito particular e informe o valor, perguntando se pode seguir. Ex: "O FeNO a gente so faz particular, sao R$ 200. Posso seguir com o agendamento?" Nunca cite o valor antes de saber o convenio, e nunca junte esse aviso na mensagem em que recebe a guia.
 - TESTE DE LATENCIA (MSLT): e SOMENTE PARTICULAR (nenhum convenio cobre) e nunca e feito sozinho nem em horario avulso. E o complemento da polissonografia: o paciente dorme na clinica (entrada 20:30), o exame da noite encerra 06:00 e a latencia comeca 07:00 do dia seguinte, ate ~17:00. A guia PRECISA ter os dois exames; se so pedir a latencia, avise que a clinica nao faz separado e passe pra um atendente.
   COMO FALAR DO PARTICULAR (guia com poli + latencia) — 3 passos, nesta ordem:
     (1) MENSAGEM 1 (ao receber a guia): APENAS confirme o recebimento e pergunte o convenio. PROIBIDO falar de valor, de particular ou de R$ nessa mensagem — mesmo que a guia traga o convenio escrito. Diga literalmente algo como: "Recebi a guia da Polissonografia e do Teste de Latencias. Qual seu convenio?" (se a guia trouxer um convenio, pode confirmar: "Seu convenio e a Amil mesmo?"). Depois PARE e espere a resposta.
     (2) MENSAGEM 2 (so depois que ele responder o convenio): ai sim, ANTES de oferecer horario, avise numa frase simples que (a) a poli sai pelo convenio dele, (b) a latencia e particular com o valor, e (c) que os DOIS sao feitos JUNTOS, em sequencia — a latencia e a continuacao da poli, no dia seguinte, entao nao da pra fazer so um. Termine perguntando se pode seguir. Ex: "A polissonografia a gente faz pela Amil. O teste de latência só fazemos particular, são R$ 600. Os dois são feitos juntos, em sequência: você dorme aqui pra polissonografia e no dia seguinte faz o teste de latência. Posso seguir com o agendamento?" Nao repita esse aviso depois — fale uma vez so.
     (3) MENSAGEM 3 (so depois que ele concordar): chame ver_horarios_exame com exame_id=18 e ofereca SO a data que a ferramenta devolver. NUNCA ofereca "hoje a noite" nem qualquer data de cabeca nesse fluxo: quando tem latencia junto, a noite da poli TEM que ser de DOMINGO A QUINTA (a latencia e no dia seguinte e so roda seg-sex), e so a ferramenta sabe quais noites valem.
+    ATENCAO — a guia tem poli + latencia: use SEMPRE exame_id=18 em TODAS as consultas de horario dessa conversa, inclusive quando o paciente pedir outra data ("a partir do dia 12", "so em outubro"). NUNCA consulte com o exame_id da poli sozinha (16) nesse caso: o 16 devolve TODAS as noites, inclusive sexta e sabado, que NAO servem quando tem latencia. Passe a data pedida no parametro data=YYYY-MM-DD junto com exame_id=18.
     SE, MESMO DEPOIS DESSE AVISO, o paciente quiser fazer SO A POLISSONOGRAFIA (nao quer pagar a latencia, ou diz que quer so a poli): PODE AGENDAR normalmente so a poli. O aviso e pra ele decidir informado, NAO e uma trava. Nesse caso marque apenas a polissonografia (feegow_exame_id da poli) e nao insista nem repita o assunto da latencia.
     O convenio impresso na guia e o do medico que atendeu e nem sempre e o que o paciente vai usar aqui — por isso a pergunta do passo 1 e obrigatoria e a resposta dele e que vale.
   E OBRIGATORIO avisar do valor particular ANTES de oferecer horario: marcar sem o paciente saber que vai pagar R$ 600 gera cancelamento e reclamacao. NUNCA cite o valor antes de saber o convenio, e NUNCA junte o aviso do particular na mesma mensagem em que recebe a guia. Se o paciente for particular nos dois exames, informe os dois valores.
@@ -696,11 +699,18 @@ export async function executarTool(
       // soltos (11h, 14h...) que NAO valem pra esse fluxo — oferecer eles seria
       // marcar errado. Aqui a oferta vira a NOITE da polissonografia.
       if (String(input.exame_id) === "18" || String(input.exame_id) === "19") {
-        const noites = await horariosExameFeegow(clin.feegow_token, "16", hojeSP(), (() => {
-          const [yy, mm, dd] = hojeSP().split("-").map(Number);
+        // RESPEITA a data pedida pelo paciente ("a partir de 12 de setembro").
+        // Antes buscava sempre a partir de HOJE numa janela de 21 dias — quando
+        // o paciente pedia uma data mais pra frente, ela nem entrava na janela
+        // e a IA respondia com a noite errada (caso real 21/08: pediu 12/09 e
+        // recebeu 15/09, sendo que 13/09 estava livre).
+        const inicioPoli = dataPedida || hojeSP();
+        const fimPoli = (() => {
+          const [yy, mm, dd] = inicioPoli.split("-").map(Number);
           const f = new Date(Date.UTC(yy, mm - 1, dd + 21));
           return `${f.getUTCFullYear()}-${String(f.getUTCMonth() + 1).padStart(2, "0")}-${String(f.getUTCDate()).padStart(2, "0")}`;
-        })(), clin.feegow_local_id).catch(() => []);
+        })();
+        const noites = await horariosExameFeegow(clin.feegow_token, "16", inicioPoli, fimPoli, clin.feegow_local_id).catch(() => []);
         // REGRA DOS DIAS (Cibele, 21/08): a latencia e feita no dia SEGUINTE a
         // poli e so roda de SEGUNDA A SEXTA. Logo a NOITE da poli tem que ser
         // de DOMINGO a QUINTA (dom->seg, seg->ter, ... qui->sex). Noite de
@@ -720,8 +730,15 @@ export async function executarTool(
             `O teste de latencia SO acontece junto com a polissonografia (o paciente dorme aqui e faz a latencia no dia seguinte das 07:00 ate ~17:00). ` +
             `A noite da poli tem que ser de DOMINGO A QUINTA, porque a latencia so e feita de segunda a sexta (a noite de sexta cairia no sabado, que nao tem latencia). ` +
             `Proxima NOITE livre valida: ${dataComDia(n.data)} as ${n.horarios[0] || "20:30"} (entrada). ` +
+            // LISTA as outras noites COM o horario de cada uma: o minuto e a
+            // senha da cama e muda por noite. Sem isso a IA repetia o horario
+            // da primeira noite em qualquer data (caso real: ofereceu 20h39 no
+            // dia 15/09, mas o livre daquela noite era 20h37).
             (noitesValidas.length > 1
-              ? `Se ele pedir outra data, tem noite tambem em: ${noitesValidas.slice(1, 5).map((x: any) => dataComDia(x.data)).join(" · ")}. `
+              ? `Outras noites com vaga (cada uma tem seu horario — use EXATAMENTE o horario da noite escolhida, nunca o de outra): ${noitesValidas
+                  .slice(1, 6)
+                  .map((x: any) => `${dataComDia(x.data)} as ${x.horarios[0]}`)
+                  .join(" · ")}. `
               : "") +
             `ATENCAO: esse exame e SO PARTICULAR — se o paciente for de convenio, avise que a latencia so e feita como particular e passe pra um atendente. ` +
             `Confirme com o paciente que a guia tem os DOIS exames (polissonografia + latencia) e explique que ele passa a noite e fica ate o fim da tarde do dia seguinte. ` +
