@@ -393,7 +393,7 @@ export function atualizarLead(id, campos) {
 export const salvarMensagem = (leadId, role, texto, tipo = "texto") =>
   db.prepare("INSERT INTO mensagens (lead_id, role, texto, tipo) VALUES (?, ?, ?, ?)").run(leadId, role, texto, tipo);
 export const historicoLead = (leadId, limite = 40) =>
-  db.prepare("SELECT role, texto, tipo, criado_em FROM mensagens WHERE lead_id = ? ORDER BY id DESC LIMIT ?")
+  db.prepare("SELECT role, texto, tipo, thread_id, criado_em FROM mensagens WHERE lead_id = ? ORDER BY id DESC LIMIT ?")
     .all(leadId, limite).reverse();
 export const ultimaMensagemUsuario = (leadId) =>
   db.prepare("SELECT id FROM mensagens WHERE lead_id = ? AND role = 'user' ORDER BY id DESC LIMIT 1").get(leadId)?.id;

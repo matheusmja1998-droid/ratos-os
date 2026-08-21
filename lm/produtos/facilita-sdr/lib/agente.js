@@ -114,10 +114,19 @@ function blocoTreinamento() {
 // ---------- montagem do prompt ----------
 function montarPrompt(lead, thread = null) {
   const hist = historicoLead(lead.id);
+  // marca de qual CANAL e cada mensagem: sem isso a IA lia respostas dadas no
+  // numero da empresa como se ja tivesse respondido o decisor (e ficava calada)
   const conversa = hist.map((m) => {
     const quem = m.role === "user" ? "LEAD" : m.role === "assistant" ? "VOCÊ" : "SISTEMA";
-    return `${quem}: ${m.texto}`;
+    const canal = thread
+      ? (m.thread_id === thread.id ? "[com o decisor] " : "[com a recepção] ")
+      : "";
+    return `${canal}${quem}: ${m.texto}`;
   }).join("\n");
+  // ultima mensagem do canal ATUAL (pra IA saber se esta devendo resposta)
+  const ultimaDoCanal = thread
+    ? db.prepare("SELECT role, texto FROM mensagens WHERE thread_id = ? ORDER BY id DESC LIMIT 1").get(thread.id)
+    : db.prepare("SELECT role, texto FROM mensagens WHERE lead_id = ? AND thread_id IS NULL ORDER BY id DESC LIMIT 1").get(lead.id);
 
   const horarios = horariosDisponiveis()
     .map((h) => `- ${h.inicio} (${DIAS_PT[h.dow]}) com ${h.closer}`)
@@ -171,6 +180,10 @@ Você AGORA está falando com ${lead.nome_decisor || thread.rotulo || "o decisor
 - Objetivo: 1 pergunta de dor no máximo e já conduzir pra reunião (2 opções de horário).
 - Se ele pedir LIGAÇÃO ("me liga", "pode ligar"), responda UMA linha confirmando ("Te ligo em instantes!") E use a ação pedir_ligacao junto.
 - As mensagens marcadas VOCÊ incluem a conversa anterior com a atendente — é contexto, a mesma voz sua.
+- **ATENÇÃO AO CANAL**: cada linha do histórico diz se foi [com o decisor] ou [com a recepção]. Só conta como "já respondi" o que está marcado [com o decisor]. O que você falou com a recepção o decisor NUNCA leu.
+- **Status deste canal**: ${ultimaDoCanal?.role === "user"
+    ? `o DECISOR falou por último e está esperando sua resposta — responda AGORA, não retorne ações vazias.`
+    : `você falou por último aqui; se não há nada novo a dizer, retorne ações vazias.`}
 ` : ""}## CONVERSA ATÉ AGORA
 ${conversa}
 
